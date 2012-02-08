@@ -1,0 +1,50 @@
+#homepage_slider{
+	width:964px;
+	height:350px;
+	overflow:hidden;
+	margin:0 auto
+}
+
+#homepage_slider li{
+
+
+width:964px !important;height:350px !important;
+position:relative;
+background-position:center center !important;
+background-repeat:no-repeat !important;
+background-color:#DDD;
+-webkit-border-radius:6px;
+-moz-border-radius:6px;
+border-radius:6px
+}
+
+#homepage_slider li a{
+display:block;
+width:964px;
+height:350px;
+position:absolute;
+top:0;
+text-decoration:none
+}
+
+#homepage_slider li .desc{
+	position:absolute;
+	width:400px;
+	background:url(../img/descbg.png);
+	padding:2px 9px 0;
+	text-align:left !important
+}
+
+#homepage_slider li .desc div{
+	width:400px;
+	overflow:hidden;
+	position:relative
+}
+
+#homepage_slider li .desc div p{
+
+font:14px/20px Helvetica, Arial, sans-serif;color:#FFF;text-shadow:0 1px 1px black;margin:0 !important}
+
+#homepage_slider li h2{
+font:26px Georgia, serif;color:#FFF;text-shadow:0 1px 1px black;padding:3px 0 0 !important;margin:0 0 6px !important
+}
