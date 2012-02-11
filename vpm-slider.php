@@ -87,7 +87,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 	public function createSlidesOptionField() {
 	/*
-		Upon plugin activation, creates the lml_homepage_slides option
+		Upon plugin activation, creates the vpm_homepage_slides option
 		in wp_options, if it does not already exist.
 	*/
 	
