@@ -7,6 +7,7 @@ Version: 1.0
 Author: Peter Upfold
 Author URI: http://vanpattenmedia.com/
 License: GPL2
+*/
 /* ----------------------------------------------*/
 
 /*  Copyright (C) 2011-2012 Peter Upfold.
