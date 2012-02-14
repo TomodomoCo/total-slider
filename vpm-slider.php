@@ -7,7 +7,6 @@ Version: 1.0
 Author: Peter Upfold
 Author URI: http://vanpattenmedia.com/
 License: GPL2
-*/
 /* ----------------------------------------------*/
 
 /*  Copyright (C) 2011-2012 Peter Upfold.
@@ -27,6 +26,7 @@ License: GPL2
 */
 
 define('VPM_SLIDER_IN_FUNCTIONS', true);
+define('VPM_SLIDER_REQUIRED_CAPABILITY', 'vpm_slider_manage_slides');
 require_once(dirname(__FILE__).'/slides_backend.php');
 
 
@@ -64,27 +64,6 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 	*/
 	
-	public function defineCapability()
-	{
-	/*
-		Define the required capability from options, or if it is not set, set it to the default.
-	*/
-	
-		if (!defined('VPM_SLIDER_REQUIRED_CAPABILITY'))
-		{
-	
-			if (get_option('vpm_slider_required_capability'))
-			{
-				define('VPM_SLIDER_REQUIRED_CAPABILITY', get_option('vpm_slider_required_capability'));
-			}
-			else {
-				define('VPM_SLIDER_REQUIRED_CAPABILITY', 'manage_options');
-			}
-		
-		}
-	
-	}
-	
 	public function createSlidesOptionField() {
 	/*
 		Upon plugin activation, creates the vpm_homepage_slides option
@@ -96,6 +75,10 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			add_option('vpm_slider_slides', array()); // create with a blank array
 		
 		}
+		
+		// set the capability for administrator so they can visit the options page
+		$admin = get_role('administrator');
+		$admin->add_cap(VPM_SLIDER_REQUIRED_CAPABILITY);
 	
 	}
 	
@@ -130,7 +113,6 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			array_key_exists('vpm-slider-ajax', $_GET) && $_GET['vpm-slider-ajax'] == 'true'
 		)
 		{
-			VPMSlider::defineCapability();
 			require_once(dirname(__FILE__).'/ajax_interface.php');
 		}		
 	
@@ -140,11 +122,6 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		/*
 			Add the submenu to the admin sidebar for the configuration screen.
 		*/	
-		
-		if (!defined('VPM_SLIDER_REQUIRED_CAPABILITY'))
-		{
-			VPMSlider::defineCapability();
-		}
 		
 		if (array_key_exists('page', $_GET) && $_GET['page'] == 'vpm-slider')
 		{
@@ -338,6 +315,54 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 	}
 	
+	public function setCapabilityForRole($roleToSet)
+	{
+	/*
+		Set the VPM_SLIDER_REQUIRED_CAPABILITY capability against this role, so this WordPress
+		user role is able to manage the slides.
+		
+		Will clear out the capability from all roles, then add it to both administrator and the
+		specified role if that is not also administrator.
+	*/
+		global $wp_roles;
+		
+		if (!current_user_can('manage_options'))
+		{
+			return false;
+		}
+	
+		$allRoles = get_editable_roles();
+		$validRoles = array_keys($allRoles);
+		
+		if (!is_array($allRoles) || count($allRoles) < 1)
+		{
+			return false;
+		}
+		
+		if (!in_array($roleToSet, $validRoles))
+		{
+			return false;
+		}
+		
+		// clear the capability from all roles first
+		foreach ($allRoles as $rName => $r)
+		{
+			$wp_roles->remove_cap($rName, VPM_SLIDER_REQUIRED_CAPABILITY);
+		}
+		
+		// add the capability to 'administrator', which can always manage slides
+		$wp_roles->add_cap('administrator', VPM_SLIDER_REQUIRED_CAPABILITY);
+		
+		// add the capability to the specified $roleToSet
+		if ($roleToSet != 'administrator')
+		{
+			$wp_roles->add_cap($roleToSet, VPM_SLIDER_REQUIRED_CAPABILITY);
+		}
+		
+		return true;
+	
+	}
+	
 	public function printSettingsPage()
 	{
 	/*
@@ -345,9 +370,26 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		have come back to us.
 	*/
 	
+		if (strtolower($_SERVER['REQUEST_METHOD']) == 'post' && array_key_exists('vpm-slider-settings-submitted', $_POST))
+		{
+			// handle the submitted form
+			
+			if (array_key_exists('required_capability', $_POST) && !empty($_POST['required_capability']))
+			{
+				// set the required_capability
+				$capSuccess = VPMSlider::setCapabilityForRole($_POST['required_capability']);
+			}
+			
+		
+		}
+	
 		?><div class="wrap">
 		<div id="icon-plugins" class="icon32"><br /></div><h2>Settings</h2>
 		<form method="post" action="admin.php?page=vpm-slider-settings">
+			<input type="hidden" name="vpm-slider-settings-submitted" value="true" />
+		
+			<!-- Only display 'Required Role Level' to manage_options capable users -->
+			<?php if (current_user_can('manage_options')):?>
 		
 			<h3>Required Role Level</h3>
 			<p>Any user with the following role in WordPress will be able to add, edit and delete the
@@ -360,19 +402,37 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 						<label for="required_capability">Required Role:</label>
 					</th>
 					<td>
+					<pre>
+					<?php
+					$allRoles = get_editable_roles();
+					print_r($allRoles);
+					?>
+					</pre>
+					
 						<select name="required_capability" id="required_capability">
-								<option value="administrator">Administrator</option>
-								<option value="editor">Editor</option>
-								<option value="author">Author</option>
-								<option value="contributor">Contributor</option>
+							<?php
+							if (is_array($allRoles) && count($allRoles) > 0):
+								foreach($allRoles as $rName => $r):
+									?><option value="<?php echo esc_attr($rName);?>"<?php
+										
+										// if this role has the vpm_slider_manage_slides capability, mark it as selected
+										if (array_key_exists(VPM_SLIDER_REQUIRED_CAPABILITY, $r['capabilities']) &&
+										$rName != 'administrator'):
+											?> selected="selected"<?php
+										endif;
+									
+									?>><?php echo esc_html($r['name']);?></option>
+									<?php
+								endforeach;							
+							endif;
+							?>
 						</select>
 					</td>
 				</tr>
 				
 			</table>
 			
-			<p> <a href="http://www.garyc40.com/2010/04/ultimate-guide-to-roles-and-capabilities/">http://www.garyc40.com/2010/04/ultimate-guide-to-roles-and-capabilities/</a></p>
-			
+			<?php endif; ?>		
 			
 		<p class="submit">
 			<input class="button-primary" type="submit" value="Save Changes" id="submitbutton" />		
