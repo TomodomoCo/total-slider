@@ -486,6 +486,23 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 	}
 	
+	public function enqueueFrontendCSS()
+	{
+	/*
+		When WordPress is enqueueing the styles, inject our slider CSS in.
+	*/
+	
+		$file = plugin_dir_path( __FILE__ ) . 'slider_edit.css';
+		$url = plugin_dir_url( __FILE__ ) . 'slider_edit.css';
+		
+		if (@file_exists($file))
+		{
+			wp_register_style('vpm-slider-frontend', $url, array(), '20120214', 'all');
+			wp_enqueue_style('vpm-slider-frontend');
+		}
+	
+	}
+	
 	public function registerAsWidget() {
 	/*
 		Register the output to the theme as a widget	
@@ -561,5 +578,7 @@ register_activation_hook(__FILE__, array('VPMSlider', 'createSlidesOptionField')
 add_action('admin_menu', array('VPMSlider', 'addAdminSubMenu'));
 add_action('widgets_init', array('VPMSlider', 'registerAsWidget'));
 add_action('admin_init', array('VPMSlider', 'passControlToAjaxHandler'));
+
+add_action('wp_enqueue_scripts', array('VPMSlider', 'enqueueFrontendCSS'));
 
 ?>
