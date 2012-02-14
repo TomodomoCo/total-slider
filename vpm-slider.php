@@ -315,14 +315,14 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 	}
 	
-	public function setCapabilityForRole($roleToSet)
+	public function setCapabilityForRoles($rolesToSet)
 	{
 	/*
 		Set the VPM_SLIDER_REQUIRED_CAPABILITY capability against this role, so this WordPress
 		user role is able to manage the slides.
 		
 		Will clear out the capability from all roles, then add it to both administrator and the
-		specified role if that is not also administrator.
+		specified roles. (Administrator always has access).
 	*/
 		global $wp_roles;
 		
@@ -339,11 +339,6 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			return false;
 		}
 		
-		if (!in_array($roleToSet, $validRoles))
-		{
-			return false;
-		}
-		
 		// clear the capability from all roles first
 		foreach ($allRoles as $rName => $r)
 		{
@@ -354,9 +349,15 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		$wp_roles->add_cap('administrator', VPM_SLIDER_REQUIRED_CAPABILITY);
 		
 		// add the capability to the specified $roleToSet
-		if ($roleToSet != 'administrator')
+		if (is_array($rolesToSet) && count($rolesToSet) > 0)
 		{
-			$wp_roles->add_cap($roleToSet, VPM_SLIDER_REQUIRED_CAPABILITY);
+			foreach($rolesToSet as $theRole)
+			{
+				if (in_array($theRole, $validRoles))
+				{
+					$wp_roles->add_cap($theRole, VPM_SLIDER_REQUIRED_CAPABILITY);
+				}
+			}
 		}
 		
 		return true;
@@ -370,14 +371,43 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		have come back to us.
 	*/
 	
+		if (!current_user_can(VPM_SLIDER_REQUIRED_CAPABILITY))
+		{
+			echo '<h1>You do not have permission to manage slider settings.</h1>';
+			die();
+		}
+	
+		$success = null;
+		$message = '';
+	
 		if (strtolower($_SERVER['REQUEST_METHOD']) == 'post' && array_key_exists('vpm-slider-settings-submitted', $_POST))
 		{
 			// handle the submitted form
 			
-			if (array_key_exists('required_capability', $_POST) && !empty($_POST['required_capability']))
+			if (current_user_can('manage_options'))
 			{
-				// set the required_capability
-				$capSuccess = VPMSlider::setCapabilityForRole($_POST['required_capability']);
+			
+				$rolesToAdd = array();
+			
+				// find any checked roles to add our capability to
+				foreach($_POST as $pk => $po)
+				{
+					if (preg_match('/^required_capability_/', $pk))
+					{
+						$roleNameChopped = substr($pk, strlen('required_capability_'));
+						
+						// do not allow administrator to be modified
+						if ($roleNameChopped != 'administrator' && $po == '1')
+						{
+							$rolesToAdd[] = $roleNameChopped;		
+						}								
+					}
+				}
+				
+				VPMSlider::setCapabilityForRoles($rolesToAdd);
+				$success = true;
+				$message .= 'Required role level saved.';
+			
 			}
 			
 		
@@ -385,6 +415,15 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 		?><div class="wrap">
 		<div id="icon-plugins" class="icon32"><br /></div><h2>Settings</h2>
+		
+		
+		<?php if ($success): ?>
+			<div class="updated settings-error">
+				<p><strong><?php echo esc_html($message); ?></strong></p>
+			</div>
+		<?php endif; ?>
+		
+		
 		<form method="post" action="admin.php?page=vpm-slider-settings">
 			<input type="hidden" name="vpm-slider-settings-submitted" value="true" />
 		
@@ -392,43 +431,47 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			<?php if (current_user_can('manage_options')):?>
 		
 			<h3>Required Role Level</h3>
-			<p>Any user with the following role in WordPress will be able to add, edit and delete the
-			slides.</p>
+			<p>Any user with a checked role will be allowed to create, edit and delete slides. Only users that can manage
+			widgets are able to activate, deactivate or move the VPM Slider widget, which makes the slides show up on your site.</p>
 			
 			<table class="form-table">
 			<tbody>
 				<tr class="form-field">
-					<th scope="row">
-						<label for="required_capability">Required Role:</label>
-					</th>
 					<td>
-					<pre>
+					<!--<pre>
 					<?php
 					$allRoles = get_editable_roles();
 					print_r($allRoles);
 					?>
-					</pre>
+					</pre>-->
 					
-						<select name="required_capability" id="required_capability">
-							<?php
+					<?php
 							if (is_array($allRoles) && count($allRoles) > 0):
-								foreach($allRoles as $rName => $r):
-									?><option value="<?php echo esc_attr($rName);?>"<?php
-										
-										// if this role has the vpm_slider_manage_slides capability, mark it as selected
-										if (array_key_exists(VPM_SLIDER_REQUIRED_CAPABILITY, $r['capabilities']) &&
-										$rName != 'administrator'):
-											?> selected="selected"<?php
-										endif;
+								foreach($allRoles as $rName => $r): ?>
+					<tr>
+						<td>
+							<label for="required_capability_<?php echo esc_attr($rName);?>">
+								<input type="checkbox" name="required_capability_<?php echo esc_attr($rName);?>"
+								id="required_capability_<?php echo esc_attr($rName);?>" value="1" style="width:20px;"
+									<?php 
+									// if this role has the vpm_slider_manage_slides capability, mark it as selected
 									
-									?>><?php echo esc_html($r['name']);?></option>
-									<?php
-								endforeach;							
-							endif;
-							?>
-						</select>
-					</td>
-				</tr>
+									if (array_key_exists(VPM_SLIDER_REQUIRED_CAPABILITY, $r['capabilities'])): ?>
+									checked="checked"
+									<?php endif;?>
+									
+									<?php // lock administrator checkbox on
+									if ($rName == 'administrator'):
+									 ?>
+									disabled="disabled"
+									 <?php endif; ?>
+
+								 /><?php echo esc_html($r['name']);?><br/>
+							</label>
+						</td>
+					</tr>
+					
+					<?php endforeach; endif; ?>
 				
 			</table>
 			
