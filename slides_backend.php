@@ -60,6 +60,34 @@ if (!defined('VPM_SLIDER_IN_FUNCTIONS'))
 	
 class VPMSliderBackend {
 
+	private $groupSlug; // the slug of this slide group
+
+	public function __construct($slug)
+	{
+	/*
+		Construct the backend handler, passing in the slug of the desired
+		group to modify.
+	*/
+	
+		$this->groupSlug = $this->sanitizeSlideGroupSlug($slug);
+		
+		if (!get_option('vpm_slider_slides_' . $this->groupSlug))
+		{
+			throw new Exception('The specified slide group does not exist.', 1);
+			return false;
+		}
+	
+	}
+	
+	public function sanitizeSlideGroupSlug($slug)
+	{
+	/*
+		Sanitize a slide group slug, for accessing the wp_option row with that slug name.		
+	*/
+		return substr(preg_replace('/[^a-zA-Z0-9]/', '', $slug), 0, 64);
+	}
+	
+
 	public function createNewSlide($title, $description, $background, $link, $title_pos_x, $title_pos_y)
 	{
 		/*
@@ -68,13 +96,14 @@ class VPMSliderBackend {
 			option. Return the new slide ID for resorting in another function.
 		*/
 		
-		$currentSlides = get_option('vpm_slider_slides');
+		$currentSlides = get_option('vpm_slider_slides_' . $this->groupSlug);
 		
 		if ($currentSlides === false)
 		{
+			//TODO check group existence
 			require_once(dirname(__FILE__).'/vpm-slider.php');
 			VPMHomepageSlides::createSlidesOptionField();
-			$currentSlides = get_option('vpm_slider_slides');
+			$currentSlides = get_option('vpm_slider_slides_' . $this->groupSlug);
 			if ($currentSlides === false)
 			{
 				return false; //can't do it
@@ -112,7 +141,7 @@ class VPMSliderBackend {
 		Fetch the whole object for the given slide ID.
 	*/
 	
-		$currentSlides = get_option('vpm_slider_slides');
+		$currentSlides = get_option('vpm_slider_slides_' . $this->groupSlug);
 		
 		if ($currentSlides === false || !is_array($currentSlides) || count($currentSlides) < 0)
 		{
@@ -144,7 +173,7 @@ class VPMSliderBackend {
 		Given the slideID, update that slide with the pre-filtered data specified.
 	*/
 	
-	$currentSlides = get_option('vpm_slider_slides');
+	$currentSlides = get_option('vpm_slider_slides_' . $this->groupSlug);
 		
 		if ($currentSlides === false || !is_array($currentSlides) || count($currentSlides) < 0)
 		{
@@ -190,7 +219,7 @@ class VPMSliderBackend {
 		Dumb function that just updates the option with the array it is given.
 	*/
 	
-		return update_option('vpm_slider_slides', $slidesToWrite);
+		return update_option('vpm_slider_slides_' . $this->groupSlug, $slidesToWrite);
 	
 	}
 
@@ -216,13 +245,14 @@ class VPMSliderBackend {
 		option.
 	*/
 	
-		$currentSlides = get_option('vpm_slider_slides');
+		$currentSlides = get_option('vpm_slider_slides_' . $this->groupSlug);
 		
 		if ($currentSlides === false)
 		{
+			//TODO handle slide group existence problems
 			require_once('vpm-slider.php');
 			VPMHomepageSlides::createSlidesOptionField();
-			$currentSlides = get_option('vpm_slider_slides');
+			$currentSlides = get_option('vpm_slider_slides_' . $this->groupSlug);
 			if ($currentSlides === false)
 			{
 				return false; //can't do it
@@ -268,13 +298,14 @@ class VPMSliderBackend {
 		IDs in the options array.
 	*/
 	
-		$currentSlides = get_option('vpm_slider_slides');
+		$currentSlides = get_option('vpm_slider_slides_' . $this->groupSlug);
 		
 		if ($currentSlides === false)
 		{
+			//TODO existence again
 			require_once('vpm-slider.php');
 			VPMHomepageSlides::createSlidesOptionField();
-			$currentSlides = get_option('vpm_slider_slides');
+			$currentSlides = get_option('vpm_slider_slides_' . $this->groupSlug);
 			if ($currentSlides === false)
 			{
 				return false; //can't do it

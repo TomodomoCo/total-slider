@@ -143,3 +143,18 @@ ul#new-slide-button li {
 	text-align:right;
 	padding-left:5px;
 }
+
+/* Slide Groups Table Column widths */
+.column-slides_count {
+	width:40px !important;
+	max-width: 40px !important;
+}
+.column-actions
+{
+	width:220px;
+}
+
+#new-slide-group
+{
+	display:none;
+}

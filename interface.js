@@ -75,7 +75,7 @@ jQuery(document).ready(function() {
 			jQuery.ajax({
 			
 				type: 'POST',
-				url: VPM_HPS_PLUGIN_URL + 'action=newSlideOrder',
+				url: VPM_HPS_PLUGIN_URL + 'action=newSlideOrder&group=' + VPM_HPS_GROUP,
 				data: newSortOrder,
 				
 				success: function(result) {
@@ -242,7 +242,7 @@ jQuery(document).ready(function() {
 			// get the data
 			jQuery.ajax({
 				type: 'POST',
-				url: VPM_HPS_PLUGIN_URL + 'action=getSlide',
+				url: VPM_HPS_PLUGIN_URL + 'action=getSlide&group=' + VPM_HPS_GROUP,
 				data: {
 					'id': jQuery(object).attr('id').substr( jQuery(object).attr('id').indexOf('slidesort_')+10, jQuery(object).attr('id').length )
 				},
@@ -431,7 +431,7 @@ jQuery(document).ready(function() {
 			// create new slide
 			jQuery.ajax({
 				type: 'POST',
-				url: VPM_HPS_PLUGIN_URL + 'action=createNewSlide',
+				url: VPM_HPS_PLUGIN_URL + 'action=createNewSlide&group=' + VPM_HPS_GROUP,
 				data: {
 					'title': jQuery('#edit-slide-title').val(),
 					'description': jQuery('#edit-slide-description').val(),
@@ -505,7 +505,7 @@ jQuery(document).ready(function() {
 			// update existing slide
 			jQuery.ajax({
 				type: 'POST',
-				url: VPM_HPS_PLUGIN_URL + 'action=updateSlide',
+				url: VPM_HPS_PLUGIN_URL + 'action=updateSlide&group=' + VPM_HPS_GROUP,
 				data: {
 					'id': jQuery('#' + editingSlideSortButton).attr('id').substr( jQuery('#' + editingSlideSortButton).attr('id').indexOf('slidesort_')+10, jQuery('#' + editingSlideSortButton).attr('id').length ),
 					'title': jQuery('#edit-slide-title').val(),
@@ -669,7 +669,7 @@ jQuery(document).ready(function() {
 			jQuery.ajax({
 			
 				type: 'POST',
-				url: VPM_HPS_PLUGIN_URL + 'action=deleteSlide',
+				url: VPM_HPS_PLUGIN_URL + 'action=deleteSlide&group=' + VPM_HPS_GROUP,
 				data: { 'id' : slideID },
 				
 				success: function(result) {

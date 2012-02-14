@@ -37,7 +37,34 @@ if (!defined('VPM_SLIDER_REQUIRED_CAPABILITY'))
 
 
 require_once(dirname(__FILE__).'/slides_backend.php');
-$be = new VPMSliderBackend();
+
+// get the group that we are supposed to be acting on
+if (array_key_exists('group', $_GET) {
+	$slug = $_GET['group'];
+}
+else {
+	$slug = '';
+}
+
+if (empty($slug))
+{
+	header('HTTP/1.0 400 Bad Request');
+	header('Content-Type: application/json');
+	echo json_encode(array('error' => 'You did not supply the slide group to which this action should be applied.'));
+	die();
+}
+
+try {
+	$be = new VPMSliderBackend($slug);
+}
+catch (Exception $e)
+{
+	header('HTTP/1.0 400 Bad Request');
+	header('Content-Type: application/json');
+	echo json_encode(array('error' => $e->getMessage()));
+	die();
+}
+
 
 switch ($_GET['action'])
 {
