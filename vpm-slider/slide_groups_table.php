@@ -79,7 +79,9 @@ class SlideGroupsTable extends WP_List_Table {
 		echo esc_html(stripslashes($item->name));
 		?><br/><div class="row-actions">
 			<span class="edit"><a href="admin.php?page=vpm-slider&amp;group=<?php echo esc_attr($item->slug);?>">Edit</a></span> |
-			<span class="remove"><a class="submitdelete" href="admin.php?page=vpm-slider&amp;action=remove&amp;group=<?php echo esc_attr($item->slug);?>&amp;_wpnonce=<?php echo wp_create_nonce('remove-slide-group');?>">Remove</a></span>
+			<span class="remove"><a class="submitdelete" href="admin.php?page=vpm-slider&amp;action=remove&amp;group=<?php echo esc_attr($item->slug);?>&amp;_wpnonce=<?php echo wp_create_nonce('remove-slide-group');?>"
+				onclick="return confirm('Are you sure you want to delete this slide group?\n\nThis action cannot be undone.');"
+			>Remove</a></span>
 		</div><?php
 	}
 	
@@ -114,11 +116,11 @@ class SlideGroupsTable extends WP_List_Table {
 		);
 	}
 	
-	public function get_bulk_actions() {
+	/*public function get_bulk_actions() {
 	/*
 		Define the bulk actions that can be performed
 		against the table data.
-	*/
+	*//*
 		
 		$actions = array(
 			'remove'			=> 'Remove'
@@ -126,7 +128,8 @@ class SlideGroupsTable extends WP_List_Table {
 		
 		
 		return $actions;
-	}
+	}*/
+	// not implemented yet
     
 	
 	public function getTotalItems()

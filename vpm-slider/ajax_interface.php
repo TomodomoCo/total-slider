@@ -39,7 +39,7 @@ if (!defined('VPM_SLIDER_REQUIRED_CAPABILITY'))
 require_once(dirname(__FILE__).'/slides_backend.php');
 
 // get the group that we are supposed to be acting on
-if (array_key_exists('group', $_GET) {
+if (array_key_exists('group', $_GET)) {
 	$slug = $_GET['group'];
 }
 else {

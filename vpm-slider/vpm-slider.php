@@ -30,30 +30,6 @@ define('VPM_SLIDER_REQUIRED_CAPABILITY', 'vpm_slider_manage_slides');
 define('VPM_SLIDER_MAX_SLIDE_GROUPS', 24);
 require_once(dirname(__FILE__).'/slides_backend.php');
 
-class SlideGroup { 
-/*
-	Defines a slide group object for the purposes of storing a list of available
-	groups in the wp_option	'vpm_slider_slide_groups'.
-	
-	This object specifies the slug and friendly group name. We then use the slug
-	to work out which wp_option to query later -- vpm_slider_slides_[slug].
-*/
-
-	public $slug;
-	public $name;
-	
-	public function __construct($slug, $name)
-	{
-	/*
-		Set the slug and name for this group.
-	*/
-	
-		$this->slug = substr(preg_replace('/[^a-zA-Z0-9]/', '', $slug), 0, 64);
-		$this->name = $name;
-	}
-
-};
-
 class VPMSlider { // not actually a widget -- really a plugin admin panel
 							//  the widget class comes later
 
@@ -129,6 +105,37 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	*/
 	
 		return preg_replace('[^0-9a-zA-Z_]', '', $idToFilter);
+	
+	}
+	
+	public function uglyJSRedirect($location, $data = false)
+	{
+	/*
+		Redirect, from within the admin panel for this plugin back to the plugin's main page.
+	*/
+	
+		switch ($location) {
+		
+			case 'root':
+				$url = 'admin.php?page=vpm-slider';
+			break;
+			
+			case 'edit-slide-group':
+				$url = 'admin.php?page=vpm-slider&group=';
+				$url .= esc_attr(VPMSlider::sanitizeSlideGroupSlug($data));
+			break;
+			
+			default:
+				$url = 'admin.php?page=vpm-slider';
+			break;
+		
+		}
+	
+		// erm, just a little bit of an ugly hack :(
+		
+		?><script type="text/javascript">window.location.replace('<?php echo $url; ?>');</script>
+		<noscript><h1><a href="<?php echo esc_url($url); ?>">Please go here</a></h1></noscript><?php
+		die();
 	
 	}
 	
@@ -234,8 +241,24 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			?><h1>This page is not accessible to your user.</h1><?php
 			return;
 		}
+
+		// if we are to remove a slide group, do that and redirect to home
+		if (array_key_exists('action', $_GET) && $_GET['action'] == 'remove' && array_key_exists('group', $_GET))
+		{
+			if (wp_verify_nonce($_REQUEST['_wpnonce'], 'remove-slide-group'))
+			{
+				// remove the slide group
+				$newGroup = new VPMSlideGroup($_GET['group']);
+				$newGroup->delete();
+				
+				// redirect back to the admin vpm slider root page
+				VPMSlider::uglyJSRedirect('root');
+				die();
+					
+			}
+		}	
 		
-		// if the user has 'group' in the GET parameters, it's time to pass control
+		// if the URL otherwise has 'group' in the GET parameters, it's time to pass control
 		// to printSlidesPage() for editing purposes
 		if (array_key_exists('group', $_GET))
 		{
@@ -248,12 +271,20 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		{
 			if (wp_verify_nonce($_REQUEST['_wpnonce'], 'new-slide-group'))
 			{
-				// add to the list of slide groups
-				
 				// add the new slide group
+				$newSlug = VPMSlider::sanitizeSlideGroupSlug(sanitize_title_with_dashes($_POST['group-name']));
 				
+				$newGroup = new VPMSlideGroup($newSlug, $_POST['group-name']);
+				$newGroup->save();	
+				
+				// add the new slides option for this group
+				add_option('vpm_slider_slides_'.$newSlug, array(), '', 'yes');
+				
+				// redirect to the new edit page for this slide group
+				VPMSlider::uglyJSRedirect('edit-slide-group', $newSlug);
+				die();
 			}
-		}
+		}	
 		
 		?>
 		<script type="text/javascript">
@@ -311,12 +342,19 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			?><h1>This page is not accessible to your user.</h1><?php
 			return;
 		}
-		
-		// get my slug
+
 		$theSlug = VPMSlider::sanitizeSlideGroupSlug($_GET['group']);
 		if (empty($theSlug))
 		{
 			echo '<div class="wrap"><h1>No Slide Group selected.</h1></div>';
+			return;
+		}
+		
+		// get the name data for this slide group based on its slug
+		$slideGroup = new VPMSlideGroup($_GET['group']);
+		if (!$slideGroup->load())
+		{
+			echo '<div class="wrap"><h1>Could not load the selected Slide Group. Does it exist?</h1></div>';
 			return;
 		}
 		
@@ -331,7 +369,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 		<div class="wrap">
 		
-		<div id="icon-plugins" class="icon32"><br /></div><h2>Slides <a href="#" id="new-slide-button" class="add-new-h2">Add New</a></h2>
+		<div id="icon-plugins" class="icon32"><br /></div><h2>&lsquo;<?php echo esc_html($slideGroup->name);?>&rsquo; Slides <a href="#" id="new-slide-button" class="add-new-h2">Add New</a></h2>
 		
 		<noscript>
 		<h3>Sorry, this interface requires JavaScript to function.</h3>
@@ -615,8 +653,8 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		When WordPress is enqueueing the styles, inject our slider CSS in.
 	*/
 	
-		$origFile = plugin_dir_path( __FILE__ ) . 'slider_edit.css';
-		$origUrl = plugin_dir_url( __FILE__ ) . 'slider_edit.css';
+		$origFile = plugin_dir_path( __FILE__ ) . 'css/slider_edit.css';
+		$origUrl = plugin_dir_url( __FILE__ ) . 'css/slider_edit.css';
 		
 		$templateFile = plugin_dir_path( __FILE__ ) . 'templates/slider.css';
 		$templateUrl = plugin_dir_url( __FILE__ ) . 'templates/slider.css';
@@ -661,7 +699,7 @@ class VPMSliderWidget extends WP_Widget {
 	
 	public function widget($args, $instance) {
 	
-		$slides = get_option('vpm_slider_slides');
+		$slides = get_option('vpm_slider_slides_' . VPMSlider::sanitizeSlideGroupSlug($instance['groupSlug']));
 		
 		if (is_array($slides) && count($slides) > 0)
 		{
@@ -698,7 +736,49 @@ class VPMSliderWidget extends WP_Widget {
 	public function form($instance)
 	{
 	
-	?><p><input type="button" class="button-secondary" onclick="window.location.href = '<?php echo admin_url();?>admin.php?page=vpm-slider';" value="Configure Slides" /></p><?php
+	?><p>Choose a slide group for this widget to show:</p>
+	
+	<select id="<?php echo $this->get_field_id('groupSlug');?>" name="<?php echo $this->get_field_name('groupSlug');?>">
+		<option value="**INVALID**">--------------------</option>
+		<?php
+		
+			// find all the slide groups and offer them for the widget
+			
+			$slideGroups = get_option('vpm_slider_slide_groups');
+			
+			if (is_array($slideGroups) && count($slideGroups) > 0)
+			{
+				foreach($slideGroups as $group)
+				{
+					?><option value="<?php echo esc_attr($group->slug);?>"
+						<?php if (array_key_exists('groupSlug', $instance)):
+							echo ($group->slug == $instance['groupSlug']) ? ' selected="selected"' : '';
+						endif; ?>
+					><?php echo esc_html($group->name);?></option><?php
+				}
+			
+			}				
+		
+		?>		
+	</select>
+	<?php
+	
+	}
+	
+	public function update($newInstance, $oldInstance)
+	{
+	/*
+		Update the widget's settings with the new selected slide group.
+	*/
+	
+		if ($newInstance['groupSlug'] != '**INVALID**')
+		{
+			
+			return array('groupSlug' => VPMSlider::sanitizeSlideGroupSlug($newInstance['groupSlug']));
+		}
+		else {
+			return false;
+		}
 	
 	}
 
