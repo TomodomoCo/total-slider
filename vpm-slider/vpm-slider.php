@@ -169,22 +169,16 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			wp_enqueue_script('jquery-ui-draggable');	
 			wp_enqueue_script('jquery-ui-droppable');	
 			wp_enqueue_script('jquery-ui-sortable');		
-			
-			wp_register_style('vpm-slider-interface-styles', plugin_dir_url( __FILE__ ).'interface.css');
-			wp_enqueue_style('vpm-slider-interface-styles');			
 
-			if (array_key_exists('group', $_GET))
-			{
-				wp_register_script('vpm-slider-interface', plugin_dir_url( __FILE__ ).'interface.js');
-				wp_enqueue_script('vpm-slider-interface');	
-				
-				
-				// load the rotator css
-				//TODO templating
-				wp_register_style('vpm-slider-rotator-styles', plugin_dir_url( __FILE__ ).'slider_edit.css');
-				wp_enqueue_style('vpm-slider-rotator-styles');
-			}
-		
+			wp_register_script('vpm-slider-interface', plugin_dir_url( __FILE__ ).'js/interface.js');
+			wp_enqueue_script('vpm-slider-interface');	
+			
+			// load the rotator css
+			wp_register_style('vpm-slider-rotator-styles', plugin_dir_url( __FILE__ ).'css/slider_edit.css');
+			wp_enqueue_style('vpm-slider-rotator-styles');
+			
+			wp_register_style('vpm-slider-interface-styles', plugin_dir_url( __FILE__ ).'css/interface.css');
+			wp_enqueue_style('vpm-slider-interface-styles');	
 		}
 	
 		/* Top-level menu page */
@@ -383,7 +377,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 		<div id="message-area"></div>
 		
-		<div id="loading-area"><img src="<?php echo plugin_dir_url( __FILE__ ).'loadingAnimation.gif';?>" alt="Loading" width="208" height="13" /></div>
+		<div id="loading-area"><img src="<?php echo plugin_dir_url( __FILE__ ).'img/loadingAnimation.gif';?>" /></div>
 		
 		<hr />
 		
