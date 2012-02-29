@@ -251,6 +251,9 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 				$newGroup = new VPMSlideGroup($_GET['group']);
 				$newGroup->delete();
 				
+				// remove the option
+				delete_option('vpm_slider_slides_'. VPMSlider::sanitizeSlideGroupSlug($_GET['group']));
+				
 				// redirect back to the admin vpm slider root page
 				VPMSlider::uglyJSRedirect('root');
 				die();
