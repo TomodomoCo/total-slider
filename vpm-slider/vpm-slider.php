@@ -185,7 +185,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			wp_enqueue_style('vpm-slider-rotator-styles');
 			
 			wp_register_style('vpm-slider-interface-styles', plugin_dir_url( __FILE__ ).'css/interface.css');
-			wp_enqueue_style('vpm-slider-interface-styles');	
+			wp_enqueue_style('vpm-slider-interface-styles');
 		}
 	
 		/* Top-level menu page */
@@ -196,7 +196,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			VPM_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
 			'vpm-slider',									/* menu slug */
 			array('VPMSlider', 'printSlideGroupsPage'),		/* callback to print the page to output */
-			null,											/* icon file */
+			plugin_dir_url( __FILE__ ).'img/vpm-slider-icon-16.png',/* icon file */
 			null 											/* menu position number */
 		);
 		
@@ -306,7 +306,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		</script>
 		<div class="wrap">
 		
-		<div id="icon-plugins" class="icon32"><br /></div><h2>Slide Groups <a href="#" id="new-slide-group-button" class="add-new-h2">Add New</a></h2>
+		<div id="icon-vpm-slides" class="icon32"><br /></div><h2>Slide Groups <a href="#" id="new-slide-group-button" class="add-new-h2">Add New</a></h2>
 
 		<div id="new-slide-group">
 			<form name="new-slide-group-form" id="new-slide-group-form" method="post" action="admin.php?page=vpm-slider&action=new_slide_group">
@@ -372,7 +372,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 		<div class="wrap">
 		
-		<div id="icon-plugins" class="icon32"><br /></div><h2>&lsquo;<?php echo esc_html($slideGroup->name);?>&rsquo; Slides <a href="#" id="new-slide-button" class="add-new-h2">Add New</a></h2>
+		<div id="icon-vpm-slides" class="icon32"><br /></div><h2>&lsquo;<?php echo esc_html($slideGroup->name);?>&rsquo; Slides <a href="#" id="new-slide-button" class="add-new-h2">Add New</a></h2>
 		
 		<noscript>
 		<h3>Sorry, this interface requires JavaScript to function.</h3>
@@ -578,7 +578,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		}
 	
 		?><div class="wrap">
-		<div id="icon-plugins" class="icon32"><br /></div><h2>Settings</h2>
+		<div id="icon-vpm-slides" class="icon32" style="background:transparent url(<?php echo plugin_dir_url( __FILE__ );?>img/vpm-slider-icon-32.png?ver=20120229) no-repeat;"><br /></div><h2>Settings</h2>
 		
 		
 		<?php if ($success): ?>
