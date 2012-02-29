@@ -1,7 +1,7 @@
 VPM Slider
 ==========
 
-This is a WordPress plugin to allows the user to create, edit and remove ‘slides’ with text and images, for example, a ‘slider’ widget to display featured items on a website homepage.
+This is a WordPress plugin to allow the user to create, edit and remove ‘slides’ with text and images. For example, you may want a slideshow to advertise some of your featured content on your homepage.
 
 **NOTE:** VPM Slider is being developed ‘in the open’, but may not be quite ready for primetime yet. There are new features to be added, bugs to be fixed, and so on. Consider this alpha quality until we make an official announcement!
 
