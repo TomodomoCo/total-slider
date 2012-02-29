@@ -274,18 +274,22 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		{
 			if (wp_verify_nonce($_REQUEST['_wpnonce'], 'new-slide-group'))
 			{
-				// add the new slide group
-				$newSlug = VPMSlider::sanitizeSlideGroupSlug(sanitize_title_with_dashes($_POST['group-name']));
-				
-				$newGroup = new VPMSlideGroup($newSlug, $_POST['group-name']);
-				$newGroup->save();	
-				
-				// add the new slides option for this group
-				add_option('vpm_slider_slides_'.$newSlug, array(), '', 'yes');
-				
-				// redirect to the new edit page for this slide group
-				VPMSlider::uglyJSRedirect('edit-slide-group', $newSlug);
-				die();
+			
+				if (!empty($_POST['group-name']))
+				{				
+					// add the new slide group
+					$newSlug = VPMSlider::sanitizeSlideGroupSlug(sanitize_title_with_dashes($_POST['group-name']));
+					
+					$newGroup = new VPMSlideGroup($newSlug, $_POST['group-name']);
+					$newGroup->save();	
+					
+					// add the new slides option for this group
+					add_option('vpm_slider_slides_'.$newSlug, array(), '', 'yes');
+					
+					// redirect to the new edit page for this slide group
+					VPMSlider::uglyJSRedirect('edit-slide-group', $newSlug);
+					die();
+				}
 			}
 		}	
 		
