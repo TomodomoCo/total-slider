@@ -692,56 +692,84 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 };
 
 
-class VPMSliderWidget extends WP_Widget {
+class VPMSliderWidget extends WP_Widget {	
+/*
+	The VPM Slider Widget is responsible for allowing the user to place the slider in any
+	‘sidebar’ defined in their theme and for invoking the Slider theme file for displaying
+	the slides.
 	
+	This widget class also defines a minimalist API for the Slider theme files to use to display
+	the slides.
+*/
+
 	/*
-		Actual widget class, used only for the display
-		of saved data in the theme file.
+		These hold the data for the current slide we are working with.
+		
+		The theme file accesses these indirectly, through the the_… and get_the_… functions.
 	*/
+	private $slides; // stores all of the slides in this group
+	private $instance; // has_slides needs access to the instance data
+	protected $slide_title;
+	protected $slide_description;
+	protected $slide_background_url;
+	protected $slide_link;
+	protected $slide_x;
+	protected $slide_y;
+	protected $slide_identifier;
+	protected $slider_iteration = 0;
 	
 	
 	public function __construct(){
+	/*
+		Constructor, merely calls the WP_Widget constructor.
+	*/
 		parent::__construct(false, 'VPM Slider');
 	}
 	
 	public function widget($args, $instance) {
-	
-		$slides = get_option('vpm_slider_slides_' . VPMSlider::sanitizeSlideGroupSlug($instance['groupSlug']));
+	/*
+		The widget function is responsible for rendering the widget's output. In the case
+		of VPM Slider Widget, this will invoke the Slider theme file to output the slides
+		to the desired widget area.
+	*/
 		
-		if (is_array($slides) && count($slides) > 0)
+		if (!$this->instance)
 		{
-		?><ul id="homepage_slider">
+			// prepare instance data for has_slides()
+			$this->instance = $instance;
+		}
 		
-		<?php
-		foreach($slides as $slide)
-		{			
-		?>
-<li style="background-image: url(<?php echo esc_url($slide['background']); ?>);">
-		<a href="<?php echo esc_url($slide['link']); ?>">
-			<div class="desc" style="top: <?php echo (int) $slide['title_pos_y'];?>px; left: <?php echo (int) $slide['title_pos_x']; ?>px;">
-				<h2><?php echo esc_html($slide['title']); ?></h2>
-				<div class="png_fix">
-					<p><?php echo esc_html($slide['description']);?></p>
-				</div>
-			</div>
-		</a>
-	</li>	
-		<?php	
-	
-		} // end foreach
+		$s = &$this; // $s is used by the theme to call our functions to actually display the data
+		
+		// look for a theme file for vpm-slider in the current active theme
+		$themePath = get_theme_root();
+		
+		if ( @file_exists($themePath . '/vpm-slider.php' ) )
+		{
+			require_once($themePath . '/vpm-slider.php' );
+		}
+		else
+		{ // if not, use our default
+			require_once( dirname(__FILE__) . '/slider_default_theme.php' );
+		}	
+		
+		
 	?>
 
 
 </ul>	
 	<?php
-		} // end if
-		else {
-			// to display if there are none
-		}
-	} //end function
+
+	}
 	
 	public function form($instance)
 	{
+	/*
+		The form function defines the settings form for the widget.
+		
+		In our case, we will allow the user to pick which Slide Group this widget is responsible
+		for displaying.
+	*/
 	
 	?><p>Choose a slide group for this widget to show:</p>
 	
@@ -775,7 +803,7 @@ class VPMSliderWidget extends WP_Widget {
 	public function update($newInstance, $oldInstance)
 	{
 	/*
-		Update the widget's settings with the new selected slide group.
+		Update the widget's settings with the new selected slide group from the form()
 	*/
 	
 		if ($newInstance['groupSlug'] != '**INVALID**')
@@ -786,6 +814,238 @@ class VPMSliderWidget extends WP_Widget {
 		else {
 			return false;
 		}
+	
+	}
+	
+	
+	public function has_slides()
+	{
+	/*
+		Behaves as an iterator for the purposes of slider theme files. It loads
+		in the next slide, readying the other functions below for returning
+		the data from this particular slide to the theme.
+		
+		
+	*/
+	
+		if (!$this->instance)
+		{
+			throw new Exception("The widget's instance data, containing information about which slide group to show, could not be loaded.");
+			return false;
+		}
+	
+		if (!is_array($this->slides) || count($this->slides) < 1)
+		{
+			$this->slides = get_option('vpm_slider_slides_' . VPMSlider::sanitizeSlideGroupSlug($this->instance['groupSlug']));		
+		}
+		
+		// on which slide should we work? does it exist?
+		if (count($this->slides) < $this->slider_iteration + 1)
+		{
+			return false; // we are at the end of the slides
+		}
+		
+		// otherwise, load in the data
+		if (!empty ($this->slides[$this->slider_iteration]['title']) )
+		{
+			$this->slide_title = $this->slides[$this->slider_iteration]['title'];
+		}
+		if (!empty ($this->slides[$this->slider_iteration]['description']) )
+		{
+			$this->slide_description = $this->slides[$this->slider_iteration]['description'];
+		}
+		
+		if (!empty ($this->slides[$this->slider_iteration]['id']) )
+		{
+			$this->slide_identifier = $this->slides[$this->slider_iteration]['id'];
+		}
+		
+		// the background may be blank!
+		if (!empty ($this->slides[$this->slider_iteration]['background']) )
+		{
+			$this->slide_background_url = $this->slides[$this->slider_iteration]['background'];
+		}
+		else {
+			$this->slide_background_url = '';
+		}
+		
+		// the link may be blank!
+		if (!empty ($this->slides[$this->slider_iteration]['link']) )
+		{
+			$this->slide_link = $this->slides[$this->slider_iteration]['link'];
+		}
+		else {
+			$this->slide_link = '';
+		}
+		
+		// get X and Y coords
+		if (!empty ($this->slides[$this->slider_iteration]['title_pos_x']) )
+		{
+			$this->slide_x = $this->slides[$this->slider_iteration]['title_pos_x'];
+		}
+		if (!empty ($this->slides[$this->slider_iteration]['title_pos_y']) )
+		{
+			$this->slide_y = $this->slides[$this->slider_iteration]['title_pos_y'];
+		}
+		
+		
+		
+		// the data is ready, bump the iterator and return true
+		$this->slider_iteration++;
+		return true;
+		
+		
+	}
+	
+	public function the_title()
+	{
+	/*
+		Print the slide title to output, having sanitised it.
+	*/
+	
+		echo $this->get_the_title();
+	
+	}
+	
+	public function get_the_title()
+	{
+	/*
+		Return the slide title, having sanitised it.
+	*/
+	
+		return esc_html( apply_filters( 'vpm-slider_slide_title', $this->slide_title ) );
+	
+	}
+	
+	public function the_description()
+	{
+	/*
+		Print the slide description to output, having sanitised it.
+	*/
+	
+		echo $this->get_the_description();
+	
+	}
+	
+	public function get_the_description()
+	{
+	/*
+		Return the slide description, having sanitised it.
+	*/
+	
+		return esc_html( apply_filters ( 'vpm-slider_slide_description', $this->slide_description ) );
+	
+	}
+	
+	public function the_background_url()
+	{
+	/*
+		Print the background URL to output, having sanitised it.
+	*/
+	
+		echo $this->get_the_background_url();
+	
+	}
+	
+	public function get_the_background_url()
+	{
+	/*
+		Return the background URL, having sanitisied it.
+	*/
+		return esc_url( apply_filters ('vpm-slider_slide_background_url', $this->slide_background_url) );
+	
+	}
+	
+	public function the_link()
+	{
+	/*
+		Print the slide link URL to output, having sanitised it.
+	*/
+	
+		echo $this->get_the_link();
+	
+	}
+	
+	public function get_the_link()
+	{
+	/*
+		Return the slide link URL, having sanitised it.
+	*/
+	
+		return esc_url ( apply_filters('vpm-slider_slide_link', $this->slide_link) );
+	
+	}
+	
+	public function the_x()
+	{
+	/*
+		Print the X coordinate to the output, having sanitised it.
+	*/
+	
+		echo $this->get_the_x();
+	
+	}
+	
+	public function get_the_x()
+	{
+	/*
+		Return the X coordinate, having sanitised it.
+	*/
+	
+		return intval ( apply_filters( 'vpm-slider_slide_x', $this->slide_x ), 10 /* decimal */ );
+	
+	}
+	
+	public function the_y()
+	{
+	/*
+		Print the Y coordinate to the output, having sanitised it.
+	*/
+	
+		echo $this->get_the_y();
+	
+	}
+	
+	public function get_the_y()
+	{
+	/*
+		Return the Y coordinate, having sanitised it.
+	*/
+	
+		return intval ( apply_filters( 'vpm-slider_slide_y', $this->slide_y ), 10 /* decimal */ );
+	
+	}
+	
+	public function the_identifier()
+	{
+	/*
+		Print the slide identifier to output, having sanitised it.
+	*/
+	
+		echo $this->get_the_identifier();
+		
+	}
+	
+	public function get_the_identifier()
+	{
+	/*
+		Return the slide identifier to output, having sanitised it.
+	*/
+	
+		return esc_attr( apply_filters('vpm-slider_slide_identifier', $this->slide_identifier) );
+	
+	}
+	
+	public function iteration()
+	{
+	/*
+		Return the iteration number. How many slides have we been through?
+	*/
+	
+		return intval ( $this->slider_iteration - 1 );
+		// has_slides() always bumps the iteration ready for the next run, but we
+		// are still running for the theme's purposes on the previous iteration.
+		// Hence, returning the iteration - 1.
 	
 	}
 
