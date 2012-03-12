@@ -22,7 +22,7 @@ var newShouldShuffle = false;
 var deleteCaller = false;
 
 /* language */
-var switchEditWouldLoseChanges = 'You are still editing the current slide. Switching to a different slide will lose your changes.\n\nDo you still want to switch slides?';
+var switchEditWouldLoseChanges = 'You are still editing the current slide. Switching to a different slide will lose your changes.\n\nDo you want to lose your changes?';
 var leavePageWouldLoseChanges = 'You are still editing the current slide. Leaving this page will lose your changes.';
 	/* note:
 		This message may or may not be shown. This is browser-dependent. All we can do in some cases is throw a generic
@@ -179,7 +179,7 @@ jQuery(document).ready(function() {
 		// clear the form
 		jQuery('#edit-slide-title').val('');
 		jQuery('#edit-slide-description').val('');
-		jQuery('#edit-slide-image-url').html('');
+		jQuery('#edit-slide-image-url').text('');
 		jQuery('#edit-slide-link').val('');
 		jQuery('#slide-preview-title').html('untitled');
 		jQuery('#slide-preview-description').html('');
@@ -237,7 +237,7 @@ jQuery(document).ready(function() {
 			jQuery(object).addClass('slidesort-selected');
 			
 			// save the original title in case of cancel
-			originalTitle = jQuery('#' + jQuery(object).attr('id') + '_text').html();
+			originalTitle = jQuery('#' + jQuery(object).attr('id') + '_text').text();
 			
 			// get the data
 			jQuery.ajax({
@@ -264,10 +264,10 @@ jQuery(document).ready(function() {
 						// fill the fields
 						jQuery('#edit-slide-title').val(result.title);
 						jQuery('#edit-slide-description').val(result.description);
-						jQuery('#edit-slide-image-url').html(result.background);
+						jQuery('#edit-slide-image-url').text(result.background);
 						jQuery('#edit-slide-link').val(result.link);
-						jQuery('#slide-preview-title').html(result.title);
-						jQuery('#slide-preview-description').html(result.description);
+						jQuery('#slide-preview-title').text(result.title);
+						jQuery('#slide-preview-description').text(result.description);
 						
 						// put the background image on
 						jQuery('#preview-area').css('background', 'url(' + result.background + ')');
@@ -326,35 +326,23 @@ jQuery(document).ready(function() {
 	
 	/* update slide title as typed */
 	jQuery('#edit-slide-title').keyup(function(e) {
-		jQuery('#slide-preview-title').html(jQuery(this).val());
+		jQuery('#slide-preview-title').text(jQuery(this).val());
 		if (jQuery(this).val() == "")
 		{
-			jQuery('#' + editingSlideSortButton + '_text').html('untitled');
+			jQuery('#' + editingSlideSortButton + '_text').text('untitled');
 		}
 		else {
-			jQuery('#' + editingSlideSortButton + '_text').html(jQuery(this).val());
+			jQuery('#' + editingSlideSortButton + '_text').text(jQuery(this).val());
 		}
 	});
 	
 	/* update slide description as typed */
 	jQuery('#edit-slide-description').keyup(function(e) {
-		jQuery('#slide-preview-description').html(jQuery(this).val());
+		jQuery('#slide-preview-description').text(jQuery(this).val());
 	});
 	
 	/* Make the preview slide in the edit area draggable */
 	jQuery('#slide-preview').draggable({ containment: '#preview-area' } );
-	
-	/* Test button for XY data */
-	/*jQuery('#show-xy-test').click(function() {
-	
-		var calcBoxOffsetLeft = jQuery('#slide-preview').offset().left - jQuery('#preview-area').offset().left;
-		var calcBoxOffsetTop  = jQuery('#slide-preview').offset().top - jQuery('#preview-area').offset().top;
-	
-		var xydata = 'slidepreview left is ' + jQuery('#slide-preview').offset().left + "\n" + 'slidepreview top is ' + jQuery('#slide-preview').offset().top + "\n" + 'previewarea left is ' + jQuery('#preview-area').offset().left + "\n" + 'previewareatop is ' + jQuery('#preview-area').offset().top + "\ncalculated left offset is " + calcBoxOffsetLeft + "\ncalculated top offset is " + calcBoxOffsetTop;
-		
-		alert(xydata);
-	
-	});*/
 	
 	/* Trigger the upload thickbox for the background image */
 	
@@ -371,7 +359,7 @@ jQuery(document).ready(function() {
 	window.send_to_editor = function(html) {
 	
 		imgurl = jQuery('img',html).attr('src');
-		jQuery('#edit-slide-image-url').html(imgurl);
+		jQuery('#edit-slide-image-url').text(imgurl);
 		
 		// update the preview to show this background
 		jQuery('#preview-area').css('background', 'url(' + imgurl + ')');
@@ -435,7 +423,7 @@ jQuery(document).ready(function() {
 				data: {
 					'title': jQuery('#edit-slide-title').val(),
 					'description': jQuery('#edit-slide-description').val(),
-					'background': jQuery('#edit-slide-image-url').html(),
+					'background': jQuery('#edit-slide-image-url').text(),
 					'link': jQuery('#edit-slide-link').val(),
 					'title_pos_x': calcBoxOffsetLeft,
 					'title_pos_y': calcBoxOffsetTop						
@@ -510,7 +498,7 @@ jQuery(document).ready(function() {
 					'id': jQuery('#' + editingSlideSortButton).attr('id').substr( jQuery('#' + editingSlideSortButton).attr('id').indexOf('slidesort_')+10, jQuery('#' + editingSlideSortButton).attr('id').length ),
 					'title': jQuery('#edit-slide-title').val(),
 					'description': jQuery('#edit-slide-description').val(),
-					'background': jQuery('#edit-slide-image-url').html(),
+					'background': jQuery('#edit-slide-image-url').text(),
 					'link': jQuery('#edit-slide-link').val(),
 					'title_pos_x': calcBoxOffsetLeft,
 					'title_pos_y': calcBoxOffsetTop									
@@ -592,7 +580,7 @@ jQuery(document).ready(function() {
 				jQuery('#edit-area').hide('slow');
 				jQuery().clearForm();				
 				
-				jQuery('#' + editingSlideSortButton + '_text').html(originalTitle); // restore pre-edit title
+				jQuery('#' + editingSlideSortButton + '_text').text(originalTitle); // restore pre-edit title
 				jQuery('#' + editingSlideSortButton).removeClass('slidesort-selected'); // unselect
 				
 				isEditing = false;

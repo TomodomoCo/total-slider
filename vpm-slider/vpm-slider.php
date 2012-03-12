@@ -204,8 +204,8 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		add_submenu_page(
 		
 			'vpm-slider',									/* parent slug */
-			'Slide Groups',										/* title of page */
-			'Slide Groups',										/* title to use in menu */
+			'Slide Groups',									/* title of page */
+			'Slide Groups',									/* title to use in menu */
 			VPM_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
 			'vpm-slider',									/* menu slug */
 			array('VPMSlider', 'printSlideGroupsPage')		/* callback to print the page to output */
@@ -311,6 +311,11 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		<div class="wrap">
 		
 		<div id="icon-vpm-slides" class="icon32"><br /></div><h2>Slide Groups <a href="#" id="new-slide-group-button" class="add-new-h2">Add New</a></h2>
+		
+		<noscript>
+		<h3>Sorry, this interface requires JavaScript to function.</h3>
+		<p>You will need to enable JavaScript for this page before many of the controls below will work.</p>
+		</noscript>
 
 		<div id="new-slide-group">
 			<form name="new-slide-group-form" id="new-slide-group-form" method="post" action="admin.php?page=vpm-slider&action=new_slide_group">
@@ -330,11 +335,19 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 
 
 		<?php require_once( dirname( __FILE__ ) . '/slide_groups_table.php');
-		$table = new SlideGroupsTable();
-		$table->prepare_items();
+		$table = new SlideGroupsTable();		
+		$table->prepare_items();		
 		$table->display();
-		 ?>
-
+		
+				
+		if ($table->getTotalItems() < 1)
+		{
+			?><div class="slidesort-add-hint">Click &lsquo;Add New&rsquo; to create a new group of slides.</div><?php
+		}
+		?>
+		
+		<?php VPMSlider::printPluginFooter(); ?>
+		
 		</div><!--wrap-->
 		<?php
 	}
@@ -417,6 +430,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		}
 		
 		?>
+	
 		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>Click &lsquo;Add New&rsquo; to create a slide.</div>
 		</ul>
 		
@@ -470,6 +484,9 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 		
 		</form>
+		
+		<?php VPMSlider::printPluginFooter(); ?>
+		
 		</div><?php
 	
 	}
@@ -641,7 +658,23 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		</p>
 		
 		</form>
+		<?php VPMSlider::printPluginFooter(); ?>
 		</div><?php
+	
+	}
+	
+	public function printPluginFooter()
+	{
+	/*
+		Print out the plugin footer, including the PayPal donation button.
+	*/	
+	
+		
+	
+		?>
+		<p style="color:#777;font-size:12px;border-top:#777 dotted 1px; margin-top:50px; padding-top:9px">
+		<strong><a href="">VPM Slider</a> by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>.</strong> If you find this plugin useful, or are using it commercially, please consider
+		<a href="">making a financial contribution</a>. Thank you.</p><?php
 	
 	}
 	
@@ -657,7 +690,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	*/
 	
 		// look for a template file for vpm-slider in the current active theme
-		$themePath = get_theme_root();
+		$themePath = get_stylesheet_directory();
 		
 		if (
 			@file_exists($themePath . '/vpm-slider-templates' ) 
@@ -671,7 +704,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			
 			// enqueue the user's custom CSS template
 			wp_register_style(
-				'vpm-slider-frontend	',																	/* handle */
+				'vpm-slider-frontend',																		/* handle */
 				$themeURL . '/vpm-slider-templates/vpm-slider-template.css',								/* src */
 				array(),																					/* deps */
 				date("Ymd", @filemtime($themePath . '/vpm-slider-templates/vpm-slider-template.css') ) , 	/* ver */
@@ -833,7 +866,7 @@ class VPMSliderWidget extends WP_Widget {
 		$s = &$this; // $s is used by the theme to call our functions to actually display the data
 		
 		// look for a template file for vpm-slider in the current active theme
-		$themePath = get_theme_root();
+		$themePath = get_stylesheet_directory();
 		
 		if (
 			@file_exists($themePath . '/vpm-slider-templates' ) 
@@ -841,7 +874,7 @@ class VPMSliderWidget extends WP_Widget {
 			&& @file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.php')
 		)
 		{
-			require_once($themePath . '/vpm-slider-template.php' );
+			require_once($themePath . '/vpm-slider-templates/vpm-slider-template.php' );
 			//TODO enqueue CSS and JavaScript
 		}
 		else
@@ -1152,6 +1185,7 @@ register_activation_hook(__FILE__, array('VPMSlider', 'createSlidesOptionField')
 add_action('admin_menu', array('VPMSlider', 'addAdminSubMenu'));
 add_action('widgets_init', array('VPMSlider', 'registerAsWidget'));
 add_action('admin_init', array('VPMSlider', 'passControlToAjaxHandler'));
+add_action('admin_footer-vpm-slider', array('VPMSlider', 'printPluginFooter'));
 
 add_action('wp_enqueue_scripts', array('VPMSlider', 'enqueueSliderFrontend'));
 

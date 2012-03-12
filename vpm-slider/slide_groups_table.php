@@ -91,7 +91,7 @@ class SlideGroupsTable extends WP_List_Table {
 		Gather a count of this slide group for the column.
 	*/
 		
-		return count(get_option('vpm_slides_' . esc_attr($item->slug) ));		
+		return count(get_option('vpm_slider_slides_' . esc_attr($item->slug) ));		
 	
 	}
 	
