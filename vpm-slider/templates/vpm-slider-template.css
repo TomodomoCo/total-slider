@@ -13,14 +13,14 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
-#homepage_slider{
+#vpm-slider{
 	width:964px;
 	height:350px;
 	overflow:hidden;
-	margin:0 auto
+	/*margin:0 auto*/
 }
 
-#homepage_slider li{
+#vpm-slider li{
 
 
 width:964px !important;height:350px !important;
@@ -33,7 +33,7 @@ background-color:#DDD;
 border-radius:6px
 }
 
-#homepage_slider li a{
+#vpm-slider li a{
 display:block;
 width:964px;
 height:350px;
@@ -42,7 +42,7 @@ top:0;
 text-decoration:none
 }
 
-#homepage_slider li .desc{
+#vpm-slider li .desc{
 	position:absolute;
 	width:400px;
 	background:url(../img/descbg.png);
@@ -50,16 +50,16 @@ text-decoration:none
 	text-align:left !important
 }
 
-#homepage_slider li .desc div{
+#vpm-slider li .desc div{
 	width:400px;
 	overflow:hidden;
 	position:relative
 }
 
-#homepage_slider li .desc div p{
+#vpm-slider li .desc div p{
 
 font:14px/20px Helvetica, Arial, sans-serif;color:#FFF;text-shadow:0 1px 1px black;margin:0 !important}
 
-#homepage_slider li h2{
+#vpm-slider li h2{
 font:26px Georgia, serif;color:#FFF;text-shadow:0 1px 1px black;padding:3px 0 0 !important;margin:0 0 6px !important
 }

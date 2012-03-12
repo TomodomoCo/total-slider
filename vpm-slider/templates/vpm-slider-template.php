@@ -1,9 +1,9 @@
 <?php
 /********************************************************************************
 
-	VPM Slider Default Theme
+	VPM Slider Default Template
 	
-	The default theme for showing the slides. Used if there is no vpm-slider.php
+	The default template for showing the slides. Used if there is no vpm-slider-templates/vpm-slider-template.php
 	file found in the active theme's directory.
 
 *********************************************************************************/
@@ -25,19 +25,23 @@
 */
 ?>
 
-<ul>
+<ul id="vpm-slider">
 <?php
 
 while ($s->has_slides())
 {
 
-	?><li id="<?php $s->the_identifier();?>">
-		<strong>Title:</strong> <?php $s->the_title(); ?><br />
-		<strong>Description:</strong> <?php $s->the_description(); ?><br />
-		<strong>Background:</strong> <?php $s->the_background_url(); ?><br />
-		<strong>Link:</strong> <?php $s->the_link(); ?><br />
-		<strong>X:</strong> <?php $s->the_x(); ?><br />
-		<strong>Y:</strong> <?php $s->the_y(); ?><br />
+	?><li id="vpm-slider-slide-<?php $s->the_identifier();?>"
+		style="background:url(<?php $s->the_background_url();?>) bottom repeat-x; padding: 0;"
+	>
+		<a href="<?php $s->the_link();?>">
+			<div class="desc" style="top: <?php $s->the_y();?>px; left: <?php $s->the_x();?>px">
+				<h2><?php $s->the_title();?></h2>
+				<div class="png_fix">
+					<p><?php $s->the_description();?></p>
+				</div>
+			</div>
+		</a>
 	</li>
 	<?php
 

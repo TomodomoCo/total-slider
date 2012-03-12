@@ -25,6 +25,7 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
 define('VPM_SLIDER_IN_FUNCTIONS', true);
 define('VPM_SLIDER_REQUIRED_CAPABILITY', 'vpm_slider_manage_slides');
 define('VPM_SLIDER_MAX_SLIDE_GROUPS', 24);
@@ -66,7 +67,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 	public function createSlidesOptionField() {
 	/*
-		Upon plugin activation, creates the vpm_homepage_slides option
+		Upon plugin activation, creates the vpm_slider_slide_groups option
 		in wp_options, if it does not already exist.
 	*/
 	
@@ -180,9 +181,8 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			wp_register_script('vpm-slider-interface', plugin_dir_url( __FILE__ ).'js/interface.js');
 			wp_enqueue_script('vpm-slider-interface');	
 			
-			// load the rotator css
-			wp_register_style('vpm-slider-rotator-styles', plugin_dir_url( __FILE__ ).'css/slider_edit.css');
-			wp_enqueue_style('vpm-slider-rotator-styles');
+			// enqueue the frontend so that the interface will be ready
+			VPMSlider::enqueueSliderFrontend('backend');
 			
 			wp_register_style('vpm-slider-interface-styles', plugin_dir_url( __FILE__ ).'css/interface.css');
 			wp_enqueue_style('vpm-slider-interface-styles');
@@ -383,7 +383,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		<p>You will need to enable JavaScript for this page before any of the controls below will work.</p>
 		</noscript>
 		
-		<form name="homepage-slides">
+		<form name="vpm-the-slides">
 				
 		<!--sortable slides-->
 		<ul id="slidesort">
@@ -428,16 +428,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 		<div id="edit-area">
 		
-			<!--<div id="preview-area">
-			
-				<div id="slide-preview">
-				<h2 id="slide-preview-title">Slide preview</h2>
-				<p id="slide-preview-description">Class Aptent Taciti Sociosqu Ad Litora Torquent Per Conubia Nostra, Per Inceptos.</p>
-				</div>
-			
-			</div>-->
-		
-			<ul id="homepage_slider">
+			<ul id="vpm-slider">
 			
 				<li id="preview-area">
 				
@@ -654,27 +645,127 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 	}
 	
-	public function enqueueFrontendCSS()
+	public function enqueueSliderFrontend($context = 'frontend')
 	{
 	/*
-		When WordPress is enqueueing the styles, inject our slider CSS in.
+		When WordPress is enqueueing the styles, inject our slider CSS and JavaScript in.
+		Use the default template if not available in the active theme, or use the active theme's
+		VPM Slider templates if they do indeed exist.
+		
+		If $context is 'backend', we will load the CSS only and not the JS.
+		
 	*/
 	
-		$origFile = plugin_dir_path( __FILE__ ) . 'css/slider_edit.css';
-		$origUrl = plugin_dir_url( __FILE__ ) . 'css/slider_edit.css';
+		// look for a template file for vpm-slider in the current active theme
+		$themePath = get_theme_root();
 		
-		$templateFile = plugin_dir_path( __FILE__ ) . 'templates/slider.css';
-		$templateUrl = plugin_dir_url( __FILE__ ) . 'templates/slider.css';
+		if (
+			@file_exists($themePath . '/vpm-slider-templates' ) 
+			&& @is_dir($themePath . '/vpm-slider-templates' )
+			&& @file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.css')
+		)
+		{
 		
-		if (@file_exists($templateFile))
-		{
-			wp_register_style('vpm-slider-frontend', $templateUrl, array(), '20120214', 'all');
+			// determine theme URL
+			$themeURL = get_stylesheet_directory_uri(); // get 'stylesheet' not 'template' will support child themes
+			
+			// enqueue the user's custom CSS template
+			wp_register_style(
+				'vpm-slider-frontend	',																	/* handle */
+				$themeURL . '/vpm-slider-templates/vpm-slider-template.css',								/* src */
+				array(),																					/* deps */
+				date("Ymd", @filemtime($themePath . '/vpm-slider-templates/vpm-slider-template.css') ) , 	/* ver */
+				'all'																						/* media */
+			);
+			
 			wp_enqueue_style('vpm-slider-frontend');
-		}		
-		else if (@file_exists($origFile))
-		{
-			wp_register_style('vpm-slider-frontend', $origUrl, array(), '20120214', 'all');
+			
+			if ($context != 'backend')
+			{
+				// is there a custom JS to use?
+				if ( @file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.js') )
+				{
+					
+					// enqueue the user's custom JS template
+					wp_register_script(
+						'vpm-slider-frontend',																		/* handle */
+						$themeURL . '/vpm-slider-templates/vpm-slider-template.js',									/* src */
+						array(),																					/* deps */
+						date("Ymd", @filemtime($themePath . '/vpm-slider-templates/vpm-slider-template.js') ) , 	/* ver */
+						'all'																						/* media */
+					);
+					
+					wp_enqueue_script('vpm-slider-frontend');		
+					
+				}
+				else {
+					// use the default JS				
+					wp_register_script(
+						'vpm-slider-jquery-cycle-lite',															/* handle */
+						plugin_dir_url( __FILE__ ) . 'js/jquery.cycle.lite.js',									/* src */
+						array('jquery'),																		/* deps */
+						date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
+														 '/js/jquery.cycle.lite.js')) , 						/* ver */
+						'all'
+					);
+					
+					wp_enqueue_script('vpm-slider-jquery-cycle-lite');
+					
+					// and the frontend
+					wp_register_script(
+						'vpm-slider-frontend',																/* handle */
+						plugin_dir_url( __FILE__ ) . 'templates/vpm-slider-template.js',					/* src */
+						array('jquery', 'vpm-slider-jquery-cycle-lite'),									/* deps */
+						date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
+														 '/templates/vpm-slider-template.js')) , 			/* ver */
+						'all'
+					);		
+				}
+			}
+		
+		}
+		else {
+			
+			// enqueue our defaults
+			wp_register_style(
+				'vpm-slider-frontend',																		/* handle */
+				plugin_dir_url( __FILE__ ) . 'templates/vpm-slider-template.css',							/* src */
+				array(),																					/* deps */
+				date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
+													 '/templates/vpm-slider-template.css')) , 				/* ver */
+				'all'																						/* media */
+			);
+			
 			wp_enqueue_style('vpm-slider-frontend');
+			
+			if ($context != 'backend')
+			{
+				// also bring in the jquery cycle lite
+				
+				wp_register_script(
+					'vpm-slider-jquery-cycle-lite',															/* handle */
+					plugin_dir_url( __FILE__ ) . 'js/jquery.cycle.lite.js',									/* src */
+					array('jquery'),																		/* deps */
+					date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
+													 '/js/jquery.cycle.lite.js')) , 						/* ver */
+					'all'
+				);
+				
+				wp_enqueue_script('vpm-slider-jquery-cycle-lite');
+				
+				// and the frontend
+				wp_register_script(
+					'vpm-slider-frontend',																/* handle */
+					plugin_dir_url( __FILE__ ) . 'templates/vpm-slider-template.js',					/* src */
+					array('jquery', 'vpm-slider-jquery-cycle-lite'),									/* deps */
+					date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
+													 '/templates/vpm-slider-template.js')) , 			/* ver */
+					'all'
+				);		
+				
+				wp_enqueue_script('vpm-slider-frontend');		
+							
+			}	
 		}
 	
 	}
@@ -695,17 +786,17 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 class VPMSliderWidget extends WP_Widget {	
 /*
 	The VPM Slider Widget is responsible for allowing the user to place the slider in any
-	‘sidebar’ defined in their theme and for invoking the Slider theme file for displaying
+	‘sidebar’ defined in their theme and for invoking the Slider template file for displaying
 	the slides.
 	
-	This widget class also defines a minimalist API for the Slider theme files to use to display
+	This widget class also defines a minimalist API for the Slider template files to use to display
 	the slides.
 */
 
 	/*
 		These hold the data for the current slide we are working with.
 		
-		The theme file accesses these indirectly, through the the_… and get_the_… functions.
+		The template file accesses these indirectly, through the the_… and get_the_… functions.
 	*/
 	private $slides; // stores all of the slides in this group
 	private $instance; // has_slides needs access to the instance data
@@ -729,7 +820,7 @@ class VPMSliderWidget extends WP_Widget {
 	public function widget($args, $instance) {
 	/*
 		The widget function is responsible for rendering the widget's output. In the case
-		of VPM Slider Widget, this will invoke the Slider theme file to output the slides
+		of VPM Slider Widget, this will invoke the Slider template file to output the slides
 		to the desired widget area.
 	*/
 		
@@ -741,16 +832,21 @@ class VPMSliderWidget extends WP_Widget {
 		
 		$s = &$this; // $s is used by the theme to call our functions to actually display the data
 		
-		// look for a theme file for vpm-slider in the current active theme
+		// look for a template file for vpm-slider in the current active theme
 		$themePath = get_theme_root();
 		
-		if ( @file_exists($themePath . '/vpm-slider.php' ) )
+		if (
+			@file_exists($themePath . '/vpm-slider-templates' ) 
+			&& @is_dir($themePath . '/vpm-slider-templates' )
+			&& @file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.php')
+		)
 		{
-			require_once($themePath . '/vpm-slider.php' );
+			require_once($themePath . '/vpm-slider-template.php' );
+			//TODO enqueue CSS and JavaScript
 		}
 		else
 		{ // if not, use our default
-			require_once( dirname(__FILE__) . '/slider_default_theme.php' );
+			require_once( dirname(__FILE__) . '/templates/vpm-slider-template.php' );
 		}	
 		
 		
@@ -821,7 +917,7 @@ class VPMSliderWidget extends WP_Widget {
 	public function has_slides()
 	{
 	/*
-		Behaves as an iterator for the purposes of slider theme files. It loads
+		Behaves as an iterator for the purposes of slider template files. It loads
 		in the next slide, readying the other functions below for returning
 		the data from this particular slide to the theme.
 		
@@ -840,7 +936,7 @@ class VPMSliderWidget extends WP_Widget {
 		}
 		
 		// on which slide should we work? does it exist?
-		if (count($this->slides) < $this->slider_iteration + 1)
+		if (count($this->slides) < $this->slider_iteration + 1) //TODO I am not working right
 		{
 			return false; // we are at the end of the slides
 		}
@@ -1057,6 +1153,6 @@ add_action('admin_menu', array('VPMSlider', 'addAdminSubMenu'));
 add_action('widgets_init', array('VPMSlider', 'registerAsWidget'));
 add_action('admin_init', array('VPMSlider', 'passControlToAjaxHandler'));
 
-add_action('wp_enqueue_scripts', array('VPMSlider', 'enqueueFrontendCSS'));
+add_action('wp_enqueue_scripts', array('VPMSlider', 'enqueueSliderFrontend'));
 
 ?>
