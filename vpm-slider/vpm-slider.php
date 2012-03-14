@@ -462,7 +462,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 				<div class="edit-controls-inputs">
 					<p><label for="edit-slide-title">Title:</label> <input type="text" name="slide-title" id="edit-slide-title" value="" maxlength="64" /></p>
 					<p><label for="edit-slide-description">Description:</label> <input type="text" name="slide-description" id="edit-slide-description" value="" maxlength="255" /></p>
-					<p><label for="edit-slide-image-upload">Background</label>: <span id="edit-slide-image-url"></span> <input id="edit-slide-image" type="hidden" name="slide-image" /><input id="edit-slide-image-upload" type="button" value="Upload image" /></p>
+					<p><label for="edit-slide-image-upload">Background</label>: <span id="edit-slide-image-url"></span> <input id="edit-slide-image" type="hidden" name="slide-image" /><input id="edit-slide-image-upload" type="button" class="button" value="Upload image" /> <input id="edit-slide-image-crop" type="button" class="button" value="Crop" /></p>
 					<p><label for="edit-slide-link">Slide Link:</label> <input type="text" name="slide-link" id="edit-slide-link" value="" maxlength="255" /></p>
 				</div>
 				<div class="edit-controls-save-input">
@@ -808,9 +808,52 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		Register the output to the theme as a widget	
 	*/
 	
-	register_widget('VPMSliderWidget');
+		register_widget('VPMSliderWidget');
 
-}
+	}
+	
+	public function printUploaderJavaScript()
+	{
+	/*
+		Print the JavaScript to inject into the Media Uploader
+	*/
+	
+		if (array_key_exists('vpm-slider-uploader', $_GET) && $_GET['vpm-slider-uploader'] == 'bgimage')
+		{
+	
+		?>
+		<script type="text/javascript">
+		//<![CDATA[
+		// VPM Slider shimming button names and modifying uploader for our purposes
+		jQuery(document).ready(function() {
+		
+			jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align,#media-items .image-size').hide(); // hide unnecessary items
+		
+			jQuery('.savesend .button').each(function() {
+				jQuery(this).attr('value', 'Use as background image');
+			});
+			
+			uploader.bind('FileUploaded', function() {
+				window.setTimeout(function() {
+				
+					jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align,#media-items .image-size').hide(); // hide unnecessary items
+				
+					// rename the main action button
+					jQuery('.savesend .button').each(function() {
+						jQuery(this).attr('value', 'Use as background image');
+					});
+				}, 500); 
+			});
+			
+		});
+		
+		//]]>
+		</script>
+		<?php
+		
+		}
+	
+	}
 
 
 };
@@ -1186,6 +1229,7 @@ add_action('admin_menu', array('VPMSlider', 'addAdminSubMenu'));
 add_action('widgets_init', array('VPMSlider', 'registerAsWidget'));
 add_action('admin_init', array('VPMSlider', 'passControlToAjaxHandler'));
 add_action('admin_footer-vpm-slider', array('VPMSlider', 'printPluginFooter'));
+add_action('admin_head-media-upload-popup', array('VPMSlider', 'printUploaderJavaScript'));
 
 add_action('wp_enqueue_scripts', array('VPMSlider', 'enqueueSliderFrontend'));
 

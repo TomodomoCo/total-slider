@@ -349,10 +349,16 @@ jQuery(document).ready(function() {
 	jQuery('#edit-slide-image-upload').click(function () {		
 		var myTop = jQuery(this).offset();
 
-		tb_show('Upload slide background image', 'media-upload.php?type=image&TB_iframe=true&height=400&width=600');
+		tb_show('Upload slide background image', 'media-upload.php?vpm-slider-uploader=bgimage&type=image&TB_iframe=true&height=400&width=600');
 		
 		return false;
 	
+	});
+	
+	/* Trigger the crop thickbox for the background image */
+	jQuery('#edit-slide-image-crop').click(function () {
+		tb_show('Crop image', 'media.php?action=editattachment');
+		return false;	
 	});
 	
 	/* Uploader has returned from uploading */
