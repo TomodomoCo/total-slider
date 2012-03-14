@@ -829,6 +829,8 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 			jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align,#media-items .image-size').hide(); // hide unnecessary items
 		
+			jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;">Choose &lsquo;Edit Image&rsquo; and crop to 964x350 for best results.</p>');//TODO dynamic size, extract from active template
+		
 			jQuery('.savesend .button').each(function() {
 				jQuery(this).attr('value', 'Use as background image');
 			});
@@ -837,6 +839,8 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 				window.setTimeout(function() {
 				
 					jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align,#media-items .image-size').hide(); // hide unnecessary items
+					
+					jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;">Choose &lsquo;Edit Image&rsquo; and crop to 964x350 for best results.</p>');//TODO dynamic size, extract from active template
 				
 					// rename the main action button
 					jQuery('.savesend .button').each(function() {

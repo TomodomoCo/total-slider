@@ -167,8 +167,8 @@ ul#new-slide-button li {
 
 /* Slide Groups Table Column widths */
 .column-slides_count {
-	width:40px !important;
-	max-width: 40px !important;
+	width:60px !important;
+	max-width: 60px !important;
 }
 .column-actions
 {
