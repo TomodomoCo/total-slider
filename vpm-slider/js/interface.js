@@ -355,12 +355,6 @@ jQuery(document).ready(function() {
 	
 	});
 	
-	/* Trigger the crop thickbox for the background image */
-	jQuery('#edit-slide-image-crop').click(function () {
-		tb_show('Crop image', 'media.php?action=editattachment');
-		return false;	
-	});
-	
 	/* Uploader has returned from uploading */
 	window.send_to_editor = function(html) {
 	
@@ -716,6 +710,14 @@ jQuery(document).ready(function() {
 	
 		jQuery().deleteSlide(event, this);
 	
+	});
+	
+	/* help buttons */
+	jQuery('.vpm-slider-help-point').click(function(event)
+	{
+		event.preventDefault();
+		jQuery('#contextual-help-link').click();
+		jQuery('#tab-link-vpm-slider-publishing').children('a:first-child').click();
 	});
 	
 

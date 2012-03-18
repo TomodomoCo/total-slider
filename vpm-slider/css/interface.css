@@ -154,6 +154,11 @@ ul#new-slide-button li {
 
 }
 
+#edit-slide-image-url
+{
+	font-size:7pt;
+}
+
 .slidesort-add-hint {
 	text-align: center;
 	font-size:125%;
@@ -163,6 +168,19 @@ ul#new-slide-button li {
 .slide-delete {
 	text-align:right;
 	padding-left:5px;
+}
+
+.vpm-slider-help-point {
+	background:url(../img/help-icon-wp-16.png) no-repeat;
+	padding-left:24px;
+	margin-top:20px;
+	font-size:12px;
+	vertical-align: middle;
+
+}
+.vpm-slider-help-point a
+{
+	text-decoration:none !important;
 }
 
 /* Slide Groups Table Column widths */

@@ -29,6 +29,10 @@ License: GPL2
 define('VPM_SLIDER_IN_FUNCTIONS', true);
 define('VPM_SLIDER_REQUIRED_CAPABILITY', 'vpm_slider_manage_slides');
 define('VPM_SLIDER_MAX_SLIDE_GROUPS', 24);
+define('VPM_SLIDER_DEFAULT_CROP_WIDTH', 964);
+define('VPM_SLIDER_DEFAULT_CROP_HEIGHT', 350);
+
+
 require_once(dirname(__FILE__).'/slides_backend.php');
 
 class VPMSlider { // not actually a widget -- really a plugin admin panel
@@ -201,7 +205,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		);
 		
 		/* First child, 'Slide Groups' */
-		add_submenu_page(
+		$submenu = add_submenu_page(
 		
 			'vpm-slider',									/* parent slug */
 			'Slide Groups',									/* title of page */
@@ -224,6 +228,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 		);		
 		
+		add_action( 'admin_head-'. $submenu, array('VPMSlider', 'addSlidesHelp') );
 		
 	
 	}
@@ -379,7 +384,6 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		}
 		
 		?>
-		
 
 		<script type="text/javascript">
 		//<![CDATA[
@@ -462,7 +466,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 				<div class="edit-controls-inputs">
 					<p><label for="edit-slide-title">Title:</label> <input type="text" name="slide-title" id="edit-slide-title" value="" maxlength="64" /></p>
 					<p><label for="edit-slide-description">Description:</label> <input type="text" name="slide-description" id="edit-slide-description" value="" maxlength="255" /></p>
-					<p><label for="edit-slide-image-upload">Background</label>: <span id="edit-slide-image-url"></span> <input id="edit-slide-image" type="hidden" name="slide-image" /><input id="edit-slide-image-upload" type="button" class="button" value="Upload image" /> <input id="edit-slide-image-crop" type="button" class="button" value="Crop" /></p>
+					<p><label for="edit-slide-image-upload">Background</label>: <span id="edit-slide-image-url"></span> <input id="edit-slide-image" type="hidden" name="slide-image" /><input id="edit-slide-image-upload" type="button" class="button" value="Upload or choose image" /></p>
 					<p><label for="edit-slide-link">Slide Link:</label> <input type="text" name="slide-link" id="edit-slide-link" value="" maxlength="255" /></p>
 				</div>
 				<div class="edit-controls-save-input">
@@ -484,6 +488,10 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 		
 		</form>
+		
+		
+		
+		<p class="vpm-slider-help-point"><a href="#">How do I get these to show up on my site?</a></p>
 		
 		<?php VPMSlider::printPluginFooter(); ?>
 		
@@ -614,12 +622,9 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			<tbody>
 				<tr class="form-field">
 					<td>
-					<!--<pre>
 					<?php
 					$allRoles = get_editable_roles();
-					print_r($allRoles);
 					?>
-					</pre>-->
 					
 					<?php
 							if (is_array($allRoles) && count($allRoles) > 0):
@@ -630,7 +635,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 								<input type="checkbox" name="required_capability_<?php echo esc_attr($rName);?>"
 								id="required_capability_<?php echo esc_attr($rName);?>" value="1" style="width:20px;"
 									<?php 
-									// if this role has the vpm_slider_manage_slides capability, mark it as selected
+									/* if this role has the vpm_slider_manage_slides capability, mark it as selected */
 									
 									if (array_key_exists(VPM_SLIDER_REQUIRED_CAPABILITY, $r['capabilities'])): ?>
 									checked="checked"
@@ -672,9 +677,52 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 	
 		?>
-		<p style="color:#777;font-size:12px;border-top:#777 dotted 1px; margin-top:50px; padding-top:9px">
+		<p style="color:#777;font-size:12px;border-top:#777 dotted 1px; margin-top:30px; padding-top:9px">
 		<strong><a href="">VPM Slider</a> by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>.</strong> If you find this plugin useful, or are using it commercially, please consider
 		<a href="">making a financial contribution</a>. Thank you.</p><?php
+	
+	}
+	
+	public function addSlidesHelp()
+	{
+	/*
+		Add our help tab to the Slides page.
+	*/
+	
+		$screen = get_current_screen();
+		
+		$screen->add_help_tab( array (
+			'id'			=>			'vpm-slider-groups',
+			'title'			=>			'Slide Groups',
+			'content'		=>			'<p>Each Slide Group contains a number of Slides that will appear, one after another, when you publish your Slides on your site.</p><p>You can make up to '.intval(VPM_SLIDER_MAX_SLIDE_GROUPS).' Slide Groups, which you can use to have different slideshows on different parts of your site.</p>'
+		
+		) );
+		
+		$screen->add_help_tab( array (
+			'id'			=>			'vpm-slider-editing',
+			'title'			=>			'Editing',
+			'content'		=>			'<p>Once you have clicked &lsquo;Edit&rsquo; on the desired Slide Group, you&rsquo;ll see all of its Slides.</p><p>Click on any Slide to make changes. As well as changing the Slide text, link and image, you can drag and drop the title and description to place them anywhere over the background image.</p><p>Simply drag and drop to re-order the Slides in the Slide Group. The new order is saved immediately.</p>'
+		
+		) );		
+		
+		$screen->add_help_tab( array(
+		
+			'id'			=>			'vpm-slider-publishing',
+			'title'			=>			'Publishing',
+			'content'		=>			'<p>Once you are happy with your new Slide Group, you need to publish it for it to show up on your site.</p><p>To do this, your theme needs to support Widgets, and have a &lsquo;sidebar&rsquo; in the theme where you&rsquo;d like the Slides to show up.</p><p>Go across to <a href="widgets.php">Appearance &raquo; Widgets</a> and drag a <strong>VPM Slider</strong> Widget to the desired sidebar. In the Widget&rsquo;s settings, choose the Slide Group to show and click <em>Save</em>.</p>'
+		
+		) );
+		
+		$crop = VPMSlider::determineCropWidthAndHeight();
+
+		$screen->add_help_tab( array(
+		
+			'id'			=>			'vpm-slider-hints',
+			'title'			=>			'Hints &amp; Tips',
+			'content'		=>			'<ul><li>For the best visual results, crop your background images to the size used by your Slider template &mdash; '.$crop['width'].'&times;'.$crop['height'].'.</li><li>Experiment with dragging and dropping the title and description over different parts of the background to achieve a different visual effect.</li><li>Keep your site fresh &mdash; create multiple Slide Groups ahead of time, then simply edit the <strong>VPM Slider</strong> Widget to switch over to display another Slide Group every now and then.</li><li>Completely customise the look of your Slides &mdash; create a <em>vpm-slider-templates</em> subfolder in your theme. You can use our <em>templates</em> folder in the plugin as a starting point.</ul>'
+		
+		) );	
+	
 	
 	}
 	
@@ -803,6 +851,64 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 	}
 	
+	public function determineCropWidthAndHeight()
+	{
+	/*
+		Using the active Slider template, determine the desired crop height
+		and crop width for the background image.
+		
+		Requires that custom theme CSS wrap the width and height in question in
+		//	/*crop-to-width*/
+		//  /*end crop-to-width*/
+		//	/*crop-to-height*/
+		//	/*end crop-to-height*/
+		/*
+		
+	*/
+		$themePath = get_stylesheet_directory();
+		
+		if (@file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.css'))
+		{
+			$css = @file_get_contents($themePath . '/vpm-slider-templates/vpm-slider-template.css');
+		}
+		else {
+			$css = @file_get_contents(dirname(__FILE__) . '/templates/vpm-slider-template.css');
+		}
+			
+		if ($css !== false)
+		{
+			$matches = array();
+			preg_match('|/\*crop\-to\-width\*/(.*)/\*end crop\-to\-width\*/|', $css, $matches);
+			
+			if (count($matches) > 0)
+			{
+				$cropWidth = (int) preg_replace('/[^0-9]$/', '', $matches[1]);
+			}
+			else {
+				$cropWidth = VPM_SLIDER_DEFAULT_CROP_WIDTH;
+			}
+			
+			$matches = array();
+			
+			preg_match('|/\*crop\-to\-height\*/(.*)/\*end crop\-to\-height\*/|', $css, $matches);										
+			
+			if (count($matches) > 0)
+			{
+				$cropHeight = (int) preg_replace('/[^0-9]$/', '', $matches[1]);
+			}
+			else {
+				$cropHeight = VPM_SLIDER_DEFAULT_CROP_HEIGHT;
+			}	
+		}
+		else {
+			$cropWidth = VPM_SLIDER_DEFAULT_CROP_WIDTH;
+			$cropHeight = VPM_SLIDER_DEFAULT_CROP_HEIGHT;
+		}
+		
+		return array('width' => $cropWidth, 'height' => $cropHeight);
+	
+	}
+	
 	public function registerAsWidget() {
 	/*
 		Register the output to the theme as a widget	
@@ -820,6 +926,8 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 		if (array_key_exists('vpm-slider-uploader', $_GET) && $_GET['vpm-slider-uploader'] == 'bgimage')
 		{
+		
+			$crop = VPMSlider::determineCropWidthAndHeight();
 	
 		?>
 		<script type="text/javascript">
@@ -829,7 +937,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 			jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align,#media-items .image-size').hide(); // hide unnecessary items
 		
-			jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;">Choose &lsquo;Edit Image&rsquo; and crop to 964x350 for best results.</p>');//TODO dynamic size, extract from active template
+			jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;">Choose &lsquo;Edit Image&rsquo; and crop to <?php echo $crop['width'];?>&times;<?php echo $crop['height'];?> for best results.</p>');
 		
 			jQuery('.savesend .button').each(function() {
 				jQuery(this).attr('value', 'Use as background image');
@@ -840,7 +948,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 				
 					jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align,#media-items .image-size').hide(); // hide unnecessary items
 					
-					jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;">Choose &lsquo;Edit Image&rsquo; and crop to 964x350 for best results.</p>');//TODO dynamic size, extract from active template
+					jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;">Choose &lsquo;Edit Image&rsquo; and crop to <?php echo $crop['width'];?>&times;<?php echo $crop['height'];?> for best results.</p>');
 				
 					// rename the main action button
 					jQuery('.savesend .button').each(function() {
@@ -922,7 +1030,6 @@ class VPMSliderWidget extends WP_Widget {
 		)
 		{
 			require_once($themePath . '/vpm-slider-templates/vpm-slider-template.php' );
-			//TODO enqueue CSS and JavaScript
 		}
 		else
 		{ // if not, use our default
@@ -1232,7 +1339,6 @@ register_activation_hook(__FILE__, array('VPMSlider', 'createSlidesOptionField')
 add_action('admin_menu', array('VPMSlider', 'addAdminSubMenu'));
 add_action('widgets_init', array('VPMSlider', 'registerAsWidget'));
 add_action('admin_init', array('VPMSlider', 'passControlToAjaxHandler'));
-add_action('admin_footer-vpm-slider', array('VPMSlider', 'printPluginFooter'));
 add_action('admin_head-media-upload-popup', array('VPMSlider', 'printUploaderJavaScript'));
 
 add_action('wp_enqueue_scripts', array('VPMSlider', 'enqueueSliderFrontend'));

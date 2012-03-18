@@ -226,6 +226,23 @@ class VPMSliderBackend {
 	
 	}
 	
+	protected function createSlideGroup($slug)
+	{
+	/*
+		If the slide group did not exist at edit time, then create it at this stage.
+	*/
+	
+		$newSlug = $this->sanitizeSlideGroupSlug(sanitize_title_with_dashes($slug));
+		
+		$newGroup = new VPMSlideGroup($newSlug, $newSlug); // not ideal for title, but we're not expecting
+															// this to happen at all.
+		$newGroup->save();	
+		
+		// add the new slides option for this group
+		add_option('vpm_slider_slides_'.$newSlug, array(), '', 'yes');
+	
+	}
+	
 	public function sanitizeSlideGroupSlug($slug)
 	{
 	/*
@@ -247,9 +264,9 @@ class VPMSliderBackend {
 		
 		if ($currentSlides === false)
 		{
-			//TODO check group existence
-			require_once(dirname(__FILE__).'/vpm-slider.php');
-			VPMHomepageSlides::createSlidesOptionField();
+			
+			$this->createSlideGroup($this->groupSlug);
+			
 			$currentSlides = get_option('vpm_slider_slides_' . $this->groupSlug);
 			if ($currentSlides === false)
 			{
@@ -396,9 +413,8 @@ class VPMSliderBackend {
 		
 		if ($currentSlides === false)
 		{
-			//TODO handle slide group existence problems
-			require_once('vpm-slider.php');
-			VPMHomepageSlides::createSlidesOptionField();
+			$this->createSlideGroup($this->groupSlug);
+			
 			$currentSlides = get_option('vpm_slider_slides_' . $this->groupSlug);
 			if ($currentSlides === false)
 			{
@@ -449,9 +465,9 @@ class VPMSliderBackend {
 		
 		if ($currentSlides === false)
 		{
-			//TODO existence again
-			require_once('vpm-slider.php');
-			VPMHomepageSlides::createSlidesOptionField();
+			
+			$this->createSlideGroup($this->groupSlug);
+			
 			$currentSlides = get_option('vpm_slider_slides_' . $this->groupSlug);
 			if ($currentSlides === false)
 			{
