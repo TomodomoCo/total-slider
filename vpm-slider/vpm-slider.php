@@ -403,10 +403,11 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		<form name="vpm-the-slides">
 				
 		<!--sortable slides-->
-		<ul id="slidesort">
-		<?php
+		<?php $currentSlides = VPMSlider::getCurrentSlides($theSlug); ?>
 		
-		$currentSlides = VPMSlider::getCurrentSlides($theSlug);
+		<div id="slidesort-container">
+		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*160 + 80); ?>px; min-width:80%;">
+		<?php
 		
 		if (is_array($currentSlides) && count($currentSlides) > 0)
 		{
@@ -437,6 +438,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>Click &lsquo;Add New&rsquo; to create a slide.</div>
 		</ul>
+		</div>
 		
 		<div id="message-area" class="updated settings-error below-h2"></div>
 		
@@ -446,7 +448,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 		<div id="edit-area">
 		
-			<ul id="vpm-slider">
+			<ul id="vpm-slider" class="vpm-slider">
 			
 				<li id="preview-area">
 				

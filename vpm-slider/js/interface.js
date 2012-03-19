@@ -160,6 +160,9 @@ jQuery(document).ready(function() {
 			
 			jQuery('#slidesort_item' + newIdNo).addClass('slidesort-selected');
 			
+			// ensure width of slide sorting area is large enough
+			jQuery('#slidesort').css('width', parseInt(jQuery('#slidesort').css('width')) + 150 + 'px');
+			
 			isEditing = true;
 			isEditingUntitledSlide = jQuery('#slidesort_untitled' + newIdNo).attr('id');
 			editingSlideSortButton = jQuery('#slidesort_untitled' + newIdNo).attr('id');
