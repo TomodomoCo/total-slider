@@ -161,11 +161,14 @@ jQuery(document).ready(function() {
 			jQuery('#slidesort_item' + newIdNo).addClass('slidesort-selected');
 			
 			// ensure width of slide sorting area is large enough
-			jQuery('#slidesort').css('width', parseInt(jQuery('#slidesort').css('width')) + 150 + 'px');
+			jQuery('#slidesort').css('width', parseInt(jQuery('#slidesort').css('width')) + 180 + 'px');
 			
 			isEditing = true;
 			isEditingUntitledSlide = jQuery('#slidesort_untitled' + newIdNo).attr('id');
 			editingSlideSortButton = jQuery('#slidesort_untitled' + newIdNo).attr('id');
+			
+			// scroll to the end of the slidesort view
+			jQuery('#slidesort-container').animate({ scrollLeft: parseInt(jQuery('#slidesort').css('width')) - 180 }, 1000);
 			
 			jQuery().clearForm();
 		}

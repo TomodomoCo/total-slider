@@ -406,7 +406,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		<?php $currentSlides = VPMSlider::getCurrentSlides($theSlug); ?>
 		
 		<div id="slidesort-container">
-		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*160 + 80); ?>px; min-width:80%;">
+		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*180 + 50); ?>px; min-width:80%;">
 		<?php
 		
 		if (is_array($currentSlides) && count($currentSlides) > 0)
