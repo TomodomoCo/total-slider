@@ -59,13 +59,12 @@ jQuery(document).ready(function() {
 		*/
 			
 		if (isEditingUntitledSlide != false) {
-			jQuery('#message-area').css('background-color', '#f6ff96');
-			jQuery('#message-area').html('The new order will be saved when you save the new slide.');
-			jQuery('#message-area').show('slow');
+			jQuery('#message-area').html('<p>The new order will be saved when you save the new slide.</p>');
+			jQuery('#message-area').fadeIn('slow');
 			
 			newShouldShuffle = true;
 			
-			window.setTimeout(function() { jQuery('#message-area').hide('slow'); }, 7500);
+			window.setTimeout(function() { jQuery('#message-area').fadeOut('slow'); }, 7500);
 			
 		}
 		else {
@@ -195,7 +194,7 @@ jQuery(document).ready(function() {
 	}
 	
 	/* any form editing performed, set inEditing to true */
-	jQuery('.edit-controls-inputs input').keyup(function(e) {
+	jQuery('.edit-controls-inputs').keyup(function(e) {
 		isEditing = true;
 	});
 	
@@ -313,11 +312,10 @@ jQuery(document).ready(function() {
 	/* show saved message */
 	jQuery.fn.showSavedMessage = function() {
 	
-		jQuery('#message-area').css('background-color', '#8cff84');
-		jQuery('#message-area').html('Slide saved.');
-		jQuery('#message-area').show('slow');
+		jQuery('#message-area').html('<p>Slide saved.</p>');
+		jQuery('#message-area').fadeIn('slow');
 		window.setTimeout(function() {
-			jQuery('#message-area').hide('slow');
+			jQuery('#message-area').fadeOut('slow');
 			jQuery('#message-area').html();
 		
 		}, 5500);
@@ -543,6 +541,11 @@ jQuery(document).ready(function() {
 		}
 	
 	});
+	
+	/* Cancel with esc key */
+	/*jQuery(document).keyup(function(event) {
+	  if (event.keyCode == 27) { jQuery('#edit-controls-cancel').click(); }
+	});*/
 	
 	
 	/* Cancel button -- cancel edits, or cancel new item */

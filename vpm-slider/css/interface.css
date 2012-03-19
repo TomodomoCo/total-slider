@@ -74,34 +74,6 @@ ul#new-slide-button li {
 	font-size:120%;
 }
 
-.add-plus {
-	font-size:150%;
-	font-weight:900;
-}
-
-/*
-#preview-area {
-	width:80%;
-	height:300px;
-	border:2px solid #000000;
-}
-
-#slide-preview {
-
-
-	width:300px;
-	height:150px;
-	background-color:#c4daef;
-	cursor:pointer;
-	padding:7px;
-
-}
-
-#slide-preview h2 {
-	font-size:110%;
-	font-weight:bold;
-}
-*/
 #edit-area {
 	display:none;
 }
@@ -116,13 +88,23 @@ ul#new-slide-button li {
 }
 
 .edit-controls-save-input {
-	float:right;
 	vertical-align: middle;
+	text-align:center;
+}
+.edit-controls-save-input input
+{
+	max-width:70px;
 }
 
 #message-area {
 	display:none;
-	background-color:#f6ff96;
+	background-color:#a5ff6d;
+	border-color:#568438;
+	width:auto;
+}
+
+#edit-slide-image-upload {
+	max-width:150px;
 }
 
 #loading-area {
@@ -132,26 +114,12 @@ ul#new-slide-button li {
 
 #edit-controls-save {
 
-	/*background-color:#a8d097;
-	width:100%;
-	height:100%;
-	font-size:150%;
-	padding:20px;
-	font-weight:bold;*/
 	cursor:pointer;
-
+	margin-right:12px;
 }
 
 #edit-controls-cancel {
-
-	/*background-color: #ff988d;
-	width:100%;
-	height:100%;
-	font-size:150%;
-	padding:20px;
-	font-weight:bold;*/
 	cursor:pointer;
-
 }
 
 #edit-slide-image-url
@@ -168,6 +136,7 @@ ul#new-slide-button li {
 .slide-delete {
 	text-align:right;
 	padding-left:5px;
+	font-size:11px;
 }
 
 .vpm-slider-help-point {
@@ -181,6 +150,11 @@ ul#new-slide-button li {
 .vpm-slider-help-point a
 {
 	text-decoration:none !important;
+}
+
+.edit-area-top-hr
+{
+	border:1px solid #e7e7e7;
 }
 
 /* Slide Groups Table Column widths */

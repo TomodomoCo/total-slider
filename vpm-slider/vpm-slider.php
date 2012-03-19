@@ -438,11 +438,11 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>Click &lsquo;Add New&rsquo; to create a slide.</div>
 		</ul>
 		
-		<div id="message-area"></div>
+		<div id="message-area" class="updated settings-error below-h2"></div>
 		
 		<div id="loading-area"><img src="<?php echo plugin_dir_url( __FILE__ ).'img/loadingAnimation.gif';?>" /></div>
 		
-		<hr />
+		<hr class="edit-area-top-hr" />
 		
 		<div id="edit-area">
 		
@@ -463,16 +463,56 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 			<div id="edit-controls">
 				<form id="edit-form">
-				<div class="edit-controls-inputs">
-					<p><label for="edit-slide-title">Title:</label> <input type="text" name="slide-title" id="edit-slide-title" value="" maxlength="64" /></p>
-					<p><label for="edit-slide-description">Description:</label> <input type="text" name="slide-description" id="edit-slide-description" value="" maxlength="255" /></p>
-					<p><label for="edit-slide-image-upload">Background</label>: <span id="edit-slide-image-url"></span> <input id="edit-slide-image" type="hidden" name="slide-image" /><input id="edit-slide-image-upload" type="button" class="button" value="Upload or choose image" /></p>
-					<p><label for="edit-slide-link">Slide Link:</label> <input type="text" name="slide-link" id="edit-slide-link" value="" maxlength="255" /></p>
-				</div>
-				<div class="edit-controls-save-input">
-					<p><input type="button" id="edit-controls-save" class="button-primary" value="Save" /></p>
-					<p><input type="button" id="edit-controls-cancel" class="button-secondary" value="Cancel" /></p>
-				</div>
+					<table class="form-table edit-controls-form-table">
+						<tbody>
+							<tr class="form-field">
+								<th scope="row">
+									<label for="edit-slide-title">Title</label>
+								</th>
+								<td>
+									<input type="text" name="slide-title" id="edit-slide-title" value="" maxlength="64" class="edit-controls-inputs" />
+								</td>
+							</tr>
+							<tr class="form-field">
+								<th scope="row">
+									<label for="edit-slide-description">Description</label>
+								</th>
+								<td>
+									<input type="text" name="slide-description" id="edit-slide-description" value="" maxlength="255" class="edit-controls-inputs" style="min-width:200px" />
+								</td>
+							</tr>
+							
+							<tr class="form-field">
+								<th scope="row">
+									<label for="edit-slide-image-upload">Background</label>
+								</th>
+								<td>
+									<span id="edit-slide-image-url"></span> <input id="edit-slide-image" type="hidden" name="slide-image" />
+									<input id="edit-slide-image-upload" type="button" class="button" value="Upload or choose image" />
+								</td>
+							</tr>
+							
+							<tr class="form-field">
+								<th scope="row">
+									<label for="edit-slide-link">Slide Link</label>
+								</th>
+								<td>
+									<input type="text" name="slide-link" id="edit-slide-link" value="" maxlength="255" class="edit-controls-inputs" />
+								</td>
+							</tr>
+							
+							<tr class="form-field edit-controls-save-input">
+								<th scope="row">
+									
+								</th>
+								<td>
+									<input type="button" id="edit-controls-save" class="button-primary" value="Save" />
+									<input type="button" id="edit-controls-cancel" class="button-secondary" value="Cancel" />
+								</td>
+							</tr>
+							
+						</tbody>					
+					</table>
 				</form>
 			
 			</div>
@@ -671,13 +711,13 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	public function printPluginFooter()
 	{
 	/*
-		Print out the plugin footer, including the PayPal donation button.
+		Print out the plugin footer, including the link to the donate page.
 	*/	
 	
 		
 	
 		?>
-		<p style="color:#777;font-size:12px;border-top:#777 dotted 1px; margin-top:30px; padding-top:9px">
+		<p style="color:#777;font-size:12px;border-top:#e7e7e7 dotted 1px; margin-top:30px; padding-top:9px">
 		<strong><a href="">VPM Slider</a> by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>.</strong> If you find this plugin useful, or are using it commercially, please consider
 		<a href="">making a financial contribution</a>. Thank you.</p><?php
 	
@@ -935,7 +975,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		// VPM Slider shimming button names and modifying uploader for our purposes
 		jQuery(document).ready(function() {
 		
-			jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align,#media-items .image-size').hide(); // hide unnecessary items
+			jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align').hide(); // hide unnecessary items//#media-items .image-size
 		
 			jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;">Choose &lsquo;Edit Image&rsquo; and crop to <?php echo $crop['width'];?>&times;<?php echo $crop['height'];?> for best results.</p>');
 		
@@ -946,7 +986,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			uploader.bind('FileUploaded', function() {
 				window.setTimeout(function() {
 				
-					jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align,#media-items .image-size').hide(); // hide unnecessary items
+					jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align').hide(); // hide unnecessary items//#media-items .image-size
 					
 					jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;">Choose &lsquo;Edit Image&rsquo; and crop to <?php echo $crop['width'];?>&times;<?php echo $crop['height'];?> for best results.</p>');
 				
@@ -1162,7 +1202,7 @@ class VPMSliderWidget extends WP_Widget {
 		}
 		
 		// get X and Y coords
-		if (!empty ($this->slides[$this->slider_iteration]['title_pos_x']) )
+		if (!empty ($this->slides[$this->slider_iteration]['title_pos_x']) ) //TODO zero bug
 		{
 			$this->slide_x = $this->slides[$this->slider_iteration]['title_pos_x'];
 		}

@@ -391,15 +391,31 @@ class VPMSliderBackend {
 	{
 	/*
 		Assess whether or not a given string is a valid URL format, based on
-		a regex check. Returns true for valid format, false otherwise.
-	*/
-
-		// acknowledging <http://www.blog.highub.com/regular-expression/php-regex-regular-expression/php-regex-validating-a-url/>
-	
-
-		$pattern = '/^(([\w]+:)?\/\/)?(([\d\w]|%[a-fA-f\d]{2,2})+(:([\d\w]|%[a-fA-f\d]{2,2})+)?@)?([\d\w][-\d\w]{0,253}[\d\w]\.)+[\w]{2,4}(:[\d]+)?(\/([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)*(\?(&amp;?([-+_~.\d\w]|%[a-fA-f\d]{2,2})=?)*)?(#([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)?$/';
+		parse_url(). Returns true for valid format, false otherwise.
 		
-		return preg_match($pattern, $url);
+		Imported from Drupal 7 common.inc:valid_url.
+		
+		This function is Drupal code and is Copyright 2001 - 2010 by the original authors.
+		This function is GPL2-licensed.
+		
+	*/
+	
+		return (bool)preg_match("
+      /^                                                      # Start at the beginning of the text
+      (?:ftp|https?|feed):\/\/                                # Look for ftp, http, https or feed schemes
+      (?:                                                     # Userinfo (optional) which is typically
+        (?:(?:[\w\.\-\+!$&'\(\)*\+,;=]|%[0-9a-f]{2})+:)*      # a username or a username and password
+        (?:[\w\.\-\+%!$&'\(\)*\+,;=]|%[0-9a-f]{2})+@          # combination
+      )?
+      (?:
+        (?:[a-z0-9\-\.]|%[0-9a-f]{2})+                        # A domain name or a IPv4 address
+        |(?:\[(?:[0-9a-f]{0,4}:)*(?:[0-9a-f]{0,4})\])         # or a well formed IPv6 address
+      )
+      (?::[0-9]+)?                                            # Server port number (optional)
+      (?:[\/|\?]
+        (?:[\w#!:\.\?\+=&@$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})   # The path and query (optional)
+      *)?
+    $/xi", $url);
 	
 	}
 	
