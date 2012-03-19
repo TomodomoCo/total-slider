@@ -139,6 +139,11 @@ ul#new-slide-button li {
 	font-size:7pt;
 }
 
+#slide-preview
+{
+	cursor:move;
+}
+
 .slidesort-add-hint {
 	text-align: center;
 	font-size:125%;

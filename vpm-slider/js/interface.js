@@ -168,7 +168,7 @@ jQuery(document).ready(function() {
 			editingSlideSortButton = jQuery('#slidesort_untitled' + newIdNo).attr('id');
 			
 			// scroll to the end of the slidesort view
-			jQuery('#slidesort-container').animate({ scrollLeft: parseInt(jQuery('#slidesort').css('width')) - 180 }, 1000);
+			jQuery('#slidesort-container').animate({ scrollLeft: parseInt(jQuery('#slidesort').css('width')) - 180 }, 1500);
 			
 			jQuery().clearForm();
 		}
