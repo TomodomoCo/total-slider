@@ -25,7 +25,7 @@
 */
 ?>
 
-<ul id="vpm-slider">
+<ul class="vpm-slider">
 <?php
 
 while ($s->has_slides())

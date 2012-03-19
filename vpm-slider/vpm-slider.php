@@ -830,7 +830,9 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 						'all'
 					);
 					
+					
 					wp_enqueue_script('vpm-slider-jquery-cycle-lite');
+					
 					
 					// and the frontend
 					wp_register_script(
@@ -1052,11 +1054,19 @@ class VPMSliderWidget extends WP_Widget {
 		to the desired widget area.
 	*/
 		
-		if (!$this->instance)
-		{
-			// prepare instance data for has_slides()
-			$this->instance = $instance;
-		}
+
+		$this->instance = $instance;
+		
+		// clear out all the data
+		$this->slide_title = null;
+		$this->slide_description = null;
+		$this->slide_background_url = null;
+		$this->slide_link = null;
+		$this->slide_x = null;
+		$this->slide_y = null;
+		$this->slide_identifier = null;
+		$this->slides = null;
+		$this->slider_iteration = 0;		
 		
 		$s = &$this; // $s is used by the theme to call our functions to actually display the data
 		
@@ -1069,13 +1079,14 @@ class VPMSliderWidget extends WP_Widget {
 			&& @file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.php')
 		)
 		{
-			require_once($themePath . '/vpm-slider-templates/vpm-slider-template.php' );
+			require($themePath . '/vpm-slider-templates/vpm-slider-template.php' );
 		}
 		else
 		{ // if not, use our default
-			require_once( dirname(__FILE__) . '/templates/vpm-slider-template.php' );
+			require( dirname(__FILE__) . '/templates/vpm-slider-template.php' );
 		}	
 		
+		unset($s);
 		
 	?>
 
@@ -1163,7 +1174,7 @@ class VPMSliderWidget extends WP_Widget {
 		}
 		
 		// on which slide should we work? does it exist?
-		if (count($this->slides) < $this->slider_iteration + 1) //TODO I am not working right
+		if (count($this->slides) < $this->slider_iteration + 1)
 		{
 			return false; // we are at the end of the slides
 		}
@@ -1202,11 +1213,11 @@ class VPMSliderWidget extends WP_Widget {
 		}
 		
 		// get X and Y coords
-		if (!empty ($this->slides[$this->slider_iteration]['title_pos_x']) || $this->slides[$this->slider_iteration]['title_pos_x']) === 0)
+		if (!empty ($this->slides[$this->slider_iteration]['title_pos_x']) || $this->slides[$this->slider_iteration]['title_pos_x'] === 0)
 		{
 			$this->slide_x = $this->slides[$this->slider_iteration]['title_pos_x'];
 		}
-		if (!empty ($this->slides[$this->slider_iteration]['title_pos_y']) || $this->slides[$this->slider_iteration]['title_pos_y']) === 0 )
+		if (!empty ($this->slides[$this->slider_iteration]['title_pos_y']) || $this->slides[$this->slider_iteration]['title_pos_y'] === 0 )
 		{
 			$this->slide_y = $this->slides[$this->slider_iteration]['title_pos_y'];
 		}

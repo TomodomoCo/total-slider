@@ -13,7 +13,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-jQuery('#vpm-slider').cycle({
+jQuery('.vpm-slider').cycle({
 	fx: 		'fade',
 	speed:		1000,
 	timeout:	8000
