@@ -1202,11 +1202,11 @@ class VPMSliderWidget extends WP_Widget {
 		}
 		
 		// get X and Y coords
-		if (!empty ($this->slides[$this->slider_iteration]['title_pos_x']) ) //TODO zero bug
+		if (!empty ($this->slides[$this->slider_iteration]['title_pos_x']) || $this->slides[$this->slider_iteration]['title_pos_x']) === 0)
 		{
 			$this->slide_x = $this->slides[$this->slider_iteration]['title_pos_x'];
 		}
-		if (!empty ($this->slides[$this->slider_iteration]['title_pos_y']) )
+		if (!empty ($this->slides[$this->slider_iteration]['title_pos_y']) || $this->slides[$this->slider_iteration]['title_pos_y']) === 0 )
 		{
 			$this->slide_y = $this->slides[$this->slider_iteration]['title_pos_y'];
 		}
