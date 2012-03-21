@@ -566,7 +566,12 @@ jQuery(document).ready(function() {
 					}
 				
 					jQuery('#loading-area').css('visibility', 'hidden');
-					alert('Sorry, unable to save the new slide.\n\n' + response.error);				
+					alert('Sorry, unable to save the new slide.\n\n' + response.error);
+					
+					jQuery('#edit-controls-save,#edit-controls-cancel').removeAttr('disabled');
+					jQuery('#edit-controls-save').val('Save');
+					jQuery('#edit-controls-spinner').css('visibility', 'hidden');		
+							
 				}
 				
 			});
@@ -620,7 +625,12 @@ jQuery(document).ready(function() {
 					}
 				
 					jQuery('#loading-area').css('visibility', 'hidden');				
-					alert('Sorry, unable to save the slide.\n\n' + errorToShow);				
+					alert('Sorry, unable to save the slide.\n\n' + errorToShow);
+
+					jQuery('#edit-controls-save,#edit-controls-cancel').removeAttr('disabled');
+					jQuery('#edit-controls-save').val('Save');
+					jQuery('#edit-controls-spinner').css('visibility', 'hidden');					
+									
 				}
 				
 			});
@@ -813,7 +823,12 @@ jQuery(document).ready(function() {
 	
 	/* Find post/page button for links */
 	jQuery('#slide-link-finder').click(function() {
+	
 		jQuery('#slide-link-is-internal').click();
+		
+		// workaround for media.dev.js:35 overbroad jQuery selector to get post type
+		jQuery('#slide-link-is-internal').prop('checked', false);
+		
 		findPosts.open();
 		isEditing = true;
 	});
@@ -821,14 +836,14 @@ jQuery(document).ready(function() {
 	/* 'Internal post or page' chosen for slide link */
 	jQuery('#slide-link-is-internal').click(function() {
 		jQuery('#slide-link-external-settings').hide();
-		jQuery('#slide-link-internal-settings').show('slow');	
+		jQuery('#slide-link-internal-settings').show('fast');	
 		isEditing = true;		
 	});
 	
 	/* 'External link' chosen for slide link */
 	jQuery('#slide-link-is-external').click(function() {
 		jQuery('#slide-link-internal-settings').hide();
-		jQuery('#slide-link-external-settings').show('slow');
+		jQuery('#slide-link-external-settings').show('fast');
 		isEditing = true;			
 	});
 	
@@ -839,6 +854,20 @@ jQuery(document).ready(function() {
 			jQuery('#slide-link-internal-id').val(jQuery(this).val());
 		});
 		findPosts.close();
+		
+		// workaround for media.dev.js:35 overbroad jQuery selector to get post type
+		jQuery('#slide-link-is-internal').prop('checked', true);
+		
+	});
+	
+	jQuery('#find-posts-close').click(function() {
+		// workaround for media.dev.js:35 overbroad jQuery selector to get post type
+		jQuery('#slide-link-is-internal').prop('checked', true);
+	});
+	
+	// workaround for media.dev.js:35 overbroad jQuery selector to get post type
+	jQuery('#find-posts-input').keyup(function(e){
+		if (e.which == 27) { jQuery('#slide-link-is-internal').prop('checked', true); } // close on Escape
 	});
 	
 
