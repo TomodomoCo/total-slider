@@ -826,7 +826,7 @@ jQuery(document).ready(function() {
 	
 		jQuery('#slide-link-is-internal').click();
 		
-		// workaround for media.dev.js:35 overbroad jQuery selector to get post type
+		// workaround for https://core.trac.wordpress.org/ticket/16655
 		jQuery('#slide-link-is-internal').prop('checked', false);
 		
 		findPosts.open();
@@ -849,23 +849,23 @@ jQuery(document).ready(function() {
 	
 	/* Shim the find post/page button to get it for the link */
 	jQuery('#find-posts-submit').click(function() {
-		jQuery('.found-radio input').each(function() {
+		jQuery('.found-radio input:checked').each(function() {
 			jQuery('#slide-link-internal-display').text(jQuery('label[for="' + jQuery(this).attr('id') + '"]').text());
 			jQuery('#slide-link-internal-id').val(jQuery(this).val());
 		});
 		findPosts.close();
 		
-		// workaround for media.dev.js:35 overbroad jQuery selector to get post type
+		// workaround for https://core.trac.wordpress.org/ticket/16655
 		jQuery('#slide-link-is-internal').prop('checked', true);
 		
 	});
 	
 	jQuery('#find-posts-close').click(function() {
-		// workaround for media.dev.js:35 overbroad jQuery selector to get post type
+		// workaround for https://core.trac.wordpress.org/ticket/16655
 		jQuery('#slide-link-is-internal').prop('checked', true);
 	});
 	
-	// workaround for media.dev.js:35 overbroad jQuery selector to get post type
+	// workaround for https://core.trac.wordpress.org/ticket/16655
 	jQuery('#find-posts-input').keyup(function(e){
 		if (e.which == 27) { jQuery('#slide-link-is-internal').prop('checked', true); } // close on Escape
 	});
