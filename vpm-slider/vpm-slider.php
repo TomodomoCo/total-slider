@@ -1328,7 +1328,18 @@ class VPMSliderWidget extends WP_Widget {
 	/*
 		Return the background URL, having sanitisied it.
 	*/
-		return esc_url( apply_filters ('vpm-slider_slide_background_url', $this->slide_background_url) );
+	
+		if (is_numeric($this->slide_background_url))
+		{
+			$bgAttach = (int)$this->slide_background_url;
+			$bgAttach = wp_get_attachment_url($bgAttach);
+			
+			return esc_url ( apply_filters('vpm-slider_slide_background_url', $bgAttach ) );
+			
+		}
+		else {
+			return esc_url( apply_filters ('vpm-slider_slide_background_url', $this->slide_background_url) );
+		}
 	
 	}
 	
@@ -1348,7 +1359,14 @@ class VPMSliderWidget extends WP_Widget {
 		Return the slide link URL, having sanitised it.
 	*/
 	
-		return esc_url ( apply_filters('vpm-slider_slide_link', $this->slide_link) );
+		if (is_numeric($this->slide_link))
+		{
+			$linkPost = (int)$this->slide_link;
+			return esc_url( apply_filters('vpm-slider_slide_link', get_permalink($linkPost) ) );
+		}
+		else {
+			return esc_url ( apply_filters('vpm-slider_slide_link', $this->slide_link) );
+		}
 	
 	}
 	

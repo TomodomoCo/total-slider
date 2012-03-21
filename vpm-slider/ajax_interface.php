@@ -119,12 +119,29 @@ switch ($_GET['action'])
 			die();			
 		}
 		
-		if (!empty($_POST['link']) && !$be->validateURL($_POST['link']))
+		if (!empty($_POST['link']))
 		{
-			header('HTTP/1.0 400 Bad Request');
-			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'Invalid URL format for the specified link URL.'));
-			die();		
+			if (is_numeric($_POST['link']))
+			{
+				$_POST['link'] = (int)$_POST['link'];
+				
+				if ($_POST['link'] < 1)
+				{
+					header('HTTP/1.0 400 Bad Request');
+					header('Content-Type: application/json');
+					echo json_encode(array('error' => 'The post ID for the specified slide link is not valid.'));
+					die();					
+				}
+			}
+			else {
+				if (!$be->validateURL($_POST['link']))
+				{
+					header('HTTP/1.0 400 Bad Request');
+					header('Content-Type: application/json');
+					echo json_encode(array('error' => 'Invalid URL format for the specified link URL.'));
+					die();	
+				}
+			}
 		}
 		
 		$_POST['title'] = stripslashes($_POST['title']);

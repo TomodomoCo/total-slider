@@ -20,7 +20,7 @@ var originalTitle = false;
 var dontStartEdit = false;
 var newShouldShuffle = false;
 var deleteCaller = false;
-var linkToSave = false;
+var linkToSave = '';
 
 /* language */
 var switchEditWouldLoseChanges = 'You are still editing the current slide. Switching to a different slide will lose your changes.\n\nDo you want to lose your changes?';
@@ -200,7 +200,7 @@ jQuery(document).ready(function() {
 		jQuery('#slide-preview').offset({ left: jQuery('#preview-area').offset().left, top: jQuery('#preview-area').offset().top } ); 
 		// reset offset on box
 		
-		linkToSave = false;
+		linkToSave = '';
 		
 		jQuery('#preview-area').css('background', '');
 		
@@ -777,18 +777,21 @@ jQuery(document).ready(function() {
 	jQuery('#slide-link-finder').click(function() {
 		jQuery('#slide-link-is-internal').click();
 		findPosts.open();
+		isEditing = true;
 	});
 	
 	/* 'Internal post or page' chosen for slide link */
 	jQuery('#slide-link-is-internal').click(function() {
 		jQuery('#slide-link-external-settings').hide();
 		jQuery('#slide-link-internal-settings').show('slow');	
+		isEditing = true;		
 	});
 	
 	/* 'External link' chosen for slide link */
 	jQuery('#slide-link-is-external').click(function() {
 		jQuery('#slide-link-internal-settings').hide();
-		jQuery('#slide-link-external-settings').show('slow');	
+		jQuery('#slide-link-external-settings').show('slow');
+		isEditing = true;			
 	});
 	
 	/* Shim the find post/page button to get it for the link */
