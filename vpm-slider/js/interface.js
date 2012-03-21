@@ -186,7 +186,7 @@ jQuery(document).ready(function() {
 		// clear the form
 		jQuery('#edit-slide-title').val('');
 		jQuery('#edit-slide-description').val('');
-		jQuery('#edit-slide-image-url').text('');
+		jQuery('#edit-slide-image-url').val('');
 		jQuery('#edit-slide-link').val('');
 		jQuery('#slide-preview-title').html('untitled');
 		jQuery('#slide-preview-description').html('');
@@ -196,9 +196,15 @@ jQuery(document).ready(function() {
 		jQuery('#slide-link-is-external').prop('checked', false);
 		jQuery('#slide-link-internal-settings').hide();
 		jQuery('#slide-link-external-settings').hide();	
+		//jQuery('#edit-slide-image-title').text('');
 		
 		jQuery('#slide-preview').offset({ left: jQuery('#preview-area').offset().left, top: jQuery('#preview-area').offset().top } ); 
 		// reset offset on box
+		
+		jQuery('#edit-controls-spinner').css('visibility', 'hidden');
+		
+		jQuery('#edit-controls-save,#edit-controls-cancel').removeAttr('disabled');
+		jQuery('#edit-controls-save').val('Save');
 		
 		linkToSave = '';
 		
@@ -244,6 +250,11 @@ jQuery(document).ready(function() {
 		{
 		
 			jQuery('#loading-area').css('visibility', 'visible');	
+			jQuery('#loading-area').css('opacity', 0);	
+			jQuery('#loading-area').animate({
+				opacity: 1
+				
+			}, 500);
 			
 			// make all deselected
 			jQuery('#slidesort li').removeClass('slidesort-selected');
@@ -279,19 +290,29 @@ jQuery(document).ready(function() {
 						// fill the fields
 						jQuery('#edit-slide-title').val(result.title);
 						jQuery('#edit-slide-description').val(result.description);
-						jQuery('#edit-slide-image-url').text(result.background);
+						jQuery('#edit-slide-image-url').val(result.background);
 						
 						// if link is numeric, then load in the post
-						if (!isNaN(result.link))
+						if (!isNaN(result.link) && result.link != 0)
 						{
-							jQuery('#slide-link-is-internal').click();
+							jQuery('#slide-link-external-settings').hide();
+							jQuery('#slide-link-internal-settings').show('slow');
+							jQuery('#slide-link-is-internal').prop('checked', true);
 							jQuery('#slide-link-internal-id').val(parseInt(result.link));
 							jQuery('#slide-link-internal-display').text(result.link_post_title);
 							
 						}
-						else {
-							jQuery('#slide-link-is-external').click();
+						else if (result.link.length > 0) {
+							jQuery('#slide-link-internal-settings').hide();
+							jQuery('#slide-link-external-settings').show('slow');
+							jQuery('#slide-link-is-external').prop('checked', true);
 							jQuery('#edit-slide-link').val(result.link);
+						}
+						else {
+							jQuery('#slide-link-is-internal').prop('checked', false);
+							jQuery('#slide-link-is-external').prop('checked', false);
+							jQuery('#slide-link-internal-settings').hide();
+							jQuery('#slide-link-external-settings').hide();
 						}
 						
 						jQuery('#slide-preview-title').text(result.title);
@@ -386,7 +407,14 @@ jQuery(document).ready(function() {
 	window.send_to_editor = function(html) {
 	
 		imgurl = jQuery('img',html).attr('src');
-		jQuery('#edit-slide-image-url').text(imgurl);
+		var imgTitle = jQuery('img',html).attr('title');
+		
+		// attempt to extract the image attachment ID
+		var classes = jQuery('img', html).attr('class').split(' ');
+		var attachmentID = parseInt( classes[classes.length - 1].substring(9, classes[classes.length - 1].length) );
+		
+		jQuery('#edit-slide-image-url').val(imgurl);
+		//jQuery('#edit-slide-image-title').text(imgTitle);
 		
 		// update the preview to show this background
 		jQuery('#preview-area').css('background', 'url(' + imgurl + ')');
@@ -456,8 +484,18 @@ jQuery(document).ready(function() {
 	
 	
 		// go ahead and get ready to save
+		jQuery('#loading-area').css('visibility', 'visible');
 		jQuery('#loading-area').css('visibility', 'visible');	
-	
+		jQuery('#loading-area').css('opacity', 0);	
+		jQuery('#loading-area').animate({
+			opacity: 1		
+		}, 500);		
+		
+		jQuery('#edit-controls-spinner').css('visibility', 'visible');
+		
+		jQuery('#edit-controls-save,#edit-controls-cancel').prop('disabled', 'disabled');
+		jQuery('#edit-controls-save').val('Saving');
+			
 		var calcBoxOffsetLeft = jQuery('#slide-preview').offset().left - jQuery('#preview-area').offset().left;
 		var calcBoxOffsetTop  = jQuery('#slide-preview').offset().top - jQuery('#preview-area').offset().top;
 	
@@ -470,7 +508,7 @@ jQuery(document).ready(function() {
 				data: {
 					'title': jQuery('#edit-slide-title').val(),
 					'description': jQuery('#edit-slide-description').val(),
-					'background': jQuery('#edit-slide-image-url').text(),
+					'background': jQuery('#edit-slide-image-url').val(),
 					'link': linkToSave,
 					'title_pos_x': calcBoxOffsetLeft,
 					'title_pos_y': calcBoxOffsetTop						
@@ -495,7 +533,7 @@ jQuery(document).ready(function() {
 					jQuery('#slidesort_untitled_delete_button').attr('id', 'slidesort_' + result.new_id + '_delete_button');					
 					
 					jQuery('#edit-area').hide('slow');
-					jQuery().clearForm();
+					window.setTimeout(function() { jQuery().clearForm(); }, 750);
 
 						
 					
@@ -545,7 +583,7 @@ jQuery(document).ready(function() {
 					'id': jQuery('#' + editingSlideSortButton).attr('id').substr( jQuery('#' + editingSlideSortButton).attr('id').indexOf('slidesort_')+10, jQuery('#' + editingSlideSortButton).attr('id').length ),
 					'title': jQuery('#edit-slide-title').val(),
 					'description': jQuery('#edit-slide-description').val(),
-					'background': jQuery('#edit-slide-image-url').text(),
+					'background': jQuery('#edit-slide-image-url').val(),
 					'link': linkToSave,
 					'title_pos_x': calcBoxOffsetLeft,
 					'title_pos_y': calcBoxOffsetTop									
@@ -561,7 +599,7 @@ jQuery(document).ready(function() {
 					else {
 						jQuery('#' + editingSlideSortButton).removeClass('slidesort-selected');
 						jQuery('#edit-area').hide('slow');
-						jQuery().clearForm();	
+						window.setTimeout(function() { jQuery().clearForm(); }, 750);
 						
 						isEditing = false;
 						isEditingUntitledSlide = false;

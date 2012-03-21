@@ -494,7 +494,8 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 									<label for="edit-slide-image-upload">Background</label>
 								</th>
 								<td>
-									<span id="edit-slide-image-url"></span> <input id="edit-slide-image" type="hidden" name="slide-image" />
+									<input id="edit-slide-image-url" type="hidden" name="slide-image" />
+									<!--<span id="edit-slide-image-title"></span>-->
 									<input id="edit-slide-image-upload" type="button" class="button" value="Upload or choose image" />
 								</td>
 							</tr>
@@ -550,6 +551,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 								<td>
 									<input type="button" id="edit-controls-save" class="button-primary" value="Save" />
 									<input type="button" id="edit-controls-cancel" class="button-secondary" value="Cancel" />
+									<img id="edit-controls-spinner" src="images/loading.gif" width="16" height="16" alt="Loading" />
 								</td>
 							</tr>
 							

@@ -134,11 +134,6 @@ ul#new-slide-button li {
 	cursor:pointer;
 }
 
-#edit-slide-image-url
-{
-	font-size:7pt;
-}
-
 #slide-preview
 {
 	cursor:move;
@@ -188,6 +183,13 @@ ul#new-slide-button li {
 #slide-link-internal-settings
 {
 	display:none;
+}
+
+#edit-controls-spinner
+{
+	margin-left:15px;
+	visibility:hidden;
+	vertical-align: middle;
 }
 
 /* Slide Groups Table Column widths */
