@@ -54,7 +54,13 @@ if (!defined('VPM_SLIDER_IN_FUNCTIONS'))
 				title_pos_x		[int]
 				title_pos_y		[int]	
 				
-			[2] ...			
+			[2] ...		
+			
+			
+			background and link may also be numeric, encoded as a string
+			
+			if numeric and integers, they will be interpreted as WP post IDs to look up
+				
 	
 	*/
 	
@@ -317,6 +323,20 @@ class VPMSliderBackend {
 			foreach($currentSlides as $slide) {
 			
 				if ($slide['id'] == $slideID) {
+				
+					if ((int)$slide['link'] == $slide['link'])
+					{	// if slide link is a number, and therefore a post ID of some sort
+						$slp = (int) $slide['link'];
+						$linkPost = get_post($slp);
+						$slide['link_post_title'] = $linkPost->post_title;
+					}
+					
+					if ((int)$slide['background'] == $slide['background'])
+					{
+						// if slide background is a number, it must be an attachment ID
+						// so get its URL
+						$slide['background_url'] = wp_get_attachment_url((int)$slide['background']);
+					}
 				
 					return $slide;
 				

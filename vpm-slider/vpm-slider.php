@@ -174,6 +174,9 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			wp_enqueue_script('jquery');
 			wp_enqueue_script('jquery-ui');
 			
+			wp_enqueue_script('wp-ajax-response');
+			
+			wp_enqueue_script('media');
 			wp_enqueue_script('media-upload');
 			wp_enqueue_script('thickbox');
 			wp_enqueue_style('thickbox');
@@ -383,6 +386,8 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			return;
 		}
 		
+		if (function_exists('find_posts_div')) { find_posts_div(); } // bring in the post/page finder interface for links
+		
 		?>
 
 		<script type="text/javascript">
@@ -496,7 +501,42 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 							
 							<tr class="form-field">
 								<th scope="row">
-									<label for="edit-slide-link">Slide Link</label>
+									Slide Link
+								</th>
+								<td>
+									<label for="slide-link-is-internal">
+										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-internal" value="true" />
+									A page or post on this site
+									</label>
+									
+								</td>
+							</tr>
+							
+							<tr class="form-field" id="slide-link-internal-settings">
+								<th scope="row">
+								
+								</th>
+								<td>
+									<span id="slide-link-internal-display">No post selected</span>
+									<input id="slide-link-internal-id" name="slide-link-internal" value="" type="hidden" />
+									<input id="slide-link-finder" type="button" class="button" value="Find post" style="width:50px;" />			
+								</td>
+							</tr>
+							
+							<tr class="form-field">
+								<th scope="row">
+								
+								</th>
+								<td>
+									<label for="slide-link-is-external">
+										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-external" value="false" />
+									An external link
+									</label>
+								</td>
+							</tr>
+							
+							<tr class="form-field" id="slide-link-external-settings">
+								<th scope="row">
 								</th>
 								<td>
 									<input type="text" name="slide-link" id="edit-slide-link" value="" maxlength="255" class="edit-controls-inputs" />

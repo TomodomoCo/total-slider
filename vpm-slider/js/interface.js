@@ -20,6 +20,7 @@ var originalTitle = false;
 var dontStartEdit = false;
 var newShouldShuffle = false;
 var deleteCaller = false;
+var linkToSave = false;
 
 /* language */
 var switchEditWouldLoseChanges = 'You are still editing the current slide. Switching to a different slide will lose your changes.\n\nDo you want to lose your changes?';
@@ -34,7 +35,8 @@ var validationErrorIntroduction = "Please correct the following errors with the 
 var validationNoSlideTitle = 'You must enter a slide title.';
 var validationNoSlideDescription = 'You must enter a slide description.';
 var validationInvalidBackgroundURL = 'The supplied background image URL is not a valid URL.';
-var validationInvalidLinkURL = 'The supplied slide link is not a valid URL.';
+var validationInvalidLinkURL = 'The supplied external link is not a valid URL.';
+var validationInvalidLinkID = 'The supplied post ID for the slide link is not valid.';
 
 /* miscellaneous functions */
 function isUrl(s) {
@@ -188,9 +190,17 @@ jQuery(document).ready(function() {
 		jQuery('#edit-slide-link').val('');
 		jQuery('#slide-preview-title').html('untitled');
 		jQuery('#slide-preview-description').html('');
+		jQuery('#slide-link-internal-id').val('');
+		jQuery('#slide-link-internal-display').html('No post selected.');
+		jQuery('#slide-link-is-internal').prop('checked', false);
+		jQuery('#slide-link-is-external').prop('checked', false);
+		jQuery('#slide-link-internal-settings').hide();
+		jQuery('#slide-link-external-settings').hide();	
 		
 		jQuery('#slide-preview').offset({ left: jQuery('#preview-area').offset().left, top: jQuery('#preview-area').offset().top } ); 
 		// reset offset on box
+		
+		linkToSave = false;
 		
 		jQuery('#preview-area').css('background', '');
 		
@@ -270,7 +280,20 @@ jQuery(document).ready(function() {
 						jQuery('#edit-slide-title').val(result.title);
 						jQuery('#edit-slide-description').val(result.description);
 						jQuery('#edit-slide-image-url').text(result.background);
-						jQuery('#edit-slide-link').val(result.link);
+						
+						// if link is numeric, then load in the post
+						if (!isNaN(result.link))
+						{
+							jQuery('#slide-link-is-internal').click();
+							jQuery('#slide-link-internal-id').val(parseInt(result.link));
+							jQuery('#slide-link-internal-display').text(result.link_post_title);
+							
+						}
+						else {
+							jQuery('#slide-link-is-external').click();
+							jQuery('#edit-slide-link').val(result.link);
+						}
+						
 						jQuery('#slide-preview-title').text(result.title);
 						jQuery('#slide-preview-description').text(result.description);
 						
@@ -391,9 +414,29 @@ jQuery(document).ready(function() {
 		{	// if we have a background URL set, but it is not a proper URL
 			validationErrors[validationErrors.length] = validationInvalidBackgroundURL;
 		}
-		if (jQuery('#edit-slide-link').val().length > 1 && !isUrl(jQuery('#edit-slide-link').val()))
-		{	// if we have a background URL set, but it is not a proper URL
-			validationErrors[validationErrors.length] = validationInvalidLinkURL;
+		
+		
+		if (jQuery('#slide-link-is-external').prop('checked') == true)
+		{
+		
+			if (jQuery('#edit-slide-link').val().length > 1 && !isUrl(jQuery('#edit-slide-link').val()))
+			{	// if we have an external link URL set, but it is not a proper URL
+				validationErrors[validationErrors.length] = validationInvalidLinkURL;
+			}		
+			
+			linkToSave = jQuery('#edit-slide-link').val();
+		}
+		
+		// check for valid number in the internal link post ID column
+		if (jQuery('#slide-link-is-internal').prop('checked') == true)
+		{
+			if (jQuery('#slide-link-internal-id').val().length > 1 && isNaN(jQuery('#slide-link-internal-id').val()))
+			{
+				validationErrors[validationErrors.length] = validationInvalidLinkID;
+			}
+			
+			linkToSave = jQuery('#slide-link-internal-id').val();
+			
 		}
 		
 		// X/Y bounds??
@@ -428,7 +471,7 @@ jQuery(document).ready(function() {
 					'title': jQuery('#edit-slide-title').val(),
 					'description': jQuery('#edit-slide-description').val(),
 					'background': jQuery('#edit-slide-image-url').text(),
-					'link': jQuery('#edit-slide-link').val(),
+					'link': linkToSave,
 					'title_pos_x': calcBoxOffsetLeft,
 					'title_pos_y': calcBoxOffsetTop						
 				},
@@ -503,7 +546,7 @@ jQuery(document).ready(function() {
 					'title': jQuery('#edit-slide-title').val(),
 					'description': jQuery('#edit-slide-description').val(),
 					'background': jQuery('#edit-slide-image-url').text(),
-					'link': jQuery('#edit-slide-link').val(),
+					'link': linkToSave,
 					'title_pos_x': calcBoxOffsetLeft,
 					'title_pos_y': calcBoxOffsetTop									
 				},
@@ -727,6 +770,34 @@ jQuery(document).ready(function() {
 		event.preventDefault();
 		jQuery('#contextual-help-link').click();
 		jQuery('#tab-link-vpm-slider-publishing').children('a:first-child').click();
+		jQuery('body').animate({ scrollTop: 0 }, 1000);
+	});
+	
+	/* Find post/page button for links */
+	jQuery('#slide-link-finder').click(function() {
+		jQuery('#slide-link-is-internal').click();
+		findPosts.open();
+	});
+	
+	/* 'Internal post or page' chosen for slide link */
+	jQuery('#slide-link-is-internal').click(function() {
+		jQuery('#slide-link-external-settings').hide();
+		jQuery('#slide-link-internal-settings').show('slow');	
+	});
+	
+	/* 'External link' chosen for slide link */
+	jQuery('#slide-link-is-external').click(function() {
+		jQuery('#slide-link-internal-settings').hide();
+		jQuery('#slide-link-external-settings').show('slow');	
+	});
+	
+	/* Shim the find post/page button to get it for the link */
+	jQuery('#find-posts-submit').click(function() {
+		jQuery('.found-radio input').each(function() {
+			jQuery('#slide-link-internal-display').text(jQuery('label[for="' + jQuery(this).attr('id') + '"]').text());
+			jQuery('#slide-link-internal-id').val(jQuery(this).val());
+		});
+		findPosts.close();
 	});
 	
 
