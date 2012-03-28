@@ -189,7 +189,7 @@ jQuery(document).ready(function() {
 		jQuery('#edit-slide-image-url').val('');
 		jQuery('#edit-slide-link').val('');
 		jQuery('#slide-preview-title').html('untitled');
-		jQuery('#slide-preview-description').html('');
+		jQuery('#slide-preview-description').html('(no text)');
 		jQuery('#slide-link-internal-id').val('');
 		jQuery('#slide-link-internal-display').html('No post selected.');
 		jQuery('#slide-link-is-internal').prop('checked', false);
@@ -532,7 +532,7 @@ jQuery(document).ready(function() {
 					jQuery('#slidesort_untitled_delete').attr('id', 'slidesort_' + result.new_id + '_delete');
 					jQuery('#slidesort_untitled_delete_button').attr('id', 'slidesort_' + result.new_id + '_delete_button');					
 					
-					jQuery('#edit-area').hide('slow');
+					//jQuery('#edit-area').hide('slow');
 					window.setTimeout(function() { jQuery().clearForm(); }, 750);
 
 						
@@ -603,7 +603,7 @@ jQuery(document).ready(function() {
 					}
 					else {
 						jQuery('#' + editingSlideSortButton).removeClass('slidesort-selected');
-						jQuery('#edit-area').hide('slow');
+						//jQuery('#edit-area').hide('slow');
 						window.setTimeout(function() { jQuery().clearForm(); }, 750);
 						
 						isEditing = false;
@@ -655,7 +655,7 @@ jQuery(document).ready(function() {
 			if (confirm(wouldLoseUnsavedChanges))
 			{
 				jQuery('#' + editingSlideSortButton).remove();
-				jQuery('#edit-area').hide('slow');
+				//jQuery('#edit-area').hide('slow');
 				jQuery().clearForm();
 				
 				isEditing = false;
@@ -677,7 +677,7 @@ jQuery(document).ready(function() {
 			if (confirm(wouldLoseUnsavedChanges))
 			{
 			
-				jQuery('#edit-area').hide('slow');
+				//jQuery('#edit-area').hide('slow');
 				jQuery().clearForm();				
 				
 				jQuery('#' + editingSlideSortButton + '_text').text(originalTitle); // restore pre-edit title
@@ -698,7 +698,7 @@ jQuery(document).ready(function() {
 				jQuery('#' + editingSlideSortButton).removeClass('slidesort-selected'); // unselect the button if it was selected
 			}
 		
-			jQuery('#edit-area').hide('slow');
+			//jQuery('#edit-area').hide('slow');
 			jQuery().clearForm();
 			
 			isEditing = false;
@@ -729,7 +729,7 @@ jQuery(document).ready(function() {
 		
 				jQuery(caller).parent().parent().hide(350);	
 				window.setTimeout(function() {jQuery(caller).parent().parent().remove();}, 380);
-				jQuery('#edit-area').hide('slow');
+				//jQuery('#edit-area').hide('slow');
 				jQuery().clearForm();
 				
 				isEditing = false;
@@ -765,7 +765,7 @@ jQuery(document).ready(function() {
 					jQuery(deleteCaller).parent().parent().hide(350);
 					window.setTimeout(function() {jQuery(deleteCaller).parent().parent().remove();}, 380);
 					
-					jQuery('#edit-area').hide('slow');
+					//jQuery('#edit-area').hide('slow');
 					jQuery().clearForm();
 					
 					if (jQuery('#slidesort > li').size() < 2) // will be 1 after delete 

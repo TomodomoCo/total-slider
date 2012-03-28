@@ -643,24 +643,29 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 				<input type="button" id="new-slide-group-cancel" class="button-secondary" value="Cancel" /></p></form>
 			</form>
 		</div>
-
-		<div id="sgtable">
-
-		<?php require_once( dirname( __FILE__ ) . '/slide_groups_table.php');
-		$table = new Slide_Groups_Table();		
-		$table->prepare_items();		
-		$table->display();
 		
+		<div class="metabox-holder has-right-sidebar">
+
+			<div class="post-body"><div class="post-body-content table-holder">
+
+				<?php require_once( dirname( __FILE__ ) . '/slide_groups_table.php');
+				$table = new Slide_Groups_Table();		
+				$table->prepare_items();		
+				$table->display();
 				
-		if ($table->get_total_items() < 1)
-		{
-			?><div class="slidesort-add-hint">Click &lsquo;Add New&rsquo; to create a new group of slides.</div><?php
-		}
-		?>
+						
+				if ($table->get_total_items() < 1)
+				{
+					?><div class="slidesort-add-hint">Click &lsquo;Add New&rsquo; to create a new group of slides.</div><?php
+				}
+				?>
 		
-		</div>
-		<div class="inner-sidebar">
-		<?php do_meta_boxes('_vpm_slider_slide_groups', 'side', null);?>
+			</div></div>
+
+			<div class="inner-sidebar" style="margin-top:40px;">
+				<?php do_meta_boxes('_vpm_slider_slide_groups', 'side', null);?>
+			</div>
+		
 		</div>
 			
 		</div><!--wrap-->
@@ -671,6 +676,9 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	/*
 		Print the actual slides page for adding, editing and removing the slides.
 	*/
+	
+		global $theSlug;
+	
 		// permissions check
 		if (!current_user_can(VPM_SLIDER_REQUIRED_CAPABILITY))
 		{
@@ -693,13 +701,24 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 			return;
 		}
 		
+		
+		// add the metaboxes
+		add_meta_box('slide-sorter-mb', 'Slides', array('VPM_Slider', 'printSlideSorterMetabox'), '_vpm_slider_slide', 'normal', 'core');
+		add_meta_box('slide-preview-mb', 'Preview', array('VPM_Slider', 'printSlidePreviewMetabox'), '_vpm_slider_slide', 'normal', 'core');
+
+		add_meta_box('slide-editor-mb', 'Edit', array('VPM_Slider', 'printSlideEditorMetabox'), '_vpm_slider_slide_bottom', 'normal', 'core');
+		add_meta_box('credits-notes-mb', 'Credits/Notes', array('VPM_Slider', 'printCreditsMetabox'), '_vpm_slider_slide_bottom', 'side', 'core');
+		
 		if (function_exists('find_posts_div')) { find_posts_div(); } // bring in the post/page finder interface for links
 		
 		?>
 
 		<script type="text/javascript">
 		//<![CDATA[
-		var VPM_WP_ROOT = '<?php echo admin_url(); ?>';var VPM_HPS_PLUGIN_URL = '<?php echo admin_url();?>admin.php?page=vpm-slider&vpm-slider-ajax=true&';var VPM_HPS_GROUP = '<?php echo esc_attr($theSlug);?>';
+		var VPM_WP_ROOT = '<?php echo admin_url(); ?>';
+		var VPM_HPS_PLUGIN_URL = '<?php echo admin_url();?>admin.php?page=vpm-slider&vpm-slider-ajax=true&';
+		var VPM_HPS_GROUP = '<?php echo esc_attr($theSlug);?>';
+		document.title = '‘<?php echo esc_attr($slideGroup->name);?>’ Slides ' + document.title.substring(13, document.title.length);				
 		//]]>
 		</script>
 		
@@ -713,171 +732,24 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		</noscript>
 		
 		<form name="vpm-the-slides">
-				
-		<!--sortable slides-->
-		<?php $currentSlides = VPM_Slider::getCurrentSlides($theSlug); ?>
-		
-		<div id="slidesort-container">
-		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*180 + 50); ?>px; min-width:80%;">
-		<?php
-		
-		if (is_array($currentSlides) && count($currentSlides) > 0)
-		{
-		
-			foreach($currentSlides as $slide) {
+
+			<div id="message-area" class="updated settings-error below-h2"></div>
 			
-				$myId = VPM_Slider::idFilter($slide['id']);
-				
-				?>
-				
-				<li id="slidesort_<?php echo $myId;?>">
-								
-					<span id="slidesort_<?php echo $myId;?>_text"><?php echo stripslashes(esc_html($slide['title']));?></span>
-					
-					<span id="slidesort_<?php echo $myId;?>_delete" class="slide-delete">
-						[<a id="slidesort_<?php echo $myId;?>_delete_button" class="slide-delete-button" href="#">delete</a>]
-					</span>
-				
-				</li>
-				
-				<?php
-			
-			}
-		
-		}
-		
-		?>
-	
-		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>Click &lsquo;Add New&rsquo; to create a slide.</div>
-		</ul>
-		</div>
-		
-		<div id="message-area" class="updated settings-error below-h2"></div>
-		
-		<div id="loading-area"><img src="<?php echo plugin_dir_url( __FILE__ ).'img/loadingAnimation.gif';?>" /></div>
-		
-		<hr class="edit-area-top-hr" />
-		
-		<div id="edit-area">
-		
-			<ul id="vpm-slider" class="vpm-slider">
-			
-				<li id="preview-area">
-				
-					<div id="slide-preview" class="desc">
-						<h2 id="slide-preview-title">Slide preview</h2>
-						<div class="png_fix">
-							<p id="slide-preview-description">Class Aptent Taciti Sociosqu Ad Litora Torquent Per Conubia Nostra, Per Inceptos.</p>
-						</div>
-					</div>
-				
-				</li>
-			
-			</ul>
-		
-			<div id="edit-controls">
-				<form id="edit-form">
-					<table class="form-table edit-controls-form-table">
-						<tbody>
-							<tr class="form-field">
-								<th scope="row">
-									<label for="edit-slide-title">Title</label>
-								</th>
-								<td>
-									<input type="text" name="slide-title" id="edit-slide-title" value="" maxlength="64" class="edit-controls-inputs" />
-								</td>
-							</tr>
-							<tr class="form-field">
-								<th scope="row">
-									<label for="edit-slide-description">Description</label>
-								</th>
-								<td>
-									<input type="text" name="slide-description" id="edit-slide-description" value="" maxlength="255" class="edit-controls-inputs" style="min-width:200px" />
-								</td>
-							</tr>
-							
-							<tr class="form-field">
-								<th scope="row">
-									<label for="edit-slide-image-upload">Background</label>
-								</th>
-								<td>
-									<input id="edit-slide-image-url" type="hidden" name="slide-image" />
-									<!--<span id="edit-slide-image-title"></span>-->
-									<input id="edit-slide-image-upload" type="button" class="button" value="Upload or choose image" />
-								</td>
-							</tr>
-							
-							<tr class="form-field">
-								<th scope="row">
-									Slide Link
-								</th>
-								<td>
-									<label for="slide-link-is-internal">
-										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-internal" value="true" />
-									A page or post on this site
-									</label>
-									
-								</td>
-							</tr>
-							
-							<tr class="form-field" id="slide-link-internal-settings">
-								<th scope="row">
-								
-								</th>
-								<td>
-									<span id="slide-link-internal-display">No post selected</span>
-									<input id="slide-link-internal-id" name="slide-link-internal" value="" type="hidden" />
-									<input id="slide-link-finder" type="button" class="button" value="Find post" style="width:50px;" />			
-								</td>
-							</tr>
-							
-							<tr class="form-field">
-								<th scope="row">
-								
-								</th>
-								<td>
-									<label for="slide-link-is-external">
-										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-external" value="false" />
-									An external link
-									</label>
-								</td>
-							</tr>
-							
-							<tr class="form-field" id="slide-link-external-settings">
-								<th scope="row">
-								</th>
-								<td>
-									<input type="text" name="slide-link" id="edit-slide-link" value="" maxlength="255" class="edit-controls-inputs" />
-								</td>
-							</tr>
-							
-							<tr class="form-field edit-controls-save-input">
-								<th scope="row">
-									
-								</th>
-								<td>
-									<input type="button" id="edit-controls-save" class="button-primary" value="Save" />
-									<input type="button" id="edit-controls-cancel" class="button-secondary" value="Cancel" />
-									<img id="edit-controls-spinner" src="images/loading.gif" width="16" height="16" alt="Loading" />
-								</td>
-							</tr>
-							
-						</tbody>					
-					</table>
-				</form>
-			
+			<div class="metabox-holder">
+				<?php do_meta_boxes('_vpm_slider_slide', 'normal', null);?>	
 			</div>
-		
-		</div>
-		
-		<div style="clear:both;"></div>
-		
-		
-		<!--<br/>
-		<input type="button" value="Serialise slide order" id="serialise-me-test" /><br />
-		<input type="button" value="Show X/Y offset values" id="show-xy-test" /><br />-->
-		
-		
+			
+			<div class="metabox-holder has-right-sidebar">
+				<div class="inner-sidebar">
+					<?php do_meta_boxes('_vpm_slider_slide_bottom', 'side', null);?>	
+				</div>
+				<div id="post-body">
+					<div id="post-body-content">
+						<?php do_meta_boxes('_vpm_slider_slide_bottom', 'normal', null);?>	
+					</div>
+				</div>
+			</div>
+	
 		</form>
 		
 		
@@ -1092,6 +964,188 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		<strong><a href="">VPM Slider</a> by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>.</strong> If you find this plugin useful, or are using it commercially, please consider
 		<a href="">making a financial contribution</a>. Thank you.</p>
 		<?php
+	
+	}
+	
+	public function printSlideSorterMetabox()
+	{
+	/*
+		Print to output the contents of the slide sorter/slide listing metabox.
+	*/
+	
+		global $theSlug;
+	
+		?><!--sortable slides-->
+		<?php $currentSlides = VPM_Slider::getCurrentSlides($theSlug); ?>
+		
+		<div id="slidesort-container">
+		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*180 + 50); ?>px; min-width:80%;">
+		<?php
+		
+		if (is_array($currentSlides) && count($currentSlides) > 0)
+		{
+		
+			foreach($currentSlides as $slide) {
+			
+				$myId = VPM_Slider::idFilter($slide['id']);
+				
+				?>
+				
+				<li id="slidesort_<?php echo $myId;?>">
+								
+					<span id="slidesort_<?php echo $myId;?>_text"><?php echo stripslashes(esc_html($slide['title']));?></span>
+					
+					<span id="slidesort_<?php echo $myId;?>_delete" class="slide-delete">
+						[<a id="slidesort_<?php echo $myId;?>_delete_button" class="slide-delete-button" href="#">delete</a>]
+					</span>
+				
+				</li>
+				
+				<?php
+			
+			}
+		
+		}
+		
+		?>
+	
+		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>Click &lsquo;Add New&rsquo; to create a slide.</div>
+		</ul>
+		</div>
+		
+		<div id="loading-area"><img src="<?php echo plugin_dir_url( __FILE__ ).'img/loadingAnimation.gif';?>" alt="loading" title="loading" /></div>
+		
+		<?php
+	
+	}
+	
+	public function printSlidePreviewMetabox()
+	{
+	/*
+		Print to output the contents of the slide preview metabox.
+	*/	
+		?>
+			<div id="edit-area">
+		
+			<ul id="vpm-slider" class="vpm-slider">
+			
+				<li id="preview-area">
+				
+					<div id="slide-preview" class="desc">
+						<h2 id="slide-preview-title">untitled</h2>
+						<div class="png_fix">
+							<p id="slide-preview-description">(no text)</p>
+						</div>
+					</div>
+				
+				</li>
+			
+			</ul>
+		
+		</div>
+		
+		<div style="clear:both;"></div><?php
+	
+	}
+	
+	public function printSlideEditorMetabox()
+	{
+	/*
+		Print to output the contents of the slide editor metabox.
+	*/
+	?>
+				<div id="edit-controls">
+				<form id="edit-form">
+					<table class="form-table edit-controls-form-table">
+						<tbody>
+							<tr class="form-field">
+								<th scope="row">
+									<label for="edit-slide-title">Title</label>
+								</th>
+								<td>
+									<input type="text" name="slide-title" id="edit-slide-title" value="" maxlength="64" class="edit-controls-inputs" />
+								</td>
+							</tr>
+							<tr class="form-field">
+								<th scope="row">
+									<label for="edit-slide-description">Description</label>
+								</th>
+								<td>
+									<input type="text" name="slide-description" id="edit-slide-description" value="" maxlength="255" class="edit-controls-inputs" style="min-width:200px" />
+								</td>
+							</tr>
+							
+							<tr class="form-field">
+								<th scope="row">
+									<label for="edit-slide-image-upload">Background</label>
+								</th>
+								<td>
+									<input id="edit-slide-image-url" type="hidden" name="slide-image" />
+									<!--<span id="edit-slide-image-title"></span>-->
+									<input id="edit-slide-image-upload" type="button" class="button" value="Upload or choose image" />
+								</td>
+							</tr>
+							
+							<tr class="form-field">
+								<th scope="row">
+									Slide Link
+								</th>
+								<td>
+									<label for="slide-link-is-internal">
+										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-internal" value="true" />
+									A page or post on this site
+									</label>
+									
+								</td>
+							</tr>
+							
+							<tr class="form-field" id="slide-link-internal-settings">
+								<th scope="row">
+								
+								</th>
+								<td>
+									<span id="slide-link-internal-display">No post selected</span>
+									<input id="slide-link-internal-id" name="slide-link-internal" value="" type="hidden" />
+									<input id="slide-link-finder" type="button" class="button" value="Find post" style="width:50px;" />			
+								</td>
+							</tr>
+							
+							<tr class="form-field">
+								<th scope="row">
+								
+								</th>
+								<td>
+									<label for="slide-link-is-external">
+										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-external" value="false" />
+									An external link
+									</label>
+								</td>
+							</tr>
+							
+							<tr class="form-field" id="slide-link-external-settings">
+								<th scope="row">
+								</th>
+								<td>
+									<input type="text" name="slide-link" id="edit-slide-link" value="" maxlength="255" class="edit-controls-inputs" />
+								</td>
+							</tr>
+							
+							<tr class="form-field edit-controls-save-input">
+								<th scope="row">
+									
+								</th>
+								<td>
+									<input type="button" id="edit-controls-save" class="button-primary" value="Save" />
+									<input type="button" id="edit-controls-cancel" class="button-secondary" value="Cancel" />
+									<img id="edit-controls-spinner" src="images/loading.gif" width="16" height="16" alt="Loading" />
+								</td>
+							</tr>
+							
+						</tbody>					
+					</table>
+				</form>
+			
+			</div><?php
 	
 	}
 
