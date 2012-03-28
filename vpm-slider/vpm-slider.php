@@ -646,7 +646,11 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 		<div class="metabox-holder has-right-sidebar">
 
-			<div class="post-body"><div class="post-body-content table-holder">
+			<div class="inner-sidebar">
+				<?php do_meta_boxes('_vpm_slider_slide_groups', 'side', null);?>
+			</div>
+						
+			<div id="post-body"><div id="post-body-content">
 
 				<?php require_once( dirname( __FILE__ ) . '/slide_groups_table.php');
 				$table = new Slide_Groups_Table();		
@@ -661,10 +665,6 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 				?>
 		
 			</div></div>
-
-			<div class="inner-sidebar" style="margin-top:40px;">
-				<?php do_meta_boxes('_vpm_slider_slide_groups', 'side', null);?>
-			</div>
 		
 		</div>
 			
