@@ -55,7 +55,7 @@ if (empty($slug))
 }
 
 try {
-	$be = new VPMSliderBackend($slug);
+	$be = new VPM_Slider_Backend($slug);
 }
 catch (Exception $e)
 {

@@ -194,8 +194,8 @@ ul#new-slide-button li {
 
 /* Slide Groups Table Column widths */
 .column-slides_count {
-	width:60px !important;
-	max-width: 60px !important;
+	width:80px !important;
+	max-width: 80px !important;
 }
 .column-actions
 {
@@ -205,4 +205,15 @@ ul#new-slide-button li {
 #new-slide-group
 {
 	display:none;
+}
+
+/* Metaboxes */
+.postbox .hndle {
+	cursor: pointer;
+	// position: relative;
+}
+
+.postbox .hndle input {
+	position: relative;
+	z-index: 100;
 }

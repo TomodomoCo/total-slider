@@ -24,7 +24,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-class SlideGroupsTable extends WP_List_Table {
+class Slide_Groups_Table extends WP_List_Table {
 
 	public function __construct($args = array())
 	{
@@ -132,7 +132,7 @@ class SlideGroupsTable extends WP_List_Table {
 	// not implemented yet
     
 	
-	public function getTotalItems()
+	public function get_total_items()
 	{
 	/*
 		Quickly get a count for the total number of items
@@ -143,7 +143,7 @@ class SlideGroupsTable extends WP_List_Table {
 	
 	}
 	
-	public function getGroups()
+	public function get_groups()
 	{
 	/*
 		Get the slide groups from the options table, so
@@ -173,8 +173,8 @@ class SlideGroupsTable extends WP_List_Table {
 		// pagination
 		$currentPage = $this->get_pagenum();
 		
-		$totalItems = $this->getTotalItems();
-		$data = $this->getGroups();
+		$totalItems = $this->get_total_items();
+		$data = $this->get_groups();
 		
 		// get the data
 

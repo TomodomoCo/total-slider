@@ -35,12 +35,14 @@ define('VPM_SLIDER_DEFAULT_CROP_HEIGHT', 350);
 
 require_once(dirname(__FILE__).'/slides_backend.php');
 
-class VPMSlider { // not actually a widget -- really a plugin admin panel
+/******************************************** VPM_Slider main class ********************************************/
+
+class VPM_Slider { // not actually a widget -- really a plugin admin panel
 							//  the widget class comes later
 
 
 
-	/* data strucutre
+	/* data structure
 	
 		a serialized array stored as a wp_option
 		
@@ -69,6 +71,8 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 	*/
 	
+	/***********	Registration, first-time, etc.	***********/
+	
 	public function createSlidesOptionField() {
 	/*
 		Upon plugin activation, creates the vpm_slider_slide_groups option
@@ -87,6 +91,17 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 	}
 	
+	public function registerAsWidget() {
+	/*
+		Register the output to the theme as a widget	
+	*/
+	
+		register_widget('VPM_Slider_Widget');
+
+	}
+		
+	/***********	Utility Functions	***********/
+	
 	public function sanitizeSlideGroupSlug($slug)
 	{
 	/*
@@ -100,7 +115,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		Returns an array of the current slides in the database, in their 
 		current precedence order.
 	*/
-		return get_option('vpm_slider_slides_' . VPMSlider::sanitizeSlideGroupSlug($slug) );	
+		return get_option('vpm_slider_slides_' . VPM_Slider::sanitizeSlideGroupSlug($slug) );	
 	}
 	
 	private function idFilter($idToFilter)
@@ -127,7 +142,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			
 			case 'edit-slide-group':
 				$url = 'admin.php?page=vpm-slider&group=';
-				$url .= esc_attr(VPMSlider::sanitizeSlideGroupSlug($data));
+				$url .= esc_attr(VPM_Slider::sanitizeSlideGroupSlug($data));
 			break;
 			
 			default:
@@ -144,6 +159,115 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 	}
 	
+	public function determineCropWidthAndHeight()
+	{
+	/*
+		Using the active Slider template, determine the desired crop height
+		and crop width for the background image.
+		
+		Requires that custom theme CSS wrap the width and height in question in
+		//	/*crop-to-width*/
+		//  /*end crop-to-width*/
+		//	/*crop-to-height*/
+		//	/*end crop-to-height*/
+		/*
+		
+	*/
+		$themePath = get_stylesheet_directory();
+		
+		if (@file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.css'))
+		{
+			$css = @file_get_contents($themePath . '/vpm-slider-templates/vpm-slider-template.css');
+		}
+		else {
+			$css = @file_get_contents(dirname(__FILE__) . '/templates/vpm-slider-template.css');
+		}
+			
+		if ($css !== false)
+		{
+			$matches = array();
+			preg_match('|/\*crop\-to\-width\*/(.*)/\*end crop\-to\-width\*/|', $css, $matches);
+			
+			if (count($matches) > 0)
+			{
+				$cropWidth = (int) preg_replace('/[^0-9]$/', '', $matches[1]);
+			}
+			else {
+				$cropWidth = VPM_SLIDER_DEFAULT_CROP_WIDTH;
+			}
+			
+			$matches = array();
+			
+			preg_match('|/\*crop\-to\-height\*/(.*)/\*end crop\-to\-height\*/|', $css, $matches);										
+			
+			if (count($matches) > 0)
+			{
+				$cropHeight = (int) preg_replace('/[^0-9]$/', '', $matches[1]);
+			}
+			else {
+				$cropHeight = VPM_SLIDER_DEFAULT_CROP_HEIGHT;
+			}	
+		}
+		else {
+			$cropWidth = VPM_SLIDER_DEFAULT_CROP_WIDTH;
+			$cropHeight = VPM_SLIDER_DEFAULT_CROP_HEIGHT;
+		}
+		
+		return array('width' => $cropWidth, 'height' => $cropHeight);
+	
+	}
+	
+	public function setCapabilityForRoles($rolesToSet)
+	{
+	/*
+		Set the VPM_SLIDER_REQUIRED_CAPABILITY capability against this role, so this WordPress
+		user role is able to manage the slides.
+		
+		Will clear out the capability from all roles, then add it to both administrator and the
+		specified roles. (Administrator always has access).
+	*/
+		global $wp_roles;
+		
+		if (!current_user_can('manage_options'))
+		{
+			return false;
+		}
+	
+		$allRoles = get_editable_roles();
+		$validRoles = array_keys($allRoles);
+		
+		if (!is_array($allRoles) || count($allRoles) < 1)
+		{
+			return false;
+		}
+		
+		// clear the capability from all roles first
+		foreach ($allRoles as $rName => $r)
+		{
+			$wp_roles->remove_cap($rName, VPM_SLIDER_REQUIRED_CAPABILITY);
+		}
+		
+		// add the capability to 'administrator', which can always manage slides
+		$wp_roles->add_cap('administrator', VPM_SLIDER_REQUIRED_CAPABILITY);
+		
+		// add the capability to the specified $roleToSet
+		if (is_array($rolesToSet) && count($rolesToSet) > 0)
+		{
+			foreach($rolesToSet as $theRole)
+			{
+				if (in_array($theRole, $validRoles))
+				{
+					$wp_roles->add_cap($theRole, VPM_SLIDER_REQUIRED_CAPABILITY);
+				}
+			}
+		}
+		
+		return true;
+	
+	}	
+	
+	/***********	Control passing, runtime UI setup, enqueuing etc.	***********/
+	
 	public function passControlToAjaxHandler()
 	{
 	/*
@@ -153,7 +277,8 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		This should hook admin_init() (therefore be as light as possible).
 	*/
 	
-		if (array_key_exists('page', $_GET) && $_GET['page'] == 'vpm-slider' &&
+		if (
+			array_key_exists('page', $_GET) && $_GET['page'] == 'vpm-slider' &&
 			array_key_exists('vpm-slider-ajax', $_GET) && $_GET['vpm-slider-ajax'] == 'true'
 		)
 		{
@@ -161,13 +286,12 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		}		
 	
 	}
-
+	
 	public function addAdminSubMenu() {
-		/*
-			Add the submenu to the admin sidebar for the configuration screen.
-		*/	
-		
-		if (array_key_exists('page', $_GET) && $_GET['page'] == 'vpm-slider')
+	/*
+		Add the submenu to the admin sidebar for the configuration screen.
+	*/	
+		if ( array_key_exists( 'page', $_GET ) && $_GET['page'] == 'vpm-slider' )
 		{
 		
 			// get our JavaScript on	
@@ -181,6 +305,8 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			wp_enqueue_script('thickbox');
 			wp_enqueue_style('thickbox');
 			
+			wp_enqueue_script('postbox');
+			
 			wp_enqueue_script('jquery-ui-draggable');	
 			wp_enqueue_script('jquery-ui-droppable');	
 			wp_enqueue_script('jquery-ui-sortable');		
@@ -189,7 +315,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			wp_enqueue_script('vpm-slider-interface');	
 			
 			// enqueue the frontend so that the interface will be ready
-			VPMSlider::enqueueSliderFrontend('backend');
+			VPM_Slider::enqueueSliderFrontend('backend');
 			
 			wp_register_style('vpm-slider-interface-styles', plugin_dir_url( __FILE__ ).'css/interface.css');
 			wp_enqueue_style('vpm-slider-interface-styles');
@@ -202,7 +328,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			'Slider',										/* title of options menu item */
 			VPM_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
 			'vpm-slider',									/* menu slug */
-			array('VPMSlider', 'printSlideGroupsPage'),		/* callback to print the page to output */
+			array('VPM_Slider', 'printSlideGroupsPage'),		/* callback to print the page to output */
 			plugin_dir_url( __FILE__ ).'img/vpm-slider-icon-16.png',/* icon file */
 			null 											/* menu position number */
 		);
@@ -215,7 +341,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			'Slide Groups',									/* title to use in menu */
 			VPM_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
 			'vpm-slider',									/* menu slug */
-			array('VPMSlider', 'printSlideGroupsPage')		/* callback to print the page to output */
+			array('VPM_Slider', 'printSlideGroupsPage')		/* callback to print the page to output */
 		
 		);
 		
@@ -227,14 +353,187 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			'Settings',										/* title to use in menu */
 			VPM_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
 			'vpm-slider-settings',							/* menu slug */
-			array('VPMSlider', 'printSettingsPage')			/* callback to print the page to output */
+			array('VPM_Slider', 'printSettingsPage')			/* callback to print the page to output */
 		
 		);		
 		
-		add_action( 'admin_head-'. $submenu, array('VPMSlider', 'addSlidesHelp') );
+		add_action( 'admin_head-'. $submenu, array('VPM_Slider', 'addSlidesHelp') );
 		
 	
 	}
+	
+	
+	public function enqueueSliderFrontend($context = 'frontend')
+	{
+	/*
+		When WordPress is enqueueing the styles, inject our slider CSS and JavaScript in.
+		Use the default template if not available in the active theme, or use the active theme's
+		VPM Slider templates if they do indeed exist.
+		
+		If $context is 'backend', we will load the CSS only and not the JS.
+		
+	*/
+	
+		// look for a template file for vpm-slider in the current active theme
+		$themePath = get_stylesheet_directory();
+		
+		if (
+			@file_exists($themePath . '/vpm-slider-templates' ) 
+			&& @is_dir($themePath . '/vpm-slider-templates' )
+			&& @file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.css')
+		)
+		{
+		
+			// determine theme URL
+			$themeURL = get_stylesheet_directory_uri(); // get 'stylesheet' not 'template' will support child themes
+			
+			// enqueue the user's custom CSS template
+			wp_register_style(
+				'vpm-slider-frontend',																		/* handle */
+				$themeURL . '/vpm-slider-templates/vpm-slider-template.css',								/* src */
+				array(),																					/* deps */
+				date("Ymd", @filemtime($themePath . '/vpm-slider-templates/vpm-slider-template.css') ) , 	/* ver */
+				'all'																						/* media */
+			);
+			
+			wp_enqueue_style('vpm-slider-frontend');
+			
+			if ($context != 'backend')
+			{
+				// is there a custom JS to use?
+				if ( @file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.js') )
+				{
+					
+					// enqueue the user's custom JS template
+					wp_register_script(
+						'vpm-slider-frontend',																		/* handle */
+						$themeURL . '/vpm-slider-templates/vpm-slider-template.js',									/* src */
+						array(),																					/* deps */
+						date("Ymd", @filemtime($themePath . '/vpm-slider-templates/vpm-slider-template.js') ) , 	/* ver */
+						'all'																						/* media */
+					);
+					
+					wp_enqueue_script('vpm-slider-frontend');		
+					
+				}
+				else {
+					// use the default JS				
+					wp_register_script(
+						'vpm-slider-jquery-cycle-lite',															/* handle */
+						plugin_dir_url( __FILE__ ) . 'js/jquery.cycle.lite.js',									/* src */
+						array('jquery'),																		/* deps */
+						date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
+														 '/js/jquery.cycle.lite.js')) , 						/* ver */
+						'all'
+					);
+					
+					
+					wp_enqueue_script('vpm-slider-jquery-cycle-lite');
+					
+					
+					// and the frontend
+					wp_register_script(
+						'vpm-slider-frontend',																/* handle */
+						plugin_dir_url( __FILE__ ) . 'templates/vpm-slider-template.js',					/* src */
+						array('jquery', 'vpm-slider-jquery-cycle-lite'),									/* deps */
+						date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
+														 '/templates/vpm-slider-template.js')) , 			/* ver */
+						'all'
+					);		
+				}
+			}
+		
+		}
+		else {
+			
+			// enqueue our defaults
+			wp_register_style(
+				'vpm-slider-frontend',																		/* handle */
+				plugin_dir_url( __FILE__ ) . 'templates/vpm-slider-template.css',							/* src */
+				array(),																					/* deps */
+				date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
+													 '/templates/vpm-slider-template.css')) , 				/* ver */
+				'all'																						/* media */
+			);
+			
+			wp_enqueue_style('vpm-slider-frontend');
+			
+			if ($context != 'backend')
+			{
+				// also bring in the jquery cycle lite
+				
+				wp_register_script(
+					'vpm-slider-jquery-cycle-lite',															/* handle */
+					plugin_dir_url( __FILE__ ) . 'js/jquery.cycle.lite.js',									/* src */
+					array('jquery'),																		/* deps */
+					date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
+													 '/js/jquery.cycle.lite.js')) , 						/* ver */
+					'all'
+				);
+				
+				wp_enqueue_script('vpm-slider-jquery-cycle-lite');
+				
+				// and the frontend
+				wp_register_script(
+					'vpm-slider-frontend',																/* handle */
+					plugin_dir_url( __FILE__ ) . 'templates/vpm-slider-template.js',					/* src */
+					array('jquery', 'vpm-slider-jquery-cycle-lite'),									/* deps */
+					date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
+													 '/templates/vpm-slider-template.js')) , 			/* ver */
+					'all'
+				);		
+				
+				wp_enqueue_script('vpm-slider-frontend');		
+							
+			}	
+		}
+	
+	}
+
+	public function addSlidesHelp()
+	{
+	/*
+		Add our help tab to the Slides page.
+	*/
+	
+		$screen = get_current_screen();
+		
+		$screen->add_help_tab( array (
+			'id'			=>			'vpm-slider-groups',
+			'title'			=>			'Slide Groups',
+			'content'		=>			'<p>Each Slide Group contains a number of Slides that will appear, one after another, when you publish your Slides on your site.</p><p>You can make up to '.intval(VPM_SLIDER_MAX_SLIDE_GROUPS).' Slide Groups, which you can use to have different slideshows on different parts of your site.</p>'
+		
+		) );
+		
+		$screen->add_help_tab( array (
+			'id'			=>			'vpm-slider-editing',
+			'title'			=>			'Editing',
+			'content'		=>			'<p>Once you have clicked &lsquo;Edit&rsquo; on the desired Slide Group, you&rsquo;ll see all of its Slides.</p><p>Click on any Slide to make changes. As well as changing the Slide text, link and image, you can drag and drop the title and description to place them anywhere over the background image.</p><p>Simply drag and drop to re-order the Slides in the Slide Group. The new order is saved immediately.</p>'
+		
+		) );		
+		
+		$screen->add_help_tab( array(
+		
+			'id'			=>			'vpm-slider-publishing',
+			'title'			=>			'Publishing',
+			'content'		=>			'<p>Once you are happy with your new Slide Group, you need to publish it for it to show up on your site.</p><p>To do this, your theme needs to support Widgets, and have a &lsquo;sidebar&rsquo; in the theme where you&rsquo;d like the Slides to show up.</p><p>Go across to <a href="widgets.php">Appearance &raquo; Widgets</a> and drag a <strong>VPM Slider</strong> Widget to the desired sidebar. In the Widget&rsquo;s settings, choose the Slide Group to show and click <em>Save</em>.</p>'
+		
+		) );
+		
+		$crop = VPM_Slider::determineCropWidthAndHeight();
+
+		$screen->add_help_tab( array(
+		
+			'id'			=>			'vpm-slider-hints',
+			'title'			=>			'Hints &amp; Tips',
+			'content'		=>			'<ul><li>For the best visual results, crop your background images to the size used by your Slider template &mdash; '.$crop['width'].'&times;'.$crop['height'].'.</li><li>Experiment with dragging and dropping the title and description over different parts of the background to achieve a different visual effect.</li><li>Keep your site fresh &mdash; create multiple Slide Groups ahead of time, then simply edit the <strong>VPM Slider</strong> Widget to switch over to display another Slide Group every now and then.</li><li>Completely customise the look of your Slides &mdash; create a <em>vpm-slider-templates</em> subfolder in your theme. You can use our <em>templates</em> folder in the plugin as a starting point.</ul>'
+		
+		) );	
+	
+	
+	}
+	
+	/***********	Print functions for each plugin admin page	***********/
 	
 	public function printSlideGroupsPage()
 	{
@@ -242,6 +541,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		Print the page for adding, deleting Slide Groups and for pushing people over
 		to the 'actual' slides editing interface for that Slide Group.
 	*/
+	
 		
 		// permissions check
 		if (!current_user_can(VPM_SLIDER_REQUIRED_CAPABILITY))
@@ -249,6 +549,9 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			?><h1>This page is not accessible to your user.</h1><?php
 			return;
 		}
+		
+		// add the credits/notes metabox
+		add_meta_box('credits-notes', 'Credits/Notes', array('VPM_Slider', 'printCreditsMetabox'), '_vpm_slider_slide_groups', 'side', 'core');
 
 		// if we are to remove a slide group, do that and redirect to home
 		if (array_key_exists('action', $_GET) && $_GET['action'] == 'remove' && array_key_exists('group', $_GET))
@@ -256,14 +559,14 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			if (wp_verify_nonce($_REQUEST['_wpnonce'], 'remove-slide-group'))
 			{
 				// remove the slide group
-				$newGroup = new VPMSlideGroup($_GET['group']);
+				$newGroup = new VPM_Slide_Group($_GET['group']);
 				$newGroup->delete();
 				
 				// remove the option
-				delete_option('vpm_slider_slides_'. VPMSlider::sanitizeSlideGroupSlug($_GET['group']));
+				delete_option('vpm_slider_slides_'. VPM_Slider::sanitizeSlideGroupSlug($_GET['group']));
 				
 				// redirect back to the admin vpm slider root page
-				VPMSlider::uglyJSRedirect('root');
+				VPM_Slider::uglyJSRedirect('root');
 				die();
 					
 			}
@@ -273,7 +576,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		// to printSlidesPage() for editing purposes
 		if (array_key_exists('group', $_GET))
 		{
-			VPMSlider::printSlidesPage();
+			VPM_Slider::printSlidesPage();
 			return;
 		}
 		
@@ -286,16 +589,16 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 				if (!empty($_POST['group-name']))
 				{				
 					// add the new slide group
-					$newSlug = VPMSlider::sanitizeSlideGroupSlug(sanitize_title_with_dashes($_POST['group-name']));
+					$newSlug = VPM_Slider::sanitizeSlideGroupSlug(sanitize_title_with_dashes($_POST['group-name']));
 					
-					$newGroup = new VPMSlideGroup($newSlug, $_POST['group-name']);
+					$newGroup = new VPM_Slide_Group($newSlug, $_POST['group-name']);
 					$newGroup->save();	
 					
 					// add the new slides option for this group
 					add_option('vpm_slider_slides_'.$newSlug, array(), '', 'yes');
 					
 					// redirect to the new edit page for this slide group
-					VPMSlider::uglyJSRedirect('edit-slide-group', $newSlug);
+					VPM_Slider::uglyJSRedirect('edit-slide-group', $newSlug);
 					die();
 				}
 			}
@@ -341,21 +644,25 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			</form>
 		</div>
 
+		<div id="sgtable">
 
 		<?php require_once( dirname( __FILE__ ) . '/slide_groups_table.php');
-		$table = new SlideGroupsTable();		
+		$table = new Slide_Groups_Table();		
 		$table->prepare_items();		
 		$table->display();
 		
 				
-		if ($table->getTotalItems() < 1)
+		if ($table->get_total_items() < 1)
 		{
 			?><div class="slidesort-add-hint">Click &lsquo;Add New&rsquo; to create a new group of slides.</div><?php
 		}
 		?>
 		
-		<?php VPMSlider::printPluginFooter(); ?>
-		
+		</div>
+		<div class="inner-sidebar">
+		<?php do_meta_boxes('_vpm_slider_slide_groups', 'side', null);?>
+		</div>
+			
 		</div><!--wrap-->
 		<?php
 	}
@@ -371,7 +678,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			return;
 		}
 
-		$theSlug = VPMSlider::sanitizeSlideGroupSlug($_GET['group']);
+		$theSlug = VPM_Slider::sanitizeSlideGroupSlug($_GET['group']);
 		if (empty($theSlug))
 		{
 			echo '<div class="wrap"><h1>No Slide Group selected.</h1></div>';
@@ -379,7 +686,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		}
 		
 		// get the name data for this slide group based on its slug
-		$slideGroup = new VPMSlideGroup($_GET['group']);
+		$slideGroup = new VPM_Slide_Group($_GET['group']);
 		if (!$slideGroup->load())
 		{
 			echo '<div class="wrap"><h1>Could not load the selected Slide Group. Does it exist?</h1></div>';
@@ -408,7 +715,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		<form name="vpm-the-slides">
 				
 		<!--sortable slides-->
-		<?php $currentSlides = VPMSlider::getCurrentSlides($theSlug); ?>
+		<?php $currentSlides = VPM_Slider::getCurrentSlides($theSlug); ?>
 		
 		<div id="slidesort-container">
 		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*180 + 50); ?>px; min-width:80%;">
@@ -419,7 +726,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 			foreach($currentSlides as $slide) {
 			
-				$myId = VPMSlider::idFilter($slide['id']);
+				$myId = VPM_Slider::idFilter($slide['id']);
 				
 				?>
 				
@@ -577,60 +884,13 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		
 		<p class="vpm-slider-help-point"><a href="#">How do I get these to show up on my site?</a></p>
 		
-		<?php VPMSlider::printPluginFooter(); ?>
+		<?php VPM_Slider::printPluginFooter(); ?>
 		
 		</div><?php
 	
 	}
 	
-	public function setCapabilityForRoles($rolesToSet)
-	{
-	/*
-		Set the VPM_SLIDER_REQUIRED_CAPABILITY capability against this role, so this WordPress
-		user role is able to manage the slides.
-		
-		Will clear out the capability from all roles, then add it to both administrator and the
-		specified roles. (Administrator always has access).
-	*/
-		global $wp_roles;
-		
-		if (!current_user_can('manage_options'))
-		{
-			return false;
-		}
 	
-		$allRoles = get_editable_roles();
-		$validRoles = array_keys($allRoles);
-		
-		if (!is_array($allRoles) || count($allRoles) < 1)
-		{
-			return false;
-		}
-		
-		// clear the capability from all roles first
-		foreach ($allRoles as $rName => $r)
-		{
-			$wp_roles->remove_cap($rName, VPM_SLIDER_REQUIRED_CAPABILITY);
-		}
-		
-		// add the capability to 'administrator', which can always manage slides
-		$wp_roles->add_cap('administrator', VPM_SLIDER_REQUIRED_CAPABILITY);
-		
-		// add the capability to the specified $roleToSet
-		if (is_array($rolesToSet) && count($rolesToSet) > 0)
-		{
-			foreach($rolesToSet as $theRole)
-			{
-				if (in_array($theRole, $validRoles))
-				{
-					$wp_roles->add_cap($theRole, VPM_SLIDER_REQUIRED_CAPABILITY);
-				}
-			}
-		}
-		
-		return true;
-	
-	}
 	
 	public function printSettingsPage()
 	{
@@ -672,7 +932,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 					}
 				}
 				
-				VPMSlider::setCapabilityForRoles($rolesToAdd);
+				VPM_Slider::setCapabilityForRoles($rolesToAdd);
 				$success = true;
 				$message .= 'Required role level saved.';
 			
@@ -747,7 +1007,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		</p>
 		
 		</form>
-		<?php VPMSlider::printPluginFooter(); ?>
+		<?php VPM_Slider::printPluginFooter(); ?>
 		</div><?php
 	
 	}
@@ -767,243 +1027,6 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 	
 	}
 	
-	public function addSlidesHelp()
-	{
-	/*
-		Add our help tab to the Slides page.
-	*/
-	
-		$screen = get_current_screen();
-		
-		$screen->add_help_tab( array (
-			'id'			=>			'vpm-slider-groups',
-			'title'			=>			'Slide Groups',
-			'content'		=>			'<p>Each Slide Group contains a number of Slides that will appear, one after another, when you publish your Slides on your site.</p><p>You can make up to '.intval(VPM_SLIDER_MAX_SLIDE_GROUPS).' Slide Groups, which you can use to have different slideshows on different parts of your site.</p>'
-		
-		) );
-		
-		$screen->add_help_tab( array (
-			'id'			=>			'vpm-slider-editing',
-			'title'			=>			'Editing',
-			'content'		=>			'<p>Once you have clicked &lsquo;Edit&rsquo; on the desired Slide Group, you&rsquo;ll see all of its Slides.</p><p>Click on any Slide to make changes. As well as changing the Slide text, link and image, you can drag and drop the title and description to place them anywhere over the background image.</p><p>Simply drag and drop to re-order the Slides in the Slide Group. The new order is saved immediately.</p>'
-		
-		) );		
-		
-		$screen->add_help_tab( array(
-		
-			'id'			=>			'vpm-slider-publishing',
-			'title'			=>			'Publishing',
-			'content'		=>			'<p>Once you are happy with your new Slide Group, you need to publish it for it to show up on your site.</p><p>To do this, your theme needs to support Widgets, and have a &lsquo;sidebar&rsquo; in the theme where you&rsquo;d like the Slides to show up.</p><p>Go across to <a href="widgets.php">Appearance &raquo; Widgets</a> and drag a <strong>VPM Slider</strong> Widget to the desired sidebar. In the Widget&rsquo;s settings, choose the Slide Group to show and click <em>Save</em>.</p>'
-		
-		) );
-		
-		$crop = VPMSlider::determineCropWidthAndHeight();
-
-		$screen->add_help_tab( array(
-		
-			'id'			=>			'vpm-slider-hints',
-			'title'			=>			'Hints &amp; Tips',
-			'content'		=>			'<ul><li>For the best visual results, crop your background images to the size used by your Slider template &mdash; '.$crop['width'].'&times;'.$crop['height'].'.</li><li>Experiment with dragging and dropping the title and description over different parts of the background to achieve a different visual effect.</li><li>Keep your site fresh &mdash; create multiple Slide Groups ahead of time, then simply edit the <strong>VPM Slider</strong> Widget to switch over to display another Slide Group every now and then.</li><li>Completely customise the look of your Slides &mdash; create a <em>vpm-slider-templates</em> subfolder in your theme. You can use our <em>templates</em> folder in the plugin as a starting point.</ul>'
-		
-		) );	
-	
-	
-	}
-	
-	public function enqueueSliderFrontend($context = 'frontend')
-	{
-	/*
-		When WordPress is enqueueing the styles, inject our slider CSS and JavaScript in.
-		Use the default template if not available in the active theme, or use the active theme's
-		VPM Slider templates if they do indeed exist.
-		
-		If $context is 'backend', we will load the CSS only and not the JS.
-		
-	*/
-	
-		// look for a template file for vpm-slider in the current active theme
-		$themePath = get_stylesheet_directory();
-		
-		if (
-			@file_exists($themePath . '/vpm-slider-templates' ) 
-			&& @is_dir($themePath . '/vpm-slider-templates' )
-			&& @file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.css')
-		)
-		{
-		
-			// determine theme URL
-			$themeURL = get_stylesheet_directory_uri(); // get 'stylesheet' not 'template' will support child themes
-			
-			// enqueue the user's custom CSS template
-			wp_register_style(
-				'vpm-slider-frontend',																		/* handle */
-				$themeURL . '/vpm-slider-templates/vpm-slider-template.css',								/* src */
-				array(),																					/* deps */
-				date("Ymd", @filemtime($themePath . '/vpm-slider-templates/vpm-slider-template.css') ) , 	/* ver */
-				'all'																						/* media */
-			);
-			
-			wp_enqueue_style('vpm-slider-frontend');
-			
-			if ($context != 'backend')
-			{
-				// is there a custom JS to use?
-				if ( @file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.js') )
-				{
-					
-					// enqueue the user's custom JS template
-					wp_register_script(
-						'vpm-slider-frontend',																		/* handle */
-						$themeURL . '/vpm-slider-templates/vpm-slider-template.js',									/* src */
-						array(),																					/* deps */
-						date("Ymd", @filemtime($themePath . '/vpm-slider-templates/vpm-slider-template.js') ) , 	/* ver */
-						'all'																						/* media */
-					);
-					
-					wp_enqueue_script('vpm-slider-frontend');		
-					
-				}
-				else {
-					// use the default JS				
-					wp_register_script(
-						'vpm-slider-jquery-cycle-lite',															/* handle */
-						plugin_dir_url( __FILE__ ) . 'js/jquery.cycle.lite.js',									/* src */
-						array('jquery'),																		/* deps */
-						date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
-														 '/js/jquery.cycle.lite.js')) , 						/* ver */
-						'all'
-					);
-					
-					
-					wp_enqueue_script('vpm-slider-jquery-cycle-lite');
-					
-					
-					// and the frontend
-					wp_register_script(
-						'vpm-slider-frontend',																/* handle */
-						plugin_dir_url( __FILE__ ) . 'templates/vpm-slider-template.js',					/* src */
-						array('jquery', 'vpm-slider-jquery-cycle-lite'),									/* deps */
-						date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
-														 '/templates/vpm-slider-template.js')) , 			/* ver */
-						'all'
-					);		
-				}
-			}
-		
-		}
-		else {
-			
-			// enqueue our defaults
-			wp_register_style(
-				'vpm-slider-frontend',																		/* handle */
-				plugin_dir_url( __FILE__ ) . 'templates/vpm-slider-template.css',							/* src */
-				array(),																					/* deps */
-				date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
-													 '/templates/vpm-slider-template.css')) , 				/* ver */
-				'all'																						/* media */
-			);
-			
-			wp_enqueue_style('vpm-slider-frontend');
-			
-			if ($context != 'backend')
-			{
-				// also bring in the jquery cycle lite
-				
-				wp_register_script(
-					'vpm-slider-jquery-cycle-lite',															/* handle */
-					plugin_dir_url( __FILE__ ) . 'js/jquery.cycle.lite.js',									/* src */
-					array('jquery'),																		/* deps */
-					date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
-													 '/js/jquery.cycle.lite.js')) , 						/* ver */
-					'all'
-				);
-				
-				wp_enqueue_script('vpm-slider-jquery-cycle-lite');
-				
-				// and the frontend
-				wp_register_script(
-					'vpm-slider-frontend',																/* handle */
-					plugin_dir_url( __FILE__ ) . 'templates/vpm-slider-template.js',					/* src */
-					array('jquery', 'vpm-slider-jquery-cycle-lite'),									/* deps */
-					date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
-													 '/templates/vpm-slider-template.js')) , 			/* ver */
-					'all'
-				);		
-				
-				wp_enqueue_script('vpm-slider-frontend');		
-							
-			}	
-		}
-	
-	}
-	
-	public function determineCropWidthAndHeight()
-	{
-	/*
-		Using the active Slider template, determine the desired crop height
-		and crop width for the background image.
-		
-		Requires that custom theme CSS wrap the width and height in question in
-		//	/*crop-to-width*/
-		//  /*end crop-to-width*/
-		//	/*crop-to-height*/
-		//	/*end crop-to-height*/
-		/*
-		
-	*/
-		$themePath = get_stylesheet_directory();
-		
-		if (@file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.css'))
-		{
-			$css = @file_get_contents($themePath . '/vpm-slider-templates/vpm-slider-template.css');
-		}
-		else {
-			$css = @file_get_contents(dirname(__FILE__) . '/templates/vpm-slider-template.css');
-		}
-			
-		if ($css !== false)
-		{
-			$matches = array();
-			preg_match('|/\*crop\-to\-width\*/(.*)/\*end crop\-to\-width\*/|', $css, $matches);
-			
-			if (count($matches) > 0)
-			{
-				$cropWidth = (int) preg_replace('/[^0-9]$/', '', $matches[1]);
-			}
-			else {
-				$cropWidth = VPM_SLIDER_DEFAULT_CROP_WIDTH;
-			}
-			
-			$matches = array();
-			
-			preg_match('|/\*crop\-to\-height\*/(.*)/\*end crop\-to\-height\*/|', $css, $matches);										
-			
-			if (count($matches) > 0)
-			{
-				$cropHeight = (int) preg_replace('/[^0-9]$/', '', $matches[1]);
-			}
-			else {
-				$cropHeight = VPM_SLIDER_DEFAULT_CROP_HEIGHT;
-			}	
-		}
-		else {
-			$cropWidth = VPM_SLIDER_DEFAULT_CROP_WIDTH;
-			$cropHeight = VPM_SLIDER_DEFAULT_CROP_HEIGHT;
-		}
-		
-		return array('width' => $cropWidth, 'height' => $cropHeight);
-	
-	}
-	
-	public function registerAsWidget() {
-	/*
-		Register the output to the theme as a widget	
-	*/
-	
-		register_widget('VPMSliderWidget');
-
-	}
-	
 	public function printUploaderJavaScript()
 	{
 	/*
@@ -1013,7 +1036,7 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		if (array_key_exists('vpm-slider-uploader', $_GET) && $_GET['vpm-slider-uploader'] == 'bgimage')
 		{
 		
-			$crop = VPMSlider::determineCropWidthAndHeight();
+			$crop = VPM_Slider::determineCropWidthAndHeight();
 	
 		?>
 		<script type="text/javascript">
@@ -1021,7 +1044,8 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		// VPM Slider shimming button names and modifying uploader for our purposes
 		jQuery(document).ready(function() {
 		
-			jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align').hide(); // hide unnecessary items//#media-items .image-size
+			jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align').hide(); // hide unnecessary items
+			// ?? also #media-items .image-size
 		
 			jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;">Choose &lsquo;Edit Image&rsquo; and crop to <?php echo $crop['width'];?>&times;<?php echo $crop['height'];?> for best results.</p>');
 		
@@ -1032,7 +1056,9 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 			uploader.bind('FileUploaded', function() {
 				window.setTimeout(function() {
 				
-					jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align').hide(); // hide unnecessary items//#media-items .image-size
+					jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align').hide(); // hide unnecessary items
+					
+					//?? also #media-items .image-size
 					
 					jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;">Choose &lsquo;Edit Image&rsquo; and crop to <?php echo $crop['width'];?>&times;<?php echo $crop['height'];?> for best results.</p>');
 				
@@ -1052,12 +1078,30 @@ class VPMSlider { // not actually a widget -- really a plugin admin panel
 		}
 	
 	}
+	
+	/***********	Metabox printer callbacks	***********/
+	
+	public function printCreditsMetabox()
+	{
+	/*
+		Print to output the contents of the credits/notes metabox.
+	*/
+	
+		?>
+		<p style="color:#777;font-size:12px;">
+		<strong><a href="">VPM Slider</a> by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>.</strong> If you find this plugin useful, or are using it commercially, please consider
+		<a href="">making a financial contribution</a>. Thank you.</p>
+		<?php
+	
+	}
 
 
 };
 
+/******************************************** VPM_Slider_Widget ********************************************/
 
-class VPMSliderWidget extends WP_Widget {	
+
+class VPM_Slider_Widget extends WP_Widget {	
 /*
 	The VPM Slider Widget is responsible for allowing the user to place the slider in any
 	‘sidebar’ defined in their theme and for invoking the Slider template file for displaying
@@ -1187,7 +1231,7 @@ class VPMSliderWidget extends WP_Widget {
 		if ($newInstance['groupSlug'] != '**INVALID**')
 		{
 			
-			return array('groupSlug' => VPMSlider::sanitizeSlideGroupSlug($newInstance['groupSlug']));
+			return array('groupSlug' => VPM_Slider::sanitizeSlideGroupSlug($newInstance['groupSlug']));
 		}
 		else {
 			return false;
@@ -1214,7 +1258,7 @@ class VPMSliderWidget extends WP_Widget {
 	
 		if (!is_array($this->slides) || count($this->slides) < 1)
 		{
-			$this->slides = get_option('vpm_slider_slides_' . VPMSlider::sanitizeSlideGroupSlug($this->instance['groupSlug']));		
+			$this->slides = get_option('vpm_slider_slides_' . VPM_Slider::sanitizeSlideGroupSlug($this->instance['groupSlug']));		
 		}
 		
 		// on which slide should we work? does it exist?
@@ -1448,12 +1492,14 @@ class VPMSliderWidget extends WP_Widget {
 
 };
 
-register_activation_hook(__FILE__, array('VPMSlider', 'createSlidesOptionField'));
-add_action('admin_menu', array('VPMSlider', 'addAdminSubMenu'));
-add_action('widgets_init', array('VPMSlider', 'registerAsWidget'));
-add_action('admin_init', array('VPMSlider', 'passControlToAjaxHandler'));
-add_action('admin_head-media-upload-popup', array('VPMSlider', 'printUploaderJavaScript'));
+/******************************************** WordPress actions ********************************************/
 
-add_action('wp_enqueue_scripts', array('VPMSlider', 'enqueueSliderFrontend'));
+register_activation_hook(__FILE__, array('VPM_Slider', 'createSlidesOptionField'));
+add_action('admin_menu', array('VPM_Slider', 'addAdminSubMenu'));
+add_action('widgets_init', array('VPM_Slider', 'registerAsWidget'));
+add_action('admin_init', array('VPM_Slider', 'passControlToAjaxHandler'));
+add_action('admin_head-media-upload-popup', array('VPM_Slider', 'printUploaderJavaScript'));
+
+add_action('wp_enqueue_scripts', array('VPM_Slider', 'enqueueSliderFrontend'));
 
 ?>

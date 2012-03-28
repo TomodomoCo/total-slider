@@ -64,7 +64,7 @@ if (!defined('VPM_SLIDER_IN_FUNCTIONS'))
 	
 	*/
 	
-class VPMSlideGroup { 
+class VPM_Slide_Group { 
 /*
 	Defines a slide group object for the purposes of storing a list of available
 	groups in the wp_option	'vpm_slider_slide_groups'.
@@ -123,7 +123,7 @@ class VPMSlideGroup {
 		}
 		else {
 			$this->name = $currentGroups[$theIndex]->name;
-			$this->slug = VPMSlider::sanitizeSlideGroupSlug($currentGroups[$theIndex]->slug);
+			$this->slug = VPM_Slider::sanitizeSlideGroupSlug($currentGroups[$theIndex]->slug);
 			return true;
 		}
 	}
@@ -211,7 +211,7 @@ class VPMSlideGroup {
 
 };
 	
-class VPMSliderBackend {
+class VPM_Slider_Backend {
 
 	private $groupSlug; // the slug of this slide group
 
