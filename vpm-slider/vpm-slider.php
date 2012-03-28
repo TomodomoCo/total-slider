@@ -966,7 +966,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		<?php $currentSlides = VPM_Slider::getCurrentSlides($theSlug); ?>
 		
 		<div id="slidesort-container">
-		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*180 + 50); ?>px; min-width:80%;">
+		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*177); ?>px;">
 		<?php
 		
 		if (is_array($currentSlides) && count($currentSlides) > 0)
@@ -978,12 +978,12 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 				
 				?>
 				
-				<li id="slidesort_<?php echo $myId;?>">
+				<li id="slidesort_<?php echo $myId;?>" style="background: url(<?php echo esc_html($slide['background']);?>)">
 								
-					<span id="slidesort_<?php echo $myId;?>_text"><?php echo stripslashes(esc_html($slide['title']));?></span>
+					<div id="slidesort_<?php echo $myId;?>_text" class="slidesort_text"><?php echo stripslashes(esc_html($slide['title']));?></div>
 					
 					<span id="slidesort_<?php echo $myId;?>_delete" class="slide-delete">
-						[<a id="slidesort_<?php echo $myId;?>_delete_button" class="slide-delete-button" href="#">delete</a>]
+						<a id="slidesort_<?php echo $myId;?>_delete_button" class="slidesort-icon slide-delete-button" href="#">Delete</a>
 					</span>
 				
 				</li>
@@ -999,11 +999,9 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>Click &lsquo;Add New&rsquo; to create a slide.</div>
 		
-		<div class="slidesort-drag-hint" <?php if (!is_array($currentSlides) || count($currentSlides) < 2) echo ' style="visibility:hidden"'; ?>><p>Drag and drop to re-order.</p></div>
+		<!-- <div class="slidesort-drag-hint" <?php if (!is_array($currentSlides) || count($currentSlides) < 2) echo ' style="visibility:hidden"'; ?>><p>Drag and drop to re-order.</p></div> -->
 		
 		</div>
-		
-		<div id="loading-area"><img src="<?php echo plugin_dir_url( __FILE__ ).'img/loadingAnimation.gif';?>" alt="loading" title="loading" /></div>
 		
 		<?php
 	

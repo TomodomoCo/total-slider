@@ -14,16 +14,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-#icon-vpm-slides
-{
+#icon-vpm-slides {
 	background:transparent url(../img/vpm-slider-icon-32.png?ver=20120229) no-repeat;
 }
 
+.postbox .hndle {
+	cursor: default !important;
+}
+
+/* Slide sorter */
+
 #slidesort {
-	margin:0;
-	padding:0;
-	width:10000px;
-	height:75px;
+	margin: 0;
+	padding: 0;
+	width: 10000px;
+	height: 95px;
 }
 
 #slidesort-container {
@@ -34,27 +39,49 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 	padding: 0;
 }
 
+/* Slides in the slide sorter */
+
 ul#slidesort li {
 	border: 1px solid #464646;
 	background-color: #ededed;
 	display: block;
 	float: left;
 	margin: 0 15px 10px 0;
-	padding: 8px 10px 10px;
+	padding: 0;
 	cursor: pointer;
-	width: 140px;
-	height: 60px;
+	width: 160px;
+	height: 80px;
 	overflow-x: none;
+	position: relative;
 }
 
-.table-holder
-{
-	float:left;
-	width:65% !important;
+.slidesort_text {
+	padding: 4px 5px 5px;
+	color: #FFF;
+	text-shadow: 0 1px 1px #000;
+	background: url(../img/slider-desc-bg.png);
 }
 
-.postbox .hndle {
-	cursor: pointer !important;
+.slidesort-icon {
+	position: absolute;
+	width: 14px;
+	height: 14px;
+	display: block;
+	text-indent: -1000in;
+	overflow: hidden;
+	background-image: url(../img/icons.png);
+}
+
+.slide-delete-button {
+	bottom: 3px;
+	right: 3px;
+	background-position: center right;
+}
+
+.slide-move-button {
+	bottom: 3px;
+	left: 3px;
+	background-position: center left;
 }
 
 li.slidesort-selected {
@@ -63,12 +90,11 @@ li.slidesort-selected {
 	color:#ffffff;
 }
 
-li.slidesort-selected a, li.slidesort-selected a:visited
-{
+li.slidesort-selected a, li.slidesort-selected a:visited {
 	color:#c8ba9e;
 }
-li.slidesort-selected a:hover
-{
+
+li.slidesort-selected a:hover {
 	color:#c83747;
 }
 
@@ -102,8 +128,7 @@ ul#new-slide-button li {
 	margin-top:-30px;
 }
 
-.edit-controls-inputs 
-{
+.edit-controls-inputs {
 	float: left;
 }
 
@@ -111,13 +136,12 @@ ul#new-slide-button li {
 	vertical-align: middle;
 	text-align:center;
 }
-.edit-controls-save-input input
-{
+
+.edit-controls-save-input input {
 	max-width:70px;
 }
 
-#edit-controls-choose-hint
-{
+#edit-controls-choose-hint {
 	font-size:150%;
 	color:#888;
 	position:relative;
@@ -138,11 +162,6 @@ ul#new-slide-button li {
 	max-width:150px;
 }
 
-#loading-area {
-	visibility:hidden;
-	text-align:center;
-}
-
 #edit-controls-save {
 
 	cursor:pointer;
@@ -153,9 +172,8 @@ ul#new-slide-button li {
 	cursor:pointer;
 }
 
-#slide-preview
-{
-	cursor:move;
+#slide-preview {
+	cursor: move;
 }
 
 .slidesort-add-hint {
@@ -175,12 +193,6 @@ ul#new-slide-button li {
 .slidesort-drag-hint p {
 	margin-bottom:0;
 	padding-bottom:0;
-}
-
-.slide-delete {
-	text-align:right;
-	padding-left:5px;
-	font-size:11px;
 }
 
 .vpm-slider-help-point {
