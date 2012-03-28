@@ -102,6 +102,8 @@ ul#new-slide-button li {
 
 #edit-controls {
 	width:500px;
+	opacity:0;
+	margin-top:-30px;
 }
 
 .edit-controls-inputs 
@@ -116,6 +118,17 @@ ul#new-slide-button li {
 .edit-controls-save-input input
 {
 	max-width:70px;
+}
+
+#edit-controls-choose-hint
+{
+	font-size:150%;
+	color:#888;
+	position:relative;
+	left:auto;
+	top:auto;
+	text-align:center;
+	margin:auto;
 }
 
 #message-area {

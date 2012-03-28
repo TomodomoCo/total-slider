@@ -145,8 +145,12 @@ jQuery(document).ready(function() {
 		if (!isEditing) {
 		
 			jQuery('.slidesort-add-hint').hide();
-			jQuery('#edit-area').show('slow');
-		
+			if (jQuery('#slidesort li').length > 0)
+			{
+				jQuery('.slidesort-drag-hint').css('visibility', 'visible');			
+			}
+			jQuery('#edit-controls').fadeTo(400, 1);
+			jQuery('#edit-controls-choose-hint').fadeTo(400,0);
 			// make all deselected
 			jQuery('#slidesort li').removeClass('slidesort-selected');
 			
@@ -330,7 +334,8 @@ jQuery(document).ready(function() {
 						jQuery('#slide-preview').offset({ left: newLeft, top: newTop });
 						
 						// ok, do the grand unveiling
-						jQuery('#edit-area').show('slow');
+						jQuery('#edit-controls').fadeTo(400, 1);
+						jQuery('#edit-controls-choose-hint').fadeTo(400,0);
 						
 						editingSlideSortButton = jQuery(object).attr('id');
 						
@@ -532,7 +537,8 @@ jQuery(document).ready(function() {
 					jQuery('#slidesort_untitled_delete').attr('id', 'slidesort_' + result.new_id + '_delete');
 					jQuery('#slidesort_untitled_delete_button').attr('id', 'slidesort_' + result.new_id + '_delete_button');					
 					
-					//jQuery('#edit-area').hide('slow');
+					jQuery('#edit-controls').fadeTo(400, 0);
+					jQuery('#edit-controls-choose-hint').fadeTo(400,1);
 					window.setTimeout(function() { jQuery().clearForm(); }, 750);
 
 						
@@ -603,7 +609,8 @@ jQuery(document).ready(function() {
 					}
 					else {
 						jQuery('#' + editingSlideSortButton).removeClass('slidesort-selected');
-						//jQuery('#edit-area').hide('slow');
+						jQuery('#edit-controls').fadeTo(400, 0);
+						jQuery('#edit-controls-choose-hint').fadeTo(400,1);
 						window.setTimeout(function() { jQuery().clearForm(); }, 750);
 						
 						isEditing = false;
@@ -655,7 +662,8 @@ jQuery(document).ready(function() {
 			if (confirm(wouldLoseUnsavedChanges))
 			{
 				jQuery('#' + editingSlideSortButton).remove();
-				//jQuery('#edit-area').hide('slow');
+				jQuery('#edit-controls').fadeTo(400, 0);
+				jQuery('#edit-controls-choose-hint').fadeTo(400,1);
 				jQuery().clearForm();
 				
 				isEditing = false;
@@ -666,6 +674,7 @@ jQuery(document).ready(function() {
 				{
 					// bring up the help text if zero left after that delete
 					jQuery('.slidesort-add-hint').show('slow');
+					jQuery('.slidesort-drag-hint').css('visibility', 'hidden');
 				}
 			
 			}			
@@ -677,7 +686,8 @@ jQuery(document).ready(function() {
 			if (confirm(wouldLoseUnsavedChanges))
 			{
 			
-				//jQuery('#edit-area').hide('slow');
+				jQuery('#edit-controls').fadeTo(400, 0);
+				jQuery('#edit-controls-choose-hint').fadeTo(400,1);
 				jQuery().clearForm();				
 				
 				jQuery('#' + editingSlideSortButton + '_text').text(originalTitle); // restore pre-edit title
@@ -698,7 +708,8 @@ jQuery(document).ready(function() {
 				jQuery('#' + editingSlideSortButton).removeClass('slidesort-selected'); // unselect the button if it was selected
 			}
 		
-			//jQuery('#edit-area').hide('slow');
+			jQuery('#edit-controls').fadeTo(400, 0);
+			jQuery('#edit-controls-choose-hint').fadeTo(400,1);
 			jQuery().clearForm();
 			
 			isEditing = false;
@@ -727,9 +738,10 @@ jQuery(document).ready(function() {
 			if (confirm(wouldLoseUnsavedChanges))
 			{
 		
-				jQuery(caller).parent().parent().hide(350);	
+				jQuery(caller).parent().parent().fadeTo(350, 0);	
 				window.setTimeout(function() {jQuery(caller).parent().parent().remove();}, 380);
-				//jQuery('#edit-area').hide('slow');
+				jQuery('#edit-controls').fadeTo(400, 0);
+				jQuery('#edit-controls-choose-hint').fadeTo(400,1);
 				jQuery().clearForm();
 				
 				isEditing = false;
@@ -740,7 +752,17 @@ jQuery(document).ready(function() {
 				{
 					// bring up the help text if zero left after that delete
 					jQuery('.slidesort-add-hint').show('slow');
+					jQuery('.slidesort-drag-hint').css('visibility', 'hidden');					
 				}
+				
+				if (jQuery('#slidesort > li').size() < 3) // will be 2, once remove happens
+				{
+					// remove the slide sort D&D helper text
+					jQuery('.slidesort-drag-hint').css('visibility', 'hidden');
+				}
+				
+				// trim width of slide sorting area
+				jQuery('#slidesort').css('width', parseInt(jQuery('#slidesort').css('width')) - 180 + 'px');
 			
 			}
 			return;			
@@ -762,21 +784,33 @@ jQuery(document).ready(function() {
 				
 				success: function(result) {
 				
-					jQuery(deleteCaller).parent().parent().hide(350);
+					jQuery(deleteCaller).parent().parent().fadeTo(350, 0);
 					window.setTimeout(function() {jQuery(deleteCaller).parent().parent().remove();}, 380);
 					
-					//jQuery('#edit-area').hide('slow');
+					jQuery('#edit-controls').fadeTo(400, 0);
+					jQuery('#edit-controls-choose-hint').fadeTo(400,1);
 					jQuery().clearForm();
 					
 					if (jQuery('#slidesort > li').size() < 2) // will be 1 after delete 
 					{
 						// bring up the help text if zero left after that delete
 						jQuery('.slidesort-add-hint').show('slow');
+						jQuery('.slidesort-drag-hint').css('visibility', 'hidden');
 					}				
+					
+					if (jQuery('#slidesort > li').size() < 3) // will be 2, once remove happens
+					{
+						// remove the slide sort D&D helper text
+						jQuery('.slidesort-drag-hint').css('visibility', 'hidden');
+					}
+					
+					// trim width of slide sorting area
+					jQuery('#slidesort').css('width', parseInt(jQuery('#slidesort').css('width')) - 180 + 'px');
 					
 					window.setTimeout(function() {
 						deleteCaller = false;
 					}, 520);
+
 				
 				},
 				

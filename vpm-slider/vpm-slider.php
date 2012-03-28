@@ -999,7 +999,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>Click &lsquo;Add New&rsquo; to create a slide.</div>
 		
-		<div class="slidesort-drag-hint"><p>Drag and drop to re-order.</p></div>
+		<div class="slidesort-drag-hint" <?php if (!is_array($currentSlides) || count($currentSlides) < 2) echo ' style="visibility:hidden"'; ?>><p>Drag and drop to re-order.</p></div>
 		
 		</div>
 		
@@ -1044,6 +1044,11 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		Print to output the contents of the slide editor metabox.
 	*/
 	?>
+	
+				<div id="edit-controls-choose-hint">
+					<p>Click a Slide to edit it, or click &lsquo;Add New&rsquo;.</p>
+				</div>
+	
 				<div id="edit-controls">
 				<form id="edit-form">
 					<table class="form-table edit-controls-form-table">
