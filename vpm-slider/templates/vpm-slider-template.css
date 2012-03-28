@@ -14,53 +14,55 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 .vpm-slider{
-	width:964px;
-	height:350px;
+	width:600px;
+	height:300px;
 	overflow:hidden;
 	margin:0 auto
 }
 
 .vpm-slider li{
-
-
-width:/*crop-to-width*/964px/*end crop-to-width*/ !important;
-height:/*crop-to-height*/350px/*end crop-to-height*/ !important;
-position:relative;
-background-position:center center !important;
-background-repeat:no-repeat !important;
-background-color:#DDD;
--webkit-border-radius:6px;
--moz-border-radius:6px;
-border-radius:6px
+	width:/*crop-to-width*/600px/*end crop-to-width*/ !important;
+	height:/*crop-to-height*/300px/*end crop-to-height*/ !important;
+	position:relative;
+	background-position:center center !important;
+	background-repeat:no-repeat !important;
+	background-color:#DDD;
 }
 
 .vpm-slider li a{
-display:block;
-width:964px;
-height:350px;
-position:absolute;
-top:0;
-text-decoration:none
+	display: block;
+	width: 600px;
+	height: 300px;
+	position: absolute;
+	top: 0;
+	text-decoration: none
 }
 
-.vpm-slider li .desc{
-	position:absolute;
-	width:400px;
-	background:url(../img/slider-desc-bg.png);
-	padding:2px 9px 0;
-	text-align:left !important
+.vpm-slider li .desc {
+	position: absolute;
+	width: 300px;
+	background: url(../img/slider-desc-bg.png);
+	padding: 2px 9px 0;
+	text-align: left !important
 }
 
-.vpm-slider li .desc div{
-	width:400px;
+.vpm-slider li .desc div {
+	/* width:400px; */
 	overflow:hidden;
 	position:relative
 }
 
-.vpm-slider li .desc div p{
+.vpm-slider li .desc div p {
+	font: 14px/20px Helvetica, Arial, sans-serif;
+	color: #FFF;
+	text-shadow: 0 1px 1px black;
+	margin: 0 0 5px !important
+}
 
-font:14px/20px Helvetica, Arial, sans-serif;color:#FFF;text-shadow:0 1px 1px black;margin:0 !important}
-
-.vpm-slider li h2{
-font:26px Georgia, serif;color:#FFF;text-shadow:0 1px 1px black;padding:3px 0 0 !important;margin:0 0 6px !important
+.vpm-slider li h2 {
+	font: 24px Georgia, serif;
+	color: #FFF;
+	text-shadow: 0 1px 1px black;
+	padding: 3px 0 0 !important;
+	margin: 0 0 6px !important
 }
