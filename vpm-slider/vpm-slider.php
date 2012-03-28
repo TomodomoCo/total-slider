@@ -982,9 +982,8 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 								
 					<div id="slidesort_<?php echo $myId;?>_text" class="slidesort_text"><?php echo stripslashes(esc_html($slide['title']));?></div>
 					
-					<span id="slidesort_<?php echo $myId;?>_delete" class="slide-delete">
-						<a id="slidesort_<?php echo $myId;?>_delete_button" class="slidesort-icon slide-delete-button" href="#">Delete</a>
-					</span>
+					<a id="slidesort_<?php echo $myId;?>_move_button" class="slidesort-icon slide-move-button" href="#">Move</a>
+					<span id="slidesort_<?php echo $myId;?>_delete" class="slide-delete"><a id="slidesort_<?php echo $myId;?>_delete_button" class="slidesort-icon slide-delete-button" href="#">Delete</a></span>
 				
 				</li>
 				
@@ -999,8 +998,6 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>Click &lsquo;Add New&rsquo; to create a slide.</div>
 		
-		<!-- <div class="slidesort-drag-hint" <?php if (!is_array($currentSlides) || count($currentSlides) < 2) echo ' style="visibility:hidden"'; ?>><p>Drag and drop to re-order.</p></div> -->
-		
 		</div>
 		
 		<?php
@@ -1013,7 +1010,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		Print to output the contents of the slide preview metabox.
 	*/	
 		?>
-			<div id="edit-area">
+		<div id="edit-area">
 		
 			<ul id="vpm-slider" class="vpm-slider">
 			
@@ -1064,7 +1061,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 									<label for="edit-slide-description">Description</label>
 								</th>
 								<td>
-									<input type="text" name="slide-description" id="edit-slide-description" value="" maxlength="255" class="edit-controls-inputs" style="min-width:200px" />
+									<textarea name="slide-description" id="edit-slide-description" class="widefat" class="edit-controls-inputs" rows="4"></textarea>
 								</td>
 							</tr>
 							
@@ -1088,7 +1085,11 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-internal" value="true" />
 									A page or post on this site
 									</label>
-									
+									<br>
+									<label for="slide-link-is-external">
+										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-external" value="false" />
+									An external link
+									</label>
 								</td>
 							</tr>
 							
@@ -1103,18 +1104,6 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 								</td>
 							</tr>
 							
-							<tr class="form-field">
-								<th scope="row">
-								
-								</th>
-								<td>
-									<label for="slide-link-is-external">
-										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-external" value="false" />
-									An external link
-									</label>
-								</td>
-							</tr>
-							
 							<tr class="form-field" id="slide-link-external-settings">
 								<th scope="row">
 								</th>
@@ -1123,19 +1112,16 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 								</td>
 							</tr>
 							
-							<tr class="form-field edit-controls-save-input">
-								<th scope="row">
-									
-								</th>
-								<td>
-									<input type="button" id="edit-controls-save" class="button-primary" value="Save" />
-									<input type="button" id="edit-controls-cancel" class="button-secondary" value="Cancel" />
-									<img id="edit-controls-spinner" src="images/loading.gif" width="16" height="16" alt="Loading" />
-								</td>
-							</tr>
-							
 						</tbody>					
 					</table>
+					<p class="submit">
+						<input type="button" id="edit-controls-save" class="button-primary" value="Save" />
+						<input type="button" id="edit-controls-cancel" class="button-secondary" value="Cancel" />
+					</p>
+					<div id="edit-controls-saving">
+						<img id="edit-controls-spinner" src="images/loading.gif" width="16" height="16" alt="Loading" />
+						<span>Saving&hellip;</span>
+					</div>
 				</form>
 			
 			</div><?php

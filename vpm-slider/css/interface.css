@@ -64,12 +64,16 @@ ul#slidesort li {
 
 .slidesort-icon {
 	position: absolute;
+	display: none;
 	width: 14px;
 	height: 14px;
-	display: block;
 	text-indent: -1000in;
 	overflow: hidden;
 	background-image: url(../img/icons.png);
+}
+
+ul#slidesort li:hover .slidesort-icon {
+	display: block;
 }
 
 .slide-delete-button {
@@ -80,8 +84,9 @@ ul#slidesort li {
 
 .slide-move-button {
 	bottom: 3px;
-	left: 3px;
+	left: 4px;
 	background-position: center left;
+	cursor: move;
 }
 
 li.slidesort-selected {
@@ -97,6 +102,8 @@ li.slidesort-selected a, li.slidesort-selected a:visited {
 li.slidesort-selected a:hover {
 	color:#c83747;
 }
+
+/* New slide button */
 
 ul#new-slide-button {
 	text-align:right;
@@ -118,62 +125,85 @@ ul#new-slide-button li {
 	font-size:120%;
 }
 
+/* Slide preview canvas */
+
 #edit-area {
-	display:block;
+	display: block;
+	background: url(../img/slider-workspace-bg.png);
+	padding: 30px 0;
+	border: 1px solid #BBB;
 }
 
+#slide-preview {
+	cursor: move;
+}
+
+/* Edit area */
+
 #edit-controls {
-	width:500px;
-	opacity:0;
-	margin-top:-30px;
+	opacity: 0;
+}
+
+#edit-controls .form-table th {
+	width: 125px !important;
 }
 
 .edit-controls-inputs {
 	float: left;
 }
 
-.edit-controls-save-input {
-	vertical-align: middle;
-	text-align:center;
+#edit-slide-image-upload {
+	max-width: 150px;
 }
 
-.edit-controls-save-input input {
-	max-width:70px;
+#edit-controls .submit {
+	float: none !important;
+	padding: 5px 12px 10px !important;
 }
+
+#edit-controls-save, #edit-controls-cancel {
+	cursor: pointer;
+}
+
+/* Spinner & Saving... text */
+
+#edit-controls-saving {
+	display: none;
+	margin-left: 0;
+	color: #666;
+	float: right;
+	position: relative;
+	top: -31px;
+	left: -10px;
+}
+
+#edit-controls-spinner {
+	vertical-align: middle;
+	margin-right: 2px;
+}
+
+#edit-controls-saving span {
+	position: relative;
+	top: 1px;
+}
+
+/* HINT: Choose a slide to start */
 
 #edit-controls-choose-hint {
-	font-size:150%;
-	color:#888;
-	position:relative;
-	left:auto;
-	top:auto;
-	text-align:center;
-	margin:auto;
+	font-size: 150%;
+	color: #888;
+	position: relative;
+	left: auto;
+	top: auto;
+	text-align: center;
+	margin: auto;
 }
 
 #message-area {
-	display:none;
-	background-color:#a5ff6d;
-	border-color:#568438;
-	width:auto;
-}
-
-#edit-slide-image-upload {
-	max-width:150px;
-}
-
-#edit-controls-save {
-
-	cursor:pointer;
-	margin-right:12px;
-}
-
-#edit-controls-cancel {
-	cursor:pointer;
-}
-
-#slide-preview {
-	cursor: move;
+	display: none;
+	background-color: #a5ff6d;
+	border-color: #568438;
+	width: auto;
 }
 
 .slidesort-add-hint {
@@ -196,10 +226,10 @@ ul#new-slide-button li {
 }
 
 .vpm-slider-help-point {
-	background:url(../img/help-icon-wp-16.png) no-repeat;
-	padding-left:24px;
-	margin-top:20px;
-	font-size:12px;
+	background: url(../img/help-icon-wp-16.png) no-repeat;
+	padding-left: 24px;
+	margin-top: 20px;
+	font-size: 12px;
 	vertical-align: middle;
 
 }
@@ -227,13 +257,6 @@ ul#new-slide-button li {
 #slide-link-internal-settings
 {
 	display:none;
-}
-
-#edit-controls-spinner
-{
-	margin-left:15px;
-	visibility:hidden;
-	vertical-align: middle;
 }
 
 /* Slide Groups Table Column widths */

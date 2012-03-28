@@ -150,7 +150,7 @@ jQuery(document).ready(function() {
 				jQuery('.slidesort-drag-hint').css('visibility', 'visible');			
 			}
 			jQuery('#edit-controls').fadeTo(400, 1);
-			jQuery('#edit-controls-choose-hint').fadeTo(400,0);
+			jQuery('#edit-controls-choose-hint').fadeTo(400,0).hide();
 			// make all deselected
 			jQuery('#slidesort li').removeClass('slidesort-selected');
 			
@@ -205,7 +205,7 @@ jQuery(document).ready(function() {
 		jQuery('#slide-preview').offset({ left: jQuery('#preview-area').offset().left, top: jQuery('#preview-area').offset().top } ); 
 		// reset offset on box
 		
-		jQuery('#edit-controls-spinner').css('visibility', 'hidden');
+		jQuery('#edit-controls-saving').fadeTo(0,0).hide();
 		
 		jQuery('#edit-controls-save,#edit-controls-cancel').removeAttr('disabled');
 		jQuery('#edit-controls-save').val('Save');
@@ -252,13 +252,6 @@ jQuery(document).ready(function() {
 		
 		if (!isEditing)
 		{
-		
-			jQuery('#loading-area').css('visibility', 'visible');	
-			jQuery('#loading-area').css('opacity', 0);	
-			jQuery('#loading-area').animate({
-				opacity: 1
-				
-			}, 500);
 			
 			// make all deselected
 			jQuery('#slidesort li').removeClass('slidesort-selected');
@@ -278,8 +271,6 @@ jQuery(document).ready(function() {
 				},
 				
 				success: function(result) {
-				
-					jQuery('#loading-area').css('visibility', 'hidden');
 	
 					if (result.error)
 					{
@@ -335,7 +326,7 @@ jQuery(document).ready(function() {
 						
 						// ok, do the grand unveiling
 						jQuery('#edit-controls').fadeTo(400, 1);
-						jQuery('#edit-controls-choose-hint').fadeTo(400,0);
+						jQuery('#edit-controls-choose-hint').fadeTo(400,0).hide();
 						
 						editingSlideSortButton = jQuery(object).attr('id');
 						
@@ -486,20 +477,11 @@ jQuery(document).ready(function() {
 			return false;		
 			
 		}
-	
-	
-		// go ahead and get ready to save
-		jQuery('#loading-area').css('visibility', 'visible');
-		jQuery('#loading-area').css('visibility', 'visible');	
-		jQuery('#loading-area').css('opacity', 0);	
-		jQuery('#loading-area').animate({
-			opacity: 1		
-		}, 500);		
 		
-		jQuery('#edit-controls-spinner').css('visibility', 'visible');
+		jQuery('#edit-controls-saving').show().fadeTo(400,1);
 		
 		jQuery('#edit-controls-save,#edit-controls-cancel').prop('disabled', 'disabled');
-		jQuery('#edit-controls-save').val('Saving');
+		// jQuery('#edit-controls-save').val('Saving');
 			
 		var calcBoxOffsetLeft = jQuery('#slide-preview').offset().left - jQuery('#preview-area').offset().left;
 		var calcBoxOffsetTop  = jQuery('#slide-preview').offset().top - jQuery('#preview-area').offset().top;
@@ -521,8 +503,6 @@ jQuery(document).ready(function() {
 				
 				success: function(result) {
 				
-					jQuery('#loading-area').css('visibility', 'hidden');
-				
 					if (result.error) {
 						alert(result.error);
 					}
@@ -538,7 +518,7 @@ jQuery(document).ready(function() {
 					jQuery('#slidesort_untitled_delete_button').attr('id', 'slidesort_' + result.new_id + '_delete_button');					
 					
 					jQuery('#edit-controls').fadeTo(400, 0);
-					jQuery('#edit-controls-choose-hint').fadeTo(400,1);
+					jQuery('#edit-controls-choose-hint').show().fadeTo(400,1);
 					window.setTimeout(function() { jQuery().clearForm(); }, 750);
 
 						
@@ -570,13 +550,12 @@ jQuery(document).ready(function() {
 					{
 						errorToShow = response.error;
 					}
-				
-					jQuery('#loading-area').css('visibility', 'hidden');
+					
 					alert('Sorry, unable to save the new slide.\n\n' + response.error);
 					
 					jQuery('#edit-controls-save,#edit-controls-cancel').removeAttr('disabled');
 					jQuery('#edit-controls-save').val('Save');
-					jQuery('#edit-controls-spinner').css('visibility', 'hidden');		
+					jQuery('#edit-controls-saving').fadeTo(0,0).hide();		
 							
 				}
 				
@@ -602,15 +581,13 @@ jQuery(document).ready(function() {
 				
 				success: function(result) {
 				
-					jQuery('#loading-area').css('visibility', 'hidden');
-				
 					if (result.error) {
 						alert(result.error);
 					}
 					else {
 						jQuery('#' + editingSlideSortButton).removeClass('slidesort-selected');
 						jQuery('#edit-controls').fadeTo(400, 0);
-						jQuery('#edit-controls-choose-hint').fadeTo(400,1);
+						jQuery('#edit-controls-choose-hint').show().fadeTo(400,1);
 						window.setTimeout(function() { jQuery().clearForm(); }, 750);
 						
 						isEditing = false;
@@ -630,13 +607,12 @@ jQuery(document).ready(function() {
 					{
 						errorToShow = response.error;
 					}
-				
-					jQuery('#loading-area').css('visibility', 'hidden');				
+									
 					alert('Sorry, unable to save the slide.\n\n' + errorToShow);
 
 					jQuery('#edit-controls-save,#edit-controls-cancel').removeAttr('disabled');
 					jQuery('#edit-controls-save').val('Save');
-					jQuery('#edit-controls-spinner').css('visibility', 'hidden');					
+					jQuery('#edit-controls-saving').fadeTo(0,0).hide();					
 									
 				}
 				
@@ -663,7 +639,7 @@ jQuery(document).ready(function() {
 			{
 				jQuery('#' + editingSlideSortButton).remove();
 				jQuery('#edit-controls').fadeTo(400, 0);
-				jQuery('#edit-controls-choose-hint').fadeTo(400,1);
+				jQuery('#edit-controls-choose-hint').show().fadeTo(400,1);
 				jQuery().clearForm();
 				
 				isEditing = false;
@@ -687,7 +663,7 @@ jQuery(document).ready(function() {
 			{
 			
 				jQuery('#edit-controls').fadeTo(400, 0);
-				jQuery('#edit-controls-choose-hint').fadeTo(400,1);
+				jQuery('#edit-controls-choose-hint').show().fadeTo(400,1);
 				jQuery().clearForm();				
 				
 				jQuery('#' + editingSlideSortButton + '_text').text(originalTitle); // restore pre-edit title
@@ -709,7 +685,7 @@ jQuery(document).ready(function() {
 			}
 		
 			jQuery('#edit-controls').fadeTo(400, 0);
-			jQuery('#edit-controls-choose-hint').fadeTo(400,1);
+			jQuery('#edit-controls-choose-hint').show().fadeTo(400,1);
 			jQuery().clearForm();
 			
 			isEditing = false;
@@ -741,7 +717,7 @@ jQuery(document).ready(function() {
 				jQuery(caller).parent().parent().fadeTo(350, 0);	
 				window.setTimeout(function() {jQuery(caller).parent().parent().remove();}, 380);
 				jQuery('#edit-controls').fadeTo(400, 0);
-				jQuery('#edit-controls-choose-hint').fadeTo(400,1);
+				jQuery('#edit-controls-choose-hint').show().fadeTo(400,1);
 				jQuery().clearForm();
 				
 				isEditing = false;
@@ -788,7 +764,7 @@ jQuery(document).ready(function() {
 					window.setTimeout(function() {jQuery(deleteCaller).parent().parent().remove();}, 380);
 					
 					jQuery('#edit-controls').fadeTo(400, 0);
-					jQuery('#edit-controls-choose-hint').fadeTo(400,1);
+					jQuery('#edit-controls-choose-hint').show().fadeTo(400,1);
 					jQuery().clearForm();
 					
 					if (jQuery('#slidesort > li').size() < 2) // will be 1 after delete 
