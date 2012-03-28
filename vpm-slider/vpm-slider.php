@@ -1061,7 +1061,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 									<label for="edit-slide-description">Description</label>
 								</th>
 								<td>
-									<textarea name="slide-description" id="edit-slide-description" class="widefat" class="edit-controls-inputs" rows="4"></textarea>
+									<textarea name="slide-description" id="edit-slide-description" class="widefat edit-controls-inputs" rows="4"></textarea>
 								</td>
 							</tr>
 							

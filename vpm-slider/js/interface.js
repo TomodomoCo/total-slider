@@ -17,6 +17,7 @@ var isEditing = false;
 var isEditingUntitledSlide = false;
 var editingSlideSortButton = false;
 var originalTitle = false;
+var originalBackground = false;
 var dontStartEdit = false;
 var newShouldShuffle = false;
 var deleteCaller = false;
@@ -315,6 +316,7 @@ jQuery(document).ready(function() {
 						
 						// put the background image on
 						jQuery('#preview-area').css('background', 'url(' + result.background + ')');
+						originalBackground = result.background;
 						
 						// restore the pos x and pos y of the slide preview box
 						var containerPos = jQuery('#preview-area').offset();
@@ -414,6 +416,7 @@ jQuery(document).ready(function() {
 		
 		// update the preview to show this background
 		jQuery('#preview-area').css('background', 'url(' + imgurl + ')');
+		jQuery('#' + editingSlideSortButton).css('background', 'url(' + imgurl + ')');
 		
 		tb_remove();
 		
@@ -667,6 +670,7 @@ jQuery(document).ready(function() {
 				jQuery().clearForm();				
 				
 				jQuery('#' + editingSlideSortButton + '_text').text(originalTitle); // restore pre-edit title
+				jQuery('#' + editingSlideSortButton).css('background', 'url(' + originalBackground + ')'); // restore pre-edit background
 				jQuery('#' + editingSlideSortButton).removeClass('slidesort-selected'); // unselect
 				
 				isEditing = false;
@@ -683,6 +687,8 @@ jQuery(document).ready(function() {
 			{
 				jQuery('#' + editingSlideSortButton).removeClass('slidesort-selected'); // unselect the button if it was selected
 			}
+			
+			jQuery('#' + editingSlideSortButton).css('background', 'url(' + originalBackground + ')'); // restore pre-edit background			
 		
 			jQuery('#edit-controls').fadeTo(400, 0);
 			jQuery('#edit-controls-choose-hint').show().fadeTo(400,1);
