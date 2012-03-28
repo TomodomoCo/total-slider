@@ -57,6 +57,10 @@ ul#slidesort li {
 	width:65% !important;
 }
 
+.postbox .hndle {
+	cursor: pointer !important;
+}
+
 li.slidesort-selected {
 	background-color: #236188 !important;
 	border-color:#646464 !important;
@@ -149,6 +153,19 @@ ul#new-slide-button li {
 	text-align: center;
 	font-size:125%;
 	color: #747474
+}
+
+.slidesort-drag-hint {
+	text-align: center;
+	font-size:113%;
+	color: #939596;
+	margin-bottom:0;
+	padding-bottom:0;
+}
+
+.slidesort-drag-hint p {
+	margin-bottom:0;
+	padding-bottom:0;
 }
 
 .slide-delete {

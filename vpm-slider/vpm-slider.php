@@ -508,7 +508,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		$screen->add_help_tab( array (
 			'id'			=>			'vpm-slider-editing',
 			'title'			=>			'Editing',
-			'content'		=>			'<p>Once you have clicked &lsquo;Edit&rsquo; on the desired Slide Group, you&rsquo;ll see all of its Slides.</p><p>Click on any Slide to make changes. As well as changing the Slide text, link and image, you can drag and drop the title and description to place them anywhere over the background image.</p><p>Simply drag and drop to re-order the Slides in the Slide Group. The new order is saved immediately.</p>'
+			'content'		=>			'<p>Once you have clicked &lsquo;Edit&rsquo; on the desired Slide Group, you&rsquo;ll see all of its Slides.</p><p>Click on any Slide to make changes. You can also drag and drop the title and description to place them anywhere over the background image.</p><p>Simply drag and drop to re-order the Slides in the Slide Group. The new order is saved immediately.</p>'
 		
 		) );		
 		
@@ -750,14 +750,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 				</div>
 			</div>
 	
-		</form>
-		
-		
-		
-		<p class="vpm-slider-help-point"><a href="#">How do I get these to show up on my site?</a></p>
-		
-		<?php VPM_Slider::printPluginFooter(); ?>
-		
+		</form>		
 		</div><?php
 	
 	}
@@ -879,23 +872,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		</p>
 		
 		</form>
-		<?php VPM_Slider::printPluginFooter(); ?>
 		</div><?php
-	
-	}
-	
-	public function printPluginFooter()
-	{
-	/*
-		Print out the plugin footer, including the link to the donate page.
-	*/	
-	
-		
-	
-		?>
-		<p style="color:#777;font-size:12px;border-top:#e7e7e7 dotted 1px; margin-top:30px; padding-top:9px">
-		<strong><a href="">VPM Slider</a> by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>.</strong> If you find this plugin useful, or are using it commercially, please consider
-		<a href="">making a financial contribution</a>. Thank you.</p><?php
 	
 	}
 	
@@ -960,8 +937,18 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	*/
 	
 		?>
-		<p style="color:#777;font-size:12px;">
-		<strong><a href="">VPM Slider</a> by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>.</strong> If you find this plugin useful, or are using it commercially, please consider
+		
+		<p class="vpm-slider-help-point"><a href="#">How do I get my slides to show up on my site?</a></p>
+		
+		<p style="font-size:12px; border-top:1px dotted #777; padding-top:8px;">
+		<strong><a href="">VPM Slider</a> by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>.</strong></p>
+		
+		<p style="color:#777; font-size:9px">&copy; 2011-2012 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 licensed</a>.</p>
+		
+		<p style="color:#777;">Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a></p>
+		<p style="color:#777;">Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a></p></p>
+		
+		<p style="font-size:12px;">If you find this plugin useful, or are using it commercially, please consider
 		<a href="">making a financial contribution</a>. Thank you.</p>
 		<?php
 	
@@ -1007,10 +994,13 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 		}
 		
-		?>
-	
-		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>Click &lsquo;Add New&rsquo; to create a slide.</div>
+		?>		
 		</ul>
+		
+		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>Click &lsquo;Add New&rsquo; to create a slide.</div>
+		
+		<div class="slidesort-drag-hint"><p>Drag and drop to re-order.</p></div>
+		
 		</div>
 		
 		<div id="loading-area"><img src="<?php echo plugin_dir_url( __FILE__ ).'img/loadingAnimation.gif';?>" alt="loading" title="loading" /></div>
