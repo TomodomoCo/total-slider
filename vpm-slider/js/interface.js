@@ -145,6 +145,7 @@ jQuery(document).ready(function() {
 	
 		if (!isEditing) {
 		
+			// DELETEME
 			jQuery('.slidesort-add-hint').hide();
 			if (jQuery('#slidesort li').length > 0)
 			{
@@ -158,7 +159,7 @@ jQuery(document).ready(function() {
 			var newIdNo = jQuery('#slidesort').children().length+1;
 			
 			// create a new button
-			jQuery('#slidesort').append('<li id="slidesort_untitled' + newIdNo + '" class="slidesort-selected"><span id="slidesort_untitled'  + newIdNo + '_text">untitled</span><span id="slidesort_untitled_delete" class="slide-delete">[<a id="slidesort_untitled_delete_button" class="slide-delete-button" href="#">delete</a>]</span></li>');
+			jQuery('#slidesort').append('<li id="slidesort_untitled'  + newIdNo + '" style="background: url();" class="slidesort-selected"><div id="slidesort_untitled'  + newIdNo + '_text" class="slidesort_text">untitled</div><a id="slidesort_<?php echo $myId;?>_move_button" class="slidesort-icon slide-move-button" href="#">Move</a><span id="slidesort_<?php echo $myId;?>_delete" class="slide-delete"><a id="slidesort_untitled'  + newIdNo + '_delete_button" class="slidesort-icon slide-delete-button" href="#">Delete</a></span></li>');			
 			
 			// hook up new pseudo-delete button
 			jQuery('#slidesort_untitled_delete_button').click(function (event) {
@@ -649,6 +650,8 @@ jQuery(document).ready(function() {
 				isEditingUntitledSlide = false;
 				editingSlideSortButton = false;
 				
+				// DELETEME
+				
 				if (jQuery('#slidesort > li').size() < 1)
 				{
 					// bring up the help text if zero left after that delete
@@ -688,7 +691,7 @@ jQuery(document).ready(function() {
 				jQuery('#' + editingSlideSortButton).removeClass('slidesort-selected'); // unselect the button if it was selected
 			}
 			
-			jQuery('#' + editingSlideSortButton).css('background', 'url(' + originalBackground + ')'); // restore pre-edit background			
+			jQuery('#' + editingSlideSortButton).css('background', 'url(' + originalBackground + ')'); // restore pre-edit background
 		
 			jQuery('#edit-controls').fadeTo(400, 0);
 			jQuery('#edit-controls-choose-hint').show().fadeTo(400,1);
@@ -729,6 +732,8 @@ jQuery(document).ready(function() {
 				isEditing = false;
 				isEditingUntitledSlide = false;
 				editingSlideSortButton = false;
+				
+				// DELETEME
 				
 				if (jQuery('#slidesort > li').size() < 2) // will be 1, once remove happens
 				{
@@ -772,6 +777,8 @@ jQuery(document).ready(function() {
 					jQuery('#edit-controls').fadeTo(400, 0);
 					jQuery('#edit-controls-choose-hint').show().fadeTo(400,1);
 					jQuery().clearForm();
+					
+					// DELETEME
 					
 					if (jQuery('#slidesort > li').size() < 2) // will be 1 after delete 
 					{

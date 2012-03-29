@@ -43,7 +43,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 ul#slidesort li {
 	border: 1px solid #464646;
-	background-color: #ededed;
+	background-color: #FFF;
 	display: block;
 	float: left;
 	margin: 0 15px 10px 0;
@@ -231,8 +231,8 @@ ul#new-slide-button li {
 	margin-top: 20px;
 	font-size: 12px;
 	vertical-align: middle;
-
 }
+
 .vpm-slider-help-point a {
 	text-decoration: none !important;
 }
