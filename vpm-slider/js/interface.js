@@ -159,7 +159,7 @@ jQuery(document).ready(function() {
 			var newIdNo = jQuery('#slidesort').children().length+1;
 			
 			// create a new button
-			jQuery('#slidesort').append('<li id="slidesort_untitled'  + newIdNo + '" style="background: url();" class="slidesort-selected"><div id="slidesort_untitled'  + newIdNo + '_text" class="slidesort_text">untitled</div><a id="slidesort_<?php echo $myId;?>_move_button" class="slidesort-icon slide-move-button" href="#">Move</a><span id="slidesort_<?php echo $myId;?>_delete" class="slide-delete"><a id="slidesort_untitled'  + newIdNo + '_delete_button" class="slidesort-icon slide-delete-button" href="#">Delete</a></span></li>');			
+			jQuery('#slidesort').append('<li id="slidesort_untitled'  + newIdNo + '" style="background: url();" class="slidesort-selected"><div id="slidesort_untitled'  + newIdNo + '_text" class="slidesort_text">untitled</div><a id="slidesort_'  + newIdNo + '_move_button" class="slidesort-icon slide-move-button" href="#">Move</a><span id="slidesort_'  + newIdNo + '_delete" class="slide-delete"><a id="slidesort_untitled'  + newIdNo + '_delete_button" class="slidesort-icon slide-delete-button" href="#">Delete</a></span></li>');			
 			
 			// hook up new pseudo-delete button
 			jQuery('#slidesort_untitled_delete_button').click(function (event) {
