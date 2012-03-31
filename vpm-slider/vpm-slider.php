@@ -177,7 +177,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		// erm, just a little bit of an ugly hack :(
 		
 		?><script type="text/javascript">window.location.replace('<?php echo $url; ?>');</script>
-		<noscript><h1><a href="<?php echo esc_url($url); ?>"><?php _e('Please go here', 'vpm_slider');?></a></h1></noscript><?php
+		<noscript><h1><a href="<?php echo esc_url($url); ?>"><?php _e('Please visit this page to continue', 'vpm_slider');?></a></h1></noscript><?php
 		die();
 	
 	}
@@ -549,7 +549,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 		$screen->add_help_tab( array (
 			'id'			=>			'vpm-slider-editing',
-			'title'			=>			'Editing',
+			'title'			=>			__('Editing', 'vpm_slider'),
 			'content'		=>			'<p>'.$editingHelp[0].'</p><p>'.$editingHelp[1].'</p><p>'.$editingHelp[2].'</p>'
 		
 		) );		
@@ -562,7 +562,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		$screen->add_help_tab( array(
 		
 			'id'			=>			'vpm-slider-publishing',
-			'title'			=>			'Publishing',
+			'title'			=>			__('Publishing', 'vpm_slider'),
 			'content'		=>			'<p>'.$publishingHelp[0].'</p><p>'.$publishingHelp[1].'</p><p>'.$publishingHelp[2].'</p>'
 		
 		) );
@@ -577,7 +577,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		$screen->add_help_tab( array(
 		
 			'id'			=>			'vpm-slider-hints',
-			'title'			=>			'Hints &amp; Tips',
+			'title'			=>			__('Hints &amp; Tips', 'vpm_slider'),
 			'content'		=>			'<ul><li>'.$hintsTips[0].'</li><li>'.$hintsTips[1].'</li><li>'.$hintsTips[2].'</li><li>'.$hintsTips[3].'</li></ul>'
 		
 		) );	
@@ -715,7 +715,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		</script>
 		<div class="wrap">
 		
-		<div id="icon-vpm-slides" class="icon32"><br /></div><h2>Slide Groups <a href="#" id="new-slide-group-button" class="add-new-h2">Add New</a></h2>
+		<div id="icon-vpm-slides" class="icon32"><br /></div><h2>Slide Groups <a href="#" id="new-slide-group-button" class="add-new-h2"><?php _e('Add New', 'vpm_slider');?></a></h2>
 		
 		<noscript>
 		<h3><?php _e('Sorry, this interface requires JavaScript to function.', 'vpm_slider');?></h3>
@@ -958,8 +958,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 			<?php if (current_user_can('manage_options')):?>
 		
 			<h3><?php _e('Required Role Level', 'vpm_slider');?></h3>
-			<p><?php _e('Any user with a checked role will be allowed to create, edit and delete slides. Only users that can manage
-			widgets are able to activate, deactivate or move the VPM Slider widget, which makes the slides show up on your site.', 'vpm_slider');?></p>
+			<p><?php _e('Any user with a checked role will be allowed to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the VPM Slider widget, which makes the slides show up on your site.', 'vpm_slider');?></p>
 			
 			<table class="form-table">
 			<tbody>
@@ -1012,8 +1011,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 							/>
 							<?php _e('Automatically enqueue the Slider template CSS and JavaScript on the output page.', 'vpm_slider');?>
 						</label>
-						<p><em><?php _e('If disabled, you must manually include the relevant CSS and JavaScript on the output page, or the Slider
-						will be non-functional and appear broken. If in doubt, leave it switched on.', 'vpm_slider');?></em></p>
+						<p><em><?php _e('If disabled, you must manually include the relevant CSS and JavaScript on the output page, or the Slider will be non-functional and appear broken. If in doubt, leave it switched on.', 'vpm_slider');?></em></p>
 					</td>
 				</tr>
 			
@@ -1103,10 +1101,10 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		<p style="color:#777; font-size:9px"><?php _e('© 2011-2012 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 licensed</a>.', 'vpm_slider');?></p>
 		
 		<p style="color:#777;"><?php _e('Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a>', 'vpm_slider');?></p>
+		
 		<p style="color:#777;"><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>');?></p></p>
 		
-		<p style="font-size:12px;"><?php _e('If you find this plugin useful, or are using it commercially, please consider
-		<a href="">making a financial contribution</a>. Thank you.', 'vpm_slider');?></p>
+		<p style="font-size:12px;"><?php _e('If you find this plugin useful, or are using it commercially, please consider <a href="">making a financial contribution</a>. Thank you.', 'vpm_slider');?></p>
 		<?php
 	
 	}
