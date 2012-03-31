@@ -35,6 +35,11 @@ if (!defined('VPM_SLIDER_REQUIRED_CAPABILITY'))
 	die('<h1>Forbidden</h1>');
 }
 
+if (!function_exists('__'))
+{
+	header('HTTP/1.1 403 Forbidden');
+	die('<h1>Forbidden</h1>');
+}
 
 require_once(dirname(__FILE__).'/slides_backend.php');
 
@@ -50,7 +55,7 @@ if (empty($slug))
 {
 	header('HTTP/1.0 400 Bad Request');
 	header('Content-Type: application/json');
-	echo json_encode(array('error' => 'You did not supply the slide group to which this action should be applied.'));
+	echo json_encode(array('error' => __('You did not supply the slide group to which this action should be applied.', 'vpm_slider')));
 	die();
 }
 
@@ -75,7 +80,7 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.0 403 Forbidden');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?'));
+			echo json_encode(array('error' => __('Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?', 'vpm_slider')));
 			die();
 		}
 		
@@ -107,7 +112,7 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.0 400 Bad Request');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'You have not supplied all of the required data.'));
+			echo json_encode(array('error' => __('You have not supplied all of the required data.', 'vpm_slider')));
 			die();			
 		}
 		
@@ -115,7 +120,7 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.0 400 Bad Request');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'Invalid URL format for the specified background URL.'));
+			echo json_encode(array('error' => __('Invalid URL format for the specified background URL.', 'vpm_slider')));
 			die();			
 		}
 		
@@ -129,7 +134,7 @@ switch ($_GET['action'])
 				{
 					header('HTTP/1.0 400 Bad Request');
 					header('Content-Type: application/json');
-					echo json_encode(array('error' => 'The post ID for the specified slide link is not valid.'));
+					echo json_encode(array('error' => __('The post ID for the specified slide link is not valid.', 'vpm_slider')));
 					die();					
 				}
 			}
@@ -138,7 +143,7 @@ switch ($_GET['action'])
 				{
 					header('HTTP/1.0 400 Bad Request');
 					header('Content-Type: application/json');
-					echo json_encode(array('error' => 'Invalid URL format for the specified link URL.'));
+					echo json_encode(array('error' => __('Invalid URL format for the specified link URL.', 'vpm_slider')));
 					die();	
 				}
 			}
@@ -160,7 +165,7 @@ switch ($_GET['action'])
 		else {
 			header('HTTP/1.0 500 Internal Server Error');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'The create slide operation failed at the server.'));
+			echo json_encode(array('error' => __('The create slide operation failed at the server.', 'vpm_slider')));
 			die();
 		}
 	
@@ -172,7 +177,7 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.0 403 Forbidden');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?'));
+			echo json_encode(array('error' => __('Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?', 'vpm_slider')));
 			die();
 		}
 		
@@ -183,7 +188,7 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.0 400 Bad Request');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'You have not supplied the ID to look up.'));
+			echo json_encode(array('error' => __('You have not supplied the ID to look up.', 'vpm_slider')));
 			die();				
 		}
 		
@@ -201,7 +206,7 @@ switch ($_GET['action'])
 		else {
 			header('HTTP/1.1 400 Bad Request');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'Specified slide ID could not be found. It may have been already deleted.'));
+			echo json_encode(array('error' => __('Specified slide ID could not be found. It may have been already deleted.', 'vpm_slider')));
 			die();	
 		}
 		
@@ -214,7 +219,7 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.0 403 Forbidden');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?'));
+			echo json_encode(array('error' => __('Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?', 'vpm_slider')));
 			die();
 		}	
 		
@@ -225,7 +230,7 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.0 400 Bad Request');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'You have not supplied the ID to look up.'));
+			echo json_encode(array('error' => __('You have not supplied the ID to look up.', 'vpm_slider')));
 			die();				
 		}
 		
@@ -256,7 +261,7 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.0 400 Bad Request');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'You have not supplied all of the required data.'));
+			echo json_encode(array('error' => __('You have not supplied all of the required data.', 'vpm_slider')));
 			die();			
 		}
 		
@@ -264,7 +269,7 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.0 400 Bad Request');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'Invalid URL format for the specified background URL.'));
+			echo json_encode(array('error' => __('Invalid URL format for the specified background URL.', 'vpm_slider')));
 			die();			
 		}
 		
@@ -278,7 +283,7 @@ switch ($_GET['action'])
 				{
 					header('HTTP/1.0 400 Bad Request');
 					header('Content-Type: application/json');
-					echo json_encode(array('error' => 'The post ID for the specified slide link is not valid.'));
+					echo json_encode(array('error' => __('The post ID for the specified slide link is not valid.', 'vpm_slider')));
 					die();					
 				}
 			}
@@ -287,7 +292,7 @@ switch ($_GET['action'])
 				{
 					header('HTTP/1.0 400 Bad Request');
 					header('Content-Type: application/json');
-					echo json_encode(array('error' => 'Invalid URL format for the specified link URL.'));
+					echo json_encode(array('error' => __('Invalid URL format for the specified link URL.', 'vpm_slider')));
 					die();	
 				}
 			}
@@ -307,7 +312,7 @@ switch ($_GET['action'])
 		else {
 			header('HTTP/1.0 500 Internal Server Error');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'The update slide operation failed at the server.'));
+			echo json_encode(array('error' => __('The update slide operation failed at the server.', 'vpm_slider')));
 			die();
 		}
 		
@@ -321,14 +326,14 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.0 403 Forbidden');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?'));
+			echo json_encode(array('error' => __('Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?', 'vpm_slider')));
 			die();
 		}	
 		
 		if (empty($_POST['slidesort']) || !is_array($_POST['slidesort']) || count($_POST['slidesort']) < 1) {
 			header('HTTP/1.1 400 Bad Request');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'The new slide order was not specified, or there were no items within it.'));
+			echo json_encode(array('error' => __('The new slide order was not specified, or there were no items within it.', 'vpm_slider')));
 			die();			
 		}
 		
@@ -342,7 +347,7 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.1 400 Bad Request');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'The new slide order is missing one or more current slides. Cannot save the new order, or slides would be lost. Please reload the page to ensure all current slides are in the sorting area and try sorting again.'));
+			echo json_encode(array('error' => __('The new slide order is missing one or more current slides. Cannot save the new order, or slides would be lost. Please reload the page to ensure all current slides are in the sorting area and try sorting again.', 'vpm_slider')));
 			die();				
 		}
 		else if ($result === true)
@@ -354,7 +359,7 @@ switch ($_GET['action'])
 		else {
 			header('HTTP/1.0 500 Internal Server Error');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'The shuffle slide operation failed at the server.'));
+			echo json_encode(array('error' => __('The sort slide operation failed at the server.', 'vpm_slider')));
 			die();			
 		}
 	
@@ -366,7 +371,7 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.0 403 Forbidden');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?'));
+			echo json_encode(array('error' => __('Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?', 'vpm_slider')));
 			die();
 		}
 		
@@ -377,7 +382,7 @@ switch ($_GET['action'])
 		{
 			header('HTTP/1.0 400 Bad Request');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'You have not supplied the ID to delete.'));
+			echo json_encode(array('error' => __('You have not supplied the ID to delete.', 'vpm_slider')));
 			die();				
 		}
 		
@@ -392,7 +397,7 @@ switch ($_GET['action'])
 		else {
 			header('HTTP/1.1 500 Internal Server Error');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => 'The delete slide operation failed at the server. Perhaps it has already been deleted by someone else.'));		
+			echo json_encode(array('error' => __('The delete slide operation failed at the server. Perhaps it has already been deleted by someone else.', 'vpm_slider')));		
 			die();
 		}						
 	

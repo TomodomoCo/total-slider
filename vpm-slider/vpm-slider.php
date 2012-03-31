@@ -2,11 +2,12 @@
 /*
 Plugin Name: VPM Slider
 Plugin URI: http://www.vanpattenmedia.com/
-Description: Allows the user to create, edit and remove ‘slides’ with text and images. MAKE ME BETTER.
+Description: Allows the user to create, edit and remove ‘slides’ with text and images.
 Version: 1.0
 Author: Peter Upfold
 Author URI: http://vanpattenmedia.com/
 License: GPL2
+Text Domain: vpm_slider
 /* ----------------------------------------------*/
 
 /*  Copyright (C) 2011-2012 Peter Upfold.
@@ -77,6 +78,9 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	/*
 		Upon plugin activation, creates the vpm_slider_slide_groups option
 		in wp_options, if it does not already exist.
+		
+		Also set up a base capability for administrator to access the Slider
+		Admin page, and configure some default general options.
 	*/
 	
 		if (!get_option('vpm_slider_slide_groups')) {
@@ -88,6 +92,15 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		// set the capability for administrator so they can visit the options page
 		$admin = get_role('administrator');
 		$admin->add_cap(VPM_SLIDER_REQUIRED_CAPABILITY);
+		
+		// set up default general options
+		
+		if (!get_option('vpm_slider_general_options'))
+		{
+			add_option('vpm_slider_general_options', array(
+				'should_enqueue_template'	=> 	'1'
+			));
+		}
 	
 	}
 	
@@ -98,6 +111,16 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	
 		register_widget('VPM_Slider_Widget');
 
+	}
+	
+	public function loadTextDomain()
+	{
+	/*
+		Load the GetText domain for this plugin's translatable strings.
+	*/
+
+		load_plugin_textdomain( 'vpm_slider', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+	
 	}
 		
 	/***********	Utility Functions	***********/
@@ -154,7 +177,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		// erm, just a little bit of an ugly hack :(
 		
 		?><script type="text/javascript">window.location.replace('<?php echo $url; ?>');</script>
-		<noscript><h1><a href="<?php echo esc_url($url); ?>">Please go here</a></h1></noscript><?php
+		<noscript><h1><a href="<?php echo esc_url($url); ?>"><?php _e('Please go here', 'vpm_slider');?></a></h1></noscript><?php
 		die();
 	
 	}
@@ -312,7 +335,10 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 			wp_enqueue_script('jquery-ui-sortable');		
 
 			wp_register_script('vpm-slider-interface', plugin_dir_url( __FILE__ ).'js/interface.js');
-			wp_enqueue_script('vpm-slider-interface');	
+			wp_enqueue_script('vpm-slider-interface');
+			
+			wp_localize_script('vpm-slider-interface', '_vpm_slider_L10n', VPM_Slider::jsL10n());
+			
 			
 			// enqueue the frontend so that the interface will be ready
 			VPM_Slider::enqueueSliderFrontend('backend');
@@ -324,8 +350,8 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		/* Top-level menu page */
 		add_menu_page(
 			
-			'Slider',										/* title of options page */
-			'Slider',										/* title of options menu item */
+			__('Slider', 'vpm_slider'),						/* title of options page */
+			__('Slider', 'vpm_slider'),						/* title of options menu item */
 			VPM_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
 			'vpm-slider',									/* menu slug */
 			array('VPM_Slider', 'printSlideGroupsPage'),		/* callback to print the page to output */
@@ -337,8 +363,8 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		$submenu = add_submenu_page(
 		
 			'vpm-slider',									/* parent slug */
-			'Slide Groups',									/* title of page */
-			'Slide Groups',									/* title to use in menu */
+			__('Slide Groups', 'vpm_slider'),				/* title of page */
+			__('Slide Groups', 'vpm_slider'),				/* title to use in menu */
 			VPM_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
 			'vpm-slider',									/* menu slug */
 			array('VPM_Slider', 'printSlideGroupsPage')		/* callback to print the page to output */
@@ -349,8 +375,8 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		add_submenu_page(
 		
 			'vpm-slider',									/* parent slug */
-			'Settings',										/* title of page */
-			'Settings',										/* title to use in menu */
+			__('Settings', 'vpm_slider'),					/* title of page */
+			__('Settings', 'vpm_slider'),					/* title to use in menu */
 			VPM_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
 			'vpm-slider-settings',							/* menu slug */
 			array('VPM_Slider', 'printSettingsPage')			/* callback to print the page to output */
@@ -373,6 +399,15 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		If $context is 'backend', we will load the CSS only and not the JS.
 		
 	*/
+	
+		$generalOptions = get_option('vpm_slider_general_options');
+		
+		// do not run if enqueue is disabled
+		if ( is_array($generalOptions) && array_key_exists('should_enqueue_template', $generalOptions)
+		&& $generalOptions['should_enqueue_template'] == '0' && $context != 'backend'  )
+		{
+			return false;
+		}
 	
 		// look for a template file for vpm-slider in the current active theme
 		$themePath = get_stylesheet_directory();
@@ -498,38 +533,97 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	
 		$screen = get_current_screen();
 		
+		$slideGroupsHelp[0] = __('Each Slide Group contains a number of Slides that will appear, one after another, when you publish your Slides on your site.', 'vpm_slider');
+		$slideGroupsHelp[1] = sprintf(__('You can make up to %d Slide Groups, which you can use to have different slideshows on different parts of your site.', 'vpm_slider'), intval(VPM_SLIDER_MAX_SLIDE_GROUPS));
+		
 		$screen->add_help_tab( array (
 			'id'			=>			'vpm-slider-groups',
-			'title'			=>			'Slide Groups',
-			'content'		=>			'<p>Each Slide Group contains a number of Slides that will appear, one after another, when you publish your Slides on your site.</p><p>You can make up to '.intval(VPM_SLIDER_MAX_SLIDE_GROUPS).' Slide Groups, which you can use to have different slideshows on different parts of your site.</p>'
+			'title'			=>			__('Slide Groups', 'vpm_slider'),
+			'content'		=>			'<p>'.$slideGroupsHelp[0].'</p><p>'.$slideGroupsHelp[1].'</p>'
 		
 		) );
+		
+		$editingHelp[0] = __('Once you have clicked ‘Edit’ on the desired Slide Group, you’ll see all of its Slides.', 'vpm_slider');
+		$editingHelp[1] = __('Click on any Slide to make changes. You can also drag and drop the title and description to place them anywhere over the background image.', 'vpm_slider');
+		$editingHelp[2] = __('Simply drag and drop to re-order the Slides in the Slide Group. The new order is saved immediately.', 'vpm_slider');
 		
 		$screen->add_help_tab( array (
 			'id'			=>			'vpm-slider-editing',
 			'title'			=>			'Editing',
-			'content'		=>			'<p>Once you have clicked &lsquo;Edit&rsquo; on the desired Slide Group, you&rsquo;ll see all of its Slides.</p><p>Click on any Slide to make changes. You can also drag and drop the title and description to place them anywhere over the background image.</p><p>Simply drag and drop to re-order the Slides in the Slide Group. The new order is saved immediately.</p>'
+			'content'		=>			'<p>'.$editingHelp[0].'</p><p>'.$editingHelp[1].'</p><p>'.$editingHelp[2].'</p>'
 		
 		) );		
+		
+		$publishingHelp[0] = __('Once you are happy with your new Slide Group, you need to publish it for it to show up on your site.', 'vpm_slider');
+		$publishingHelp[1] = __('To do this, your theme needs to support Widgets, and have a ‘sidebar’ in the theme where you’d like the Slides to show up.', 'vpm_slider');
+		$publishingHelp[2] = __('Go across to <a href="widgets.php">Appearance » Widgets</a> and drag a <strong>VPM Slider</strong> Widget to the desired sidebar. In the Widget’s settings, choose the Slide Group to show and click <em>Save</em>.', 'vpm_slider');
+
 		
 		$screen->add_help_tab( array(
 		
 			'id'			=>			'vpm-slider-publishing',
 			'title'			=>			'Publishing',
-			'content'		=>			'<p>Once you are happy with your new Slide Group, you need to publish it for it to show up on your site.</p><p>To do this, your theme needs to support Widgets, and have a &lsquo;sidebar&rsquo; in the theme where you&rsquo;d like the Slides to show up.</p><p>Go across to <a href="widgets.php">Appearance &raquo; Widgets</a> and drag a <strong>VPM Slider</strong> Widget to the desired sidebar. In the Widget&rsquo;s settings, choose the Slide Group to show and click <em>Save</em>.</p>'
+			'content'		=>			'<p>'.$publishingHelp[0].'</p><p>'.$publishingHelp[1].'</p><p>'.$publishingHelp[2].'</p>'
 		
 		) );
 		
 		$crop = VPM_Slider::determineCropWidthAndHeight();
+		
+		$hintsTips[0] = sprintf( __('For the best visual results, crop your background images to the size used by your Slider template — %d×%d', 'vpm_slider'), $crop['width'], $crop['height'] );
+		$hintsTips[1] = __('Experiment with dragging and dropping the title and description over different parts of the background to achieve a different visual effect.', 'vpm_slider');
+		$hintsTips[2] = __('Keep your site fresh — create multiple Slide Groups ahead of time, then simply edit the <strong>VPM Slider</strong> Widget to switch over to display another Slide Group every now and then.', 'vpm_slider');
+		$hintsTips[3] = __('Completely customise the look of your Slides — create a <em>vpm-slider-templates</em> subfolder in your theme. You can use our <em>templates</em> folder in the plugin as a starting point.', 'vpm_slider');
 
 		$screen->add_help_tab( array(
 		
 			'id'			=>			'vpm-slider-hints',
 			'title'			=>			'Hints &amp; Tips',
-			'content'		=>			'<ul><li>For the best visual results, crop your background images to the size used by your Slider template &mdash; '.$crop['width'].'&times;'.$crop['height'].'.</li><li>Experiment with dragging and dropping the title and description over different parts of the background to achieve a different visual effect.</li><li>Keep your site fresh &mdash; create multiple Slide Groups ahead of time, then simply edit the <strong>VPM Slider</strong> Widget to switch over to display another Slide Group every now and then.</li><li>Completely customise the look of your Slides &mdash; create a <em>vpm-slider-templates</em> subfolder in your theme. You can use our <em>templates</em> folder in the plugin as a starting point.</ul>'
+			'content'		=>			'<ul><li>'.$hintsTips[0].'</li><li>'.$hintsTips[1].'</li><li>'.$hintsTips[2].'</li><li>'.$hintsTips[3].'</li></ul>'
 		
 		) );	
 	
+	
+	}
+	
+	public function jsL10n()
+	{
+	/*
+		Return the object containing all of the i18n-capable and l10n-capable
+		strings in the interface.js file, ready for wp_localize_script.
+	*/
+	
+		return array (
+		
+			'switchEditWouldLoseChanges'	=> __("You are still editing the current slide. Switching to a different slide will lose your changes.\n\nDo you want to lose your changes?", 'vpm_slider'),
+			'leavePageWouldLoseChanges'		=> __('You are still editing the current slide. Leaving this page will lose your changes.', 'vpm_slider'),
+				/* note:
+					This message may or may not be shown. This is browser-dependent. All we can do in some cases is throw a generic
+					“don’t leave, you haven’t saved yet” confirm box, which is better than nothing.
+				*/
+			'wouldLoseUnsavedChanges'		=> __("You will lose any unsaved changes.\n\nAre you sure you want to lose these changes?", 'vpm_slider'),
+			'confirmDeleteOperation'		=> __("Are you sure you want to delete this slide?\n\nThis action cannot be undone.", 'vpm_slider'),
+			'validationErrorIntroduction'	=> __("Please correct the following errors with the form.\n\n", 'vpm_slider'),
+			'validationNoSlideTitle'		=> __('You must enter a slide title.', 'vpm_slider'),
+			'validationNoSlideDescription'	=> __('You must enter a slide description.', 'vpm_slider'),
+			'validationInvalidBackgroundURL'=> __('The supplied background image URL is not a valid URL.', 'vpm_slider'),
+			'validationInvalidLinkURL'		=> __('The supplied external link is not a valid URL.', 'vpm_slider'),
+			'validationInvalidLinkID'		=> __('The supplied post ID for the slide link is not valid.', 'vpm_slider'),
+			'sortWillSaveSoon'				=> __('The new order will be saved when you save the new slide.', 'vpm_slider'),
+			'unableToResortSlides'			=> __('Sorry, unable to resort the slides.', 'vpm_slider'),
+			'newSlideTemplateUntitled'		=> __('untitled', 'vpm_slider'),
+			'newSlideTemplateNoText'		=> __('(no text)', 'vpm_slider'),
+			'newSlideTemplateMove'			=> __('Move', 'vpm_slider'),
+			'newSlideTemplateDelete'		=> __('Delete', 'vpm_slider'),
+			'slideEditNoPostSelected'		=> __('No post selected.', 'vpm_slider'),
+			'saveButtonValue'				=> __('Save', 'vpm_slider'),
+			'unableToGetSlide'				=> __('Sorry, unable to get that slide', 'vpm_slider'),
+			'slideSaved'					=> __('Slide saved.', 'vpm_slider'),		
+			'uploadSlideBgImage'			=> __('Upload slide background image', 'vpm_slider'),
+			'unableToSaveSlide'				=> __('Sorry, unable to save the new slide.', 'vpm_slider'),
+			'unableToDeleteSlideNoID'		=> __('Unable to delete -- could not get the slide ID for the current slide.', 'vpm_slider'),
+			'unableToDeleteSlide'			=> __('Sorry, unable to delete the slide.', 'vpm_slider')	
+		
+		);
 	
 	}
 	
@@ -551,7 +645,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		}
 		
 		// add the credits/notes metabox
-		add_meta_box('credits-notes', 'Credits/Notes', array('VPM_Slider', 'printCreditsMetabox'), '_vpm_slider_slide_groups', 'side', 'core');
+		add_meta_box('credits-notes', __('Credits/Notes', 'vpm_slider'), array('VPM_Slider', 'printCreditsMetabox'), '_vpm_slider_slide_groups', 'side', 'core');
 
 		// if we are to remove a slide group, do that and redirect to home
 		if (array_key_exists('action', $_GET) && $_GET['action'] == 'remove' && array_key_exists('group', $_GET))
@@ -624,23 +718,23 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		<div id="icon-vpm-slides" class="icon32"><br /></div><h2>Slide Groups <a href="#" id="new-slide-group-button" class="add-new-h2">Add New</a></h2>
 		
 		<noscript>
-		<h3>Sorry, this interface requires JavaScript to function.</h3>
-		<p>You will need to enable JavaScript for this page before many of the controls below will work.</p>
+		<h3><?php _e('Sorry, this interface requires JavaScript to function.', 'vpm_slider');?></h3>
+		<p><?php _e('You will need to enable JavaScript for this page before many of the controls below will work.', 'vpm_slider');?></p>
 		</noscript>
 
 		<div id="new-slide-group">
 			<form name="new-slide-group-form" id="new-slide-group-form" method="post" action="admin.php?page=vpm-slider&action=new_slide_group">
-				<h3 id="new-slide-group-header">Add a Slide Group</h3>
+				<h3 id="new-slide-group-header"><?php _e('Add a Slide Group', 'vpm_slider');?></h3>
 				<?php wp_nonce_field('new-slide-group');?>
 				<table class="form-table" style="max-width:690px">
 				
 					<tr class="form-field form-required">
-						<th scope="row"><label for="group-name">Group Name</label></th>
+						<th scope="row"><label for="group-name"><?php _e('Group Name', 'vpm_slider');?></label></th>
 						<td><input name="group-name" type="text" id="group-name" value="" /></td>
 					</tr>
 				</table>
-				<p class="submit"><input type="submit" class="button-primary" value="Add Slide Group "  />
-				<input type="button" id="new-slide-group-cancel" class="button-secondary" value="Cancel" /></p></form>
+				<p class="submit"><input type="submit" class="button-primary" value="<?php _e('Add Slide Group', 'vpm_slider');?>"  />
+				<input type="button" id="new-slide-group-cancel" class="button-secondary" value="<?php _e('Cancel', 'vpm_slider');?>" /></p></form>
 			</form>
 		</div>
 		
@@ -660,7 +754,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 						
 				if ($table->get_total_items() < 1)
 				{
-					?><div class="slidesort-add-hint">Click &lsquo;Add New&rsquo; to create a new group of slides.</div><?php
+					?><div class="slidesort-add-hint"><?php _e('Click ‘Add New’ to create a new group of slides.', 'vpm_slider');?></div><?php
 				}
 				?>
 		
@@ -682,14 +776,16 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		// permissions check
 		if (!current_user_can(VPM_SLIDER_REQUIRED_CAPABILITY))
 		{
-			?><h1>This page is not accessible to your user.</h1><?php
+			?><h1><?php _e('This page is not accessible to your user.', 'vpm_slider');?></h1><?php
 			return;
 		}
 
 		$theSlug = VPM_Slider::sanitizeSlideGroupSlug($_GET['group']);
 		if (empty($theSlug))
 		{
-			echo '<div class="wrap"><h1>No Slide Group selected.</h1></div>';
+			echo '<div class="wrap"><h1>';
+			_e('No Slide Group selected.', 'vpm_slider');
+			echo '</h1></div>';
 			return;
 		}
 		
@@ -697,17 +793,19 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		$slideGroup = new VPM_Slide_Group($_GET['group']);
 		if (!$slideGroup->load())
 		{
-			echo '<div class="wrap"><h1>Could not load the selected Slide Group. Does it exist?</h1></div>';
+			echo '<div class="wrap"><h1>';
+			_e('Could not load the selected Slide Group. Does it exist?', 'vpm_slider');
+			echo '</h1></div>';
 			return;
 		}
 		
 		
 		// add the metaboxes
-		add_meta_box('slide-sorter-mb', 'Slides', array('VPM_Slider', 'printSlideSorterMetabox'), '_vpm_slider_slide', 'normal', 'core');
-		add_meta_box('slide-preview-mb', 'Preview', array('VPM_Slider', 'printSlidePreviewMetabox'), '_vpm_slider_slide', 'normal', 'core');
+		add_meta_box('slide-sorter-mb', __('Slides', 'vpm_slider'), array('VPM_Slider', 'printSlideSorterMetabox'), '_vpm_slider_slide', 'normal', 'core');
+		add_meta_box('slide-preview-mb', __('Preview', 'vpm_slider'), array('VPM_Slider', 'printSlidePreviewMetabox'), '_vpm_slider_slide', 'normal', 'core');
 
-		add_meta_box('slide-editor-mb', 'Edit', array('VPM_Slider', 'printSlideEditorMetabox'), '_vpm_slider_slide_bottom', 'normal', 'core');
-		add_meta_box('credits-notes-mb', 'Credits/Notes', array('VPM_Slider', 'printCreditsMetabox'), '_vpm_slider_slide_bottom', 'side', 'core');
+		add_meta_box('slide-editor-mb', __('Edit', 'vpm_slider'), array('VPM_Slider', 'printSlideEditorMetabox'), '_vpm_slider_slide_bottom', 'normal', 'core');
+		add_meta_box('credits-notes-mb', __('Credits/Notes', 'vpm_slider'), array('VPM_Slider', 'printCreditsMetabox'), '_vpm_slider_slide_bottom', 'side', 'core');
 		
 		if (function_exists('find_posts_div')) { find_posts_div(); } // bring in the post/page finder interface for links
 		
@@ -718,17 +816,19 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		var VPM_WP_ROOT = '<?php echo admin_url(); ?>';
 		var VPM_HPS_PLUGIN_URL = '<?php echo admin_url();?>admin.php?page=vpm-slider&vpm-slider-ajax=true&';
 		var VPM_HPS_GROUP = '<?php echo esc_attr($theSlug);?>';
-		document.title = '‘<?php echo esc_attr($slideGroup->name);?>’ Slides ' + document.title.substring(13, document.title.length);				
+		document.title = '‘<?php echo esc_attr($slideGroup->name);?>’ Slides ' + document.title.substring(13, document.title.length);//TODO i18n
 		//]]>
 		</script>
 		
 		<div class="wrap">
 		
-		<div id="icon-vpm-slides" class="icon32"><br /></div><h2>&lsquo;<?php echo esc_html($slideGroup->name);?>&rsquo; Slides <a href="#" id="new-slide-button" class="add-new-h2">Add New</a></h2>
+		<div id="icon-vpm-slides" class="icon32"><br /></div>
+		<h2><?php printf(__('‘%s’ Slides', 'vpm_slider'), esc_html($slideGroup->name));?>
+		<a href="#" id="new-slide-button" class="add-new-h2"><?php _e('Add New', 'vpm_slider');?></a></h2>
 		
 		<noscript>
-		<h3>Sorry, this interface requires JavaScript to function.</h3>
-		<p>You will need to enable JavaScript for this page before any of the controls below will work.</p>
+		<h3><?php _e('Sorry, this interface requires JavaScript to function.', 'vpm_slider');?></h3>
+		<p><?php _e('You will need to enable JavaScript for this page before any of the controls below will work.', 'vpm_slider');?></p>
 		</noscript>
 		
 		<form name="vpm-the-slides">
@@ -766,16 +866,24 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	
 		if (!current_user_can(VPM_SLIDER_REQUIRED_CAPABILITY))
 		{
-			echo '<h1>You do not have permission to manage slider settings.</h1>';
+			echo '<h1>';
+			_e('You do not have permission to manage Slider settings.', 'vpm_slider');
+			echo '</h1>';
 			die();
 		}
 	
 		$success = null;
 		$message = '';
+		
+		$otherOptions = get_option('vpm_slider_general_options');
 	
 		if (strtolower($_SERVER['REQUEST_METHOD']) == 'post' && array_key_exists('vpm-slider-settings-submitted', $_POST))
 		{
 			// handle the submitted form
+			
+			if (!wp_verify_nonce($_POST['_wpnonce'], 'vpm-slider-settings')) {
+				die(__('Unable to confirm the form’s security.', 'vpm_slider'));	
+			}			
 			
 			if (current_user_can('manage_options'))
 			{
@@ -799,15 +907,40 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 				
 				VPM_Slider::setCapabilityForRoles($rolesToAdd);
 				$success = true;
-				$message .= 'Required role level saved.';
+				$message .= __('Required role level saved.', 'vpm_slider') . ' ';
 			
+			}
+			
+			if ( array_key_exists('should_enqueue_template', $_POST) && $_POST['should_enqueue_template'] == '1' )
+			{
+			
+				if (array_key_exists('should_enqueue_template', $otherOptions) && $otherOptions['should_enqueue_template'] != '1')
+				{
+					$success = true;
+					$message .= __('Advanced settings saved.', 'vpm_slider') . ' ';
+				}
+			
+				$otherOptions['should_enqueue_template'] = '1';
+				update_option('vpm_slider_general_options', $otherOptions);
+			}
+			else {
+				// disable the option
+				if (array_key_exists('should_enqueue_template', $otherOptions) && $otherOptions['should_enqueue_template'] != '0')
+				{
+					$success = true;
+					$message .= __('Advanced settings saved.', 'vpm_slider') . ' ';
+				}
+				
+				$otherOptions['should_enqueue_template'] = '0';
+				update_option('vpm_slider_general_options', $otherOptions);	
+				
 			}
 			
 		
 		}
 	
 		?><div class="wrap">
-		<div id="icon-vpm-slides" class="icon32" style="background:transparent url(<?php echo plugin_dir_url( __FILE__ );?>img/vpm-slider-icon-32.png?ver=20120229) no-repeat;"><br /></div><h2>Settings</h2>
+		<div id="icon-vpm-slides" class="icon32" style="background:transparent url(<?php echo plugin_dir_url( __FILE__ );?>img/vpm-slider-icon-32.png?ver=20120229) no-repeat;"><br /></div><h2><?php _e('Settings', 'vpm_slider');?></h2>
 		
 		
 		<?php if ($success): ?>
@@ -819,13 +952,14 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 		<form method="post" action="admin.php?page=vpm-slider-settings">
 			<input type="hidden" name="vpm-slider-settings-submitted" value="true" />
+			<?php wp_nonce_field ( 'vpm-slider-settings' ); ?>
 		
 			<!-- Only display 'Required Role Level' to manage_options capable users -->
 			<?php if (current_user_can('manage_options')):?>
 		
-			<h3>Required Role Level</h3>
-			<p>Any user with a checked role will be allowed to create, edit and delete slides. Only users that can manage
-			widgets are able to activate, deactivate or move the VPM Slider widget, which makes the slides show up on your site.</p>
+			<h3><?php _e('Required Role Level', 'vpm_slider');?></h3>
+			<p><?php _e('Any user with a checked role will be allowed to create, edit and delete slides. Only users that can manage
+			widgets are able to activate, deactivate or move the VPM Slider widget, which makes the slides show up on your site.', 'vpm_slider');?></p>
 			
 			<table class="form-table">
 			<tbody>
@@ -862,13 +996,35 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 					</tr>
 					
 					<?php endforeach; endif; ?>
-				
+			</tbody>
+			</table>
+			
+			<h3><?php _e('Advanced Settings', 'vpm_slider');?></h3>
+			
+			<table class="form-table">
+			<tbody>
+			
+				<tr class="form-field">
+					<td>
+						<label for="should_enqueue_template">
+							<input type="checkbox" name="should_enqueue_template" id="should_enqueue_template" value="1" style="width:20px;"
+							<?php echo ( intval($otherOptions['should_enqueue_template']) ) ? ' checked="checked"' : ''; ?>
+							/>
+							<?php _e('Automatically enqueue the Slider template CSS and JavaScript on the output page.', 'vpm_slider');?>
+						</label>
+						<p><em><?php _e('If disabled, you must manually include the relevant CSS and JavaScript on the output page, or the Slider
+						will be non-functional and appear broken. If in doubt, leave it switched on.', 'vpm_slider');?></em></p>
+					</td>
+				</tr>
+			
+			
+			</tbody>
 			</table>
 			
 			<?php endif; ?>		
 			
 		<p class="submit">
-			<input class="button-primary" type="submit" value="Save Changes" id="submitbutton" />		
+			<input class="button-primary" type="submit" value="<?php _e('Save Changes', 'vpm_slider');?>" id="submitbutton" />		
 		</p>
 		
 		</form>
@@ -896,10 +1052,10 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 			jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align').hide(); // hide unnecessary items
 			// ?? also #media-items .image-size
 		
-			jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;">Choose &lsquo;Edit Image&rsquo; and crop to <?php echo $crop['width'];?>&times;<?php echo $crop['height'];?> for best results.</p>');
+			jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'vpm_slider'), $crop['width'], $crop['height']);?></p>');
 		
 			jQuery('.savesend .button').each(function() {
-				jQuery(this).attr('value', 'Use as background image');
+				jQuery(this).attr('value', '<?php _e('Use as background image', 'vpm_slider');?>');
 			});
 			
 			uploader.bind('FileUploaded', function() {
@@ -909,11 +1065,11 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 					
 					//?? also #media-items .image-size
 					
-					jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;">Choose &lsquo;Edit Image&rsquo; and crop to <?php echo $crop['width'];?>&times;<?php echo $crop['height'];?> for best results.</p>');
+					jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"<?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'vpm_slider'), $crop['width'], $crop['height']);?></p>');
 				
 					// rename the main action button
 					jQuery('.savesend .button').each(function() {
-						jQuery(this).attr('value', 'Use as background image');
+						jQuery(this).attr('value', '<?php _e('Use as background image', 'vpm_slider');?>');
 					});
 				}, 500); 
 			});
@@ -938,18 +1094,19 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	
 		?>
 		
-		<p class="vpm-slider-help-point"><a href="#">How do I get my slides to show up on my site?</a></p>
+		<p class="vpm-slider-help-point"><a href="#"><?php _e('How do I get my slides to show up on my site?', 'vpm_slider');?></a></p>
 		
 		<p style="font-size:12px; border-top:1px dotted #777; padding-top:8px;">
-		<strong><a href="">VPM Slider</a> by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>.</strong></p>
+		<strong><?php _e('<a href="">VPM Slider</a> by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>.', 'vpm_slider');?>
+		</strong></p>
 		
-		<p style="color:#777; font-size:9px">&copy; 2011-2012 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 licensed</a>.</p>
+		<p style="color:#777; font-size:9px"><?php _e('© 2011-2012 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 licensed</a>.', 'vpm_slider');?></p>
 		
-		<p style="color:#777;">Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a></p>
-		<p style="color:#777;">Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a></p></p>
+		<p style="color:#777;"><?php _e('Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a>', 'vpm_slider');?></p>
+		<p style="color:#777;"><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>');?></p></p>
 		
-		<p style="font-size:12px;">If you find this plugin useful, or are using it commercially, please consider
-		<a href="">making a financial contribution</a>. Thank you.</p>
+		<p style="font-size:12px;"><?php _e('If you find this plugin useful, or are using it commercially, please consider
+		<a href="">making a financial contribution</a>. Thank you.', 'vpm_slider');?></p>
 		<?php
 	
 	}
@@ -982,8 +1139,8 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 								
 					<div id="slidesort_<?php echo $myId;?>_text" class="slidesort_text"><?php echo stripslashes(esc_html($slide['title']));?></div>
 					
-					<a id="slidesort_<?php echo $myId;?>_move_button" class="slidesort-icon slide-move-button" href="#">Move</a>
-					<span id="slidesort_<?php echo $myId;?>_delete" class="slide-delete"><a id="slidesort_<?php echo $myId;?>_delete_button" class="slidesort-icon slide-delete-button" href="#">Delete</a></span>
+					<a id="slidesort_<?php echo $myId;?>_move_button" class="slidesort-icon slide-move-button" href="#"><?php _e('Move', 'vpm_slider');?></a>
+					<span id="slidesort_<?php echo $myId;?>_delete" class="slide-delete"><a id="slidesort_<?php echo $myId;?>_delete_button" class="slidesort-icon slide-delete-button" href="#"><?php _e('Delete', 'vpm_slider');?></a></span>
 				
 				</li>
 				
@@ -996,7 +1153,8 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		?>		
 		</ul>
 		
-		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>Click &lsquo;Add New&rsquo; to create a slide.</div>
+		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>
+		<?php _e('Click ‘Add New’ to create a Slide.', 'vpm_slider');?></div>
 		
 		</div>
 		
@@ -1017,9 +1175,9 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 				<li id="preview-area">
 				
 					<div id="slide-preview" class="desc">
-						<h2 id="slide-preview-title">untitled</h2>
+						<h2 id="slide-preview-title"><?php _e('untitled', 'vpm_slider');?></h2>
 						<div class="png_fix">
-							<p id="slide-preview-description">(no text)</p>
+							<p id="slide-preview-description"><?php _e('(no text)', 'vpm_slider');?></p>
 						</div>
 					</div>
 				
@@ -1041,7 +1199,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	?>
 	
 				<div id="edit-controls-choose-hint">
-					<p>Click a Slide to edit it, or click &lsquo;Add New&rsquo;.</p>
+					<p><?php _e('Click a Slide to edit it, or click ‘Add New’.', 'vpm_slider');?></p>
 				</div>
 	
 				<div id="edit-controls">
@@ -1050,7 +1208,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 						<tbody>
 							<tr class="form-field">
 								<th scope="row">
-									<label for="edit-slide-title">Title</label>
+									<label for="edit-slide-title"><?php _e('Title', 'vpm_slider');?></label>
 								</th>
 								<td>
 									<input type="text" name="slide-title" id="edit-slide-title" value="" maxlength="64" class="edit-controls-inputs" />
@@ -1058,7 +1216,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 							</tr>
 							<tr class="form-field">
 								<th scope="row">
-									<label for="edit-slide-description">Description</label>
+									<label for="edit-slide-description"><?php _e('Description', 'vpm_slider');?></label>
 								</th>
 								<td>
 									<textarea name="slide-description" id="edit-slide-description" class="widefat edit-controls-inputs" rows="4"></textarea>
@@ -1067,28 +1225,28 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 							
 							<tr class="form-field">
 								<th scope="row">
-									<label for="edit-slide-image-upload">Background</label>
+									<label for="edit-slide-image-upload"><?php _e('Background', 'vpm_slider');?></label>
 								</th>
 								<td>
 									<input id="edit-slide-image-url" type="hidden" name="slide-image" />
 									<!--<span id="edit-slide-image-title"></span>-->
-									<input id="edit-slide-image-upload" type="button" class="button" value="Upload or choose image" />
+									<input id="edit-slide-image-upload" type="button" class="button" value="<?php _e('Upload or choose image', 'vpm_slider');?>" />
 								</td>
 							</tr>
 							
 							<tr class="form-field">
 								<th scope="row">
-									Slide Link
+									<?php _e('Slide Link', 'vpm_slider');?>
 								</th>
 								<td>
 									<label for="slide-link-is-internal">
 										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-internal" value="true" />
-									A page or post on this site
+									<?php _e('A page or post on this site', 'vpm_slider');?>
 									</label>
 									<br>
 									<label for="slide-link-is-external">
 										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-external" value="false" />
-									An external link
+									<?php _e('An external link', 'vpm_slider');?>
 									</label>
 								</td>
 							</tr>
@@ -1098,9 +1256,9 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 								
 								</th>
 								<td>
-									<span id="slide-link-internal-display">No post selected</span>
+									<span id="slide-link-internal-display"><?php _e('No post selected', 'vpm_slider');?></span>
 									<input id="slide-link-internal-id" name="slide-link-internal" value="" type="hidden" />
-									<input id="slide-link-finder" type="button" class="button" value="Find post" style="width:50px;" />			
+									<input id="slide-link-finder" type="button" class="button" value="<?php _e('Find post', 'vpm_slider');?>" style="width:50px;" />			
 								</td>
 							</tr>
 							
@@ -1115,12 +1273,12 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 						</tbody>					
 					</table>
 					<p class="submit">
-						<input type="button" id="edit-controls-save" class="button-primary" value="Save" />
-						<input type="button" id="edit-controls-cancel" class="button-secondary" value="Cancel" />
+						<input type="button" id="edit-controls-save" class="button-primary" value="<?php _e('Save', 'vpm_slider');?>" />
+						<input type="button" id="edit-controls-cancel" class="button-secondary" value="<?php _e('Cancel', 'vpm_slider');?>" />
 					</p>
 					<div id="edit-controls-saving">
-						<img id="edit-controls-spinner" src="images/loading.gif" width="16" height="16" alt="Loading" />
-						<span>Saving&hellip;</span>
+						<img id="edit-controls-spinner" src="images/loading.gif" width="16" height="16" alt="<?php _e('Loading', 'vpm_slider');?>" />
+						<span><?php _e('Saving…', 'vpm_slider');?></span>
 					</div>
 				</form>
 			
@@ -1226,7 +1384,7 @@ class VPM_Slider_Widget extends WP_Widget {
 		for displaying.
 	*/
 	
-	?><p>Choose a slide group for this widget to show:</p>
+	?><p><?php _e('Choose a slide group for this widget to show:', 'vpm_slider');?></p>
 	
 	<select id="<?php echo $this->get_field_id('groupSlug');?>" name="<?php echo $this->get_field_name('groupSlug');?>">
 		<option value="**INVALID**">--------------------</option>
@@ -1528,6 +1686,7 @@ class VPM_Slider_Widget extends WP_Widget {
 /******************************************** WordPress actions ********************************************/
 
 register_activation_hook(__FILE__, array('VPM_Slider', 'createSlidesOptionField'));
+add_action('init', array('VPM_Slider', 'loadTextDomain'));
 add_action('admin_menu', array('VPM_Slider', 'addAdminSubMenu'));
 add_action('widgets_init', array('VPM_Slider', 'registerAsWidget'));
 add_action('admin_init', array('VPM_Slider', 'passControlToAjaxHandler'));

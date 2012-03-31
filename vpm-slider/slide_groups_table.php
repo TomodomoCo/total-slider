@@ -35,8 +35,8 @@ class Slide_Groups_Table extends WP_List_Table {
 		return parent::__construct(
 		
 			array (
-				'singular' 	=> 'slide group',
-				'plural'	=> 'slide groups',
+				'singular' 	=> __('slide group', 'vpm_slider'),
+				'plural'	=> __('slide groups', 'vpm_slider'),
 				'ajax'		=> false			
 			)
 		);
@@ -50,8 +50,8 @@ class Slide_Groups_Table extends WP_List_Table {
 		return array(
 		
 	        'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text	
-			'name'		=>	'Group Name',
-			'slides_count'		=>	'Slides'
+			'name'		=>	__('Group Name', 'vpm_slider'),
+			'slides_count'		=>	__('Slides', 'vpm_slider')
 		
 		);
 	
@@ -78,10 +78,10 @@ class Slide_Groups_Table extends WP_List_Table {
 	
 		echo esc_html(stripslashes($item->name));
 		?><br/><div class="row-actions">
-			<span class="edit"><a href="admin.php?page=vpm-slider&amp;group=<?php echo esc_attr($item->slug);?>">Edit</a></span> |
+			<span class="edit"><a href="admin.php?page=vpm-slider&amp;group=<?php echo esc_attr($item->slug);?>"><?php _e('Edit', 'vpm_slider');?></a></span> |
 			<span class="remove"><a class="submitdelete" href="admin.php?page=vpm-slider&amp;action=remove&amp;group=<?php echo esc_attr($item->slug);?>&amp;_wpnonce=<?php echo wp_create_nonce('remove-slide-group');?>"
-				onclick="return confirm('Are you sure you want to delete this slide group?\n\nThis action cannot be undone.');"
-			>Remove</a></span>
+				onclick="return confirm('<?php _e('Are you sure you want to delete this slide group?\n\nThis action cannot be undone.', 'vpm_slider');?>');"
+			><?php _e('Remove', 'vpm_slider');?></a></span>
 		</div><?php
 	}
 	

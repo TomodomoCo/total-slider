@@ -226,7 +226,7 @@ class VPM_Slider_Backend {
 		
 		if (get_option('vpm_slider_slides_' . $this->groupSlug) === false)
 		{
-			throw new Exception('The specified slide group does not exist.', 1);
+			throw new Exception(__('The specified slide group does not exist.', 'vpm_slider'), 1);
 			return false;
 		}
 	

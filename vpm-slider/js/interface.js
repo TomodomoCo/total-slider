@@ -23,21 +23,7 @@ var newShouldShuffle = false;
 var deleteCaller = false;
 var linkToSave = '';
 
-/* language */
-var switchEditWouldLoseChanges = 'You are still editing the current slide. Switching to a different slide will lose your changes.\n\nDo you want to lose your changes?';
-var leavePageWouldLoseChanges = 'You are still editing the current slide. Leaving this page will lose your changes.';
-	/* note:
-		This message may or may not be shown. This is browser-dependent. All we can do in some cases is throw a generic
-		"don't leave, you haven't saved yet" confirm box, which is better than nothing.
-	*/
-var wouldLoseUnsavedChanges = 'You will lose any unsaved changes.\n\nAre you sure you want to lose these changes?';
-var confirmDeleteOperation = 'Are you sure you want to delete this slide?\n\nThis action cannot be undone.';
-var validationErrorIntroduction = "Please correct the following errors with the form.\n\n";
-var validationNoSlideTitle = 'You must enter a slide title.';
-var validationNoSlideDescription = 'You must enter a slide description.';
-var validationInvalidBackgroundURL = 'The supplied background image URL is not a valid URL.';
-var validationInvalidLinkURL = 'The supplied external link is not a valid URL.';
-var validationInvalidLinkID = 'The supplied post ID for the slide link is not valid.';
+/* language is now done by vpm_slider.php:jsL10n() */
 
 /* miscellaneous functions */
 function isUrl(s) {
@@ -47,7 +33,7 @@ function isUrl(s) {
 
 window.onbeforeunload = function() {
 	if (isEditing)
-	    return leavePageWouldLoseChanges;
+	    return _vpm_slider_L10n.leavePageWouldLoseChanges;
 }
 
 jQuery(document).ready(function() {
@@ -62,7 +48,7 @@ jQuery(document).ready(function() {
 		*/
 			
 		if (isEditingUntitledSlide != false) {
-			jQuery('#message-area').html('<p>The new order will be saved when you save the new slide.</p>');
+			jQuery('#message-area').html('<p>' + _vpm_slider_L10n.sortWillSaveSoon + '</p>');
 			jQuery('#message-area').fadeIn('slow');
 			
 			newShouldShuffle = true;
@@ -104,7 +90,7 @@ jQuery(document).ready(function() {
 						errorToShow = response.error;
 					}
 				
-					alert('Sorry, unable to resort the slides.\n\n' + errorToShow);												
+					alert(_vpm_slider_L10n.unableToResortSlides + '\n\n' + errorToShow);												
 				}				
 			});
 			
@@ -132,7 +118,7 @@ jQuery(document).ready(function() {
 	
 		if (isEditing)
 		{
-			if (confirm(switchEditWouldLoseChanges))
+			if (confirm(_vpm_slider_L10n.switchEditWouldLoseChanges))
 			{
 				isEditing = false;
 				
@@ -159,7 +145,7 @@ jQuery(document).ready(function() {
 			var newIdNo = jQuery('#slidesort').children().length+1;
 			
 			// create a new button
-			jQuery('#slidesort').append('<li id="slidesort_untitled'  + newIdNo + '" style="background: url();" class="slidesort-selected"><div id="slidesort_untitled'  + newIdNo + '_text" class="slidesort_text">untitled</div><a id="slidesort_'  + newIdNo + '_move_button" class="slidesort-icon slide-move-button" href="#">Move</a><span id="slidesort_'  + newIdNo + '_delete" class="slide-delete"><a id="slidesort_untitled'  + newIdNo + '_delete_button" class="slidesort-icon slide-delete-button" href="#">Delete</a></span></li>');			
+			jQuery('#slidesort').append('<li id="slidesort_untitled'  + newIdNo + '" style="background: url();" class="slidesort-selected"><div id="slidesort_untitled'  + newIdNo + '_text" class="slidesort_text">' + _vpm_slider_L10n.newSlideTemplateUntitled + '</div><a id="slidesort_'  + newIdNo + '_move_button" class="slidesort-icon slide-move-button" href="#">' + _vpm_slider_L10n.newSlideTemplateMove + '</a><span id="slidesort_'  + newIdNo + '_delete" class="slide-delete"><a id="slidesort_untitled'  + newIdNo + '_delete_button" class="slidesort-icon slide-delete-button" href="#">' + _vpm_slider_L10n.newSlideTemplateDelete + '</a></span></li>');			
 			
 			// hook up new pseudo-delete button
 			jQuery('#slidesort_untitled_delete_button').click(function (event) {
@@ -194,10 +180,10 @@ jQuery(document).ready(function() {
 		jQuery('#edit-slide-description').val('');
 		jQuery('#edit-slide-image-url').val('');
 		jQuery('#edit-slide-link').val('');
-		jQuery('#slide-preview-title').html('untitled');
-		jQuery('#slide-preview-description').html('(no text)');
+		jQuery('#slide-preview-title').html(_vpm_slider_L10n.newSlideTemplateUntitled);
+		jQuery('#slide-preview-description').html(_vpm_slider_L10n.newSlideTemplateNoText);
 		jQuery('#slide-link-internal-id').val('');
-		jQuery('#slide-link-internal-display').html('No post selected.');
+		jQuery('#slide-link-internal-display').html(_vpm_slider_L10n.slideEditNoPostSelected);
 		jQuery('#slide-link-is-internal').prop('checked', false);
 		jQuery('#slide-link-is-external').prop('checked', false);
 		jQuery('#slide-link-internal-settings').hide();
@@ -210,7 +196,7 @@ jQuery(document).ready(function() {
 		jQuery('#edit-controls-saving').fadeTo(0,0).hide();
 		
 		jQuery('#edit-controls-save,#edit-controls-cancel').removeAttr('disabled');
-		jQuery('#edit-controls-save').val('Save');
+		jQuery('#edit-controls-save').val(_vpm_slider_L10n.saveButtonValue);
 		
 		linkToSave = '';
 		
@@ -240,7 +226,7 @@ jQuery(document).ready(function() {
 	
 		if (isEditing)
 		{
-			if (confirm(switchEditWouldLoseChanges))
+			if (confirm(_vpm_slider_L10n.switchEditWouldLoseChanges))
 			{
 				isEditing = false;
 				
@@ -345,7 +331,7 @@ jQuery(document).ready(function() {
 						errorToShow = response.error;
 					}
 				
-					alert('Sorry, unable to get that slide.\n\n' + errorToShow);				
+					alert(_vpm_slider_L10n.unableToGetSlide + '\n\n' + errorToShow);				
 				}
 			
 			});
@@ -361,7 +347,7 @@ jQuery(document).ready(function() {
 	/* show saved message */
 	jQuery.fn.showSavedMessage = function() {
 	
-		jQuery('#message-area').html('<p>Slide saved.</p>');
+		jQuery('#message-area').html('<p>' + _vpm_slider_L10n.slideSaved + '</p>');
 		jQuery('#message-area').fadeIn('slow');
 		window.setTimeout(function() {
 			jQuery('#message-area').fadeOut('slow');
@@ -396,7 +382,7 @@ jQuery(document).ready(function() {
 	jQuery('#edit-slide-image-upload').click(function () {		
 		var myTop = jQuery(this).offset();
 
-		tb_show('Upload slide background image', 'media-upload.php?vpm-slider-uploader=bgimage&type=image&TB_iframe=true&height=400&width=600');
+		tb_show(_vpm_slider_L10n.uploadSlideBgImage, 'media-upload.php?vpm-slider-uploader=bgimage&type=image&TB_iframe=true&height=400&width=600');
 		
 		return false;
 	
@@ -432,15 +418,15 @@ jQuery(document).ready(function() {
 		
 		if (jQuery('#edit-slide-title').val().length < 1)
 		{ // blank title
-			validationErrors[validationErrors.length] = validationNoSlideTitle;
+			validationErrors[validationErrors.length] = _vpm_slider_L10n.validationNoSlideTitle;
 		}
 		if (jQuery('#edit-slide-description').val().length < 1)
 		{ // blank description
-			validationErrors[validationErrors.length] = validationNoSlideDescription;
+			validationErrors[validationErrors.length] = _vpm_slider_L10n.validationNoSlideDescription;
 		}
 		if (jQuery('#edit-slide-image-url').val().length > 1 && !isUrl(jQuery('#edit-slide-image-url').val()))
 		{	// if we have a background URL set, but it is not a proper URL
-			validationErrors[validationErrors.length] = validationInvalidBackgroundURL;
+			validationErrors[validationErrors.length] = _vpm_slider_L10n.validationInvalidBackgroundURL;
 		}
 		
 		
@@ -449,7 +435,7 @@ jQuery(document).ready(function() {
 		
 			if (jQuery('#edit-slide-link').val().length > 1 && !isUrl(jQuery('#edit-slide-link').val()))
 			{	// if we have an external link URL set, but it is not a proper URL
-				validationErrors[validationErrors.length] = validationInvalidLinkURL;
+				validationErrors[validationErrors.length] = _vpm_slider_L10nvalidationInvalidLinkURL;
 			}		
 			
 			linkToSave = jQuery('#edit-slide-link').val();
@@ -460,7 +446,7 @@ jQuery(document).ready(function() {
 		{
 			if (jQuery('#slide-link-internal-id').val().length > 1 && isNaN(jQuery('#slide-link-internal-id').val()))
 			{
-				validationErrors[validationErrors.length] = validationInvalidLinkID;
+				validationErrors[validationErrors.length] = _vpm_slider_L10n.validationInvalidLinkID;
 			}
 			
 			linkToSave = jQuery('#slide-link-internal-id').val();
@@ -471,7 +457,7 @@ jQuery(document).ready(function() {
 		
 		if (validationErrors.length > 0)
 		{
-			var errorString = validationErrorIntroduction;
+			var errorString = _vpm_slider_L10n.validationErrorIntroduction;
 			
 			for (var i = 0; i < validationErrors.length; i++) {
 				errorString += validationErrors[i] + '\n';
@@ -555,10 +541,10 @@ jQuery(document).ready(function() {
 						errorToShow = response.error;
 					}
 					
-					alert('Sorry, unable to save the new slide.\n\n' + response.error);
+					alert(_vpm_slider_L10n.unableToSaveSlide + '\n\n' + response.error);
 					
 					jQuery('#edit-controls-save,#edit-controls-cancel').removeAttr('disabled');
-					jQuery('#edit-controls-save').val('Save');
+					jQuery('#edit-controls-save').val(_vpm_slider_L10n.saveButtonValue);
 					jQuery('#edit-controls-saving').fadeTo(0,0).hide();		
 							
 				}
@@ -612,10 +598,10 @@ jQuery(document).ready(function() {
 						errorToShow = response.error;
 					}
 									
-					alert('Sorry, unable to save the slide.\n\n' + errorToShow);
+					alert(_vpm_slider_L10n.unableToSaveSlide + '\n\n' + errorToShow);
 
 					jQuery('#edit-controls-save,#edit-controls-cancel').removeAttr('disabled');
-					jQuery('#edit-controls-save').val('Save');
+					jQuery('#edit-controls-save').val(_vpm_slider_L10n.saveButtonValue);
 					jQuery('#edit-controls-saving').fadeTo(0,0).hide();					
 									
 				}
@@ -639,7 +625,7 @@ jQuery(document).ready(function() {
 		{
 			// editing untitled, new slide
 		
-			if (confirm(wouldLoseUnsavedChanges))
+			if (confirm(_vpm_slider_L10n.wouldLoseUnsavedChanges))
 			{
 				jQuery('#' + editingSlideSortButton).remove();
 				jQuery('#edit-controls').fadeTo(400, 0);
@@ -665,7 +651,7 @@ jQuery(document).ready(function() {
 		else if (isEditing) {
 			// editing existing slide
 			
-			if (confirm(wouldLoseUnsavedChanges))
+			if (confirm(_vpm_slider_L10n.wouldLoseUnsavedChanges))
 			{
 			
 				jQuery('#edit-controls').fadeTo(400, 0);
@@ -715,12 +701,12 @@ jQuery(document).ready(function() {
 		slideID = slideID.replace('slidesort_', '');
 		
 		if (!slideID)
-			alert('Unable to delete -- could not get the slide ID for the current slide.');
+			alert(_vpm_slider_L10n.unableToDeleteSlideNoID);
 			
 		// if untitled delete was asked, simply cancel
 		if (slideID.match(/^untitled/))
 		{
-			if (confirm(wouldLoseUnsavedChanges))
+			if (confirm(_vpm_slider_L10n.wouldLoseUnsavedChanges))
 			{
 		
 				jQuery(caller).parent().parent().fadeTo(350, 0);	
@@ -755,7 +741,7 @@ jQuery(document).ready(function() {
 			return;			
 		}
 		
-		if (confirm(confirmDeleteOperation))
+		if (confirm(_vpm_slider_L10n.confirmDeleteOperation))
 		{
 		
 			jQuery(caller).html('deleting&hellip;');
@@ -815,7 +801,7 @@ jQuery(document).ready(function() {
 					{
 						errorToShow = response.error;
 					}			
-					alert('Sorry, unable to delete the slide.\n\n' + errorToShow);					
+					alert(_vpm_slider_L10n.unableToDeleteSlide + '\n\n' + errorToShow);					
 					
 					deleteCaller = false;				
 				}			
