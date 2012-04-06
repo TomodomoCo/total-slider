@@ -89,6 +89,14 @@ ul#slidesort li:hover .slidesort-icon {
 	cursor: move;
 }
 
+.slidesort-child-selected li {
+	opacity: 0.7;
+}
+
+.slidesort-child-selected li.slidesort-selected {
+	opacity: 1;
+}
+
 li.slidesort-selected {
 	background-color: #236188 !important;
 	border-color:#646464 !important;

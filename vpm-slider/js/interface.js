@@ -214,12 +214,14 @@ jQuery(document).ready(function() {
 	
 	/* click on a slide in the resortable list to select it for editing */
 
-	/* this must be an fn. child funciton because it must be ready to bind both to
+	/* this must be an fn. child function because it must be ready to bind both to
 		#slidesort li, and to manually bind it to new slidesort objects
 		as they are created. They don't get the event binding automatically.
 	*/
 	
 	jQuery.fn.clickSlideObject = function(object) {
+	
+		
 	
 		if (dontStartEdit)
 			return;
@@ -246,6 +248,8 @@ jQuery(document).ready(function() {
 					
 			// now make me selected
 			jQuery(object).addClass('slidesort-selected');
+			
+			jQuery(object).parent('ul#slidesort').addClass('slidesort-child-selected');
 			
 			// save the original title in case of cancel
 			originalTitle = jQuery('#' + jQuery(object).attr('id') + '_text').text();
