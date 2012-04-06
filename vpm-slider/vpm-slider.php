@@ -1137,17 +1137,25 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	
 		?>
 		
-		<p><?php _e('Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a>', 'vpm_slider');?></p>
+		<div id="credits">
+			<p><?php _e('Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a>', 'vpm_slider');?></p>
+			
+			<p><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>');?></p>
+			
+			<?php if (defined('WPLANG') && WPLANG != '' ): ?><p style="color:#777;"><?php _e('Translation: <a href="">Translator\'s name here</a>', 'vpm_slider');?></p><?php endif; ?>
+		</div>
 		
-		<p><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>');?></p>
-		
-		<?php if (defined('WPLANG') && WPLANG != '' ): ?><p style="color:#777;"><?php _e('Translation: <a href="">Translator\'s name here</a>', 'vpm_slider');?></p><?php endif; ?>
-		
-		<p><?php _e('If you find this plugin useful, or are using it commercially, please consider <a href="">contributing to its continued development</a>. Thanks!', 'vpm_slider');?></p>
+		<div id="contrib-note">
+			<p><?php _e('If you find this plugin useful, or are using it commercially, please consider <a href="">donating</a> to support development.', 'vpm_slider'); ?></p>
+			
+			<p><?php _e('You can also <a href="">report bugs</a>, <a href="">suggest features</a>, or <a href="">send pull requests</a>.', 'vpm_slider');?></p>
+			
+			<p><?php _e('Thanks!', 'vpm_slider'); ?></p>
+		</div>
 		
 		<div id="copyright">
 			<p><?php _e('© 2011-2012 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 licensed</a>.', 'vpm_slider');?></p>
-			<p id="vpm-credit"><?php _e('A <a href="http://www.vanpattenmedia.com/">Van Patten Media</a> Invention', 'vpm_slider');?></p>
+			<p id="vpm-credit"><?php _e('Built by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>', 'vpm_slider');?></p>
 		</div>
 		<?php
 	

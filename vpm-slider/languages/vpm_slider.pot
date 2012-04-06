@@ -452,8 +452,8 @@ msgstr ""
 
 #: vpm-slider.php:1098
 msgid ""
-"<a href=\"\">VPM Slider</a> by <a href=\"http://www.vanpattenmedia.com/"
-"\">Van Patten Media</a>."
+"Built by by <a href=\"http://www.vanpattenmedia.com/"
+"\">Van Patten Media</a>"
 msgstr ""
 
 #: vpm-slider.php:1101

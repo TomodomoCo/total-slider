@@ -283,17 +283,17 @@ ul#new-slide-button li {
 
 /* Copyright */
 
-#copyright {
+#copyright, #contrib-note {
 	margin: 10px 0 0;
 	padding: 1px 0 0;
-	border-top: 1px solid #CCC;
+	border-top: 2px groove #FFF;
 }
 
 #vpm-credit {
 	text-transform: lowercase;
 	text-shadow: 0 1px 0px #FFF, 0 0 2px #FFF;
 	text-align: center;
-	font-size: 14px;
+	font-size: 13px;
 	color: #777;
 }
 
@@ -304,6 +304,6 @@ ul#new-slide-button li {
 	background: url('../img/vpm.png') no-repeat;
 	text-indent: -1000in;
 	position: relative;
-	top: -1px;
-	margin: 0 3px 0 2px;
+	top: -2px;
+	margin: 0;
 }
