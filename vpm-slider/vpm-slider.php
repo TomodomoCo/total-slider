@@ -1102,7 +1102,9 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 		<p style="color:#777;"><?php _e('Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a>', 'vpm_slider');?></p>
 		
-		<p style="color:#777;"><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>');?></p></p>
+		<p style="color:#777;"><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>');?></p>
+		
+		<?php if ( defined('WP_LANG') && !empty( WP_LANG ) ): ?><p style="color:#777;"><?php _e('Translation: <a href="">Translator\'s name here</a>', 'vpm_slider');?></p><?php endif;?>
 		
 		<p style="font-size:12px;"><?php _e('If you find this plugin useful, or are using it commercially, please consider <a href="">making a financial contribution</a>. Thank you.', 'vpm_slider');?></p>
 		<?php

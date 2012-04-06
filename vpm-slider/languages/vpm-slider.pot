@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VPM Slider 1.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/vpm-slider\n"
-"POT-Creation-Date: 2012-03-31 14:21:17+00:00\n"
+"POT-Creation-Date: 2012-04-06 10:10:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -282,19 +282,19 @@ msgstr ""
 msgid "Sorry, unable to resort the slides."
 msgstr ""
 
-#: vpm-slider.php:613 vpm-slider.php:1176
+#: vpm-slider.php:613 vpm-slider.php:1178
 msgid "untitled"
 msgstr ""
 
-#: vpm-slider.php:614 vpm-slider.php:1178
+#: vpm-slider.php:614 vpm-slider.php:1180
 msgid "(no text)"
 msgstr ""
 
-#: vpm-slider.php:615 vpm-slider.php:1140
+#: vpm-slider.php:615 vpm-slider.php:1142
 msgid "Move"
 msgstr ""
 
-#: vpm-slider.php:616 vpm-slider.php:1141
+#: vpm-slider.php:616 vpm-slider.php:1143
 msgid "Delete"
 msgstr ""
 
@@ -302,7 +302,7 @@ msgstr ""
 msgid "No post selected."
 msgstr ""
 
-#: vpm-slider.php:618 vpm-slider.php:1274
+#: vpm-slider.php:618 vpm-slider.php:1276
 msgid "Save"
 msgstr ""
 
@@ -356,7 +356,7 @@ msgstr ""
 msgid "Add Slide Group"
 msgstr ""
 
-#: vpm-slider.php:737 vpm-slider.php:1275
+#: vpm-slider.php:737 vpm-slider.php:1277
 msgid "Cancel"
 msgstr ""
 
@@ -473,64 +473,68 @@ msgid ""
 msgstr ""
 
 #: vpm-slider.php:1107
+msgid "Translation: <a href=\"\">Translator's name here</a>"
+msgstr ""
+
+#: vpm-slider.php:1109
 msgid ""
 "If you find this plugin useful, or are using it commercially, please "
 "consider <a href=\"\">making a financial contribution</a>. Thank you."
 msgstr ""
 
-#: vpm-slider.php:1155
+#: vpm-slider.php:1157
 msgid "Click ‘Add New’ to create a Slide."
 msgstr ""
 
-#: vpm-slider.php:1200
+#: vpm-slider.php:1202
 msgid "Click a Slide to edit it, or click ‘Add New’."
 msgstr ""
 
-#: vpm-slider.php:1209
+#: vpm-slider.php:1211
 msgid "Title"
 msgstr ""
 
-#: vpm-slider.php:1217
+#: vpm-slider.php:1219
 msgid "Description"
 msgstr ""
 
-#: vpm-slider.php:1226
+#: vpm-slider.php:1228
 msgid "Background"
 msgstr ""
 
-#: vpm-slider.php:1231
+#: vpm-slider.php:1233
 msgid "Upload or choose image"
 msgstr ""
 
-#: vpm-slider.php:1237
+#: vpm-slider.php:1239
 msgid "Slide Link"
 msgstr ""
 
-#: vpm-slider.php:1242
+#: vpm-slider.php:1244
 msgid "A page or post on this site"
 msgstr ""
 
-#: vpm-slider.php:1247
+#: vpm-slider.php:1249
 msgid "An external link"
 msgstr ""
 
-#: vpm-slider.php:1257
+#: vpm-slider.php:1259
 msgid "No post selected"
 msgstr ""
 
-#: vpm-slider.php:1259
+#: vpm-slider.php:1261
 msgid "Find post"
 msgstr ""
 
-#: vpm-slider.php:1278
+#: vpm-slider.php:1280
 msgid "Loading"
 msgstr ""
 
-#: vpm-slider.php:1279
+#: vpm-slider.php:1281
 msgid "Saving…"
 msgstr ""
 
-#: vpm-slider.php:1385
+#: vpm-slider.php:1387
 msgid "Choose a slide group for this widget to show:"
 msgstr ""
 
