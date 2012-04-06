@@ -249,8 +249,6 @@ jQuery(document).ready(function() {
 			// now make me selected
 			jQuery(object).addClass('slidesort-selected');
 			
-			jQuery(object).parent('ul#slidesort').addClass('slidesort-child-selected');
-			
 			// save the original title in case of cancel
 			originalTitle = jQuery('#' + jQuery(object).attr('id') + '_text').text();
 			
