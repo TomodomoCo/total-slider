@@ -135,31 +135,31 @@ msgstr ""
 
 #: vpm-slider.php:536
 msgid ""
-"Each Slide Group contains a number of Slides that will appear, one after "
-"another, when you publish your Slides on your site."
+"Each slide group contains a number of slides that will appear, one after "
+"another, when you publish your slides on your site."
 msgstr ""
 
 #: vpm-slider.php:537
 msgid ""
-"You can make up to %d Slide Groups, which you can use to have different "
+"You can make up to %d slide groups, which you can use to have different "
 "slideshows on different parts of your site."
 msgstr ""
 
 #: vpm-slider.php:546
 msgid ""
-"Once you have clicked ‘Edit’ on the desired Slide Group, you’ll see all of "
-"its Slides."
+"Once you have clicked ‘Edit’ on the desired slide group, you’ll see all of "
+"its slides."
 msgstr ""
 
 #: vpm-slider.php:547
 msgid ""
-"Click on any Slide to make changes. You can also drag and drop the title and "
+"Click on any slide to make changes. You can also drag and drop the title and "
 "description to place them anywhere over the background image."
 msgstr ""
 
 #: vpm-slider.php:548
 msgid ""
-"Simply drag and drop to re-order the Slides in the Slide Group. The new "
+"Simply drag and drop to re-order the slides within the group. The new "
 "order is saved immediately."
 msgstr ""
 
@@ -169,21 +169,21 @@ msgstr ""
 
 #: vpm-slider.php:557
 msgid ""
-"Once you are happy with your new Slide Group, you need to publish it for it "
+"Once you are happy with your new slide group, you need to publish it for it "
 "to show up on your site."
 msgstr ""
 
 #: vpm-slider.php:558
 msgid ""
-"To do this, your theme needs to support Widgets, and have a ‘sidebar’ in the "
-"theme where you’d like the Slides to show up."
+"To do this, your theme needs to support widgets, and have a widget area in the "
+"theme where you’d like the slides to show up."
 msgstr ""
 
 #: vpm-slider.php:559
 msgid ""
-"Go across to <a href=\"widgets.php\">Appearance » Widgets</a> and drag a "
-"<strong>VPM Slider</strong> Widget to the desired sidebar. In the Widget’s "
-"settings, choose the Slide Group to show and click <em>Save</em>."
+"Go  to <a href=\"widgets.php\">Appearance » Widgets</a> and drag a "
+"<strong>VPM Slider</strong> widget to the desired sidebar. In the widget’s "
+"settings, choose the slide group you would like to show and click <em>Save</em>."
 msgstr ""
 
 #: vpm-slider.php:565
@@ -193,7 +193,7 @@ msgstr ""
 #: vpm-slider.php:572
 msgid ""
 "For the best visual results, crop your background images to the size used by "
-"your Slider template — %d×%d"
+"your slide template — %d×%d"
 msgstr ""
 
 #: vpm-slider.php:573
@@ -204,14 +204,14 @@ msgstr ""
 
 #: vpm-slider.php:574
 msgid ""
-"Keep your site fresh — create multiple Slide Groups ahead of time, then "
-"simply edit the <strong>VPM Slider</strong> Widget to switch over to display "
-"another Slide Group every now and then."
+"Keep your site fresh — create multiple slide groups ahead of time, then "
+"simply edit the <strong>VPM Slider</strong> widget to switch over to display "
+"another slide group every now and then."
 msgstr ""
 
 #: vpm-slider.php:575
 msgid ""
-"Completely customise the look of your Slides — create a <em>vpm-slider-"
+"Completely customise the look of your slides — create a <em>vpm-slider-"
 "templates</em> subfolder in your theme. You can use our <em>templates</em> "
 "folder in the plugin as a starting point."
 msgstr ""
@@ -331,7 +331,7 @@ msgid "Sorry, unable to delete the slide."
 msgstr ""
 
 #: vpm-slider.php:648 vpm-slider.php:808
-msgid "Credits/Notes"
+msgid "Credits"
 msgstr ""
 
 #: vpm-slider.php:718 vpm-slider.php:827
@@ -373,7 +373,7 @@ msgid "No Slide Group selected."
 msgstr ""
 
 #: vpm-slider.php:797
-msgid "Could not load the selected Slide Group. Does it exist?"
+msgid "Could not load the selected slide group. Does it exist?"
 msgstr ""
 
 #: vpm-slider.php:805
@@ -391,7 +391,7 @@ msgid ""
 msgstr ""
 
 #: vpm-slider.php:870
-msgid "You do not have permission to manage Slider settings."
+msgid "You do not have permission to manage slider settings."
 msgstr ""
 
 #: vpm-slider.php:885
@@ -423,14 +423,14 @@ msgstr ""
 
 #: vpm-slider.php:1012
 msgid ""
-"Automatically enqueue the Slider template CSS and JavaScript on the output "
+"Automatically enqueue the slider template CSS and JavaScript on the output "
 "page."
 msgstr ""
 
 #: vpm-slider.php:1014
 msgid ""
 "If disabled, you must manually include the relevant CSS and JavaScript on "
-"the output page, or the Slider will be non-functional and appear broken. If "
+"the output page, or the slider will be non-functional and appear broken. If "
 "in doubt, leave it switched on."
 msgstr ""
 
@@ -479,15 +479,15 @@ msgstr ""
 #: vpm-slider.php:1109
 msgid ""
 "If you find this plugin useful, or are using it commercially, please "
-"consider <a href=\"\">making a financial contribution</a>. Thank you."
+"consider <a href=\"\">contributing to its continued development</a>. Thanks!"
 msgstr ""
 
 #: vpm-slider.php:1157
-msgid "Click ‘Add New’ to create a Slide."
+msgid "Click ‘Add New’ to create a slide."
 msgstr ""
 
 #: vpm-slider.php:1202
-msgid "Click a Slide to edit it, or click ‘Add New’."
+msgid "Click a slide to edit it, or click ‘Add New’."
 msgstr ""
 
 #: vpm-slider.php:1211

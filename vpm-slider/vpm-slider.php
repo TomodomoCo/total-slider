@@ -36,6 +36,49 @@ define('VPM_SLIDER_DEFAULT_CROP_HEIGHT', 350);
 
 require_once(dirname(__FILE__).'/slides_backend.php');
 
+function my_admin_print_footer_scripts() {
+    $pointer_content = '<h3>Need help?</h3>';
+    $pointer_content .= '<p>The help menu will walk you through creating new groups, adding slides, and getting them to display in your theme. It&rsquo;s a great place to start!';
+?>
+<script type="text/javascript">
+jQuery(document).ready( function($) {
+	$('#contextual-help-link-wrap').pointer({
+		content: '<?php echo $pointer_content; ?>',
+		position: {
+			edge:  'top',
+			align: 'right'
+		},
+		pointerClass: 'slider-help-pointer',
+		close: function() {
+			$.post( ajaxurl, {
+					pointer: 'sfc-help',
+				//	_ajax_nonce: $('#_ajax_nonce').val(),
+					action: 'dismiss-wp-pointer'
+			});
+		}
+	}).pointer('open');
+	
+	$(window).resize(function() {
+		if ( $('.slider-help-pointer').is(":visible") ) $('#contextual-help-link-wrap').pointer('reposition');
+	});
+	
+	$('#contextual-help-link-wrap').click( function () {
+		setTimeout( function () {
+			$('#contextual-help-link-wrap').pointer('close');
+		}, 0);
+	});
+});
+</script>
+<style>
+.slider-help-pointer .wp-pointer-arrow {
+	right:10px;
+	left:auto;
+}
+</style>
+<?php
+}
+add_action( 'admin_print_footer_scripts', 'my_admin_print_footer_scripts' );
+
 /******************************************** VPM_Slider main class ********************************************/
 
 class VPM_Slider { // not actually a widget -- really a plugin admin panel
@@ -330,9 +373,12 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 			
 			wp_enqueue_script('postbox');
 			
-			wp_enqueue_script('jquery-ui-draggable');	
-			wp_enqueue_script('jquery-ui-droppable');	
-			wp_enqueue_script('jquery-ui-sortable');		
+			wp_enqueue_script('jquery-ui-draggable');
+			wp_enqueue_script('jquery-ui-droppable');
+			wp_enqueue_script('jquery-ui-sortable');
+			
+			wp_enqueue_style( 'wp-pointer' );
+			wp_enqueue_script( 'wp-pointer' );
 
 			wp_register_script('vpm-slider-interface', plugin_dir_url( __FILE__ ).'js/interface.js');
 			wp_enqueue_script('vpm-slider-interface');
@@ -387,7 +433,6 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 	
 	}
-	
 	
 	public function enqueueSliderFrontend($context = 'frontend')
 	{
@@ -533,8 +578,8 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	
 		$screen = get_current_screen();
 		
-		$slideGroupsHelp[0] = __('Each Slide Group contains a number of Slides that will appear, one after another, when you publish your Slides on your site.', 'vpm_slider');
-		$slideGroupsHelp[1] = sprintf(__('You can make up to %d Slide Groups, which you can use to have different slideshows on different parts of your site.', 'vpm_slider'), intval(VPM_SLIDER_MAX_SLIDE_GROUPS));
+		$slideGroupsHelp[0] = __('Each slide group contains a number of slides that will appear, one after another, when you publish your slides on your site.', 'vpm_slider');
+		$slideGroupsHelp[1] = sprintf(__('You can make up to %d slide groups, which you can use to have different slideshows on different parts of your site.', 'vpm_slider'), intval(VPM_SLIDER_MAX_SLIDE_GROUPS));
 		
 		$screen->add_help_tab( array (
 			'id'			=>			'vpm-slider-groups',
@@ -543,9 +588,9 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 		) );
 		
-		$editingHelp[0] = __('Once you have clicked ‘Edit’ on the desired Slide Group, you’ll see all of its Slides.', 'vpm_slider');
-		$editingHelp[1] = __('Click on any Slide to make changes. You can also drag and drop the title and description to place them anywhere over the background image.', 'vpm_slider');
-		$editingHelp[2] = __('Simply drag and drop to re-order the Slides in the Slide Group. The new order is saved immediately.', 'vpm_slider');
+		$editingHelp[0] = __('Once you have clicked ‘Edit’ on the desired slide group, you’ll see all of its slides.', 'vpm_slider');
+		$editingHelp[1] = __('Click on any slide to make changes. You can also drag and drop the title and description to place them anywhere over the background image.', 'vpm_slider');
+		$editingHelp[2] = __('Simply drag and drop to re-order the slides within the group. The new order is saved immediately.', 'vpm_slider');
 		
 		$screen->add_help_tab( array (
 			'id'			=>			'vpm-slider-editing',
@@ -554,9 +599,9 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 		) );		
 		
-		$publishingHelp[0] = __('Once you are happy with your new Slide Group, you need to publish it for it to show up on your site.', 'vpm_slider');
-		$publishingHelp[1] = __('To do this, your theme needs to support Widgets, and have a ‘sidebar’ in the theme where you’d like the Slides to show up.', 'vpm_slider');
-		$publishingHelp[2] = __('Go across to <a href="widgets.php">Appearance » Widgets</a> and drag a <strong>VPM Slider</strong> Widget to the desired sidebar. In the Widget’s settings, choose the Slide Group to show and click <em>Save</em>.', 'vpm_slider');
+		$publishingHelp[0] = __('Once you are happy with your new slide group, you need to publish it for it to show up on your site.', 'vpm_slider');
+		$publishingHelp[1] = __('To do this, your theme needs to support Widgets, and have a widget area in the theme where you’d like the slides to show up.', 'vpm_slider');
+		$publishingHelp[2] = __('Go to <a href="widgets.php">Appearance » Widgets</a> and drag a <strong>VPM Slider</strong> widget to the desired sidebar. In the widget’s settings, choose the slide group you would like to show and click <em>Save</em>.', 'vpm_slider');
 
 		
 		$screen->add_help_tab( array(
@@ -569,10 +614,10 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 		$crop = VPM_Slider::determineCropWidthAndHeight();
 		
-		$hintsTips[0] = sprintf( __('For the best visual results, crop your background images to the size used by your Slider template — %d×%d', 'vpm_slider'), $crop['width'], $crop['height'] );
+		$hintsTips[0] = sprintf( __('For the best visual results, crop your background images to the size used by your slide template — %d×%d', 'vpm_slider'), $crop['width'], $crop['height'] );
 		$hintsTips[1] = __('Experiment with dragging and dropping the title and description over different parts of the background to achieve a different visual effect.', 'vpm_slider');
-		$hintsTips[2] = __('Keep your site fresh — create multiple Slide Groups ahead of time, then simply edit the <strong>VPM Slider</strong> Widget to switch over to display another Slide Group every now and then.', 'vpm_slider');
-		$hintsTips[3] = __('Completely customise the look of your Slides — create a <em>vpm-slider-templates</em> subfolder in your theme. You can use our <em>templates</em> folder in the plugin as a starting point.', 'vpm_slider');
+		$hintsTips[2] = __('Keep your site fresh — create multiple slide groups ahead of time, then simply edit the <strong>VPM Slider</strong> widget to switch over to display another slide group every now and then.', 'vpm_slider');
+		$hintsTips[3] = __('Completely customise the look of your slides — create a <em>vpm-slider-templates</em> subfolder in your theme. You can use our <em>templates</em> folder in the plugin as a starting point.', 'vpm_slider');
 
 		$screen->add_help_tab( array(
 		
@@ -645,7 +690,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		}
 		
 		// add the credits/notes metabox
-		add_meta_box('credits-notes', __('Credits/Notes', 'vpm_slider'), array('VPM_Slider', 'printCreditsMetabox'), '_vpm_slider_slide_groups', 'side', 'core');
+		add_meta_box('credits-notes', __('Credits', 'vpm_slider'), array('VPM_Slider', 'printCreditsMetabox'), '_vpm_slider_slide_groups', 'side', 'core');
 
 		// if we are to remove a slide group, do that and redirect to home
 		if (array_key_exists('action', $_GET) && $_GET['action'] == 'remove' && array_key_exists('group', $_GET))
@@ -805,7 +850,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		add_meta_box('slide-preview-mb', __('Preview', 'vpm_slider'), array('VPM_Slider', 'printSlidePreviewMetabox'), '_vpm_slider_slide', 'normal', 'core');
 
 		add_meta_box('slide-editor-mb', __('Edit', 'vpm_slider'), array('VPM_Slider', 'printSlideEditorMetabox'), '_vpm_slider_slide_bottom', 'normal', 'core');
-		add_meta_box('credits-notes-mb', __('Credits/Notes', 'vpm_slider'), array('VPM_Slider', 'printCreditsMetabox'), '_vpm_slider_slide_bottom', 'side', 'core');
+		add_meta_box('credits-notes-mb', __('Credits', 'vpm_slider'), array('VPM_Slider', 'printCreditsMetabox'), '_vpm_slider_slide_bottom', 'side', 'core');
 		
 		if (function_exists('find_posts_div')) { find_posts_div(); } // bring in the post/page finder interface for links
 		
@@ -1092,21 +1137,18 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	
 		?>
 		
-		<p class="vpm-slider-help-point"><a href="#"><?php _e('How do I get my slides to show up on my site?', 'vpm_slider');?></a></p>
+		<p><?php _e('Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a>', 'vpm_slider');?></p>
 		
-		<p style="font-size:12px; border-top:1px dotted #777; padding-top:8px;">
-		<strong><?php _e('<a href="">VPM Slider</a> by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>.', 'vpm_slider');?>
-		</strong></p>
-		
-		<p style="color:#777; font-size:9px"><?php _e('© 2011-2012 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 licensed</a>.', 'vpm_slider');?></p>
-		
-		<p style="color:#777;"><?php _e('Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a>', 'vpm_slider');?></p>
-		
-		<p style="color:#777;"><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>');?></p>
+		<p><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>');?></p>
 		
 		<?php if (defined('WPLANG') && WPLANG != '' ): ?><p style="color:#777;"><?php _e('Translation: <a href="">Translator\'s name here</a>', 'vpm_slider');?></p><?php endif; ?>
 		
-		<p style="font-size:12px;"><?php _e('If you find this plugin useful, or are using it commercially, please consider <a href="">making a financial contribution</a>. Thank you.', 'vpm_slider');?></p>
+		<p><?php _e('If you find this plugin useful, or are using it commercially, please consider <a href="">contributing to its continued development</a>. Thanks!', 'vpm_slider');?></p>
+		
+		<div id="copyright">
+			<p><?php _e('© 2011-2012 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 licensed</a>.', 'vpm_slider');?></p>
+			<p id="vpm-credit"><?php _e('A <a href="http://www.vanpattenmedia.com/">Van Patten Media</a> Invention', 'vpm_slider');?></p>
+		</div>
 		<?php
 	
 	}
@@ -1199,7 +1241,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	?>
 	
 				<div id="edit-controls-choose-hint">
-					<p><?php _e('Click a Slide to edit it, or click ‘Add New’.', 'vpm_slider');?></p>
+					<p><?php _e('Click a slide to edit it, or click ‘Add New’.', 'vpm_slider');?></p>
 				</div>
 	
 				<div id="edit-controls">
@@ -1387,7 +1429,7 @@ class VPM_Slider_Widget extends WP_Widget {
 	?><p><?php _e('Choose a slide group for this widget to show:', 'vpm_slider');?></p>
 	
 	<select id="<?php echo $this->get_field_id('groupSlug');?>" name="<?php echo $this->get_field_name('groupSlug');?>">
-		<option value="**INVALID**">--------------------</option>
+		<option value="**INVALID**" disabled="disabled" selected="selected">Select a group</option>
 		<?php
 		
 			// find all the slide groups and offer them for the widget
