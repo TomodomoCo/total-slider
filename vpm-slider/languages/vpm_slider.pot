@@ -1,16 +1,16 @@
-# Copyright (C) 2012 Peter Upfold.
+# Copyright (C) 2012 VPM Slider
 # This file is distributed under the same license as the VPM Slider package.
 msgid ""
 msgstr ""
 "Project-Id-Version: VPM Slider 1.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/vpm-slider\n"
-"POT-Creation-Date: 2012-03-31 10:41:21+00:00\n"
+"POT-Creation-Date: 2012-04-06 10:10:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2012-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Peter Upfold <peter@vanpattenmedia.com>\n"
-"Language-Team: Peter Upfold <peter@vanpattenmedia.com>\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 
 #: ajax_interface.php:58
 msgid ""
@@ -118,7 +118,7 @@ msgid "The specified slide group does not exist."
 msgstr ""
 
 #: vpm-slider.php:180
-msgid "Please go here"
+msgid "Please visit this page to continue"
 msgstr ""
 
 #: vpm-slider.php:353 vpm-slider.php:354
@@ -163,6 +163,10 @@ msgid ""
 "order is saved immediately."
 msgstr ""
 
+#: vpm-slider.php:552
+msgid "Editing"
+msgstr ""
+
 #: vpm-slider.php:557
 msgid ""
 "Once you are happy with your new Slide Group, you need to publish it for it "
@@ -180,6 +184,10 @@ msgid ""
 "Go across to <a href=\"widgets.php\">Appearance » Widgets</a> and drag a "
 "<strong>VPM Slider</strong> Widget to the desired sidebar. In the Widget’s "
 "settings, choose the Slide Group to show and click <em>Save</em>."
+msgstr ""
+
+#: vpm-slider.php:565
+msgid "Publishing"
 msgstr ""
 
 #: vpm-slider.php:572
@@ -206,6 +214,10 @@ msgid ""
 "Completely customise the look of your Slides — create a <em>vpm-slider-"
 "templates</em> subfolder in your theme. You can use our <em>templates</em> "
 "folder in the plugin as a starting point."
+msgstr ""
+
+#: vpm-slider.php:580
+msgid "Hints &amp; Tips"
 msgstr ""
 
 #: vpm-slider.php:597
@@ -322,6 +334,10 @@ msgstr ""
 msgid "Credits/Notes"
 msgstr ""
 
+#: vpm-slider.php:718 vpm-slider.php:827
+msgid "Add New"
+msgstr ""
+
 #: vpm-slider.php:721 vpm-slider.php:830
 msgid "Sorry, this interface requires JavaScript to function."
 msgstr ""
@@ -368,10 +384,6 @@ msgstr ""
 msgid "‘%s’ Slides"
 msgstr ""
 
-#: vpm-slider.php:827
-msgid "Add New"
-msgstr ""
-
 #: vpm-slider.php:831
 msgid ""
 "You will need to enable JavaScript for this page before any of the controls "
@@ -401,72 +413,73 @@ msgstr ""
 #: vpm-slider.php:961
 msgid ""
 "Any user with a checked role will be allowed to create, edit and delete "
-"slides. Only users that can manage\n"
-"\t\t\twidgets are able to activate, deactivate or move the VPM Slider "
-"widget, which makes the slides show up on your site."
+"slides. Only users that can manage widgets are able to activate, deactivate "
+"or move the VPM Slider widget, which makes the slides show up on your site."
 msgstr ""
 
-#: vpm-slider.php:1002
+#: vpm-slider.php:1001
 msgid "Advanced Settings"
 msgstr ""
 
-#: vpm-slider.php:1013
+#: vpm-slider.php:1012
 msgid ""
 "Automatically enqueue the Slider template CSS and JavaScript on the output "
 "page."
 msgstr ""
 
-#: vpm-slider.php:1015
+#: vpm-slider.php:1014
 msgid ""
 "If disabled, you must manually include the relevant CSS and JavaScript on "
-"the output page, or the Slider\n"
-"\t\t\t\t\t\twill be non-functional and appear broken. If in doubt, leave it "
-"switched on."
+"the output page, or the Slider will be non-functional and appear broken. If "
+"in doubt, leave it switched on."
 msgstr ""
 
-#: vpm-slider.php:1027
+#: vpm-slider.php:1025
 msgid "Save Changes"
 msgstr ""
 
-#: vpm-slider.php:1055 vpm-slider.php:1068
+#: vpm-slider.php:1053 vpm-slider.php:1066
 msgid "Choose ‘Edit Image’ and crop to %d×%d for best results."
 msgstr ""
 
-#: vpm-slider.php:1058 vpm-slider.php:1072
+#: vpm-slider.php:1056 vpm-slider.php:1070
 msgid "Use as background image"
 msgstr ""
 
-#: vpm-slider.php:1097
+#: vpm-slider.php:1095
 msgid "How do I get my slides to show up on my site?"
 msgstr ""
 
-#: vpm-slider.php:1100
+#: vpm-slider.php:1098
 msgid ""
 "<a href=\"\">VPM Slider</a> by <a href=\"http://www.vanpattenmedia.com/"
 "\">Van Patten Media</a>."
 msgstr ""
 
-#: vpm-slider.php:1103
+#: vpm-slider.php:1101
 msgid ""
 "© 2011-2012 Peter Upfold. Proud to be <a href=\"https://www.gnu.org/licenses/"
 "gpl-2.0.html\">GPLv2 licensed</a>."
 msgstr ""
 
-#: vpm-slider.php:1105
+#: vpm-slider.php:1103
 msgid "Development: <a href=\"http://peter.upfold.org.uk/\">Peter Upfold</a>"
 msgstr ""
 
-#: vpm-slider.php:1106
+#: vpm-slider.php:1105
 msgid ""
 "Additional UI: <a href=\"http://www.vanpattenmedia.com/\">Chris Van Patten</"
 "a>"
 msgstr ""
 
-#: vpm-slider.php:1108
+#: vpm-slider.php:1107
+msgid "Translation: <a href=\"\">Translator's name here</a>"
+msgstr ""
+
+#: vpm-slider.php:1109
 msgid ""
 "If you find this plugin useful, or are using it commercially, please "
-"consider\n"
-"\t\t<a href=\"\">making a financial contribution</a>. Thank you."
+"consider <a href=\"\">making a financial contribution</a>. Thank you."
 msgstr ""
 
 #: vpm-slider.php:1157
