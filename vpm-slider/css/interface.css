@@ -42,17 +42,27 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 /* Slides in the slide sorter */
 
 ul#slidesort li {
-	border: 1px solid #464646;
-	background-color: #FFF;
+	border: 3px solid transparent;
 	display: block;
 	float: left;
-	margin: 0 15px 10px 0;
+	margin: 0 12px 10px 0;
 	padding: 0;
 	cursor: pointer;
-	width: 160px;
-	height: 80px;
 	overflow-x: none;
 	position: relative;
+	width: 162px;
+	height: 82px;
+}
+
+ul#slidesort li.slidesort-selected {
+	border: 3px solid #8CC1E9;
+}
+
+.slidesort_slidebox {
+	border: 1px solid #464646;
+	width: 160px;
+	height: 80px;
+	background-color: #FFF;
 }
 
 .slidesort_text {
@@ -76,6 +86,8 @@ ul#slidesort li:hover .slidesort-icon {
 	display: block;
 }
 
+/* Slidesort slide buttons */
+
 .slide-delete-button {
 	bottom: 3px;
 	right: 3px;
@@ -87,28 +99,6 @@ ul#slidesort li:hover .slidesort-icon {
 	left: 4px;
 	background-position: center left;
 	cursor: move;
-}
-
-.slidesort-child-selected li {
-	opacity: 0.7;
-}
-
-.slidesort-child-selected li.slidesort-selected {
-	opacity: 1;
-}
-
-li.slidesort-selected {
-	background-color: #236188 !important;
-	border-color:#646464 !important;
-	color:#ffffff;
-}
-
-li.slidesort-selected a, li.slidesort-selected a:visited {
-	color:#c8ba9e;
-}
-
-li.slidesort-selected a:hover {
-	color:#c83747;
 }
 
 /* New slide button */

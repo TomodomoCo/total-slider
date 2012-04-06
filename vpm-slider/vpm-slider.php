@@ -1171,7 +1171,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		<?php $currentSlides = VPM_Slider::getCurrentSlides($theSlug); ?>
 		
 		<div id="slidesort-container">
-		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*177); ?>px;">
+		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*180); ?>px;">
 		<?php
 		
 		if (is_array($currentSlides) && count($currentSlides) > 0)
@@ -1183,12 +1183,14 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 				
 				?>
 				
-				<li id="slidesort_<?php echo $myId;?>" style="background: url(<?php echo esc_html($slide['background']);?>)">
-								
-					<div id="slidesort_<?php echo $myId;?>_text" class="slidesort_text"><?php echo stripslashes(esc_html($slide['title']));?></div>
+				<li id="slidesort_<?php echo $myId;?>">
 					
-					<a id="slidesort_<?php echo $myId;?>_move_button" class="slidesort-icon slide-move-button" href="#"><?php _e('Move', 'vpm_slider');?></a>
-					<span id="slidesort_<?php echo $myId;?>_delete" class="slide-delete"><a id="slidesort_<?php echo $myId;?>_delete_button" class="slidesort-icon slide-delete-button" href="#"><?php _e('Delete', 'vpm_slider');?></a></span>
+					<div class="slidesort_slidebox" style="background: url(<?php echo esc_html($slide['background']);?>)">
+						<div id="slidesort_<?php echo $myId;?>_text" class="slidesort_text"><?php echo stripslashes(esc_html($slide['title']));?></div>
+						
+						<a id="slidesort_<?php echo $myId;?>_move_button" class="slidesort-icon slide-move-button" href="#"><?php _e('Move', 'vpm_slider');?></a>
+						<span id="slidesort_<?php echo $myId;?>_delete" class="slide-delete"><a id="slidesort_<?php echo $myId;?>_delete_button" class="slidesort-icon slide-delete-button" href="#"><?php _e('Delete', 'vpm_slider');?></a></span>
+					</div>
 				
 				</li>
 				
