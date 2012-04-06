@@ -1001,67 +1001,65 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 			<!-- Only display 'Required Role Level' to manage_options capable users -->
 			<?php if (current_user_can('manage_options')):?>
-		
-			<h3><?php _e('Required Role Level', 'vpm_slider');?></h3>
-			<p><?php _e('Any user with a checked role will be allowed to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the VPM Slider widget, which makes the slides show up on your site.', 'vpm_slider');?></p>
 			
-			<table class="form-table">
-			<tbody>
-				<tr class="form-field">
-					<td>
-					<?php
-					$allRoles = get_editable_roles();
-					?>
-					
-					<?php
-							if (is_array($allRoles) && count($allRoles) > 0):
-								foreach($allRoles as $rName => $r): ?>
-					<tr>
+			<table class="form-table edit-controls-form-table">
+				<tbody>
+					<tr class="form-field">
+						<th scope="row">
+							<label for="required_capabilities"><?php _e('Required role level', 'vpm_slider');?></label>
+						</th>
 						<td>
-							<label for="required_capability_<?php echo esc_attr($rName);?>">
-								<input type="checkbox" name="required_capability_<?php echo esc_attr($rName);?>"
-								id="required_capability_<?php echo esc_attr($rName);?>" value="1" style="width:20px;"
-									<?php 
-									/* if this role has the vpm_slider_manage_slides capability, mark it as selected */
-									
-									if (array_key_exists(VPM_SLIDER_REQUIRED_CAPABILITY, $r['capabilities'])): ?>
-									checked="checked"
-									<?php endif;?>
-									
-									<?php // lock administrator checkbox on
-									if ($rName == 'administrator'):
-									 ?>
-									disabled="disabled"
-									 <?php endif; ?>
-
-								 /><?php echo esc_html($r['name']);?><br/>
-							</label>
+							<?php
+							$allRoles = get_editable_roles();
+							?>
+							
+							<?php
+									if (is_array($allRoles) && count($allRoles) > 0):
+										foreach($allRoles as $rName => $r): ?>
+								<label for="required_capability_<?php echo esc_attr($rName);?>">
+										<input type="checkbox" name="required_capability_<?php echo esc_attr($rName);?>"
+										id="required_capability_<?php echo esc_attr($rName);?>" value="1" style="width:20px;"
+											<?php 
+											/* if this role has the vpm_slider_manage_slides capability, mark it as selected */
+											
+											if (array_key_exists(VPM_SLIDER_REQUIRED_CAPABILITY, $r['capabilities'])): ?>
+											checked="checked"
+											<?php endif;?>
+											
+											<?php // lock administrator checkbox on
+											if ($rName == 'administrator'):
+											 ?>
+											disabled="disabled"
+											 <?php endif; ?>
+		
+										 /><?php echo esc_html($r['name']);?>
+									</label><br/>
+							<?php endforeach; endif; ?>
+							<span class="description"><?php _e('Users belonging to checked roles will be able to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the VPM Slider widget, which makes the slides show up on your site.', 'vpm_slider');?></span>
 						</td>
 					</tr>
 					
-					<?php endforeach; endif; ?>
-			</tbody>
+				</tbody>					
 			</table>
 			
 			<h3><?php _e('Advanced Settings', 'vpm_slider');?></h3>
 			
-			<table class="form-table">
-			<tbody>
-			
-				<tr class="form-field">
-					<td>
-						<label for="should_enqueue_template">
-							<input type="checkbox" name="should_enqueue_template" id="should_enqueue_template" value="1" style="width:20px;"
-							<?php echo ( intval($otherOptions['should_enqueue_template']) ) ? ' checked="checked"' : ''; ?>
-							/>
-							<?php _e('Automatically enqueue the Slider template CSS and JavaScript on the output page.', 'vpm_slider');?>
-						</label>
-						<p><em><?php _e('If disabled, you must manually include the relevant CSS and JavaScript on the output page, or the Slider will be non-functional and appear broken. If in doubt, leave it switched on.', 'vpm_slider');?></em></p>
-					</td>
-				</tr>
-			
-			
-			</tbody>
+			<table class="form-table edit-controls-form-table">
+				<tbody>
+					<tr class="form-field">
+						<th scope="row">
+							<label for="should_enqueue_template"><?php _e('Load JS & CSS', 'vpm_slider');?></label>
+						</th>
+						<td>
+							<label for="should_enqueue_template">
+								<input type="checkbox" name="should_enqueue_template" id="should_enqueue_template" value="1" style="width:20px;"
+								<?php echo ( intval($otherOptions['should_enqueue_template']) ) ? ' checked="checked"' : ''; ?>
+								/><?php _e('Automatically load slide template CSS and JavaScript into my theme', 'vpm_slider');?>
+							</label><br/>
+							<span class="description"><?php _e('Uncheck for manual control over how slide template CSS and JavaScript are included in your theme.', 'vpm_slider');?></span>
+						</td>
+					</tr>
+				</tbody>					
 			</table>
 			
 			<?php endif; ?>		
@@ -1316,7 +1314,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 								<th scope="row">
 								</th>
 								<td>
-									<input type="text" name="slide-link" id="edit-slide-link" value="" maxlength="255" class="edit-controls-inputs" />
+									<input type="text" name="slide-link" id="edit-slide-link" value="" maxlength="255" class="edit-controls-inputs" placeholder="http://www.example.com/" />
 								</td>
 							</tr>
 							
