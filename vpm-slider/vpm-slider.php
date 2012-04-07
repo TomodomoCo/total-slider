@@ -1138,15 +1138,15 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		<div id="credits">
 			<p><?php _e('Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a>', 'vpm_slider');?></p>
 			
-			<p><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>');?></p>
+			<p><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>', 'vpm_slider');?></p>
 			
 			<?php if (defined('WPLANG') && WPLANG != '' ): ?><p style="color:#777;"><?php _e('Translation: <a href="">Translator\'s name here</a>', 'vpm_slider');?></p><?php endif; ?>
 		</div>
 		
 		<div id="contrib-note">
-			<p><?php _e('If you find this plugin useful, or are using it commercially, please consider <a href="">donating</a> to support development.', 'vpm_slider'); ?></p>
+			<p><?php printf( __('If you find this plugin useful, or are using it commercially, please consider <a href="%s">donating</a> to support development.', 'vpm_slider'), 'http://www.vanpattenmedia.com'); ?></p>
 			
-			<p><?php _e('You can also <a href="">report bugs</a>, <a href="">suggest features</a>, or <a href="">send pull requests</a>.', 'vpm_slider');?></p>
+			<p><?php printf ( __('You can also <a href="%s">report bugs</a>, <a href="%s">suggest features</a>, or <a href="%s">send pull requests</a>.', 'vpm_slider'), '', '', '');?></p>
 			
 			<p><?php _e('Thanks!', 'vpm_slider'); ?></p>
 		</div>
