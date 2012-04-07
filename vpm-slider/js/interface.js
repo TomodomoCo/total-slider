@@ -305,12 +305,15 @@ jQuery(document).ready(function() {
 						originalBackground = result.background;
 						
 						// restore the pos x and pos y of the slide preview box
-						var containerPos = jQuery('#preview-area').offset();
-						
-						var newLeft = containerPos.left + result.title_pos_x;
-						var newTop = containerPos.top + result.title_pos_y
-						
-						jQuery('#slide-preview').offset({ left: newLeft, top: newTop });
+						if (!VPM_SHOULD_DISABLE_XY)
+						{
+							var containerPos = jQuery('#preview-area').offset();
+							
+							var newLeft = containerPos.left + result.title_pos_x;
+							var newTop = containerPos.top + result.title_pos_y
+							
+							jQuery('#slide-preview').offset({ left: newLeft, top: newTop });
+						}
 						
 						// ok, do the grand unveiling
 						jQuery('#edit-controls').fadeTo(400, 1);
@@ -374,7 +377,14 @@ jQuery(document).ready(function() {
 	});
 	
 	/* Make the preview slide in the edit area draggable */
-	jQuery('#slide-preview').draggable({ containment: '#preview-area' } );
+	if (!VPM_SHOULD_DISABLE_XY)
+	{
+		jQuery('#slide-preview').draggable({ containment: '#preview-area' } );
+	}
+	else {
+	/* or disable the drag cursor if X/Y positioned is disabled in template */
+		jQuery('#slide-preview').css('cursor', 'default');
+	}
 	
 	/* Trigger the upload thickbox for the background image */
 	

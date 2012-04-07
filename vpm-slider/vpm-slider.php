@@ -182,61 +182,111 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	
 	}
 	
-	public function determineCropWidthAndHeight()
+	public function determineTemplateOptions()
 	{
 	/*
 		Using the active Slider template, determine the desired crop height
-		and crop width for the background image.
+		and crop width for the background image, as well as other options, including
+		disabling X/Y positioning in admin.
 		
-		Requires that custom theme CSS wrap the width and height in question in
-		//	/*crop-to-width*/
-		//  /*end crop-to-width*/
-		//	/*crop-to-height*/
-		//	/*end crop-to-height*/
-		/*
+		Requires that custom theme PHP include something like the following:
+			/*
+			Template Options
+			
+			Crop-Suggested-Width: 600
+			Crop-Suggested-Height: 300
+			Disable-XY-Positioning-In-Admin: No
+			*/	
+		/*	
 		
+		These are parsed as configuration directives for the admin-side.
+			
 	*/
+	
+		static $templateOptions = array(); // save for caching
+		
+		if (isset($templateOptions) && is_array($templateOptions) && count($templateOptions) > 0)
+		{
+			// cache results
+			return $templateOptions;
+		}
+	
 		$themePath = get_stylesheet_directory();
 		
 		if (@file_exists($themePath . '/vpm-slider-templates/vpm-slider-template.css'))
 		{
-			$css = @file_get_contents($themePath . '/vpm-slider-templates/vpm-slider-template.css');
+			$tpl = @file_get_contents($themePath . '/vpm-slider-templates/vpm-slider-template.php');
 		}
 		else {
-			$css = @file_get_contents(dirname(__FILE__) . '/templates/vpm-slider-template.css');
+			$tpl = @file_get_contents(dirname(__FILE__) . '/templates/vpm-slider-template.php');
 		}
 			
-		if ($css !== false)
+		if ($tpl !== false)
 		{
+			// look for Crop-Suggested-Width: xx directive
 			$matches = array();
-			preg_match('|/\*crop\-to\-width\*/(.*)/\*end crop\-to\-width\*/|', $css, $matches);
-			
-			if (count($matches) > 0)
+			preg_match('/^\s*Crop\-Suggested\-Width:\s*([0-9]+)/im', $tpl, $matches);
+			if (count($matches) == 2)
 			{
-				$cropWidth = (int) preg_replace('/[^0-9]$/', '', $matches[1]);
+				if (intval($matches[1]) == $matches[1])
+				{
+					$cropWidth = intval( $matches[1] );
+				}
+				else {
+					$cropWidth = VPM_SLIDER_DEFAULT_CROP_WIDTH;
+				}
 			}
 			else {
 				$cropWidth = VPM_SLIDER_DEFAULT_CROP_WIDTH;
 			}
 			
+			// look for Crop-Suggested-Height: xx directive
 			$matches = array();
-			
-			preg_match('|/\*crop\-to\-height\*/(.*)/\*end crop\-to\-height\*/|', $css, $matches);										
-			
-			if (count($matches) > 0)
+			preg_match('/^\s*Crop\-Suggested\-Height:\s*([0-9]+)/im', $tpl, $matches);
+			if (count($matches) == 2)
 			{
-				$cropHeight = (int) preg_replace('/[^0-9]$/', '', $matches[1]);
+				if (intval($matches[1]) == $matches[1])
+				{
+					$cropHeight = intval( $matches[1] );
+				}
+				else {
+					$cropHeight = VPM_SLIDER_DEFAULT_CROP_HEIGHT;
+				}
 			}
 			else {
 				$cropHeight = VPM_SLIDER_DEFAULT_CROP_HEIGHT;
-			}	
+			}
+			
+			// look for Disable-XY-Positioning-In-Admin directive
+			$matches = array();
+			preg_match('/^\s*Disable\-XY\-Positioning\-In\-Admin:\s*(Yes|No|On|Off|1|0|True|False)/im', $tpl, $matches);			
+			$affirmativeResponses = array('yes', 'on', '1', 'true');
+			//$negativeResponses = array('no', 'off', '0', 'false');
+			
+			if (count($matches) == 2)
+			{
+				if (in_array(strtolower($matches[1]), $affirmativeResponses))
+				{
+					$disableXY = true;
+				}
+				else {
+					$disableXY = false;
+				}
+			}
+			else {
+				$disableXY = false;
+			}						
+			
 		}
 		else {
 			$cropWidth = VPM_SLIDER_DEFAULT_CROP_WIDTH;
 			$cropHeight = VPM_SLIDER_DEFAULT_CROP_HEIGHT;
+			$disableXY = false;
 		}
 		
-		return array('width' => $cropWidth, 'height' => $cropHeight);
+		// cache results in global $templateOptions
+		$templateOptions = array('crop_width' => $cropWidth, 'crop_height' => $cropHeight, 'disable_xy' => $disableXY);
+		return $templateOptions;
 	
 	}
 	
@@ -626,9 +676,9 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		
 		) );
 		
-		$crop = VPM_Slider::determineCropWidthAndHeight();
+		$crop = VPM_Slider::determineTemplateOptions();
 		
-		$hintsTips[0] = sprintf( __('For the best visual results, crop your background images to the size used by your slide template — %d×%d', 'vpm_slider'), $crop['width'], $crop['height'] );
+		$hintsTips[0] = sprintf( __('For the best visual results, crop your background images to the size used by your slide template — %d×%d', 'vpm_slider'), $crop['crop_width'], $crop['crop_height'] );
 		$hintsTips[1] = __('Experiment with dragging and dropping the title and description over different parts of the background to achieve a different visual effect.', 'vpm_slider');
 		$hintsTips[2] = __('Keep your site fresh — create multiple slide groups ahead of time, then simply edit the <strong>VPM Slider</strong> widget to switch over to display another slide group every now and then.', 'vpm_slider');
 		$hintsTips[3] = __('Completely customise the look of your slides — create a <em>vpm-slider-templates</em> subfolder in your theme. You can use our <em>templates</em> folder in the plugin as a starting point.', 'vpm_slider');
@@ -771,6 +821,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 			});
 		});
 		var VPM_SHOULD_WORKAROUND_16655 = false; // irrelevant here, but must be defined
+		var VPM_SHOULD_DISABLE_XY = false
 		//]]>
 		</script>
 		<div class="wrap">
@@ -879,6 +930,9 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		document.title = '‘<?php echo esc_attr($slideGroup->name);?>’ Slides ' + document.title.substring(13, document.title.length);//TODO i18n
 		var VPM_SHOULD_WORKAROUND_16655 = <?php echo (version_compare(get_bloginfo('version'), '3.4', '>=') ? 'false' : 'true');?>;
 		// on WordPress version <3.4, we need to work around https://core.trac.wordpress.org/ticket/16655. It is fixed in 3.4.
+		<?php $templateOptions = VPM_Slider::determineTemplateOptions(); ?>
+		
+		var VPM_SHOULD_DISABLE_XY = <?php echo ($templateOptions['disable_xy']) ? 'true' : 'false';?>;
 		//]]>
 		</script>
 		
@@ -1099,7 +1153,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		if (array_key_exists('vpm-slider-uploader', $_GET) && $_GET['vpm-slider-uploader'] == 'bgimage')
 		{
 		
-			$crop = VPM_Slider::determineCropWidthAndHeight();
+			$crop = VPM_Slider::determineTemplateOptions();
 	
 		?>
 		<script type="text/javascript">
@@ -1110,7 +1164,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 			jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align').hide(); // hide unnecessary items
 			// ?? also #media-items .image-size
 		
-			jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'vpm_slider'), $crop['width'], $crop['height']);?></p>');
+			jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'vpm_slider'), $crop['crop_width'], $crop['crop_height']);?></p>');
 		
 			jQuery('.savesend .button').each(function() {
 				jQuery(this).attr('value', '<?php _e('Use as background image', 'vpm_slider');?>');
