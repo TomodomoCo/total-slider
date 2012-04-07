@@ -836,9 +836,11 @@ jQuery(document).ready(function() {
 	jQuery('#slide-link-finder').click(function() {
 	
 		jQuery('#slide-link-is-internal').click();
-		
-		// workaround for https://core.trac.wordpress.org/ticket/16655
-		jQuery('#slide-link-is-internal').prop('checked', false);
+
+		if (VPM_SHOULD_WORKAROUND_16655) {
+			// workaround for https://core.trac.wordpress.org/ticket/16655
+			jQuery('#slide-link-is-internal').prop('checked', false);
+		}
 		
 		findPosts.open();
 		isEditing = true;
@@ -866,20 +868,25 @@ jQuery(document).ready(function() {
 		});
 		findPosts.close();
 		
-		// workaround for https://core.trac.wordpress.org/ticket/16655
-		jQuery('#slide-link-is-internal').prop('checked', true);
+		if (VPM_SHOULD_WORKAROUND_16655) {
+			// workaround for https://core.trac.wordpress.org/ticket/16655
+			jQuery('#slide-link-is-internal').prop('checked', true);
+		}
 		
 	});
 	
-	jQuery('#find-posts-close').click(function() {
+	if (VPM_SHOULD_WORKAROUND_16655) {
+	
+		jQuery('#find-posts-close').click(function() {
+			// workaround for https://core.trac.wordpress.org/ticket/16655
+				jQuery('#slide-link-is-internal').prop('checked', true);
+		});
+		
 		// workaround for https://core.trac.wordpress.org/ticket/16655
-		jQuery('#slide-link-is-internal').prop('checked', true);
-	});
+		jQuery('#find-posts-input').keyup(function(e){
+			if (e.which == 27) { jQuery('#slide-link-is-internal').prop('checked', true); } // close on Escape
+		});
 	
-	// workaround for https://core.trac.wordpress.org/ticket/16655
-	jQuery('#find-posts-input').keyup(function(e){
-		if (e.which == 27) { jQuery('#slide-link-is-internal').prop('checked', true); } // close on Escape
-	});
-	
+	}
 
 });

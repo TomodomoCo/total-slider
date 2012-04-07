@@ -30,26 +30,23 @@
 */
 ?>
 
-<ul class="vpm-slider">
-<?php
-
-while ($s->has_slides())
-{
-
-	?><li id="vpm-slider-slide-<?php $s->the_identifier();?>"
-		style="background:url(<?php $s->the_background_url();?>) bottom repeat-x; padding: 0;"
-	>
-		<a href="<?php $s->the_link();?>">
-			<div class="desc" style="top: <?php $s->the_y();?>px; left: <?php $s->the_x();?>px">
-				<h2><?php $s->the_title();?></h2>
-				<div class="png_fix">
-					<p><?php $s->the_description();?></p>
+<?php if ($s->slides_count() > 0): ?>
+	<ul class="vpm-slider">
+	
+	<?php while ($s->has_slides()): ?>
+		<li id="vpm-slider-slide-<?php $s->the_identifier();?>"
+			style="background:url(<?php $s->the_background_url();?>) bottom repeat-x; padding: 0;"
+		>
+			<a href="<?php $s->the_link();?>">
+				<div class="desc" style="top: <?php $s->the_y();?>px; left: <?php $s->the_x();?>px">
+					<h2><?php $s->the_title();?></h2>
+					<div class="png_fix">
+						<p><?php $s->the_description();?></p>
+					</div>
 				</div>
-			</div>
-		</a>
-	</li>
-	<?php
-
-}
-
-?></ul>
+			</a>
+		</li>
+		<?php endwhile ;?>
+		
+	</ul>
+<?php endif; ?>

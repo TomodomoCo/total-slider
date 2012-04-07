@@ -30,54 +30,11 @@ Text Domain: vpm_slider
 define('VPM_SLIDER_IN_FUNCTIONS', true);
 define('VPM_SLIDER_REQUIRED_CAPABILITY', 'vpm_slider_manage_slides');
 define('VPM_SLIDER_MAX_SLIDE_GROUPS', 24);
-define('VPM_SLIDER_DEFAULT_CROP_WIDTH', 964);
-define('VPM_SLIDER_DEFAULT_CROP_HEIGHT', 350);
+define('VPM_SLIDER_DEFAULT_CROP_WIDTH', 600);
+define('VPM_SLIDER_DEFAULT_CROP_HEIGHT', 300);
 
 
 require_once(dirname(__FILE__).'/slides_backend.php');
-
-function my_admin_print_footer_scripts() {
-    $pointer_content = '<h3>Need help?</h3>';
-    $pointer_content .= '<p>The help menu will walk you through creating new groups, adding slides, and getting them to display in your theme. It&rsquo;s a great place to start!';
-?>
-<script type="text/javascript">
-jQuery(document).ready( function($) {
-	$('#contextual-help-link-wrap').pointer({
-		content: '<?php echo $pointer_content; ?>',
-		position: {
-			edge:  'top',
-			align: 'right'
-		},
-		pointerClass: 'slider-help-pointer',
-		close: function() {
-			$.post( ajaxurl, {
-					pointer: 'sfc-help',
-				//	_ajax_nonce: $('#_ajax_nonce').val(),
-					action: 'dismiss-wp-pointer'
-			});
-		}
-	}).pointer('open');
-	
-	$(window).resize(function() {
-		if ( $('.slider-help-pointer').is(":visible") ) $('#contextual-help-link-wrap').pointer('reposition');
-	});
-	
-	$('#contextual-help-link-wrap').click( function () {
-		setTimeout( function () {
-			$('#contextual-help-link-wrap').pointer('close');
-		}, 0);
-	});
-});
-</script>
-<style>
-.slider-help-pointer .wp-pointer-arrow {
-	right:10px;
-	left:auto;
-}
-</style>
-<?php
-}
-add_action( 'admin_print_footer_scripts', 'my_admin_print_footer_scripts' );
 
 /******************************************** VPM_Slider main class ********************************************/
 
@@ -434,6 +391,53 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 	
 	}
 	
+	public function printHelpPointerJS()
+	{
+	/*
+		Print the help pointer JavaScript.
+	*/
+	
+		$pointer_content = '<h3>'.__('Need help?', 'vpm_slider').'</h3>';
+	    $pointer_content .= '<p>'.__('The help menu will walk you through creating new groups, adding slides, and getting them to display in your theme. It’s a great place to start!', 'vpm_slider') . '</p>';
+	?>
+	<script type="text/javascript">
+	jQuery(document).ready( function($) {
+		$('#contextual-help-link-wrap').pointer({
+			content: '<?php echo $pointer_content; ?>',
+			position: {
+				edge:  'top',
+				align: 'right'
+			},
+			pointerClass: 'slider-help-pointer',
+			close: function() {
+				$.post( ajaxurl, {
+						pointer: 'sfc-help',
+						_ajax_nonce: $('#_ajax_nonce').val(),
+						action: 'dismiss-wp-pointer'
+				});
+			}
+		}).pointer('open');
+		
+		$(window).resize(function() {
+			if ( $('.slider-help-pointer').is(":visible") ) $('#contextual-help-link-wrap').pointer('reposition');
+		});
+		
+		$('#contextual-help-link-wrap').click( function () {
+			setTimeout( function () {
+				$('#contextual-help-link-wrap').pointer('close');
+			}, 0);
+		});
+	});
+	</script>
+	<style>
+	.slider-help-pointer .wp-pointer-arrow {
+		right:10px;
+		left:auto;
+	}
+</style><?php
+		
+	}
+	
 	public function enqueueSliderFrontend($context = 'frontend')
 	{
 	/*
@@ -760,7 +764,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		</script>
 		<div class="wrap">
 		
-		<div id="icon-vpm-slides" class="icon32"><br /></div><h2>Slide Groups <a href="#" id="new-slide-group-button" class="add-new-h2"><?php _e('Add New', 'vpm_slider');?></a></h2>
+		<div id="icon-vpm-slides" class="icon32"><br /></div><h2><?php _e('Slide Groups', 'vpm_slider');?> <a href="#" id="new-slide-group-button" class="add-new-h2"><?php _e('Add New', 'vpm_slider');?></a></h2>
 		
 		<noscript>
 		<h3><?php _e('Sorry, this interface requires JavaScript to function.', 'vpm_slider');?></h3>
@@ -862,6 +866,8 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		var VPM_HPS_PLUGIN_URL = '<?php echo admin_url();?>admin.php?page=vpm-slider&vpm-slider-ajax=true&';
 		var VPM_HPS_GROUP = '<?php echo esc_attr($theSlug);?>';
 		document.title = '‘<?php echo esc_attr($slideGroup->name);?>’ Slides ' + document.title.substring(13, document.title.length);//TODO i18n
+		var VPM_SHOULD_WORKAROUND_16655 = <?php echo (version_compare(get_bloginfo('version'), '3.4', '>=') ? 'true' : 'false');?>;
+		// on WordPress version <3.4, we need to work around https://core.trac.wordpress.org/ticket/16655. It is fixed in 3.4.
 		//]]>
 		</script>
 		
@@ -1487,6 +1493,24 @@ class VPM_Slider_Widget extends WP_Widget {
 	
 	}
 	
+	public function slides_count()
+	{
+	/*
+		Return the number of slides in this slide group.
+		
+		Can also be used by templates to test if there are any slides to show at all,
+		and, for example, not output the starting <ul>.
+	*/
+	
+		if (!is_array($this->slides))
+		{
+			$this->slides = get_option('vpm_slider_slides_' . VPM_Slider::sanitizeSlideGroupSlug($this->instance['groupSlug']));		
+		}
+	
+		return count($this->slides);
+	
+	}
+	
 	
 	public function has_slides()
 	{
@@ -1732,7 +1756,7 @@ class VPM_Slider_Widget extends WP_Widget {
 	
 		return intval ( $this->slider_iteration - 1 );
 		// has_slides() always bumps the iteration ready for the next run, but we
-		// are still running for the theme's purposes on the previous iteration.
+		// are still running, for the theme's purposes, on the previous iteration.
 		// Hence, returning the iteration - 1.
 	
 	}
@@ -1750,5 +1774,6 @@ add_action('admin_init', array('VPM_Slider', 'passControlToAjaxHandler'));
 add_action('admin_head-media-upload-popup', array('VPM_Slider', 'printUploaderJavaScript'));
 
 add_action('wp_enqueue_scripts', array('VPM_Slider', 'enqueueSliderFrontend'));
+add_action( 'admin_print_footer_scripts', array('VPM_Slider', 'printHelpPointerJS'));
 
 ?>
