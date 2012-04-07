@@ -328,7 +328,10 @@ class VPM_Slider_Backend {
 					{	// if slide link is a number, and therefore a post ID of some sort
 						$slp = (int) $slide['link'];
 						$linkPost = get_post($slp);
-						$slide['link_post_title'] = $linkPost->post_title;
+						if ($linkPost)
+						{
+							$slide['link_post_title'] = $linkPost->post_title;
+						}
 					}
 					
 					if ((int)$slide['background'] == $slide['background'])
