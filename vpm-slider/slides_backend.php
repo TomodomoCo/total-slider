@@ -358,6 +358,7 @@ class VPM_Slider_Backend {
 	*/
 	
 	$currentSlides = get_option('vpm_slider_slides_' . $this->groupSlug);
+	$originalSlides = $currentSlides;
 		
 		if ($currentSlides === false || !is_array($currentSlides) || count($currentSlides) < 0)
 		{
@@ -390,6 +391,11 @@ class VPM_Slider_Backend {
 			{
 				return false;
 			}
+		}
+		
+		if ($currentSlides === $originalSlides)
+		{
+			return true; // no change, don't bother update_option as it returns false and errors us out
 		}
 		
 		// $currentSlides now holds the slides we want to save
