@@ -63,6 +63,8 @@ ul#slidesort li.slidesort-selected {
 	width: 160px;
 	height: 80px;
 	background-color: #FFF;
+	background-size:100% 100% !important;
+	background-repeat:no-repeat !important;
 }
 
 .slidesort_text {

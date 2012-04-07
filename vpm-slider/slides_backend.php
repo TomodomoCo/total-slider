@@ -552,6 +552,11 @@ class VPM_Slider_Backend {
 				return 'disparity';
 			}
 			
+			if ($newSlides === $currentSlides)
+			{
+				return true;
+			}
+			
 			return $this->writeNewSlidesOptionWithSlides($newSlides);
 		
 		}
