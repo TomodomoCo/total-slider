@@ -1263,7 +1263,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 				
 				<li id="slidesort_<?php echo $myId;?>">
 					
-					<div class="slidesort_slidebox" style="background: url(<?php echo esc_html($slide['background']);?>)">
+					<div class="slidesort_slidebox" style="background: url(<?php echo esc_attr($slide['background']);?>)">
 						<div id="slidesort_<?php echo $myId;?>_text" class="slidesort_text"><?php echo stripslashes(esc_html($slide['title']));?></div>
 						
 						<a id="slidesort_<?php echo $myId;?>_move_button" class="slidesort-icon slide-move-button" href="#"><?php _e('Move', 'vpm_slider');?></a>
