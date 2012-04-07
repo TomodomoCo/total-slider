@@ -404,8 +404,8 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 			$pointer_content = '';
 		}
 		else {	
-			$pointer_content = '<h3>'.__('Need help?', 'vpm_slider').'</h3>';
-		    $pointer_content .= '<p>'.__('The help menu will walk you through creating new groups, adding slides, and getting them to display in your theme. It’s a great place to start!', 'vpm_slider') . '</p>';
+			$pointer_content = '<h3>'.esc_attr ( __('Need help?', 'vpm_slider') ).'</h3>';
+		    $pointer_content .= '<p>'.esc_attr ( __('The help menu will walk you through creating new groups, adding slides, and getting them to display in your theme. It’s a great place to start!', 'vpm_slider') ) . '</p>';
 	    }
 	?>
 	<script type="text/javascript">
@@ -770,6 +770,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 				jQuery('#new-slide-group').hide('slow');
 			});
 		});
+		var VPM_SHOULD_WORKAROUND_16655 = false; // irrelevant here, but must be defined
 		//]]>
 		</script>
 		<div class="wrap">
@@ -876,7 +877,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		var VPM_HPS_PLUGIN_URL = '<?php echo admin_url();?>admin.php?page=vpm-slider&vpm-slider-ajax=true&';
 		var VPM_HPS_GROUP = '<?php echo esc_attr($theSlug);?>';
 		document.title = '‘<?php echo esc_attr($slideGroup->name);?>’ Slides ' + document.title.substring(13, document.title.length);//TODO i18n
-		var VPM_SHOULD_WORKAROUND_16655 = <?php echo (version_compare(get_bloginfo('version'), '3.4', '>=') ? 'true' : 'false');?>;
+		var VPM_SHOULD_WORKAROUND_16655 = <?php echo (version_compare(get_bloginfo('version'), '3.4', '>=') ? 'false' : 'true');?>;
 		// on WordPress version <3.4, we need to work around https://core.trac.wordpress.org/ticket/16655. It is fixed in 3.4.
 		//]]>
 		</script>

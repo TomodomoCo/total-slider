@@ -131,12 +131,9 @@ jQuery(document).ready(function() {
 	
 		if (!isEditing) {
 		
-			// DELETEME
+
 			jQuery('.slidesort-add-hint').hide();
-			if (jQuery('#slidesort li').length > 0)
-			{
-				jQuery('.slidesort-drag-hint').css('visibility', 'visible');			
-			}
+
 			jQuery('#edit-controls').fadeTo(400, 1);
 			jQuery('#edit-controls-choose-hint').fadeTo(400,0).hide();
 			// make all deselected
@@ -145,10 +142,10 @@ jQuery(document).ready(function() {
 			var newIdNo = jQuery('#slidesort').children().length+1;
 			
 			// create a new button
-			jQuery('#slidesort').append('<li id="slidesort_untitled'  + newIdNo + '" style="background: url();" class="slidesort-selected"><div id="slidesort_untitled'  + newIdNo + '_text" class="slidesort_text">' + _vpm_slider_L10n.newSlideTemplateUntitled + '</div><a id="slidesort_'  + newIdNo + '_move_button" class="slidesort-icon slide-move-button" href="#">' + _vpm_slider_L10n.newSlideTemplateMove + '</a><span id="slidesort_'  + newIdNo + '_delete" class="slide-delete"><a id="slidesort_untitled'  + newIdNo + '_delete_button" class="slidesort-icon slide-delete-button" href="#">' + _vpm_slider_L10n.newSlideTemplateDelete + '</a></span></li>');			
+			jQuery('#slidesort').append('<li id="slidesort_untitled'  + newIdNo + '" style="background: url();" class="slidesort-selected"><div class="slidesort_slidebox" style="background:url();"><div id="slidesort_untitled'  + newIdNo + '_text" class="slidesort_text">' + _vpm_slider_L10n.newSlideTemplateUntitled + '</div><a id="slidesort_'  + newIdNo + '_move_button" class="slidesort-icon slide-move-button" href="#">' + _vpm_slider_L10n.newSlideTemplateMove + '</a><span id="slidesort_'  + newIdNo + '_delete" class="slide-delete"><a id="slidesort_untitled'  + newIdNo + '_delete_button" class="slidesort-icon slide-delete-button" href="#">' + _vpm_slider_L10n.newSlideTemplateDelete + '</a></span></div></li>');			
 			
 			// hook up new pseudo-delete button
-			jQuery('#slidesort_untitled_delete_button').click(function (event) {
+			jQuery('#slidesort_untitled' + newIdNo + '_delete_button').click(function (event) {
 				jQuery().deleteSlide(event, this);
 			});
 			
@@ -518,13 +515,12 @@ jQuery(document).ready(function() {
 					isEditing = false;
 					isEditingUntitledSlide = false;
 					editingSlideSortButton = false;
-					newShouldShuffle = false;//TODO fixme should be under??
 					
 					// trigger a shuffle update with the new order, if changed, of this new item
 					if (newShouldShuffle)
 					{
 						newShouldShuffle = false;
-						window.setTimeout(function() { jQuery().sortSlides(); }, 450);
+						window.setTimeout(function() { jQuery().sortSlides(); }, 1200);
 					}
 					
 					newShouldShuffle = false;
@@ -638,13 +634,11 @@ jQuery(document).ready(function() {
 				isEditingUntitledSlide = false;
 				editingSlideSortButton = false;
 				
-				// DELETEME
 				
 				if (jQuery('#slidesort > li').size() < 1)
 				{
 					// bring up the help text if zero left after that delete
 					jQuery('.slidesort-add-hint').show('slow');
-					jQuery('.slidesort-drag-hint').css('visibility', 'hidden');
 				}
 			
 			}			
@@ -699,12 +693,16 @@ jQuery(document).ready(function() {
 		event.preventDefault();
 		
 		// what is our ID?
-		var slideID = jQuery(caller).parent().parent().attr('id');
+		var slideID = jQuery(caller).parent().parent().parent().attr('id');
+		
+		if (!slideID)
+			alert(_vpm_slider_L10n.unableToDeleteSlideNoID);
+					
 		slideID = slideID.replace('slidesort_', '');
 		
 		if (!slideID)
 			alert(_vpm_slider_L10n.unableToDeleteSlideNoID);
-			
+		
 		// if untitled delete was asked, simply cancel
 		if (slideID.match(/^untitled/))
 		{
@@ -712,7 +710,7 @@ jQuery(document).ready(function() {
 			{
 		
 				jQuery(caller).parent().parent().fadeTo(350, 0);	
-				window.setTimeout(function() {jQuery(caller).parent().parent().remove();}, 380);
+				window.setTimeout(function() {jQuery(caller).parent().parent().parent().remove();}, 380);
 				jQuery('#edit-controls').fadeTo(400, 0);
 				jQuery('#edit-controls-choose-hint').show().fadeTo(400,1);
 				jQuery().clearForm();
@@ -721,8 +719,6 @@ jQuery(document).ready(function() {
 				isEditingUntitledSlide = false;
 				editingSlideSortButton = false;
 				
-				// DELETEME
-				
 				if (jQuery('#slidesort > li').size() < 2) // will be 1, once remove happens
 				{
 					// bring up the help text if zero left after that delete
@@ -730,14 +726,8 @@ jQuery(document).ready(function() {
 					jQuery('.slidesort-drag-hint').css('visibility', 'hidden');					
 				}
 				
-				if (jQuery('#slidesort > li').size() < 3) // will be 2, once remove happens
-				{
-					// remove the slide sort D&D helper text
-					jQuery('.slidesort-drag-hint').css('visibility', 'hidden');
-				}
-				
 				// trim width of slide sorting area
-				jQuery('#slidesort').css('width', parseInt(jQuery('#slidesort').css('width')) - 180 + 'px');
+				//jQuery('#slidesort').css('width', parseInt(jQuery('#slidesort').css('width')) - 180 + 'px');
 			
 			}
 			return;			
@@ -760,13 +750,11 @@ jQuery(document).ready(function() {
 				success: function(result) {
 				
 					jQuery(deleteCaller).parent().parent().fadeTo(350, 0);
-					window.setTimeout(function() {jQuery(deleteCaller).parent().parent().remove();}, 380);
+					window.setTimeout(function() {jQuery(deleteCaller).parent().parent().parent().remove();}, 380);
 					
 					jQuery('#edit-controls').fadeTo(400, 0);
 					jQuery('#edit-controls-choose-hint').show().fadeTo(400,1);
 					jQuery().clearForm();
-					
-					// DELETEME
 					
 					if (jQuery('#slidesort > li').size() < 2) // will be 1 after delete 
 					{
@@ -775,14 +763,8 @@ jQuery(document).ready(function() {
 						jQuery('.slidesort-drag-hint').css('visibility', 'hidden');
 					}				
 					
-					if (jQuery('#slidesort > li').size() < 3) // will be 2, once remove happens
-					{
-						// remove the slide sort D&D helper text
-						jQuery('.slidesort-drag-hint').css('visibility', 'hidden');
-					}
-					
 					// trim width of slide sorting area
-					jQuery('#slidesort').css('width', parseInt(jQuery('#slidesort').css('width')) - 180 + 'px');
+					//jQuery('#slidesort').css('width', parseInt(jQuery('#slidesort').css('width')) - 180 + 'px');
 					
 					window.setTimeout(function() {
 						deleteCaller = false;
