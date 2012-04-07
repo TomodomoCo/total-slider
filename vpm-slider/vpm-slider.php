@@ -397,10 +397,19 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 		Print the help pointer JavaScript.
 	*/
 	
-		$pointer_content = '<h3>'.__('Need help?', 'vpm_slider').'</h3>';
-	    $pointer_content .= '<p>'.__('The help menu will walk you through creating new groups, adding slides, and getting them to display in your theme. It’s a great place to start!', 'vpm_slider') . '</p>';
+		// if dismissed, set empty pointer content, which hides it
+		$dismissed = explode( ',', (string) get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
+		
+		if ( in_array( 'vpm-slider-help-pointer', $dismissed ) ) {
+			$pointer_content = '';
+		}
+		else {	
+			$pointer_content = '<h3>'.__('Need help?', 'vpm_slider').'</h3>';
+		    $pointer_content .= '<p>'.__('The help menu will walk you through creating new groups, adding slides, and getting them to display in your theme. It’s a great place to start!', 'vpm_slider') . '</p>';
+	    }
 	?>
 	<script type="text/javascript">
+	/*<![CDATA[ */
 	jQuery(document).ready( function($) {
 		$('#contextual-help-link-wrap').pointer({
 			content: '<?php echo $pointer_content; ?>',
@@ -411,7 +420,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 			pointerClass: 'slider-help-pointer',
 			close: function() {
 				$.post( ajaxurl, {
-						pointer: 'sfc-help',
+						pointer: 'vpm-slider-help-pointer',
 						_ajax_nonce: $('#_ajax_nonce').val(),
 						action: 'dismiss-wp-pointer'
 				});
@@ -428,6 +437,7 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 			}, 0);
 		});
 	});
+	//]]>	
 	</script>
 	<style>
 	.slider-help-pointer .wp-pointer-arrow {
