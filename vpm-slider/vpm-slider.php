@@ -1140,7 +1140,14 @@ class VPM_Slider { // not actually a widget -- really a plugin admin panel
 			
 			<p><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>', 'vpm_slider');?></p>
 			
-			<?php if (defined('WPLANG') && WPLANG != '' ): ?><p style="color:#777;"><?php _e('Translation: <a href="">Translator\'s name here</a>', 'vpm_slider');?></p><?php endif; ?>
+			<?php if (defined('WPLANG') && WPLANG != '' && strpos(strtolower(WPLANG), 'en') !== 0 ): ?>
+				<p>
+				<?php
+				/* translators: please replace this with a credit to yourself! "Translation: Your Name". This English message will appear when no translation is available, but the user is using WordPress in another language.. */
+				?>
+				<?php printf(__('<a href="%s">Help us translate this plugin into your language!</a>', 'vpm_slider'), '');?>
+				</p>
+			<?php endif; ?>
 		</div>
 		
 		<div id="contrib-note">
