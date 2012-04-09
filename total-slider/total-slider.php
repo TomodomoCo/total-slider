@@ -773,12 +773,37 @@ class Total_Slider {
 				// remove the option
 				delete_option('total_slider_slides_'. Total_Slider::sanitizeSlideGroupSlug($_GET['group']));
 				
-				// redirect back to the admin vpm slider root page
+				// redirect back to the admin total slider root page
 				Total_Slider::uglyJSRedirect('root');
 				die();
 					
 			}
 		}	
+		
+		// if we are to batch remove slide groups, do so and redirect to home
+		if (array_key_exists('slidegroup', $_POST) && ( array_key_exists('action', $_POST) || array_key_exists('action2', $_POST) )
+			&& array_key_exists('_wpnonce', $_POST)	&& ( $_POST['action'] == 'remove' || $_POST['action2'] == 'remove' )
+			&& is_array($_POST['slidegroup']) && count($_POST['slidegroup'] > 0)
+		)
+		{
+			if (wp_verify_nonce($_POST['_bulk_wpnonce'], 'remove-bulk-slide-group'))
+			{
+				// remove selected slide groups
+				foreach($_POST['slidegroup'] as $slideGroup)
+				{
+					// remove the slide group
+					$newGroup = new Total_Slide_Group($slideGroup);
+					$newGroup->delete();
+					
+					// remove the option
+					delete_option('total_slider_slides_'. Total_Slider::sanitizeSlideGroupSlug($slideGroup));					
+				}
+				
+				// redirect back to the admin total slider root page
+				Total_Slider::uglyJSRedirect('root');
+				die();
+			}	
+		}
 		
 		// if the URL otherwise has 'group' in the GET parameters, it's time to pass control
 		// to printSlidesPage() for editing purposes
@@ -861,7 +886,8 @@ class Total_Slider {
 			</div>
 						
 			<div id="post-body"><div id="post-body-content">
-
+			<form id="slide-groups-bulk-actions" method="post" action="admin.php?page=total-slider" onsubmit="if (jQuery('.slide-group-checkbox:checked').length > 0 && jQuery('option[value=remove]:selected').length > 0) { return confirm('<?php _e('Are you sure you want to delete these slide groups?\n\nThis action cannot be undone.', 'total_slider');?>'); }">
+				<input type="hidden" name="_bulk_wpnonce" value="<?php echo wp_create_nonce('remove-bulk-slide-group');?>" />
 				<?php require_once( dirname( __FILE__ ) . '/slide_groups_table.php');
 				$table = new Slide_Groups_Table();		
 				$table->prepare_items();		
@@ -873,7 +899,7 @@ class Total_Slider {
 					?><div class="slidesort-add-hint"><?php _e('Click ‘Add New’ to create a new group of slides.', 'total_slider');?></div><?php
 				}
 				?>
-		
+			</form>
 			</div></div>
 		
 		</div>

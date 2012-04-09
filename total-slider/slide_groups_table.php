@@ -110,17 +110,17 @@ class Slide_Groups_Table extends WP_List_Table {
 	public function column_cb ($item) 
 	{
 		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			'<input class="slide-group-checkbox" type="checkbox" name="%1$s[]" value="%2$s" />',
 			/*$1%s*/ $this->_args['singular'],
-			/*$2%s*/ $item->name
+			/*$2%s*/ $item->slug
 		);
 	}
 	
-	/*public function get_bulk_actions() {
+	public function get_bulk_actions() {
 	/*
 		Define the bulk actions that can be performed
 		against the table data.
-	*//*
+	*/
 		
 		$actions = array(
 			'remove'			=> 'Remove'
@@ -128,8 +128,7 @@ class Slide_Groups_Table extends WP_List_Table {
 		
 		
 		return $actions;
-	}*/
-	// not implemented yet
+	}
     
 	
 	public function get_total_items()
