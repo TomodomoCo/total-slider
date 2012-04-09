@@ -35,8 +35,8 @@ class Slide_Groups_Table extends WP_List_Table {
 		return parent::__construct(
 		
 			array (
-				'singular' 	=> __('slide group', 'vpm_slider'),
-				'plural'	=> __('slide groups', 'vpm_slider'),
+				'singular' 	=> __('slide group', 'total_slider'),
+				'plural'	=> __('slide groups', 'total_slider'),
 				'ajax'		=> false			
 			)
 		);
@@ -50,8 +50,8 @@ class Slide_Groups_Table extends WP_List_Table {
 		return array(
 		
 	        'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text	
-			'name'		=>	__('Group Name', 'vpm_slider'),
-			'slides_count'		=>	__('Slides', 'vpm_slider')
+			'name'		=>	__('Group Name', 'total_slider'),
+			'slides_count'		=>	__('Slides', 'total_slider')
 		
 		);
 	
@@ -78,10 +78,10 @@ class Slide_Groups_Table extends WP_List_Table {
 	
 		echo esc_html(stripslashes($item->name));
 		?><br/><div class="row-actions">
-			<span class="edit"><a href="admin.php?page=vpm-slider&amp;group=<?php echo esc_attr($item->slug);?>"><?php _e('Edit', 'vpm_slider');?></a></span> |
-			<span class="remove"><a class="submitdelete" href="admin.php?page=vpm-slider&amp;action=remove&amp;group=<?php echo esc_attr($item->slug);?>&amp;_wpnonce=<?php echo wp_create_nonce('remove-slide-group');?>"
-				onclick="return confirm('<?php _e('Are you sure you want to delete this slide group?\n\nThis action cannot be undone.', 'vpm_slider');?>');"
-			><?php _e('Remove', 'vpm_slider');?></a></span>
+			<span class="edit"><a href="admin.php?page=total-slider&amp;group=<?php echo esc_attr($item->slug);?>"><?php _e('Edit', 'total_slider');?></a></span> |
+			<span class="remove"><a class="submitdelete" href="admin.php?page=total-slider&amp;action=remove&amp;group=<?php echo esc_attr($item->slug);?>&amp;_wpnonce=<?php echo wp_create_nonce('remove-slide-group');?>"
+				onclick="return confirm('<?php _e('Are you sure you want to delete this slide group?\n\nThis action cannot be undone.', 'total_slider');?>');"
+			><?php _e('Remove', 'total_slider');?></a></span>
 		</div><?php
 	}
 	
@@ -91,7 +91,7 @@ class Slide_Groups_Table extends WP_List_Table {
 		Gather a count of this slide group for the column.
 	*/
 		
-		return count(get_option('vpm_slider_slides_' . esc_attr($item->slug) ));		
+		return count(get_option('total_slider_slides_' . esc_attr($item->slug) ));		
 	
 	}
 	
@@ -139,7 +139,7 @@ class Slide_Groups_Table extends WP_List_Table {
 		so that we can do pagination properly.
 	*/
 	
-		return count(get_option('vpm_slider_slide_groups'));
+		return count(get_option('total_slider_slide_groups'));
 	
 	}
 	
@@ -150,7 +150,7 @@ class Slide_Groups_Table extends WP_List_Table {
 		we can display them in the table.
 	*/
 	
-		$groups = get_option('vpm_slider_slide_groups');
+		$groups = get_option('total_slider_slide_groups');
 		return $groups;
 	
 	}
@@ -162,7 +162,7 @@ class Slide_Groups_Table extends WP_List_Table {
 		the data for the table.
 	*/
 	
-		$perPage = VPM_SLIDER_MAX_SLIDE_GROUPS;
+		$perPage = TOTAL_SLIDER_MAX_SLIDE_GROUPS;
 		
 		$columns = $this->get_columns();
 		$hidden = array();

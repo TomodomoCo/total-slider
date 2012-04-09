@@ -13,7 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
-.vpm-slider {
+.total-slider {
 	width:600px;
 	height:300px;
 	overflow:hidden;
@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 	list-style: none;
 }
 
-.vpm-slider li {
+.total-slider li {
 	width:600px !important;
 	height:300px !important;
 	position:relative;
@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 	background-color:#DDD;
 }
 
-.vpm-slider li a {
+.total-slider li a {
 	display: block;
 	width: 600px;
 	height: 300px;
@@ -41,7 +41,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 	text-decoration: none
 }
 
-.vpm-slider li .desc {
+.total-slider li .desc {
 	position: absolute;
 	width: 300px;
 	background: url(../img/slider-desc-bg.png);
@@ -49,20 +49,20 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 	text-align: left !important
 }
 
-.vpm-slider li .desc div {
+.total-slider li .desc div {
 	/* width:400px; */
 	overflow:hidden;
 	position:relative
 }
 
-.vpm-slider li .desc div p {
+.total-slider li .desc div p {
 	font: 14px/20px Helvetica, Arial, sans-serif;
 	color: #FFF;
 	text-shadow: 0 1px 1px black;
 	margin: 0 0 5px !important
 }
 
-.vpm-slider li h2 {
+.total-slider li h2 {
 	font: 24px Georgia, serif;
 	color: #FFF;
 	text-shadow: 0 1px 1px black;
