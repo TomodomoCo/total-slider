@@ -127,8 +127,14 @@ class Total_Slider {
 	{
 	/*
 		Sanitize a slide group slug, for accessing the wp_option row with that slug name.		
+		
+		A wp_option name cannot be greater than 64 chars, so we truncate after 42 chars (63 - length of our option prefix),
+		so as not to request a too-long wp_option name from MySQL.
+		
+		The create routine will handle if there is an existig name conflict due to the truncation.
+		
 	*/
-		return substr(preg_replace('/[^a-zA-Z0-9]/', '', $slug), 0, 64);
+		return substr(preg_replace('/[^a-zA-Z0-9_\-]/', '', $slug), 0, (63 - strlen('total_slider_slides_') ) );
 	}
 	
 	private function getCurrentSlides($slug) {
@@ -823,6 +829,21 @@ class Total_Slider {
 				{				
 					// add the new slide group
 					$newSlug = Total_Slider::sanitizeSlideGroupSlug(sanitize_title_with_dashes($_POST['group-name']));
+					
+					// slide group already with this name?
+					$existing = new Total_Slide_Group($newSlug);
+					if ($existing->load())
+					{
+						$newSlug = substr($newSlug, 0, (63 - strlen('total_slider_slides_') - 23 ) ); // truncate so that the uniqid portion is retained.
+						$newSlug .= Total_Slider::idFilter(uniqid('_', true));
+						$newSlug = Total_Slider::sanitizeSlideGroupSlug($newSlug);
+					}
+										
+					if (empty($newSlug))
+					{
+						$newSlug = 'group_' . Total_Slider::idFilter(uniqid('', true));
+						$newSlug = Total_Slider::sanitizeSlideGroupSlug($newSlug);
+					}
 					
 					$newGroup = new Total_Slide_Group($newSlug, $_POST['group-name']);
 					$newGroup->save();	
