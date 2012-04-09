@@ -1238,6 +1238,8 @@ class Total_Slider {
 			
 			<p><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>', 'total_slider');?></p>
 			
+			<p><?php _e('Icons: <a href="http://www.field2.com/">Ben Dunkle</a>', 'total_slider');?></p>
+			
 			<?php if (defined('WPLANG') && WPLANG != '' && strpos(strtolower(WPLANG), 'en') !== 0 ): ?>
 				<p>
 				<?php
@@ -1309,7 +1311,7 @@ class Total_Slider {
 		</ul>
 		
 		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>
-		<?php _e('Click ‘Add New’ to create a Slide.', 'total_slider');?></div>
+		<?php _e('Click &lsquo;Add New&rsquo; to create a Slide.', 'total_slider');?></div>
 		
 		</div>
 		

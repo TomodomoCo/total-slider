@@ -130,7 +130,7 @@ ul#new-slide-button li {
 #edit-area {
 	display: block;
 	background: url(../img/slider-workspace-bg.png);
-	padding: 30px 0;
+	padding: 30px;
 	border: 1px solid #BBB;
 }
 
@@ -187,15 +187,22 @@ ul#new-slide-button li {
 	top: 1px;
 }
 
-/* HINT: Choose a slide to start */
+
+/* HINT TEXT */
+
+#edit-controls-choose-hint, .slidesort-add-hint, .no-items td {
+	font-size: 150% !important;
+	color: #888 !important;
+	text-align: center !important;
+}
+
+
+/* Choose a slide to start */
 
 #edit-controls-choose-hint {
-	font-size: 150%;
-	color: #888;
 	position: relative;
 	left: auto;
 	top: auto;
-	text-align: center;
 	margin: auto;
 }
 
@@ -206,11 +213,27 @@ ul#new-slide-button li {
 	width: auto;
 }
 
+
+/* Add a slide to start */
+
 .slidesort-add-hint {
-	text-align: center;
-	font-size:125%;
-	color: #747474
+	position: absolute;
+	left: 0;
+	top: 30px;
+	right: 0;
 }
+
+
+/* Click to create a new slide group */
+
+.no-items td {
+	padding-top: 45px !important;
+	padding-bottom: 50px !important;
+	border-bottom: 1px solid #DFDFDF !important;
+}
+
+
+/* Drag hint: DELETEME? */
 
 .slidesort-drag-hint {
 	text-align: center;
@@ -223,18 +246,6 @@ ul#new-slide-button li {
 .slidesort-drag-hint p {
 	margin-bottom:0;
 	padding-bottom:0;
-}
-
-.total-slider-help-point {
-	background: url(../img/help-icon-wp-16.png) no-repeat;
-	padding-left: 24px;
-	margin-top: 20px;
-	font-size: 12px;
-	vertical-align: middle;
-}
-
-.total-slider-help-point a {
-	text-decoration: none !important;
 }
 
 #slide-link-internal-display {
