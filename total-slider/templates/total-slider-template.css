@@ -14,22 +14,22 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 .total-slider {
-	width:600px;
-	height:300px;
-	overflow:hidden;
-	margin:0 auto;
+	width: 600px;
+	height: 300px;
+	overflow: hidden;
+	margin: 0 auto;
 	border: 1px solid #000;
 	padding: 0;
 	list-style: none;
 }
 
 .total-slider li {
-	width:600px !important;
-	height:300px !important;
-	position:relative;
-	background-position:center center !important;
-	background-repeat:no-repeat !important;
-	background-color:#DDD;
+	width: 600px !important;
+	height: 300px !important;
+	position: relative;
+	background-position: center center !important;
+	background-repeat: no-repeat !important;
+	background-color: #DDD;
 }
 
 .total-slider li a {
@@ -50,9 +50,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 }
 
 .total-slider li .desc div {
-	/* width:400px; */
-	overflow:hidden;
-	position:relative
+	/* width: 400px; */
+	overflow: hidden;
+	position: relative
 }
 
 .total-slider li .desc div p {
