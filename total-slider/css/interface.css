@@ -14,13 +14,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
+
+/* Plugin 32x32 icon */
+
 #icon-total-slides {
 	background:transparent url(../img/total-slider-icon-32.png?ver=20120229) no-repeat;
 }
 
-.postbox .hndle {
-	cursor: default !important;
-}
 
 /* Slide sorter */
 
@@ -38,6 +38,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 	margin: 0;
 	padding: 0;
 }
+
 
 /* Slides in the slide sorter */
 
@@ -88,6 +89,7 @@ ul#slidesort li:hover .slidesort-icon {
 	display: block;
 }
 
+
 /* Slidesort slide buttons */
 
 .slide-delete-button {
@@ -102,6 +104,7 @@ ul#slidesort li:hover .slidesort-icon {
 	background-position: center left;
 	cursor: move;
 }
+
 
 /* New slide button */
 
@@ -125,6 +128,7 @@ ul#new-slide-button li {
 	font-size:120%;
 }
 
+
 /* Slide preview canvas */
 
 #edit-area {
@@ -137,6 +141,7 @@ ul#new-slide-button li {
 #slide-preview {
 	cursor: move;
 }
+
 
 /* Edit area */
 
@@ -154,6 +159,19 @@ ul#new-slide-button li {
 
 #edit-slide-image-upload {
 	max-width: 150px;
+}
+
+#slide-link-internal-display {
+	font-style: italic;
+	font-size: 12px;
+}
+
+#slide-link-external-settings {
+	display: none;
+}
+
+#slide-link-internal-settings {
+	display: none;
 }
 
 #edit-controls .submit {
@@ -233,34 +251,6 @@ ul#new-slide-button li {
 }
 
 
-/* Drag hint: DELETEME? */
-
-.slidesort-drag-hint {
-	text-align: center;
-	font-size:113%;
-	color: #939596;
-	margin-bottom:0;
-	padding-bottom:0;
-}
-
-.slidesort-drag-hint p {
-	margin-bottom:0;
-	padding-bottom:0;
-}
-
-#slide-link-internal-display {
-	font-style: italic;
-	font-size: 12px;
-}
-
-#slide-link-external-settings {
-	display: none;
-}
-
-#slide-link-internal-settings {
-	display: none;
-}
-
 /* Slide Groups Table Column widths */
 
 .column-slides_count {
@@ -276,11 +266,11 @@ ul#new-slide-button li {
 	display: none;
 }
 
+
 /* Metaboxes */
 
 .postbox .hndle {
-	cursor: pointer;
-	// position: relative;
+	cursor: default !important;
 }
 
 .postbox .hndle input {
@@ -301,6 +291,7 @@ ul#new-slide-button li {
 .has-right-sidebar #post-body-content {
 	margin-right: 300px !important;
 }
+
 
 /* Copyright */
 
