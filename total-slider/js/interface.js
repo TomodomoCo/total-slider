@@ -391,7 +391,7 @@ jQuery(document).ready(function() {
 	jQuery('#edit-slide-image-upload').click(function () {		
 		var myTop = jQuery(this).offset();
 
-		tb_show(_total_slider_L10n.uploadSlideBgImage, 'media-upload.php?total-slider-uploader=bgimage&type=image&TB_iframe=true&height=400&width=600');
+		tb_show(_total_slider_L10n.uploadSlideBgImage, 'media-upload.php?total-slider-uploader=bgimage&type=image&post_id=0&TB_iframe=true&height=400&width=600');
 		
 		return false;
 	

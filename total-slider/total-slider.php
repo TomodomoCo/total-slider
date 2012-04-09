@@ -856,7 +856,7 @@ class Total_Slider {
 		</script>
 		<div class="wrap">
 		
-		<div id="icon-vpm-slides" class="icon32"><br /></div><h2><?php _e('Slide Groups', 'total_slider');?> <a href="#" id="new-slide-group-button" class="add-new-h2"><?php _e('Add New', 'total_slider');?></a></h2>
+		<div id="icon-total-slides" class="icon32"><br /></div><h2><?php _e('Slide Groups', 'total_slider');?> <a href="#" id="new-slide-group-button" class="add-new-h2"><?php _e('Add New', 'total_slider');?></a></h2>
 		
 		<noscript>
 		<h3><?php _e('Sorry, this interface requires JavaScript to function.', 'total_slider');?></h3>
@@ -969,7 +969,7 @@ class Total_Slider {
 		
 		<div class="wrap">
 		
-		<div id="icon-vpm-slides" class="icon32"><br /></div>
+		<div id="icon-total-slides" class="icon32"><br /></div>
 		<h2><?php printf(__('‘%s’ Slides', 'total_slider'), esc_html($slideGroup->name));?>
 		<a href="#" id="new-slide-button" class="add-new-h2"><?php _e('Add New', 'total_slider');?></a></h2>
 		
@@ -1087,7 +1087,7 @@ class Total_Slider {
 		}
 	
 		?><div class="wrap">
-		<div id="icon-vpm-slides" class="icon32" style="background:transparent url(<?php echo plugin_dir_url( __FILE__ );?>img/total-slider-icon-32.png?ver=20120229) no-repeat;"><br /></div><h2><?php _e('Settings', 'total_slider');?></h2>
+		<div id="icon-total-slides" class="icon32" style="background:transparent url(<?php echo plugin_dir_url( __FILE__ );?>img/total-slider-icon-32.png?ver=20120229) no-repeat;"><br /></div><h2><?php _e('Settings', 'total_slider');?></h2>
 		
 		
 		<?php if ($success): ?>
@@ -1208,7 +1208,7 @@ class Total_Slider {
 					
 					//?? also #media-items .image-size
 					
-					jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"<?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider'), $crop['width'], $crop['height']);?></p>');
+					jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"<?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider'), $crop['crop_width'], $crop['crop_height']);?></p>');
 				
 					// rename the main action button
 					jQuery('.savesend .button').each(function() {
