@@ -879,29 +879,31 @@ class Total_Slider {
 			</form>
 		</div>
 		
-		<div class="metabox-holder has-right-sidebar columns-2">
-
-			<div class="inner-sidebar" id="postbox-container-1">
-				<?php do_meta_boxes('_total_slider_slide_groups', 'side', null);?>
+		<div id="poststuff">
+			<div class="metabox-holder has-right-sidebar columns-2">
+	
+				<div class="inner-sidebar" id="postbox-container-1">
+					<?php do_meta_boxes('_total_slider_slide_groups', 'side', null);?>
+				</div>
+							
+				<div id="post-body" class="columns-2"><div id="post-body-content">
+				<form id="slide-groups-bulk-actions" method="post" action="admin.php?page=total-slider" onsubmit="if (jQuery('.slide-group-checkbox:checked').length > 0 && jQuery('option[value=remove]:selected').length > 0) { return confirm('<?php _e('Are you sure you want to delete these slide groups?\n\nThis action cannot be undone.', 'total_slider');?>'); }">
+					<input type="hidden" name="_bulk_wpnonce" value="<?php echo wp_create_nonce('remove-bulk-slide-group');?>" />
+					<?php require_once( dirname( __FILE__ ) . '/slide_groups_table.php');
+					$table = new Slide_Groups_Table();		
+					$table->prepare_items();		
+					$table->display();
+					
+							
+					if ($table->get_total_items() < 1)
+					{
+						?><div class="slidesort-add-hint"><?php _e('Click ‘Add New’ to create a new group of slides.', 'total_slider');?></div><?php
+					}
+					?>
+				</form>
+				</div></div>
+			
 			</div>
-						
-			<div id="post-body"><div id="post-body-content">
-			<form id="slide-groups-bulk-actions" method="post" action="admin.php?page=total-slider" onsubmit="if (jQuery('.slide-group-checkbox:checked').length > 0 && jQuery('option[value=remove]:selected').length > 0) { return confirm('<?php _e('Are you sure you want to delete these slide groups?\n\nThis action cannot be undone.', 'total_slider');?>'); }">
-				<input type="hidden" name="_bulk_wpnonce" value="<?php echo wp_create_nonce('remove-bulk-slide-group');?>" />
-				<?php require_once( dirname( __FILE__ ) . '/slide_groups_table.php');
-				$table = new Slide_Groups_Table();		
-				$table->prepare_items();		
-				$table->display();
-				
-						
-				if ($table->get_total_items() < 1)
-				{
-					?><div class="slidesort-add-hint"><?php _e('Click ‘Add New’ to create a new group of slides.', 'total_slider');?></div><?php
-				}
-				?>
-			</form>
-			</div></div>
-		
 		</div>
 			
 		</div><!--wrap-->
@@ -981,22 +983,22 @@ class Total_Slider {
 		<form name="vpm-the-slides">
 
 			<div id="message-area" class="updated settings-error below-h2"></div>
-			
-			<div class="metabox-holder">
-				<?php do_meta_boxes('_total_slider_slide', 'normal', null);?>	
-			</div>
-			
-			<div class="metabox-holder has-right-sidebar columns-2">
-				<div class="inner-sidebar" id="postbox-container-1">
-					<?php do_meta_boxes('_total_slider_slide_bottom', 'side', null);?>	
+			<div id="poststuff">
+				<div class="metabox-holder">
+					<?php do_meta_boxes('_total_slider_slide', 'normal', null);?>	
 				</div>
-				<div id="post-body">
-					<div id="post-body-content">
-						<?php do_meta_boxes('_total_slider_slide_bottom', 'normal', null);?>	
+				
+				<div class="metabox-holder has-right-sidebar columns-2">
+					<div class="inner-sidebar" id="postbox-container-1">
+						<?php do_meta_boxes('_total_slider_slide_bottom', 'side', null);?>	
+					</div>
+					<div id="post-body" class="columns-2">
+						<div id="post-body-content">
+							<?php do_meta_boxes('_total_slider_slide_bottom', 'normal', null);?>	
+						</div>
 					</div>
 				</div>
 			</div>
-	
 		</form>		
 		</div><?php
 	

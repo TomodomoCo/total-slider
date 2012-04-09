@@ -79,7 +79,7 @@ class Slide_Groups_Table extends WP_List_Table {
 		echo esc_html(stripslashes($item->name));
 		?><br/><div class="row-actions">
 			<span class="edit"><a href="admin.php?page=total-slider&amp;group=<?php echo esc_attr($item->slug);?>"><?php _e('Edit', 'total_slider');?></a></span> |
-			<span class="remove"><a class="submitdelete" href="admin.php?page=total-slider&amp;action=remove&amp;group=<?php echo esc_attr($item->slug);?>&amp;_wpnonce=<?php echo wp_create_nonce('remove-slide-group');?>"
+			<span class="trash"><a class="submitdelete" href="admin.php?page=total-slider&amp;action=remove&amp;group=<?php echo esc_attr($item->slug);?>&amp;_wpnonce=<?php echo wp_create_nonce('remove-slide-group');?>"
 				onclick="return confirm('<?php _e('Are you sure you want to delete this slide group?\n\nThis action cannot be undone.', 'total_slider');?>');"
 			><?php _e('Remove', 'total_slider');?></a></span>
 		</div><?php
