@@ -14,8 +14,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-#icon-vpm-slides {
-	background:transparent url(../img/vpm-slider-icon-32.png?ver=20120229) no-repeat;
+#icon-total-slides {
+	background:transparent url(../img/total-slider-icon-32.png?ver=20120229) no-repeat;
 }
 
 .postbox .hndle {
@@ -225,7 +225,7 @@ ul#new-slide-button li {
 	padding-bottom:0;
 }
 
-.vpm-slider-help-point {
+.total-slider-help-point {
 	background: url(../img/help-icon-wp-16.png) no-repeat;
 	padding-left: 24px;
 	margin-top: 20px;
@@ -233,7 +233,7 @@ ul#new-slide-button li {
 	vertical-align: middle;
 }
 
-.vpm-slider-help-point a {
+.total-slider-help-point a {
 	text-decoration: none !important;
 }
 

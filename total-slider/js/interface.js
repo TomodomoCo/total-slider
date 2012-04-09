@@ -391,7 +391,7 @@ jQuery(document).ready(function() {
 	jQuery('#edit-slide-image-upload').click(function () {		
 		var myTop = jQuery(this).offset();
 
-		tb_show(_total_slider_L10n.uploadSlideBgImage, 'media-upload.php?vpm-slider-uploader=bgimage&type=image&TB_iframe=true&height=400&width=600');
+		tb_show(_total_slider_L10n.uploadSlideBgImage, 'media-upload.php?total-slider-uploader=bgimage&type=image&TB_iframe=true&height=400&width=600');
 		
 		return false;
 	
@@ -816,11 +816,11 @@ jQuery(document).ready(function() {
 	});
 	
 	/* help buttons */
-	jQuery('.vpm-slider-help-point').click(function(event)
+	jQuery('.total-slider-help-point').click(function(event)
 	{
 		event.preventDefault();
 		jQuery('#contextual-help-link').click();
-		jQuery('#tab-link-vpm-slider-publishing').children('a:first-child').click();
+		jQuery('#tab-link-total-slider-publishing').children('a:first-child').click();
 		jQuery('body').animate({ scrollTop: 0 }, 1000);
 	});
 	
