@@ -879,9 +879,9 @@ class Total_Slider {
 			</form>
 		</div>
 		
-		<div class="metabox-holder has-right-sidebar">
+		<div class="metabox-holder has-right-sidebar columns-2">
 
-			<div class="inner-sidebar">
+			<div class="inner-sidebar" id="postbox-container-1">
 				<?php do_meta_boxes('_total_slider_slide_groups', 'side', null);?>
 			</div>
 						
@@ -986,8 +986,8 @@ class Total_Slider {
 				<?php do_meta_boxes('_total_slider_slide', 'normal', null);?>	
 			</div>
 			
-			<div class="metabox-holder has-right-sidebar">
-				<div class="inner-sidebar">
+			<div class="metabox-holder has-right-sidebar columns-2">
+				<div class="inner-sidebar" id="postbox-container-1">
 					<?php do_meta_boxes('_total_slider_slide_bottom', 'side', null);?>	
 				</div>
 				<div id="post-body">

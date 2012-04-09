@@ -281,6 +281,16 @@ ul#new-slide-button li {
 	display: none;
 }
 
+.inner-sidebar {
+	float:right;
+	clear:right;
+	width:286px;
+}
+
+.has-right-sidebar #post-body-content {
+	margin-right: 300px !important;
+}
+
 /* Copyright */
 
 #copyright, #contrib-note {
