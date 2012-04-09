@@ -194,15 +194,11 @@ switch ($_GET['action'])
 		}
 		
 		// error out if the POST format isn't right
-		if ( !array_key_exists('title_pos_x', $_POST) ||  !array_key_exists('title_pos_y', $_POST)
-			|| !array_key_exists('background', $_POST) || !array_key_exists('title', $_POST)
-			|| !array_key_exists('description', $_POST) || !array_key_exists('link', $_POST)
-			|| !array_key_exists('id', $_POST)
-		)
+		if ( !array_key_exists('id', $_POST)	)
 		{
 			header('HTTP/1.0 400 Bad Request');
 			header('Content-Type: application/json');
-			echo json_encode(array('error' => __('You have not supplied all of the required data.', 'total_slider')));
+			echo json_encode(array('error' =>  __('You have not supplied the ID to look up.', 'total_slider')));
 			die();				
 		}
 		
