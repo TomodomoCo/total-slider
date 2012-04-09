@@ -84,6 +84,18 @@ switch ($_GET['action'])
 			die();
 		}
 		
+		// error out if the POST format isn't right
+		if ( !array_key_exists('title_pos_x', $_POST) ||  !array_key_exists('title_pos_y', $_POST)
+			|| !array_key_exists('background', $_POST) || !array_key_exists('title', $_POST)
+			|| !array_key_exists('description', $_POST) || !array_key_exists('link', $_POST)
+		)
+		{
+			header('HTTP/1.0 400 Bad Request');
+			header('Content-Type: application/json');
+			echo json_encode(array('error' => __('You have not supplied all of the required data.', 'total_slider')));
+			die();				
+		}
+		
 		// validate data that we have received
 		
 		$_POST['title_pos_x'] = (int) $_POST['title_pos_x'];
@@ -181,6 +193,19 @@ switch ($_GET['action'])
 			die();
 		}
 		
+		// error out if the POST format isn't right
+		if ( !array_key_exists('title_pos_x', $_POST) ||  !array_key_exists('title_pos_y', $_POST)
+			|| !array_key_exists('background', $_POST) || !array_key_exists('title', $_POST)
+			|| !array_key_exists('description', $_POST) || !array_key_exists('link', $_POST)
+			|| !array_key_exists('id', $_POST)
+		)
+		{
+			header('HTTP/1.0 400 Bad Request');
+			header('Content-Type: application/json');
+			echo json_encode(array('error' => __('You have not supplied all of the required data.', 'total_slider')));
+			die();				
+		}
+		
 		// we need the slide ID
 		$_POST['id'] = preg_replace('[^0-9a-zA-Z_]', '', $_POST['id']);
 		
@@ -221,7 +246,20 @@ switch ($_GET['action'])
 			header('Content-Type: application/json');
 			echo json_encode(array('error' => __('Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?', 'total_slider')));
 			die();
-		}	
+		}
+		
+		// error out if the POST format isn't right
+		if ( !array_key_exists('title_pos_x', $_POST) ||  !array_key_exists('title_pos_y', $_POST)
+			|| !array_key_exists('background', $_POST) || !array_key_exists('title', $_POST)
+			|| !array_key_exists('description', $_POST) || !array_key_exists('link', $_POST)
+			|| !array_key_exists('id', $_POST)
+		)
+		{
+			header('HTTP/1.0 400 Bad Request');
+			header('Content-Type: application/json');
+			echo json_encode(array('error' => __('You have not supplied all of the required data.', 'total_slider')));
+			die();				
+		}
 		
 		// we need the slide ID
 		$_POST['id'] = preg_replace('[^0-9a-zA-Z_]', '', $_POST['id']);
@@ -328,7 +366,16 @@ switch ($_GET['action'])
 			header('Content-Type: application/json');
 			echo json_encode(array('error' => __('Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?', 'total_slider')));
 			die();
-		}	
+		}
+		
+		// error out if the POST format isn't right
+		if ( !array_key_exists('slidesort', $_POST) )
+		{
+			header('HTTP/1.0 400 Bad Request');
+			header('Content-Type: application/json');
+			echo json_encode(array('error' => __('The new slide order was not specified, or there were no items within it.', 'total_slider')));
+			die();
+		}
 		
 		if (empty($_POST['slidesort']) || !is_array($_POST['slidesort']) || count($_POST['slidesort']) < 1) {
 			header('HTTP/1.1 400 Bad Request');
@@ -372,6 +419,15 @@ switch ($_GET['action'])
 			header('HTTP/1.0 403 Forbidden');
 			header('Content-Type: application/json');
 			echo json_encode(array('error' => __('Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?', 'total_slider')));
+			die();
+		}
+		
+		// error out if the POST format isn't right
+		if ( !array_key_exists('id', $_POST) )
+		{
+			header('HTTP/1.0 400 Bad Request');
+			header('Content-Type: application/json');
+			echo json_encode(array('error' => __('You have not supplied the ID to delete.', 'total_slider')));
 			die();
 		}
 		
