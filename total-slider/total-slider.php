@@ -893,12 +893,6 @@ class Total_Slider {
 					$table = new Slide_Groups_Table();		
 					$table->prepare_items();		
 					$table->display();
-					
-							
-					if ($table->get_total_items() < 1)
-					{
-						?><div class="slidesort-add-hint"><?php _e('Click ‘Add New’ to create a new group of slides.', 'total_slider');?></div><?php
-					}
 					?>
 				</form>
 				</div></div>

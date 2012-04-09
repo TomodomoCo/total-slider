@@ -189,6 +189,16 @@ class Slide_Groups_Table extends WP_List_Table {
 			
 	}
 	
+	public function no_items()
+	{
+	/*
+		Return the text to display when there are no items.	
+	*/
+	
+		return __('Click ‘Add New’ to create a new group of slides.', 'total_slider');
+	
+	}
+	
 
 }
 
