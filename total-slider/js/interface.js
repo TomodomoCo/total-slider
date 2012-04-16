@@ -444,7 +444,7 @@ jQuery(document).ready(function() {
 		
 			if (jQuery('#edit-slide-link').val().length > 1 && !isUrl(jQuery('#edit-slide-link').val()))
 			{	// if we have an external link URL set, but it is not a proper URL
-				validationErrors[validationErrors.length] = _total_slider_L10nvalidationInvalidLinkURL;
+				validationErrors[validationErrors.length] = _total_slider_L10n.validationInvalidLinkURL;
 			}		
 			
 			linkToSave = jQuery('#edit-slide-link').val();
