@@ -254,7 +254,7 @@ class Total_Slider_Backend {
 	/*
 		Sanitize a slide group slug, for accessing the wp_option row with that slug name.		
 	*/
-		return substr(preg_replace('/[^a-zA-Z0-9]/', '', $slug), 0, 64);
+		return substr(preg_replace('/[^a-zA-Z0-9_\-]/', '', $slug), 0, (63 - strlen('total_slider_slides_') ) );
 	}
 	
 
