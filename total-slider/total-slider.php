@@ -1463,6 +1463,21 @@ class Total_Slider {
 			</div><?php
 	
 	}
+	
+	public function printAdminCSS() {
+	/*
+		Print the admin CSS to show our admin menu icons.
+	*/
+	
+		?>
+		<style type="text/css" id="total-slider-menu-css">
+		#toplevel_page_total-slider .wp-menu-image img { visibility: hidden; }
+		#toplevel_page_total-slider .wp-menu-image { background: url( <?php echo plugins_url( basename( dirname( __FILE__ ) ) . '/img/slider-icon-switch.png' ) ?> ) 0 90% no-repeat; }
+		#toplevel_page_total-slider.current .wp-menu-image, #toplevel_page_total-slider.wp-has-current-submenu .wp-menu-image, #toplevel_page_total-slider:hover .wp-menu-image { background-position: top left; }
+		</style>
+		<?php
+	
+	}
 
 
 };
@@ -1878,6 +1893,7 @@ class Total_Slider_Widget extends WP_Widget {
 register_activation_hook(__FILE__, array('Total_Slider', 'createSlidesOptionField'));
 add_action('init', array('Total_Slider', 'loadTextDomain'));
 add_action('admin_menu', array('Total_Slider', 'addAdminSubMenu'));
+add_action( 'admin_head', array('Total_Slider', 'printAdminCSS'));
 add_action('widgets_init', array('Total_Slider', 'registerAsWidget'));
 add_action('admin_init', array('Total_Slider', 'passControlToAjaxHandler'));
 add_action('admin_head-media-upload-popup', array('Total_Slider', 'printUploaderJavaScript'));
