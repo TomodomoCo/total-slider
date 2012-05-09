@@ -2,19 +2,21 @@
 /*
 Plugin Name: Total Slider
 Plugin URI: http://www.totalslider.com/
-Description: Allows the user to create, edit and remove ‘slides’ with text and images.
+Description: The best experience for building sliders, with true WYSIWYG, drag & drop and more!
 Version: 1.0
 Author: Peter Upfold
 Author URI: http://www.vanpattenmedia.com/
-License: GPL2
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: total_slider
 /* ----------------------------------------------*/
 
 /*  Copyright (C) 2011-2012 Peter Upfold.
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2, as 
-    published by the Free Software Foundation.
+    This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -1266,21 +1268,21 @@ class Total_Slider {
 				<?php
 				/* translators: please replace this with a credit to yourself! "Translation: Your Name". This English message will appear when no translation is available, but the user is using WordPress in another language.. */
 				?>
-				<?php printf(__('<a href="%s">Help us translate this plugin into your language!</a>', 'total_slider'), '');?>
+				<?php printf(__('<a href="%s">Help us translate this plugin into your language!</a>', 'total_slider'), 'http://www.vanpattenmedia.com/project/total-slider/#contribute');?>
 				</p>
 			<?php endif; ?>
 		</div>
 		
 		<div id="contrib-note">
-			<p><?php printf( __('If you find this plugin useful, or are using it commercially, please consider <a href="%s">donating</a> to support development.', 'total_slider'), 'http://www.vanpattenmedia.com'); ?></p>
+			<p><?php printf( __('If you find this plugin useful, or are using it commercially, please consider <a href="%s">donating</a> to support development.', 'total_slider'), 'http://www.vanpattenmedia.com/project/total-slider/#contribute'); ?></p>
 			
-			<p><?php printf ( __('You can also <a href="%s">report bugs</a>, <a href="%s">suggest features</a>, or <a href="%s">send pull requests</a>.', 'total_slider'), '', '', '');?></p>
+			<p><?php printf ( __('You can also <a href="%s">report bugs</a>, <a href="%s">suggest features</a>, or <a href="%s">send pull requests</a>.', 'total_slider'), 'http://www.vanpattenmedia.com/project/total-slider/#contribute', 'http://www.vanpattenmedia.com/project/total-slider/#contribute', 'http://www.vanpattenmedia.com/project/total-slider/#contribute');?></p>
 			
 			<p><?php _e('Thanks!', 'total_slider'); ?></p>
 		</div>
 		
 		<div id="copyright">
-			<p><?php _e('© 2011-2012 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 licensed</a>.', 'total_slider');?></p>
+			<p><?php _e('© 2011-2012 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 (or later) licensed</a>.', 'total_slider');?></p>
 			<p id="vpm-credit"><?php _e('Built by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>', 'total_slider');?></p>
 		</div>
 		<?php
