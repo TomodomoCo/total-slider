@@ -1206,14 +1206,13 @@ class Total_Slider {
 			$crop = Total_Slider::determineTemplateOptions();
 
 		?>
+		<!-- a little shimming to prettify the uploader/media library options for Total Slider purposes -->
+		<style type="text/css">
+		#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align { display:none !important; }
+		</style>
 		<script type="text/javascript">
 		//<![CDATA[
-		// Total Slider shimming button names and modifying uploader for our purposes
 		jQuery(document).ready(function() {
-
-			jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align').hide(); // hide unnecessary items
-			// ?? also #media-items .image-size
-
 			jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider'), $crop['crop_width'], $crop['crop_height']);?></p>');
 
 			jQuery('.savesend .button').each(function() {
@@ -1223,23 +1222,17 @@ class Total_Slider {
 			uploader.bind('FileUploaded', function() {
 				window.setTimeout(function() {
 
-					jQuery('#media-items .post_title,#media-items .image_alt,#media-items .post_excerpt,#media-items .post_content, #media-items .url, #media-items .align').hide(); // hide unnecessary items
-
-					//?? also #media-items .image-size
-
-					jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"<?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider'), $crop['crop_width'], $crop['crop_height']);?></p>');
-
+					jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider'), $crop['crop_width'], $crop['crop_height']);?></p>');
 					// rename the main action button
 					jQuery('.savesend .button').each(function() {
 						jQuery(this).attr('value', '<?php _e('Use as background image', 'total_slider');?>');
 					});
-				}, 500);
+				}, 680);
 			});
-
 		});
-
 		//]]>
 		</script>
+		<!-- we're done shimming -->
 		<?php
 
 		}
