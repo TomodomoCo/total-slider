@@ -46,7 +46,7 @@ Disable-XY-Positioning-In-Admin: No
 			class="total-slider-slide"
 			style="background-image: url('<?php $s->the_background_url();?>');"
 		>
-			<a href="<?php $s->the_link();?>">
+			<a href="<?php $s->the_link();?>" class="total-slider-link">
 				<div class="total-slider-overlay" style="left: <?php $s->the_x();?>px; top: <?php $s->the_y();?>px">
 					<h2 class="total-slider-title"><?php $s->the_title();?></h2>
 					<div class="total-slider-description">

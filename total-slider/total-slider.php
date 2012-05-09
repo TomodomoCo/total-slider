@@ -1352,7 +1352,7 @@ class Total_Slider {
 
 			<ul id="total-slider" class="total-slider">
 
-				<li id="preview-area">
+				<li id="preview-area" class="total-slider-slide">
 
 					<div id="slide-preview" class="total-slider-overlay">
 						<h2 class="total-slider-title" id="slide-preview-title"><?php _e('untitled', 'total_slider');?></h2>

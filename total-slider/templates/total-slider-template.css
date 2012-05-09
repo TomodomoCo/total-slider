@@ -34,7 +34,7 @@
 	padding: 0;
 }
 
-.total-slider-slide a {
+.total-slider-slide .total-slider-link {
 	display: block;
 	width: 600px;
 	height: 300px;
@@ -51,7 +51,7 @@
 	text-align: left !important
 }
 
-.total-slider-title {
+.total-slider-overlay .total-slider-title {
 	font: 24px Georgia, serif;
 	color: #FFF;
 	text-shadow: 0 1px 1px black;
