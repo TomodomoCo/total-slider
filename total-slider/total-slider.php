@@ -1268,7 +1268,7 @@ class Total_Slider {
 				<?php
 				/* translators: please replace this with a credit to yourself! "Translation: Your Name". This English message will appear when no translation is available, but the user is using WordPress in another language.. */
 				?>
-				<?php printf(__('<a href="%s">Help us translate this plugin into your language!</a>', 'total_slider'), 'http://www.vanpattenmedia.com/project/total-slider/#contribute');?>
+				<?php printf(__('<a href="%s">Help us translate this plugin into your language!</a>', 'total_slider'), 'http://www.vanpattenmedia.com/project/total-slider/#translate');?>
 				</p>
 			<?php endif; ?>
 		</div>
