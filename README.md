@@ -1,9 +1,7 @@
 Total Slider
 ==========
 
-Allows the user to create, edit and remove ‘slides’ with text and images.
-
-**NOTE:** Total Slider is being developed ‘in the open’, but may not be quite ready for primetime yet. There are new features to be added, bugs to be fixed, and so on. Consider this alpha quality until we make an official announcement!
+Total Slider is a plugin for WordPress from Van Patten Media that will transform your experience with sliders forever. Build your own templates in PHP and CSS, then preview the output in a beautiful WYSIWYG interface designed to blend seamlessly with the WordPress core.
 
 How it works
 ------------
@@ -14,3 +12,7 @@ Once this plugin is installed and activated, use the Slider tab in your WordPres
 
 Go to **Appearance** > **Widgets** in WordPress and drag a new Total Slider widget to the correct area. Then, simply select the slide group to show in this area of your site.
 
+More information
+----------------
+
+For more information, do check out the [user documentation](http://www.vanpattenmedia.com/project/total-slider/docs/), or the [developer documentation](https://github.com/vanpattenmedia/total-slider/wiki/).
