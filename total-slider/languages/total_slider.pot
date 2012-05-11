@@ -4,193 +4,198 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Total Slider 1.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/total-slider\n"
-"POT-Creation-Date: 2012-04-09 07:31:10+00:00\n"
+"POT-Creation-Date: 2012-05-11 07:03:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2012-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2012-05-11 07:03:47+00:00\n"
+"Last-Translator: Peter Upfold <peter@vanpattenmedia.com>\n"
+"Language-Team: Peter Upfold <peter@vanpattenmedia.com>\n"
 
-#: ajax_interface.php:58
+#: ajax_interface.php:59
 msgid ""
 "You did not supply the slide group to which this action should be applied."
 msgstr ""
 
-#: ajax_interface.php:83 ajax_interface.php:180 ajax_interface.php:222
-#: ajax_interface.php:329 ajax_interface.php:374
+#: ajax_interface.php:84 ajax_interface.php:193 ajax_interface.php:244
+#: ajax_interface.php:364 ajax_interface.php:418
 msgid ""
 "Your user does not have the required permission level. Are you sure you are "
 "still logged in to the WordPress dashboard?"
 msgstr ""
 
-#: ajax_interface.php:115 ajax_interface.php:264
+#: ajax_interface.php:96 ajax_interface.php:128 ajax_interface.php:257
+#: ajax_interface.php:299
 msgid "You have not supplied all of the required data."
 msgstr ""
 
-#: ajax_interface.php:123 ajax_interface.php:272
+#: ajax_interface.php:136 ajax_interface.php:307
 msgid "Invalid URL format for the specified background URL."
 msgstr ""
 
-#: ajax_interface.php:137 ajax_interface.php:286
+#: ajax_interface.php:150 ajax_interface.php:321
 msgid "The post ID for the specified slide link is not valid."
 msgstr ""
 
-#: ajax_interface.php:146 ajax_interface.php:295
+#: ajax_interface.php:159 ajax_interface.php:330
 msgid "Invalid URL format for the specified link URL."
 msgstr ""
 
-#: ajax_interface.php:168
+#: ajax_interface.php:181
 msgid "The create slide operation failed at the server."
 msgstr ""
 
-#: ajax_interface.php:191 ajax_interface.php:233
+#: ajax_interface.php:202 ajax_interface.php:213 ajax_interface.php:268
 msgid "You have not supplied the ID to look up."
 msgstr ""
 
-#: ajax_interface.php:209
+#: ajax_interface.php:231
 msgid ""
 "Specified slide ID could not be found. It may have been already deleted."
 msgstr ""
 
-#: ajax_interface.php:315
+#: ajax_interface.php:350
 msgid "The update slide operation failed at the server."
 msgstr ""
 
-#: ajax_interface.php:336
+#: ajax_interface.php:373 ajax_interface.php:380
 msgid ""
 "The new slide order was not specified, or there were no items within it."
 msgstr ""
 
-#: ajax_interface.php:350
+#: ajax_interface.php:394
 msgid ""
 "The new slide order is missing one or more current slides. Cannot save the "
 "new order, or slides would be lost. Please reload the page to ensure all "
 "current slides are in the sorting area and try sorting again."
 msgstr ""
 
-#: ajax_interface.php:362
+#: ajax_interface.php:406
 msgid "The sort slide operation failed at the server."
 msgstr ""
 
-#: ajax_interface.php:385
+#: ajax_interface.php:427 ajax_interface.php:438
 msgid "You have not supplied the ID to delete."
 msgstr ""
 
-#: ajax_interface.php:400
+#: ajax_interface.php:453
 msgid ""
 "The delete slide operation failed at the server. Perhaps it has already been "
 "deleted by someone else."
 msgstr ""
 
-#: slide_groups_table.php:38
+#: slide_groups_table.php:39
 msgid "slide group"
 msgstr ""
 
-#: slide_groups_table.php:39
+#: slide_groups_table.php:40
 msgid "slide groups"
 msgstr ""
 
-#: slide_groups_table.php:53 total-slider.php:848
+#: slide_groups_table.php:54 total-slider.php:896
 msgid "Group Name"
 msgstr ""
 
-#: slide_groups_table.php:54 total-slider.php:920
+#: slide_groups_table.php:55 total-slider.php:965
 msgid "Slides"
 msgstr ""
 
-#: slide_groups_table.php:81 total-slider.php:923
+#: slide_groups_table.php:82 total-slider.php:968
 msgid "Edit"
 msgstr ""
 
-#: slide_groups_table.php:83
+#: slide_groups_table.php:84
 msgid ""
 "Are you sure you want to delete this slide group?\\n\\nThis action cannot be "
 "undone."
 msgstr ""
 
-#: slide_groups_table.php:84
+#: slide_groups_table.php:85
 msgid "Remove"
 msgstr ""
 
-#: slides_backend.php:229
+#: slide_groups_table.php:199
+msgid "Click &lsquo;Add New&rsquo; to create a new group of slides."
+msgstr ""
+
+#: slides_backend.php:231
 msgid "The specified slide group does not exist."
 msgstr ""
 
-#: total-slider.php:178
+#: total-slider.php:186
 msgid "Please visit this page to continue"
 msgstr ""
 
-#: total-slider.php:411 total-slider.php:412
+#: total-slider.php:419 total-slider.php:420
 msgid "Slider"
 msgstr ""
 
-#: total-slider.php:424 total-slider.php:425 total-slider.php:655
-#: total-slider.php:834
+#: total-slider.php:432 total-slider.php:433 total-slider.php:663
+#: total-slider.php:882
 msgid "Slide Groups"
 msgstr ""
 
-#: total-slider.php:436 total-slider.php:437 total-slider.php:1064
+#: total-slider.php:444 total-slider.php:445 total-slider.php:1109
 msgid "Settings"
 msgstr ""
 
-#: total-slider.php:462
+#: total-slider.php:470
 msgid "Need help?"
 msgstr ""
 
-#: total-slider.php:463
+#: total-slider.php:471
 msgid ""
 "The help menu will walk you through creating new groups, adding slides, and "
 "getting them to display in your theme. It’s a great place to start!"
 msgstr ""
 
-#: total-slider.php:650
+#: total-slider.php:658
 msgid ""
 "Each slide group contains a number of slides that will appear, one after "
 "another, when you publish your slides on your site."
 msgstr ""
 
-#: total-slider.php:651
+#: total-slider.php:659
 msgid ""
 "You can make up to %d slide groups, which you can use to have different "
 "slideshows on different parts of your site."
 msgstr ""
 
-#: total-slider.php:660
+#: total-slider.php:668
 msgid ""
 "Once you have clicked ‘Edit’ on the desired slide group, you’ll see all of "
 "its slides."
 msgstr ""
 
-#: total-slider.php:661
+#: total-slider.php:669
 msgid ""
 "Click on any slide to make changes. You can also drag and drop the title and "
 "description to place them anywhere over the background image."
 msgstr ""
 
-#: total-slider.php:662
+#: total-slider.php:670
 msgid ""
 "Simply drag and drop to re-order the slides within the group. The new order "
 "is saved immediately."
 msgstr ""
 
-#: total-slider.php:666
+#: total-slider.php:674
 msgid "Editing"
 msgstr ""
 
-#: total-slider.php:671
+#: total-slider.php:679
 msgid ""
 "Once you are happy with your new slide group, you need to publish it for it "
 "to show up on your site."
 msgstr ""
 
-#: total-slider.php:672
+#: total-slider.php:680
 msgid ""
 "To do this, your theme needs to support Widgets, and have a widget area in "
 "the theme where you’d like the slides to show up."
 msgstr ""
 
-#: total-slider.php:673
+#: total-slider.php:681
 msgid ""
 "Go to <a href=\"widgets.php\">Appearance » Widgets</a> and drag a "
 "<strong>Total Slider</strong> widget to the desired sidebar. In the widget’s "
@@ -198,41 +203,41 @@ msgid ""
 "em>."
 msgstr ""
 
-#: total-slider.php:679
+#: total-slider.php:687
 msgid "Publishing"
 msgstr ""
 
-#: total-slider.php:686
+#: total-slider.php:694
 msgid ""
 "For the best visual results, crop your background images to the size used by "
 "your slide template — %d×%d"
 msgstr ""
 
-#: total-slider.php:687
+#: total-slider.php:695
 msgid ""
 "Experiment with dragging and dropping the title and description over "
 "different parts of the background to achieve a different visual effect."
 msgstr ""
 
-#: total-slider.php:688
+#: total-slider.php:696
 msgid ""
 "Keep your site fresh — create multiple slide groups ahead of time, then "
 "simply edit the <strong>Total Slider</strong> widget to switch over to "
 "display another slide group every now and then."
 msgstr ""
 
-#: total-slider.php:689
+#: total-slider.php:697
 msgid ""
 "Completely customise the look of your slides — create a <em>total-slider-"
 "templates</em> subfolder in your theme. You can use our <em>templates</em> "
 "folder in the plugin as a starting point."
 msgstr ""
 
-#: total-slider.php:694
+#: total-slider.php:702
 msgid "Hints &amp; Tips"
 msgstr ""
 
-#: total-slider.php:711
+#: total-slider.php:719
 msgid ""
 "You are still editing the current slide. Switching to a different slide will "
 "lose your changes.\n"
@@ -240,326 +245,332 @@ msgid ""
 "Do you want to lose your changes?"
 msgstr ""
 
-#: total-slider.php:712
+#: total-slider.php:720
 msgid ""
 "You are still editing the current slide. Leaving this page will lose your "
 "changes."
 msgstr ""
 
-#: total-slider.php:717
+#: total-slider.php:725
 msgid ""
 "You will lose any unsaved changes.\n"
 "\n"
 "Are you sure you want to lose these changes?"
 msgstr ""
 
-#: total-slider.php:718
+#: total-slider.php:726
 msgid ""
 "Are you sure you want to delete this slide?\n"
 "\n"
 "This action cannot be undone."
 msgstr ""
 
-#: total-slider.php:719
+#: total-slider.php:727
 msgid ""
 "Please correct the following errors with the form.\n"
 "\n"
 msgstr ""
 
-#: total-slider.php:720
+#: total-slider.php:728
 msgid "You must enter a slide title."
 msgstr ""
 
-#: total-slider.php:721
+#: total-slider.php:729
 msgid "You must enter a slide description."
 msgstr ""
 
-#: total-slider.php:722
+#: total-slider.php:730
 msgid "The supplied background image URL is not a valid URL."
 msgstr ""
 
-#: total-slider.php:723
+#: total-slider.php:731
 msgid "The supplied external link is not a valid URL."
 msgstr ""
 
-#: total-slider.php:724
+#: total-slider.php:732
 msgid "The supplied post ID for the slide link is not valid."
 msgstr ""
 
-#: total-slider.php:725
+#: total-slider.php:733
 msgid "The new order will be saved when you save the new slide."
 msgstr ""
 
-#: total-slider.php:726
+#: total-slider.php:734
 msgid "Sorry, unable to resort the slides."
 msgstr ""
 
-#: total-slider.php:727 total-slider.php:1311
+#: total-slider.php:735 total-slider.php:1351
 msgid "untitled"
 msgstr ""
 
-#: total-slider.php:728 total-slider.php:1313
+#: total-slider.php:736 total-slider.php:1353
 msgid "(no text)"
 msgstr ""
 
-#: total-slider.php:729 total-slider.php:1274
+#: total-slider.php:737 total-slider.php:1314
 msgid "Move"
 msgstr ""
 
-#: total-slider.php:730 total-slider.php:1275
+#: total-slider.php:738 total-slider.php:1315
 msgid "Delete"
 msgstr ""
 
-#: total-slider.php:731
+#: total-slider.php:739
 msgid "No post selected."
 msgstr ""
 
-#: total-slider.php:732 total-slider.php:1409
+#: total-slider.php:740 total-slider.php:1449
 msgid "Save"
 msgstr ""
 
-#: total-slider.php:733
+#: total-slider.php:741
 msgid "Sorry, unable to get that slide"
 msgstr ""
 
-#: total-slider.php:734
+#: total-slider.php:742
 msgid "Slide saved."
 msgstr ""
 
-#: total-slider.php:735
+#: total-slider.php:743
 msgid "Upload slide background image"
 msgstr ""
 
-#: total-slider.php:736
+#: total-slider.php:744
 msgid "Sorry, unable to save the new slide."
 msgstr ""
 
-#: total-slider.php:737
+#: total-slider.php:745
 msgid "Unable to delete -- could not get the slide ID for the current slide."
 msgstr ""
 
-#: total-slider.php:738
+#: total-slider.php:746
 msgid "Sorry, unable to delete the slide."
 msgstr ""
 
-#: total-slider.php:762 total-slider.php:924
+#: total-slider.php:770 total-slider.php:969
 msgid "Credits"
 msgstr ""
 
-#: total-slider.php:834 total-slider.php:948
+#: total-slider.php:882 total-slider.php:993
 msgid "Add New"
 msgstr ""
 
-#: total-slider.php:837 total-slider.php:951
+#: total-slider.php:885 total-slider.php:996
 msgid "Sorry, this interface requires JavaScript to function."
 msgstr ""
 
-#: total-slider.php:838
+#: total-slider.php:886
 msgid ""
 "You will need to enable JavaScript for this page before many of the controls "
 "below will work."
 msgstr ""
 
-#: total-slider.php:843
+#: total-slider.php:891
 msgid "Add a Slide Group"
 msgstr ""
 
-#: total-slider.php:852
+#: total-slider.php:900
 msgid "Add Slide Group"
 msgstr ""
 
-#: total-slider.php:853 total-slider.php:1410
+#: total-slider.php:901 total-slider.php:1450
 msgid "Cancel"
 msgstr ""
 
-#: total-slider.php:873
-msgid "Click ‘Add New’ to create a new group of slides."
+#: total-slider.php:913
+msgid ""
+"Are you sure you want to delete these slide groups?\\n\\nThis action cannot "
+"be undone."
 msgstr ""
 
-#: total-slider.php:895
+#: total-slider.php:940
 msgid "This page is not accessible to your user."
 msgstr ""
 
-#: total-slider.php:903
+#: total-slider.php:948
 msgid "No Slide Group selected."
 msgstr ""
 
-#: total-slider.php:913
+#: total-slider.php:958
 msgid "Could not load the selected Slide Group. Does it exist?"
 msgstr ""
 
-#: total-slider.php:921
+#: total-slider.php:966
 msgid "Preview"
 msgstr ""
 
-#: total-slider.php:947
+#: total-slider.php:992
 msgid "‘%s’ Slides"
 msgstr ""
 
-#: total-slider.php:952
+#: total-slider.php:997
 msgid ""
 "You will need to enable JavaScript for this page before any of the controls "
 "below will work."
 msgstr ""
 
-#: total-slider.php:991
+#: total-slider.php:1036
 msgid "You do not have permission to manage Slider settings."
 msgstr ""
 
-#: total-slider.php:1006
+#: total-slider.php:1051
 msgid "Unable to confirm the form’s security."
 msgstr ""
 
-#: total-slider.php:1031
+#: total-slider.php:1076
 msgid "Required role level saved."
 msgstr ""
 
-#: total-slider.php:1041 total-slider.php:1052
+#: total-slider.php:1086 total-slider.php:1097
 msgid "Advanced settings saved."
 msgstr ""
 
-#: total-slider.php:1085
+#: total-slider.php:1130
 msgid "Required role level"
 msgstr ""
 
-#: total-slider.php:1114
+#: total-slider.php:1159
 msgid ""
 "Users belonging to checked roles will be able to create, edit and delete "
 "slides. Only users that can manage widgets are able to activate, deactivate "
 "or move the Total Slider widget, which makes the slides show up on your site."
 msgstr ""
 
-#: total-slider.php:1121
+#: total-slider.php:1166
 msgid "Advanced Settings"
 msgstr ""
 
-#: total-slider.php:1127
+#: total-slider.php:1172
 msgid "Load JS & CSS"
 msgstr ""
 
-#: total-slider.php:1133
+#: total-slider.php:1178
 msgid "Automatically load slide template CSS and JavaScript into my theme"
 msgstr ""
 
-#: total-slider.php:1135
+#: total-slider.php:1180
 msgid ""
 "Uncheck for manual control over how slide template CSS and JavaScript are "
 "included in your theme."
 msgstr ""
 
-#: total-slider.php:1144
+#: total-slider.php:1189
 msgid "Save Changes"
 msgstr ""
 
-#: total-slider.php:1172 total-slider.php:1185
+#: total-slider.php:1216 total-slider.php:1225
 msgid "Choose ‘Edit Image’ and crop to %d×%d for best results."
 msgstr ""
 
-#: total-slider.php:1175 total-slider.php:1189
+#: total-slider.php:1219 total-slider.php:1228
 msgid "Use as background image"
 msgstr ""
 
-#: total-slider.php:1215
+#: total-slider.php:1253
 msgid "Development: <a href=\"http://peter.upfold.org.uk/\">Peter Upfold</a>"
 msgstr ""
 
-#: total-slider.php:1217
+#: total-slider.php:1255
 msgid ""
 "Additional UI: <a href=\"http://www.vanpattenmedia.com/\">Chris Van Patten</"
 "a>"
 msgstr ""
 
+#: total-slider.php:1257
+msgid "Icons: <a href=\"http://www.field2.com/\">Ben Dunkle</a>"
+msgstr ""
+
 #. translators: please replace this with a credit to yourself! "Translation:
 #. Your Name". This English message will appear when no translation is
 #. available, but the user is using WordPress in another language..
-#: total-slider.php:1224
+#: total-slider.php:1264
 msgid "<a href=\"%s\">Help us translate this plugin into your language!</a>"
 msgstr ""
 
-#: total-slider.php:1230
+#: total-slider.php:1270
 msgid ""
 "If you find this plugin useful, or are using it commercially, please "
 "consider <a href=\"%s\">donating</a> to support development."
 msgstr ""
 
-#: total-slider.php:1232
+#: total-slider.php:1272
 msgid ""
 "You can also <a href=\"%s\">report bugs</a>, <a href=\"%s\">suggest "
 "features</a>, or <a href=\"%s\">send pull requests</a>."
 msgstr ""
 
-#: total-slider.php:1234
+#: total-slider.php:1274
 msgid "Thanks!"
 msgstr ""
 
-#: total-slider.php:1238
+#: total-slider.php:1278
 msgid ""
 "© 2011-2012 Peter Upfold. Proud to be <a href=\"https://www.gnu.org/licenses/"
-"gpl-2.0.html\">GPLv2 licensed</a>."
+"gpl-2.0.html\">GPLv2 (or later) licensed</a>."
 msgstr ""
 
-#: total-slider.php:1239
+#: total-slider.php:1279
 msgid ""
 "Built by <a href=\"http://www.vanpattenmedia.com/\">Van Patten Media</a>"
 msgstr ""
 
-#: total-slider.php:1290
-msgid "Click ‘Add New’ to create a Slide."
+#: total-slider.php:1330
+msgid "Click &lsquo;Add New&rsquo; to create a Slide."
 msgstr ""
 
-#: total-slider.php:1335
+#: total-slider.php:1375
 msgid "Click a slide to edit it, or click ‘Add New’."
 msgstr ""
 
-#: total-slider.php:1344
+#: total-slider.php:1384
 msgid "Title"
 msgstr ""
 
-#: total-slider.php:1352
+#: total-slider.php:1392
 msgid "Description"
 msgstr ""
 
-#: total-slider.php:1361
+#: total-slider.php:1401
 msgid "Background"
 msgstr ""
 
-#: total-slider.php:1366
+#: total-slider.php:1406
 msgid "Upload or choose image"
 msgstr ""
 
-#: total-slider.php:1372
+#: total-slider.php:1412
 msgid "Slide Link"
 msgstr ""
 
-#: total-slider.php:1377
+#: total-slider.php:1417
 msgid "A page or post on this site"
 msgstr ""
 
-#: total-slider.php:1382
+#: total-slider.php:1422
 msgid "An external link"
 msgstr ""
 
-#: total-slider.php:1392
+#: total-slider.php:1432
 msgid "No post selected"
 msgstr ""
 
-#: total-slider.php:1394
+#: total-slider.php:1434
 msgid "Find post"
 msgstr ""
 
-#: total-slider.php:1413
+#: total-slider.php:1453
 msgid "Loading"
 msgstr ""
 
-#: total-slider.php:1414
+#: total-slider.php:1454
 msgid "Saving…"
 msgstr ""
 
-#: total-slider.php:1514
+#: total-slider.php:1569
 msgid "Choose a slide group for this widget to show:"
 msgstr ""
 
-#: total-slider.php:1517
+#: total-slider.php:1572
 msgid "Select a group"
 msgstr ""
 
@@ -568,12 +579,13 @@ msgid "Total Slider"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "http://www.vanpattenmedia.com/"
+msgid "http://www.totalslider.com/"
 msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Allows the user to create, edit and remove ‘slides’ with text and images."
+"The best experience for building sliders, with true WYSIWYG, drag & drop and "
+"more!"
 msgstr ""
 
 #. Author of the plugin/theme
@@ -581,5 +593,5 @@ msgid "Peter Upfold"
 msgstr ""
 
 #. Author URI of the plugin/theme
-msgid "http://vanpattenmedia.com/"
+msgid "http://www.vanpattenmedia.com/"
 msgstr ""
