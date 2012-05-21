@@ -596,7 +596,7 @@ class Total_Slider {
 						date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
 														 '/templates/total-slider-template.js')) , 			/* ver */
 						'all'
-					);
+					); wp_enqueue_script('total-slider-frontend'); // fixes #6
 				}
 			}
 
