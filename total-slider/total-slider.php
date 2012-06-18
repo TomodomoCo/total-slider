@@ -3,7 +3,7 @@
 Plugin Name: Total Slider
 Plugin URI: http://www.totalslider.com/
 Description: The best experience for building sliders, with true WYSIWYG, drag & drop and more!
-Version: 1.0.1
+Version: 1.0.2
 Author: Peter Upfold
 Author URI: http://www.vanpattenmedia.com/
 License: GPLv2 or later
@@ -34,6 +34,12 @@ define('TOTAL_SLIDER_REQUIRED_CAPABILITY', 'total_slider_manage_slides');
 define('TOTAL_SLIDER_MAX_SLIDE_GROUPS', 24);
 define('TOTAL_SLIDER_DEFAULT_CROP_WIDTH', 600);
 define('TOTAL_SLIDER_DEFAULT_CROP_HEIGHT', 300);
+
+/*VPM_33x_CONDITIONAL*/
+if (!version_compare(get_bloginfo('version'), '3.4', '>='))
+{
+	define('TOTAL_SLIDER_33x_WORKAROUND', true);
+}
 
 
 require_once(dirname(__FILE__).'/slides_backend.php');
@@ -903,7 +909,7 @@ class Total_Slider {
 		</div>
 
 		<div id="poststuff">
-			<div class="metabox-holder has-right-sidebar columns-2">
+			<div class="metabox-holder columns-2<?php /*VPM_33x_CONDITIONAL*/ echo (defined('TOTAL_SLIDER_33x_WORKAROUND')) ? ' has-right-sidebar' : ''; ?>">
 
 				<div class="inner-sidebar" id="postbox-container-1">
 					<?php do_meta_boxes('_total_slider_slide_groups', 'side', null);?>
@@ -1005,7 +1011,7 @@ class Total_Slider {
 					<?php do_meta_boxes('_total_slider_slide', 'normal', null);?>
 				</div>
 
-				<div class="metabox-holder has-right-sidebar columns-2">
+				<div class="metabox-holder columns-2<?php /*VPM_33x_CONDITIONAL*/ echo (defined('TOTAL_SLIDER_33x_WORKAROUND')) ? ' has-right-sidebar' : ''; ?>">
 					<div class="inner-sidebar" id="postbox-container-1">
 						<?php do_meta_boxes('_total_slider_slide_bottom', 'side', null);?>
 					</div>
@@ -1467,7 +1473,7 @@ class Total_Slider {
 		?>
 		<style type="text/css" id="total-slider-menu-css">
 		#toplevel_page_total-slider .wp-menu-image img { visibility: hidden; }
-		#toplevel_page_total-slider .wp-menu-image { background: url( <?php echo plugins_url( basename( dirname( __FILE__ ) ) . '/img/slider-icon-switch.png' ) ?> ) 0 90% no-repeat; }
+		#toplevel_page_total-slider .wp-menu-image { background: url( <?php echo plugin_dir_url( __FILE__ ).'img/slider-icon-switch.png'; ?> ) 0 90% no-repeat; }
 		#toplevel_page_total-slider.current .wp-menu-image, #toplevel_page_total-slider.wp-has-current-submenu .wp-menu-image, #toplevel_page_total-slider:hover .wp-menu-image { background-position: top left; }
 		</style>
 		<?php
