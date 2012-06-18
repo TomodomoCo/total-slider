@@ -44,6 +44,39 @@ if (!function_exists('__'))
 
 require_once(dirname(__FILE__).'/slides_backend.php');
 
+// get list of slide groups if asked
+if (!array_key_exists('group', $_GET) && $_GET['action'] == 'getSlideGroups')
+{
+
+	if (!current_user_can(TOTAL_SLIDER_REQUIRED_CAPABILITY))
+	{
+		header('HTTP/1.0 403 Forbidden');
+		header('Content-Type: application/json');
+		echo json_encode(array('error' => __('Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?', 'total_slider')));
+		die();
+	}
+	
+	$groups = get_option('total_slider_slide_groups');
+	
+	$results = array();
+	$i = 0;
+	
+	if (is_array($groups) && count($groups) > 0)
+	{
+		foreach($groups as $group)
+		{
+			$results[$i]['slug'] = $group->slug;
+			$results[$i]['name'] = $group->name;
+			$i++;
+		}		
+	}
+	
+	header('Content-Type: application/json');
+	echo json_encode($results);
+	die();
+
+}
+
 // get the group that we are supposed to be acting on
 if (array_key_exists('group', $_GET)) {
 	$slug = $_GET['group'];
