@@ -789,6 +789,46 @@ class Total_Slider {
 		);
 
 	}
+	
+	public function bootstrapTinyMCEPlugin()
+	{
+	/*
+		Bootstrap the setup of the Total Slider insert button on the rich text
+		editing toolbar, if enabled and desired.
+	*/
+	
+		if ( !current_user_can('edit_posts') && !current_user_can('edit_pages') )
+		{
+			return;
+		}
+		
+		if ( get_user_option('rich_editing') == 'true')
+		{	
+			add_filter('mce_external_plugins', array('Total_Slider', 'registerTinyMCEPlugin'));
+			add_filter('mce_buttons', array('Total_Slider', 'registerTinyMCEButton'));
+		}
+	
+	}
+	
+	public function registerTinyMCEPlugin($plugin_array)
+	{
+	/*
+		Register our TinyMCE plugin JavaScript, so it can be run by TinyMCE.
+	*/
+		$plugin_array['total_slider_insert'] = plugin_dir_url(__FILE__) . 'tinymce-custom/mce/total_slider_insert/editor_plugin.js';
+		return $plugin_array;
+		
+	}
+	
+	public function registerTinyMCEButton($buttons)
+	{
+	/*
+		Add our new Total Slider button to the TinyMCE buttons toolbar.
+	*/	
+		array_push($buttons, 'separator', 'total_slider_insert');
+		return $buttons;
+				
+	}
 
 	/***********	Print functions for each plugin admin page	***********/
 
@@ -1933,6 +1973,7 @@ function total_slider_shortcode($atts, $content, $tag)
 
 register_activation_hook(__FILE__, array('Total_Slider', 'createSlidesOptionField'));
 add_action('init', array('Total_Slider', 'loadTextDomain'));
+add_action('init', array('Total_Slider', 'bootstrapTinyMCEPlugin'));
 add_action('admin_menu', array('Total_Slider', 'addAdminSubMenu'));
 add_action( 'admin_head', array('Total_Slider', 'printAdminCSS'));
 add_action('widgets_init', array('Total_Slider', 'registerAsWidget'));
