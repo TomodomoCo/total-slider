@@ -551,6 +551,26 @@ class Total_Slider {
 </style><?php
 
 	}
+	
+	public function printJSAdminPageReference()
+	{
+	/*
+		When WordPress is displaying the WP-Admin page headers, add a reference to the
+		ajax_interface.php access URL, so we can pass it to TinyMCE popup iframes.
+	*/
+	
+		//TODO: migrate to WP_Ajax_Response
+	
+		?>
+		<script type="text/javascript">
+		//<![CDATA[
+		window._total_slider_ajax = '<?php echo get_admin_url(); ?>admin.php?page=total-slider&total-slider-ajax=true';
+		window._total_slider_jq = '<?php echo includes_url(); ?>js/jquery/jquery.js';
+		//]]>
+		</script>
+		<?php
+		
+	}
 
 	public function enqueueSliderFrontend($context = 'frontend')
 	{
@@ -806,6 +826,7 @@ class Total_Slider {
 		{	
 			add_filter('mce_external_plugins', array('Total_Slider', 'registerTinyMCEPlugin'));
 			add_filter('mce_buttons', array('Total_Slider', 'registerTinyMCEButton'));
+			add_action('admin_head', array('Total_Slider', 'printJSAdminPageReference'));
 		}
 	
 	}

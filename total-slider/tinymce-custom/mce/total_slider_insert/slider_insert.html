@@ -74,7 +74,72 @@
 		border-color:#9a9a9a;
 	}
 	
-	</style>	
+	</style>
+	<script type="text/javascript">
+	//<![CDATA[
+	
+	function execute() {
+		jQuery(document).ready(function($) {
+			$(document).ready(function() {
+				
+				$.ajax({
+				
+					type: 'POST',
+					url: window.parent._total_slider_ajax + '&action=getSlideGroups',
+					dataType: 'json',
+					
+					success: function(data, textStatus, jqXHR) {
+						
+						// hide the loading area
+						$('.loading').hide();
+						$('.select-group').show();
+						$('#groups').show();
+						
+						$('#groups').removeAttr('disabled');
+
+						var options = $('#groups').attr('options');
+
+						$.each(data, function(index, dataEl) {
+							$('#groups').append('<option value="' + dataEl.slug + '">' + dataEl.name + '</option');
+						});									
+						
+						// enable the button
+						$('.primary-button').removeClass('button-disabled');
+						$('.primary-button').removeAttr('disabled');
+					}
+									
+				});
+				
+			});
+		});
+	}
+	
+	// bring in the jQuery
+	var head = document.getElementsByTagName('head')[0];
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	
+	script.onload = script.onreadystatechange = function() {
+	
+		if (script.readyState)
+		{
+			if (script.readyState === 'complete' || script.readyState === 'loaded') {
+				script.onreadystatechange = null;
+				execute();				
+			}			
+		}
+		else {
+			execute();
+		}	
+		
+	};
+	
+	script.src = window.parent._total_slider_jq;
+	
+	head.appendChild(script);
+
+	//]]>
+	</script>
 </head>
 <body id="total_slider_insert" role="application">
 	<span class="mceVoiceLabel" id="app_label" style="display:none;">Insert Slider</span>
@@ -101,5 +166,6 @@
 		<input type="submit" value="Insert" class="primary-button button-disabled" disabled="disabled" />
 	</div>
 </form>
+
 </body>
 </html>

@@ -7,7 +7,7 @@
 				ed.windowManager.open({
 					file : url + '/slider_insert.html',
 					width : 300,
-					height : 160,
+					height : 190,
 					inline : 1
 				}, {
 					plugin_url : url
