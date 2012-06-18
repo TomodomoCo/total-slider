@@ -2,17 +2,104 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>Insert Slider</title>
+	<style type="text/css">
+	body {
+		background-color:#E5E5E5;
+		font-family:sans-serif;
+		font-size:12px;	
+		margin:5px;
+		padding:5px;
+	}
+	
+	.howto
+	{
+		font-style:italic;
+		color:#666;		
+	}
+	
+	h1 {
+		font-size:13px;
+		margin:5px;
+	}
+	
+	.primary-button {
+		background-color:#21759B;
+		border-bottom-color: #13455B;
+		border-bottom-left-radius: 11px;
+		border-bottom-right-radius: 11px;
+		border-bottom-style: solid;
+		border-bottom-width: 1px;
+		border-left-color: #13455B;
+		border-left-style: solid;
+		border-left-width: 1px;
+		border-right-color: #13455B;
+		border-right-style: solid;
+		border-right-width: 1px;
+		border-top-color: #13455B;
+		border-top-left-radius: 11px;
+		border-top-right-radius: 11px;
+		border-top-style: solid;
+		border-top-width: 1px;
+		color: #EAF2FA;
+		font-weight:bold;
+		width:60px;
+	}
+	
+	select
+	{
+		min-width:250px;
+	}
+	
+	.deletion
+	{
+		color:red;
+		outline-color:red;
+		line-height:25px;
+	}
+	
+	.loading
+	{
+		text-align: center;
+	}
+	
+	.select-group
+	{
+		display:none;
+	}
+	
+	.button-disabled
+	{
+		background-color:rgba(178,178,178,0.94);
+		color:#d7d7d7;
+		border-color:#9a9a9a;
+	}
+	
+	</style>	
 </head>
 <body id="total_slider_insert" role="application">
 	<span class="mceVoiceLabel" id="app_label" style="display:none;">Insert Slider</span>
-<form action="#">
-	<p>Choose a slide group to show:</p>
-	<select name="groups" id="groups">
-		<option value="dummy">Lorem</option>
-		<option value="dummy2">Ipsum</option>
-	</select>
 	
-	<input type="submit" value="Insert" class="primary-button" />
+	<h1>Insert Total Slider</h1>
+	
+<form action="#">
+	<div style="padding:10px; margin-bottom:25px;">
+		
+		<p class="loading"><img src="../../../img/loadingAnimation.gif" alt="Loading" title="Loading" />
+		
+		<div class="select-group">
+			<p class="howto">Choose a slide group to show:</p>
+			<select name="groups" id="groups" style="display:none">
+			</select>
+		</div>
+		
+	</div>
+	
+	<div style="float:left">
+		<a href="#" class="deletion">Cancel</a>	
+	</div>
+	<div style="float:right">
+		<input type="submit" value="Insert" class="primary-button button-disabled" disabled="disabled" />
+	</div>
 </form>
 </body>
 </html>
