@@ -124,7 +124,7 @@ class Slide_Groups_Table extends WP_List_Table {
 	*/
 		
 		$actions = array(
-			'remove'			=> 'Remove'
+			'remove'			=> __('Remove', 'total_slider')
 		);
 		
 		

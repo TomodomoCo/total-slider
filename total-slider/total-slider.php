@@ -3,7 +3,7 @@
 Plugin Name: Total Slider
 Plugin URI: http://www.totalslider.com/
 Description: The best experience for building sliders, with true WYSIWYG, drag & drop and more!
-Version: 1.0.2
+Version: 1.0.3
 Author: Peter Upfold
 Author URI: http://www.vanpattenmedia.com/
 License: GPLv2 or later
@@ -350,6 +350,41 @@ class Total_Slider {
 		return true;
 
 	}
+	
+	public function shortcodeHandler($atts, $content, $tag)
+	{
+	/*
+		Create a Total Slider WP_Widget from a [totalslider] shortcode in
+		the post body.
+	*/
+	
+		extract( shortcode_atts( array(
+			'group' => NULL
+		), $atts ));
+		
+		// require a slide group
+		if (empty($group))
+		{
+			return __('<strong>Total Slider:</strong> No slide group selected to show.', 'total_slider');	
+		}
+		
+		// require a valid slide group
+		if (!get_option('total_slider_slides_' . Total_Slider::sanitizeSlideGroupSlug($group) ) )
+		{
+			return __('<strong>Total Slider:</strong> Could not find the selected slide group to show. Does it still exist?', 'total_slider');
+		}
+		
+		ob_start();
+		
+		the_widget('Total_Slider_Widget', array('groupSlug' => Total_Slider::sanitizeSlideGroupSlug($group) ) );
+		
+		$output = ob_get_contents();
+		ob_end_clean();
+		
+		return $output;
+	
+	
+	}	
 
 	/***********	Control passing, runtime UI setup, enqueuing etc.	***********/
 
@@ -1889,6 +1924,11 @@ class Total_Slider_Widget extends WP_Widget {
 
 };
 
+function total_slider_shortcode($atts, $content, $tag)
+{
+	return Total_Slider::shortcodeHandler($atts, $content, $tag);
+}
+
 /******************************************** WordPress actions ********************************************/
 
 register_activation_hook(__FILE__, array('Total_Slider', 'createSlidesOptionField'));
@@ -1898,6 +1938,8 @@ add_action( 'admin_head', array('Total_Slider', 'printAdminCSS'));
 add_action('widgets_init', array('Total_Slider', 'registerAsWidget'));
 add_action('admin_init', array('Total_Slider', 'passControlToAjaxHandler'));
 add_action('admin_head-media-upload-popup', array('Total_Slider', 'printUploaderJavaScript'));
+
+add_shortcode('totalslider', 'total_slider_shortcode');
 
 add_action('wp_enqueue_scripts', array('Total_Slider', 'enqueueSliderFrontend'));
 

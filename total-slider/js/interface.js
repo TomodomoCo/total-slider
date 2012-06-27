@@ -365,7 +365,7 @@ jQuery(document).ready(function() {
 		jQuery('#slide-preview-title').text(jQuery(this).val());
 		if (jQuery(this).val() == "")
 		{
-			jQuery('#' + editingSlideSortButton + '_text').text('untitled');
+			jQuery('#' + editingSlideSortButton + '_text').text(_total_slider_L10n.newSlideTemplateUntitled);
 		}
 		else {
 			jQuery('#' + editingSlideSortButton + '_text').text(jQuery(this).val());
