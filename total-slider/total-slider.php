@@ -3,7 +3,7 @@
 Plugin Name: Total Slider
 Plugin URI: http://www.totalslider.com/
 Description: The best experience for building sliders, with true WYSIWYG, drag & drop and more!
-Version: 1.0.3
+Version: 1.0.4
 Author: Peter Upfold
 Author URI: http://www.vanpattenmedia.com/
 License: GPLv2 or later
@@ -413,10 +413,26 @@ class Total_Slider {
 	*/
 		if ( array_key_exists( 'page', $_GET ) && $_GET['page'] == 'total-slider' )
 		{
+		
+			// load .dev.js if available, if SCRIPT_DEBUG is true in wp-config.php
+			$maybeDev = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? 'dev.' : '';		
 
 			// get our JavaScript on
+			wp_register_script(
+			
+				'total-slider-interface', 									/* handle */
+				plugin_dir_url( __FILE__ ).'js/interface.'.$maybeDev.'js',	/* src */
+				array(
+					'jquery', 'jquery-ui-draggable', 'jquery-ui-droppable',
+					'jquery-ui-sortable'
+				),															/* deps */
+				date("YmdHis", @filemtime( plugin_dir_path( __FILE__ ) .
+							'js/interface.'.$maybeDev.'js'	) ),			/* ver */
+				true														/* in_footer */		
+			);
+			
 			wp_enqueue_script('jquery');
-			wp_enqueue_script('jquery-ui');
+			//wp_enqueue_script('jquery-ui');
 
 			wp_enqueue_script('wp-ajax-response');
 
@@ -431,10 +447,11 @@ class Total_Slider {
 			wp_enqueue_script('jquery-ui-droppable');
 			wp_enqueue_script('jquery-ui-sortable');
 
-			wp_enqueue_style( 'wp-pointer' );
-			wp_enqueue_script( 'wp-pointer' );
+			wp_enqueue_style('wp-pointer');
+			wp_enqueue_script('wp-pointer');
 
-			wp_register_script('total-slider-interface', plugin_dir_url( __FILE__ ).'js/interface.js');
+			
+			
 			wp_enqueue_script('total-slider-interface');
 
 			wp_localize_script('total-slider-interface', '_total_slider_L10n', Total_Slider::jsL10n());
@@ -562,6 +579,9 @@ class Total_Slider {
 		If $context is 'backend', we will load the CSS only and not the JS.
 
 	*/
+	
+		// load .dev.js if available, if SCRIPT_DEBUG is true in wp-config.php
+		$maybeDev = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? 'dev.' : '';
 
 		$generalOptions = get_option('total_slider_general_options');
 
@@ -587,11 +607,11 @@ class Total_Slider {
 
 			// enqueue the user's custom CSS template
 			wp_register_style(
-				'total-slider-frontend',																		/* handle */
-				$themeURL . '/total-slider-templates/total-slider-template.css',								/* src */
-				array(),																					/* deps */
-				date("Ymd", @filemtime($themePath . '/total-slider-templates/total-slider-template.css') ) , 	/* ver */
-				'all'																						/* media */
+				'total-slider-frontend',																			/* handle */
+				$themeURL . '/total-slider-templates/total-slider-template.css',									/* src */
+				array(),																							/* deps */
+				date("YmdHis", @filemtime($themePath . '/total-slider-templates/total-slider-template.css') ) , 	/* ver */
+				'all'																								/* media */
 			);
 
 			wp_enqueue_style('total-slider-frontend');
@@ -599,45 +619,50 @@ class Total_Slider {
 			if ($context != 'backend')
 			{
 				// is there a custom JS to use?
-				if ( @file_exists($themePath . '/total-slider-templates/total-slider-template.js') )
+				if ( @file_exists($themePath . '/total-slider-templates/total-slider-template.'.$maybeDev.'js') )
 				{
 
 					// enqueue the user's custom JS template
 					wp_register_script(
 						'total-slider-frontend',																		/* handle */
-						$themeURL . '/total-slider-templates/total-slider-template.js',									/* src */
-						array(),																					/* deps */
-						date("Ymd", @filemtime($themePath . '/total-slider-templates/total-slider-template.js') ) , 	/* ver */
-						'all'																						/* media */
+						$themeURL . '/total-slider-templates/total-slider-template.'.$maybeDev.'js',					/* src */
+						array('jquery'),																				/* deps */
+						date("YmdHis", @filemtime($themePath .
+												'/total-slider-templates/total-slider-template.'.$maybeDev.'js') ) ,	/* ver */
+						true																							/* in_footer */
 					);
 
 					wp_enqueue_script('total-slider-frontend');
 
 				}
-				else {
-					// use the default JS
+				else if ( @file_exists($themePath . '/total-slider-templates/total-slider-template.js') )
+				{
+					// dev.js doesn't exist, but .js does
 					wp_register_script(
-						'total-slider-jquery-cycle-lite',															/* handle */
-						plugin_dir_url( __FILE__ ) . 'js/jquery.cycle.lite.js',									/* src */
-						array('jquery'),																		/* deps */
-						date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
-														 '/js/jquery.cycle.lite.js')) , 						/* ver */
-						'all'
+						'total-slider-frontend',																		/* handle */
+						$themeURL . '/total-slider-templates/total-slider-template.js',									/* src */
+						array('jquery'),																				/* deps */
+						date("YmdHis", @filemtime($themePath .
+												'/total-slider-templates/total-slider-template.js') ) ,					/* ver */
+						true																							/* in_footer */
 					);
 
-
-					wp_enqueue_script('total-slider-jquery-cycle-lite');
-
+					wp_enqueue_script('total-slider-frontend');					
+				}
+				else {
+					// use the default JS
 
 					// and the frontend
 					wp_register_script(
-						'total-slider-frontend',																/* handle */
-						plugin_dir_url( __FILE__ ) . 'templates/total-slider-template.js',					/* src */
-						array('jquery', 'total-slider-jquery-cycle-lite'),									/* deps */
-						date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
-														 '/templates/total-slider-template.js')) , 			/* ver */
-						'all'
-					); wp_enqueue_script('total-slider-frontend'); // fixes #6
+						'total-slider-frontend',															/* handle */
+						plugin_dir_url( __FILE__ ) . 'templates/total-slider-template.'.$maybeDev.'js',		/* src */
+						array('jquery'),																	/* deps */
+						date("YmdHis", @filemtime(plugin_dir_path( __FILE__ ) .
+														 '/templates/total-slider-template.'.$maybeDev.'js')) , 			/* ver */
+						true																				/* in_footer */
+					);
+					
+					wp_enqueue_script('total-slider-frontend');
 				}
 			}
 
@@ -646,11 +671,11 @@ class Total_Slider {
 
 			// enqueue our defaults
 			wp_register_style(
-				'total-slider-frontend',																		/* handle */
+				'total-slider-frontend',																	/* handle */
 				plugin_dir_url( __FILE__ ) . 'templates/total-slider-template.css',							/* src */
 				array(),																					/* deps */
-				date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
-													 '/templates/total-slider-template.css')) , 				/* ver */
+				date("YmdHis", @filemtime(plugin_dir_path( __FILE__ ) .
+													 '/templates/total-slider-template.css')) , 			/* ver */
 				'all'																						/* media */
 			);
 
@@ -658,27 +683,15 @@ class Total_Slider {
 
 			if ($context != 'backend')
 			{
-				// also bring in the jquery cycle lite
-
-				wp_register_script(
-					'total-slider-jquery-cycle-lite',															/* handle */
-					plugin_dir_url( __FILE__ ) . 'js/jquery.cycle.lite.js',									/* src */
-					array('jquery'),																		/* deps */
-					date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
-													 '/js/jquery.cycle.lite.js')) , 						/* ver */
-					'all'
-				);
-
-				wp_enqueue_script('total-slider-jquery-cycle-lite');
 
 				// and the frontend
 				wp_register_script(
-					'total-slider-frontend',																/* handle */
-					plugin_dir_url( __FILE__ ) . 'templates/total-slider-template.js',					/* src */
-					array('jquery', 'total-slider-jquery-cycle-lite'),									/* deps */
-					date("Ymd", @filemtime(plugin_dir_path( __FILE__ ) .
-													 '/templates/total-slider-template.js')) , 			/* ver */
-					'all'
+					'total-slider-frontend',															/* handle */
+					plugin_dir_url( __FILE__ ) . 'templates/total-slider-template.'.$maybeDev.'js',		/* src */
+					array('jquery'),																	/* deps */
+					date("YmdHis", @filemtime(plugin_dir_path( __FILE__ ) .
+													 '/templates/total-slider-template.'.$maybeDev.'js')) , 			/* ver */
+					true																				/* in_footer */
 				);
 
 				wp_enqueue_script('total-slider-frontend');
