@@ -100,7 +100,7 @@
 						var options = $('#groups').attr('options');
 
 						$.each(data, function(index, dataEl) {
-							$('#groups').append('<option value="' + dataEl.slug + '">' + dataEl.name + '</option');
+							$('#groups').append('<option value="' + dataEl.slug + '">' + dataEl.name + '</option>');
 						});									
 						
 						// enable the button
@@ -108,6 +108,17 @@
 						$('.primary-button').removeAttr('disabled');
 					}
 									
+				});
+				
+				// form submit
+				$('#sgform').submit(function(e) {
+					e.preventDefault();
+					var selectedSlug = $('#groups option:selected').val();
+					// send to TMCE
+					window.parent.tinyMCE.execCommand('mceInsertContent',false,'[totalslider slidegroup="' + selectedSlug + '"]');
+					// close window
+					//TODO
+					//window.paren
 				});
 				
 			});
@@ -146,7 +157,7 @@
 	
 	<h1>Insert Total Slider</h1>
 	
-<form action="#">
+<form id="sgform" action="#">
 	<div style="padding:10px; margin-bottom:25px;">
 		
 		<p class="loading"><img src="../../../img/loadingAnimation.gif" alt="Loading" title="Loading" />
