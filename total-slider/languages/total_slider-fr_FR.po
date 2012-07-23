@@ -1,0 +1,598 @@
+# Copyright (C) 2012 Total Slider
+# This file is distributed under the same license as the Total Slider package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Total Slider 1.0.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/total-slider\n"
+"POT-Creation-Date: 2012-06-27 15:17:07+00:00\n"
+"PO-Revision-Date: 2012-06-27 16:29+0100\n"
+"Last-Translator: Peter Upfold <peter@vanpattenmedia.com>\n"
+"Language-Team: Frédéric Serva <fred.serva@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2;plural=n>2\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: ajax_interface.php:59
+msgid "You did not supply the slide group to which this action should be applied."
+msgstr "Vous n'avez pas indiqué à quel groupe cette action doit être appliquée."
+
+#: ajax_interface.php:84
+#: ajax_interface.php:193
+#: ajax_interface.php:244
+#: ajax_interface.php:364
+#: ajax_interface.php:418
+msgid "Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?"
+msgstr "Vous n'avez pas le niveau de permissions suffisant. Etes-vous sûr d'être toujours connecté à l'administration de WordPress ?"
+
+#: ajax_interface.php:96
+#: ajax_interface.php:128
+#: ajax_interface.php:257
+#: ajax_interface.php:299
+msgid "You have not supplied all of the required data."
+msgstr "Vous n'avez pas assemblé tous les éléments nécessaires."
+
+#: ajax_interface.php:136
+#: ajax_interface.php:307
+msgid "Invalid URL format for the specified background URL."
+msgstr "Format d'URL invalide."
+
+#: ajax_interface.php:150
+#: ajax_interface.php:321
+msgid "The post ID for the specified slide link is not valid."
+msgstr "L'ID de l'article n'est pas valide pour cette diapositive."
+
+#: ajax_interface.php:159
+#: ajax_interface.php:330
+msgid "Invalid URL format for the specified link URL."
+msgstr "Format d'URL invalide pour le lien indiqué."
+
+#: ajax_interface.php:181
+msgid "The create slide operation failed at the server."
+msgstr "Le processus de création de la diapositive n'a pas abouti sur ce serveur."
+
+#: ajax_interface.php:202
+#: ajax_interface.php:213
+#: ajax_interface.php:268
+msgid "You have not supplied the ID to look up."
+msgstr "Vous n'avez pas renseigné l'ID à chercher."
+
+#: ajax_interface.php:231
+msgid "Specified slide ID could not be found. It may have been already deleted."
+msgstr "L'ID de la diapositive choisie n'a pas été trouvée. Elle a peut-être déjà été supprimée."
+
+#: ajax_interface.php:350
+msgid "The update slide operation failed at the server."
+msgstr "L'opération de mise à jour de la diapositive n'a pas abouti sur ce serveur."
+
+#: ajax_interface.php:373
+#: ajax_interface.php:380
+msgid "The new slide order was not specified, or there were no items within it."
+msgstr "Le nouvel ordre des diapositives n'a pas été spécifié, ou ne contenait aucun élément."
+
+#: ajax_interface.php:394
+msgid "The new slide order is missing one or more current slides. Cannot save the new order, or slides would be lost. Please reload the page to ensure all current slides are in the sorting area and try sorting again."
+msgstr "Il manque une ou plusieurs diapositives dans le nouvel ordre des diapositives. La sauvegarde du nouvel ordre est impossible, sinon les diapositives pourraient être perdues. Rafraîchissez la page pour vous assurer que les diapositives sont dans la zone d'ordre et essayez à nouveau de les réarranger."
+
+#: ajax_interface.php:406
+msgid "The sort slide operation failed at the server."
+msgstr "Le processus de réarrangerment des diapositives n'a pas abouti sur ce serveur."
+
+#: ajax_interface.php:427
+#: ajax_interface.php:438
+msgid "You have not supplied the ID to delete."
+msgstr "Vous n'avez pas indiqué quelle ID doit être supprimée."
+
+#: ajax_interface.php:453
+msgid "The delete slide operation failed at the server. Perhaps it has already been deleted by someone else."
+msgstr "L'opération de suppression de la diapositive n'a pas abouti sur ce serveur. Peut-être a-t-elle déjà été supprimée par quelqu'un d'autre."
+
+#: slide_groups_table.php:39
+msgid "slide group"
+msgstr "Groupe"
+
+#: slide_groups_table.php:40
+msgid "slide groups"
+msgstr "Groupes"
+
+#: slide_groups_table.php:54
+#: total-slider.php:937
+msgid "Group Name"
+msgstr "Nom du groupe"
+
+#: slide_groups_table.php:55
+#: total-slider.php:1006
+msgid "Slides"
+msgstr "Diapositives"
+
+#: slide_groups_table.php:82
+#: total-slider.php:1009
+msgid "Edit"
+msgstr "Editer"
+
+#: slide_groups_table.php:84
+msgid ""
+"Are you sure you want to delete this slide group?\\n"
+"\\n"
+"This action cannot be undone."
+msgstr ""
+"Etes-vous sûr de vouloir supprimer ce groupe ?\\n"
+"\\n"
+"Cette action ne peut être annulée."
+
+#: slide_groups_table.php:85
+msgid "Remove"
+msgstr "Supprimer"
+
+#: slide_groups_table.php:199
+msgid "Click &lsquo;Add New&rsquo; to create a new group of slides."
+msgstr "Cliquez sur &lsquo;Ajouter&rsquo; pour créer un nouveau groupe de diapositives."
+
+#: slides_backend.php:231
+msgid "The specified slide group does not exist."
+msgstr "Le groupe spécifié n'existe pas."
+
+#: total-slider.php:192
+msgid "Please visit this page to continue"
+msgstr "Visitez cette page pour aller plus loin"
+
+#: total-slider.php:368
+msgid "<strong>Total Slider:</strong> No slide group selected to show."
+msgstr "<strong>Total Slider :</strong> Aucun groupe sélectionné."
+
+#: total-slider.php:374
+msgid "<strong>Total Slider:</strong> Could not find the selected slide group to show. Does it still exist?"
+msgstr "<strong>Total Slider :</strong> Impossible de charger le groupe choisi. Etes-vous sûr qu'il existe ?"
+
+#: total-slider.php:460
+#: total-slider.php:461
+msgid "Slider"
+msgstr "Slider"
+
+#: total-slider.php:473
+#: total-slider.php:474
+#: total-slider.php:704
+#: total-slider.php:923
+msgid "Slide Groups"
+msgstr "Groupes"
+
+#: total-slider.php:485
+#: total-slider.php:486
+#: total-slider.php:1150
+msgid "Settings"
+msgstr "Réglages"
+
+#: total-slider.php:511
+msgid "Need help?"
+msgstr "Besoin d'aide ?"
+
+#: total-slider.php:512
+msgid "The help menu will walk you through creating new groups, adding slides, and getting them to display in your theme. It’s a great place to start!"
+msgstr "Le menu d'aide vous explique comment créer de nouveaux groupes, ajouter des diapositives et effectuer les réglages pour les faire apparaître sur votre site. Parfait pour commencer !"
+
+#: total-slider.php:699
+msgid "Each slide group contains a number of slides that will appear, one after another, when you publish your slides on your site."
+msgstr "Chaque groupe contient un certain nombre de diapositives qui apparaîtront, l'une après l'autre, après que vous l'ayez publié sur votre site."
+
+#: total-slider.php:700
+msgid "You can make up to %d slide groups, which you can use to have different slideshows on different parts of your site."
+msgstr "Vous pouvez créer jusqu'à %d groupes, que vous pourrez utilisez de manière à avoir des slideshows différents à des endroits distincts sur votre site."
+
+#: total-slider.php:709
+msgid "Once you have clicked ‘Edit’ on the desired slide group, you’ll see all of its slides."
+msgstr "Une fois que vous aurez cliqué sur 'Editer' pour le groupe choisi, vous verrez toutes les diapositives qu'il contient."
+
+#: total-slider.php:710
+msgid "Click on any slide to make changes. You can also drag and drop the title and description to place them anywhere over the background image."
+msgstr "Cliquez sur une diapositive pour la modifier. Vous pouvez également cliquer et déplacer les titre et description pour les placer là ou vous le désirez sur l'image de fond."
+
+#: total-slider.php:711
+msgid "Simply drag and drop to re-order the slides within the group. The new order is saved immediately."
+msgstr "Cliquez et déplacez pour réarranger les diapositives à l'intérieur du groupe. Le nouvel ordre sera mis à jour immédiatement."
+
+#: total-slider.php:715
+msgid "Editing"
+msgstr "Edition"
+
+#: total-slider.php:720
+msgid "Once you are happy with your new slide group, you need to publish it for it to show up on your site."
+msgstr "Une fois que vous serez satisfait de votre groupe de diapositives, vous devrez le publier pour le faire apparaître sur votre site."
+
+#: total-slider.php:721
+msgid "To do this, your theme needs to support Widgets, and have a widget area in the theme where you’d like the slides to show up."
+msgstr "Pour ce faire, votre thème doit accepter les widgets, et posséder une barre latérale là où vous désirez que le slider apparaisse."
+
+#: total-slider.php:722
+msgid "Go to <a href=\"widgets.php\">Appearance » Widgets</a> and drag a <strong>Total Slider</strong> widget to the desired sidebar. In the widget’s settings, choose the slide group you would like to show and click <em>Save</em>."
+msgstr "Allez à <a href=\"widgets.php\">Apparence » Widgets</a> et tirez un widget <strong>Total Slider</strong> vers la barre latérale de votre choix. Dans les paramètres du widget, choisissez un groupe et cliquez sur <em>Enregistrez</em>."
+
+#: total-slider.php:728
+msgid "Publishing"
+msgstr "Publication"
+
+#: total-slider.php:735
+msgid "For the best visual results, crop your background images to the size used by your slide template — %d×%d"
+msgstr "Pour obtenir de meilleurs résultats visuels, retaillez vos images de fond aux dimensions utilisée par votre template — %d×%d"
+
+#: total-slider.php:736
+msgid "Experiment with dragging and dropping the title and description over different parts of the background to achieve a different visual effect."
+msgstr "Faîtes des essais en déplaçant titre et description à différents endroits sur l'image de fond pour obtenir ce qui vous semblera être le meilleur effet visuel."
+
+#: total-slider.php:737
+msgid "Keep your site fresh — create multiple slide groups ahead of time, then simply edit the <strong>Total Slider</strong> widget to switch over to display another slide group every now and then."
+msgstr "Animez votre site — Créez des groupes puis mettez-les en place grâce au widget <strong>Total Slider</strong>, qui vous permettra d'alterner vos groupes quand vous le souhaiterez."
+
+#: total-slider.php:738
+msgid "Completely customise the look of your slides — create a <em>total-slider-templates</em> subfolder in your theme. You can use our <em>templates</em> folder in the plugin as a starting point."
+msgstr "Personnalisez le look de vos diapositives — Créez un dossier <em>total-slider-templates</em> dans votre thème. Vous pourrez utiliser ce dossier <em>templates</em> dans l'extension."
+
+#: total-slider.php:743
+msgid "Hints &amp; Tips"
+msgstr "Trucs et conseils"
+
+#: total-slider.php:760
+msgid ""
+"You are still editing the current slide. Switching to a different slide will lose your changes.\n"
+"\n"
+"Do you want to lose your changes?"
+msgstr ""
+"Vous êtes en train d'éditer une diapositive. En choisir une autre entraînera l'annulation de toutes vos modifications.\n"
+"\n"
+"Etes-vous sûr que c'est ce que vous désirez ?"
+
+#: total-slider.php:761
+msgid "You are still editing the current slide. Leaving this page will lose your changes."
+msgstr "Vous êtes en train d'éditer une diapositive. Quitter cette page entraînera l'annulation de toutes vos modifications."
+
+#: total-slider.php:766
+msgid ""
+"You will lose any unsaved changes.\n"
+"\n"
+"Are you sure you want to lose these changes?"
+msgstr ""
+"Vous allez perdre toutes les modifications non sauvegardées.\n"
+"\n"
+"En êtes-vous sûr ?"
+
+#: total-slider.php:767
+msgid ""
+"Are you sure you want to delete this slide?\n"
+"\n"
+"This action cannot be undone."
+msgstr ""
+"Etes-vous sûr de vouloir supprimer cette diapositive ?\\n"
+"\\n"
+"Cette action ne peut être annulée."
+
+#: total-slider.php:768
+msgid ""
+"Please correct the following errors with the form.\n"
+"\n"
+msgstr ""
+"Merci de corriger ces erreurs :\n"
+"\n"
+
+#: total-slider.php:769
+msgid "You must enter a slide title."
+msgstr "Vous devez choisir un titre à la diapositive."
+
+#: total-slider.php:770
+msgid "You must enter a slide description."
+msgstr "Vous devez écrire une description."
+
+#: total-slider.php:771
+msgid "The supplied background image URL is not a valid URL."
+msgstr "L'URL de l'image de fond choisie n'est pas une URL valide."
+
+#: total-slider.php:772
+msgid "The supplied external link is not a valid URL."
+msgstr "Le lien externe spécifié n'est pas une URL valide."
+
+#: total-slider.php:773
+msgid "The supplied post ID for the slide link is not valid."
+msgstr "L'ID de l'article spécifié pour le lien de la diapositive n'est pas valide."
+
+#: total-slider.php:774
+msgid "The new order will be saved when you save the new slide."
+msgstr "Le nouvel ordre sera sauvegardé lorsque vous aurez enregistré la nouvelle diapositive."
+
+#: total-slider.php:775
+msgid "Sorry, unable to resort the slides."
+msgstr "Désolé, impossible de réarranger les diapositives."
+
+#: total-slider.php:776
+#: total-slider.php:1392
+msgid "untitled"
+msgstr "sans titre"
+
+#: total-slider.php:777
+#: total-slider.php:1394
+msgid "(no text)"
+msgstr "(pas de texte)"
+
+#: total-slider.php:778
+#: total-slider.php:1355
+msgid "Move"
+msgstr "Déplacer"
+
+#: total-slider.php:779
+#: total-slider.php:1356
+msgid "Delete"
+msgstr "Supprimer"
+
+#: total-slider.php:780
+msgid "No post selected."
+msgstr "Aucun article choisi."
+
+#: total-slider.php:781
+#: total-slider.php:1490
+msgid "Save"
+msgstr "Enregistrement"
+
+#: total-slider.php:782
+msgid "Sorry, unable to get that slide"
+msgstr "Désolé, impossible d'utiliser cette diapositive"
+
+#: total-slider.php:783
+msgid "Slide saved."
+msgstr "Diapositive enregistrée."
+
+#: total-slider.php:784
+msgid "Upload slide background image"
+msgstr "Téléchargez une image pour votre diapositive"
+
+#: total-slider.php:785
+msgid "Sorry, unable to save the new slide."
+msgstr "Désolé, impossible de sauvegarder une nouvelle diapositive."
+
+#: total-slider.php:786
+msgid "Unable to delete -- could not get the slide ID for the current slide."
+msgstr "Suppression impossible -- Impossible de déterminer l'ID de la diapositive."
+
+#: total-slider.php:787
+msgid "Sorry, unable to delete the slide."
+msgstr "Désolé, impossible de supprimer la diapositive."
+
+#: total-slider.php:811
+#: total-slider.php:1010
+msgid "Credits"
+msgstr "Crédits"
+
+#: total-slider.php:923
+#: total-slider.php:1034
+msgid "Add New"
+msgstr "Ajouter"
+
+#: total-slider.php:926
+#: total-slider.php:1037
+msgid "Sorry, this interface requires JavaScript to function."
+msgstr "Désolé, cette interface a besoin de JavaScript pour fonctionner."
+
+#: total-slider.php:927
+msgid "You will need to enable JavaScript for this page before many of the controls below will work."
+msgstr "Vous devez activer JavaScript pour cette page si vous voulez que les contrôles de paramètres ci-dessus fonctionnent."
+
+#: total-slider.php:932
+msgid "Add a Slide Group"
+msgstr "Ajouter un groupe"
+
+#: total-slider.php:941
+msgid "Add Slide Group"
+msgstr "Ajouter un groupe"
+
+#: total-slider.php:942
+#: total-slider.php:1491
+msgid "Cancel"
+msgstr "Annuler"
+
+#: total-slider.php:954
+msgid ""
+"Are you sure you want to delete these slide groups?\\n"
+"\\n"
+"This action cannot be undone."
+msgstr ""
+"Etes-vous sûr de vouloir supprimer ce groupe ?\\n"
+"\\n"
+"Cette action ne peut être annulée."
+
+#: total-slider.php:981
+msgid "This page is not accessible to your user."
+msgstr "Cette page ne vous est pas accessible."
+
+#: total-slider.php:989
+msgid "No Slide Group selected."
+msgstr "Aucun groupe sélectionné."
+
+#: total-slider.php:999
+msgid "Could not load the selected Slide Group. Does it exist?"
+msgstr "Impossible de charger le groupe choisi. Etes-vous sûr qu'il existe ?"
+
+#: total-slider.php:1007
+msgid "Preview"
+msgstr "Prévisualisation"
+
+#: total-slider.php:1033
+msgid "‘%s’ Slides"
+msgstr "‘%s’ Diapositives"
+
+#: total-slider.php:1038
+msgid "You will need to enable JavaScript for this page before any of the controls below will work."
+msgstr "Vous devez activer JavaScript pour cette page si vous voulez que les contrôles de paramètres ci-dessus fonctionnent."
+
+#: total-slider.php:1077
+msgid "You do not have permission to manage Slider settings."
+msgstr "Vous n'avez pas l'autorisation d'accéder aux paramétrages de Slider."
+
+#: total-slider.php:1092
+msgid "Unable to confirm the form’s security."
+msgstr "Impossible de certifier la sécurité de ce formulaire."
+
+#: total-slider.php:1117
+msgid "Required role level saved."
+msgstr "Choix du rôle minimum enregistré."
+
+#: total-slider.php:1127
+#: total-slider.php:1138
+msgid "Advanced settings saved."
+msgstr "Paramètres avancés enregistrés."
+
+#: total-slider.php:1171
+msgid "Required role level"
+msgstr "Rôle minimum nécessaire"
+
+#: total-slider.php:1200
+msgid "Users belonging to checked roles will be able to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the Total Slider widget, which makes the slides show up on your site."
+msgstr "Les utilisateurs dont le rôle est celui coché ci-dessus auront la permission de créer, éditer et supprimer des diapositives. Seuls les utilisateurs ayant les autorisations d'accès aux widgets seront habilités à activer, désactiver ou déplacer le widget Total Slider, nécessaire pour faire apparaître le slider sur votre site."
+
+#: total-slider.php:1207
+msgid "Advanced Settings"
+msgstr "Réglages avancés"
+
+#: total-slider.php:1213
+msgid "Load JS & CSS"
+msgstr "Activation des fichiers JS et CSS"
+
+#: total-slider.php:1219
+msgid "Automatically load slide template CSS and JavaScript into my theme"
+msgstr "Activation automatique des fichiers CSS et JavaScript dans mon thème"
+
+#: total-slider.php:1221
+msgid "Uncheck for manual control over how slide template CSS and JavaScript are included in your theme."
+msgstr "Décochez cette case pour manipuler vous-même la manière dont ces fichiers CSS et JavaScript seront incorporés au thème."
+
+#: total-slider.php:1230
+msgid "Save Changes"
+msgstr "Enregistrer les modifications"
+
+#: total-slider.php:1257
+#: total-slider.php:1266
+msgid "Choose ‘Edit Image’ and crop to %d×%d for best results."
+msgstr "Choisissez ‘Editer l'image’ et retaillez-la aux dimensions %d×%d pour améliorer le rendu."
+
+#: total-slider.php:1260
+#: total-slider.php:1269
+msgid "Use as background image"
+msgstr "Utiliser comme image"
+
+#: total-slider.php:1294
+msgid "Development: <a href=\"http://peter.upfold.org.uk/\">Peter Upfold</a>"
+msgstr "Développement : <a href=\"http://peter.upfold.org.uk/\">Peter Upfold</a>"
+
+#: total-slider.php:1296
+msgid "Additional UI: <a href=\"http://www.vanpattenmedia.com/\">Chris Van Patten</a>"
+msgstr "Eléments d'interface  (UI) : <a href=\"http://www.vanpattenmedia.com/\">Chris Van Patten</a>"
+
+#: total-slider.php:1298
+msgid "Icons: <a href=\"http://www.field2.com/\">Ben Dunkle</a>"
+msgstr "Icones : <a href=\"http://www.field2.com/\">Ben Dunkle</a>"
+
+#. translators: please replace this with a credit to yourself! "Translation:
+#. Your Name". This English message will appear when no translation is
+#. available, but the user is using WordPress in another language..
+#: total-slider.php:1305
+msgid "<a href=\"%s\">Help us translate this plugin into your language!</a>"
+msgstr "Traduction en français : Frédéric Serva"
+
+#: total-slider.php:1311
+msgid "If you find this plugin useful, or are using it commercially, please consider <a href=\"%s\">donating</a> to support development."
+msgstr "Si vous trouvez cette extension utile, ou si vous en faîtes un usage commercial, songez à <a href=\"%s\">effectuer un don</a> pour aider au maintien de son développement."
+
+#: total-slider.php:1313
+msgid "You can also <a href=\"%s\">report bugs</a>, <a href=\"%s\">suggest features</a>, or <a href=\"%s\">send pull requests</a>."
+msgstr "Vous pouvez également <a href=\"%s\">signaler des bugs</a>, <a href=\"%s\">suggérer des fonctionnalités</a>, ou <a href=\"%s\">demander à contribuer au développement</a>."
+
+#: total-slider.php:1315
+msgid "Thanks!"
+msgstr "Merci !"
+
+#: total-slider.php:1319
+msgid "© 2011-2012 Peter Upfold. Proud to be <a href=\"https://www.gnu.org/licenses/gpl-2.0.html\">GPLv2 (or later) licensed</a>."
+msgstr "© 2011-2012 Peter Upfold. Fier de la distribution sous license <a href=\"https://www.gnu.org/licenses/gpl-2.0.html\">GPLv2 (ou suivante)</a>."
+
+#: total-slider.php:1320
+msgid "Built by <a href=\"http://www.vanpattenmedia.com/\">Van Patten Media</a>"
+msgstr "Développé par <a href=\"http://www.vanpattenmedia.com/\">Van Patten Media</a>"
+
+#: total-slider.php:1371
+msgid "Click &lsquo;Add New&rsquo; to create a Slide."
+msgstr "Cliquez sur &lsquo;Ajouter&rsquo; pour créer une diapositive."
+
+#: total-slider.php:1416
+msgid "Click a slide to edit it, or click ‘Add New’."
+msgstr "Cliquez sur une diapositive pour l'éditer, ou cliquez sur ‘Ajouter’."
+
+#: total-slider.php:1425
+msgid "Title"
+msgstr "Titre"
+
+#: total-slider.php:1433
+msgid "Description"
+msgstr "Description"
+
+#: total-slider.php:1442
+msgid "Background"
+msgstr "Arrière-plan"
+
+#: total-slider.php:1447
+msgid "Upload or choose image"
+msgstr "Choisissez"
+
+#: total-slider.php:1453
+msgid "Slide Link"
+msgstr "Lien de la diapositive"
+
+#: total-slider.php:1458
+msgid "A page or post on this site"
+msgstr "Page ou article de ce site"
+
+#: total-slider.php:1463
+msgid "An external link"
+msgstr "Lien extérieur"
+
+#: total-slider.php:1473
+msgid "No post selected"
+msgstr "Aucun article choisi"
+
+#: total-slider.php:1475
+msgid "Find post"
+msgstr "Chercher"
+
+#: total-slider.php:1494
+msgid "Loading"
+msgstr "Chargement"
+
+#: total-slider.php:1495
+msgid "Saving…"
+msgstr "Enregistrement..."
+
+#: total-slider.php:1610
+msgid "Choose a slide group for this widget to show:"
+msgstr "Choisissez un groupe de diapositives pour ce widget :"
+
+#: total-slider.php:1613
+msgid "Select a group"
+msgstr "Choisissez un groupe"
+
+#. Plugin Name of the plugin/theme
+msgid "Total Slider"
+msgstr "Total Slider"
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.totalslider.com/"
+msgstr "http://www.totalslider.com/"
+
+#. Description of the plugin/theme
+msgid "The best experience for building sliders, with true WYSIWYG, drag & drop and more!"
+msgstr "La meilleure des expériences pour construire des sliders : WYSIWYG, Tirez-Déplacez et plus encore !"
+
+#. Author of the plugin/theme
+msgid "Peter Upfold"
+msgstr "Peter Upfold"
+
+#. Author URI of the plugin/theme
+msgid "http://www.vanpattenmedia.com/"
+msgstr "http://www.vanpattenmedia.com/"
+
