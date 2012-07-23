@@ -581,6 +581,7 @@ class Total_Slider {
 		//<![CDATA[
 		window._total_slider_ajax = '<?php echo get_admin_url(); ?>admin.php?page=total-slider&total-slider-ajax=true';
 		window._total_slider_jq = '<?php echo includes_url(); ?>js/jquery/jquery.js';
+		window._total_slider_tmp = '<?php echo includes_url(); ?>js/tinymce/tiny_mce_popup.js';
 		//]]>
 		</script>
 		<?php

@@ -4,11 +4,10 @@
 	<title>Insert Slider</title>
 	<style type="text/css">
 	body {
-		background-color:#E5E5E5;
-		font-family:sans-serif;
-		font-size:12px;	
-		margin:5px;
-		padding:5px;
+		font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px;
+		background:#f1f1f1;
+		padding:0;
+		margin:8px 8px 0 8px;
 	}
 	
 	.howto
@@ -18,31 +17,8 @@
 	}
 	
 	h1 {
-		font-size:13px;
-		margin:5px;
-	}
-	
-	.primary-button {
-		background-color:#21759B;
-		border-bottom-color: #13455B;
-		border-bottom-left-radius: 11px;
-		border-bottom-right-radius: 11px;
-		border-bottom-style: solid;
-		border-bottom-width: 1px;
-		border-left-color: #13455B;
-		border-left-style: solid;
-		border-left-width: 1px;
-		border-right-color: #13455B;
-		border-right-style: solid;
-		border-right-width: 1px;
-		border-top-color: #13455B;
-		border-top-left-radius: 11px;
-		border-top-right-radius: 11px;
-		border-top-style: solid;
-		border-top-width: 1px;
-		color: #EAF2FA;
-		font-weight:bold;
-		width:60px;
+		color:#2B6FB6; margin:0; padding:0; padding-top:5px;
+		font-size:12px;
 	}
 	
 	select
@@ -50,28 +26,15 @@
 		min-width:250px;
 	}
 	
-	.deletion
-	{
-		color:red;
-		outline-color:red;
-		line-height:25px;
-	}
-	
 	.loading
 	{
 		text-align: center;
+		margin-top:30px;
 	}
 	
 	.select-group
 	{
 		display:none;
-	}
-	
-	.button-disabled
-	{
-		background-color:rgba(178,178,178,0.94);
-		color:#d7d7d7;
-		border-color:#9a9a9a;
 	}
 	
 	</style>
@@ -81,7 +44,7 @@
 	function execute() {
 		jQuery(document).ready(function($) {
 			$(document).ready(function() {
-				
+			
 				$.ajax({
 				
 					type: 'POST',
@@ -115,10 +78,14 @@
 					e.preventDefault();
 					var selectedSlug = $('#groups option:selected').val();
 					// send to TMCE
-					window.parent.tinyMCE.execCommand('mceInsertContent',false,'[totalslider slidegroup="' + selectedSlug + '"]');
+					window.parent.tinyMCE.execCommand('mceInsertContent',false,'[totalslider group="' + selectedSlug + '"]');
 					// close window
-					//TODO
-					//window.paren
+					tinyMCEPopup.close();
+				});
+				
+				$('#cancel').click(function(e) {
+					e.preventDefault();
+					tinyMCEPopup.close();
 				});
 				
 			});
@@ -148,6 +115,11 @@
 	script.src = window.parent._total_slider_jq;
 	
 	head.appendChild(script);
+	
+	var popup_script = document.createElement('script');
+	popup_script.type = 'text/javascript';
+	popup_script.src = window.parent._total_slider_tmp;
+	head.appendChild(popup_script);
 
 	//]]>
 	</script>
@@ -160,7 +132,7 @@
 <form id="sgform" action="#">
 	<div style="padding:10px; margin-bottom:25px;">
 		
-		<p class="loading"><img src="../../../img/loadingAnimation.gif" alt="Loading" title="Loading" />
+		<p class="loading"><img src="../../../img/loadingAnimation.gif" alt="Loading" title="Loading" /></p>
 		
 		<div class="select-group">
 			<p class="howto">Choose a slide group to show:</p>
@@ -171,10 +143,10 @@
 	</div>
 	
 	<div style="float:left">
-		<a href="#" class="deletion">Cancel</a>	
+		<input type="button" value="Cancel" id="cancel" />	
 	</div>
 	<div style="float:right">
-		<input type="submit" value="Insert" class="primary-button button-disabled" disabled="disabled" />
+		<input type="submit" value="Insert" id="insert" class="primary-button button-disabled" disabled="disabled" />
 	</div>
 </form>
 
