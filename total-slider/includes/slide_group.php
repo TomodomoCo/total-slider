@@ -1,8 +1,10 @@
 <?php
-/********************************************************************************
-Total Slider Backend
-
-Custom data handling access backend
+/*
+Total Slider Slide Group Class
+	
+This class provides a set of methods for manipulating the slide group and its slides at the database level.
+It is used by ajax_interface.php, primarily.
+/* ----------------------------------------------*/
 
 /*  Copyright (C) 2011-2012 Peter Upfold.
 
@@ -21,22 +23,13 @@ Custom data handling access backend
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
-/*********************************************************************************/
-
 if (!defined('TOTAL_SLIDER_IN_FUNCTIONS'))
 {
 	header('HTTP/1.1 403 Forbidden');
 	die('<h1>Forbidden</h1>');
 }
 
-static $allowedTemplateContexts = array(
-	'builtin',
-	'theme',
-	'downloaded'
-);
-
-	/* data strucutre
+	/* data structure
 	
 		a serialized array stored as a wp_option
 		
@@ -78,12 +71,15 @@ class Total_Slide_Group {
 	
 	This object specifies the slug and friendly group name. We then use the slug
 	to work out which wp_option to query later -- total_slider_slides_[slug].
+	
+	This class provides a set of methods for manipulating the slide group and its slides
+	at the database level. It is used by ajax_interface.php, primarily.
 */
 
 	public $slug;
 	public $originalSlug;
 	public $name;
-	public $templateContext;
+	public $templateLocation;
 	public $template;
 	
 	public function __construct($slug, $name = null)
@@ -92,7 +88,7 @@ class Total_Slide_Group {
 		Set the slug and name for this group.
 	*/
 	
-		$this->slug = substr(preg_replace('/[^a-zA-Z0-9_\-]/', '', $slug), 0, 64);
+		$this->slug = $this->sanitizeSlug($slug);
 		$this->originalSlug = $this->slug;
 		
 		if ($name)
@@ -100,6 +96,14 @@ class Total_Slide_Group {
 			$this->name = $name;
 		}
 	}
+	
+	public function sanitizeSlug($slug)
+	{
+	/*
+		Sanitize a slide group slug, for accessing the wp_option row with that slug name.		
+	*/
+		return substr(preg_replace('/[^a-zA-Z0-9_\-]/', '', $slug), 0, (63 - strlen('total_slider_slides_') ) );
+	}	
 	
 	public function load() {
 	/*
@@ -135,10 +139,10 @@ class Total_Slide_Group {
 			$this->slug = Total_Slider::sanitizeSlideGroupSlug($currentGroups[$theIndex]->slug);
 			
 			if (property_exists($currentGroups[$theIndex], 'templateContext') &&
-				in_array($currentGroups[$theIndex]->templateContext, $allowedTemplateContexts)
+				in_array($currentGroups[$theIndex]->templateLocation, $allowedTemplateContexts)
 			)
 			{
-				$this->templateContext = $currentGroups[$theIndex]->templateContext;
+				$this->templateLocation = $currentGroups[$theIndex]->templateLocation;
 			}
 			if (property_exists($currentGroups[$theIndex], 'template'))
 			{
@@ -229,72 +233,23 @@ class Total_Slide_Group {
 		update_option('total_slider_slide_groups', $currentGroups);
 	
 	}
-
-};
 	
-class Total_Slider_Backend {
-
-	private $groupSlug; // the slug of this slide group
-
-	public function __construct($slug)
+	public function newSlide($title, $description, $background, $link, $title_pos_x, $title_pos_y)
 	{
 	/*
-		Construct the backend handler, passing in the slug of the desired
-		group to modify.
-	*/
-	
-		$this->groupSlug = $this->sanitizeSlideGroupSlug($slug);
-		
-		if (get_option('total_slider_slides_' . $this->groupSlug) === false)
-		{
-			throw new Exception(__('The specified slide group does not exist.', 'total_slider'), 1);
-			return false;
-		}
-	
-	}
-	
-	protected function createSlideGroup($slug)
-	{
-	/*
-		If the slide group did not exist at edit time, then create it at this stage.
-	*/
-	
-		$newSlug = $this->sanitizeSlideGroupSlug(sanitize_title_with_dashes($slug));
-		
-		$newGroup = new VPMSlideGroup($newSlug, $newSlug); // not ideal for title, but we're not expecting
-															// this to happen at all.
-		$newGroup->save();	
-		
-		// add the new slides option for this group
-		add_option('total_slider_slides_'.$newSlug, array(), '', 'yes');
-	
-	}
-	
-	public function sanitizeSlideGroupSlug($slug)
-	{
-	/*
-		Sanitize a slide group slug, for accessing the wp_option row with that slug name.		
-	*/
-		return substr(preg_replace('/[^a-zA-Z0-9_\-]/', '', $slug), 0, (63 - strlen('total_slider_slides_') ) );
-	}
-	
-
-	public function createNewSlide($title, $description, $background, $link, $title_pos_x, $title_pos_y)
-	{
-		/*
 			Given a pre-validated set of data (title, description, backgorund,
 			link, title_pos_x and title_pos_y, create a new slide and add to the
-			option. Return the new slide ID for resorting in another function.
-		*/
-		
-		$currentSlides = get_option('total_slider_slides_' . $this->groupSlug);
+			option. Return the new slide ID for resorting in another function.	
+	*/
+	
+		$currentSlides = get_option('total_slider_slides_' . $this->slug);
 		
 		if ($currentSlides === false)
 		{
 			
-			$this->createSlideGroup($this->groupSlug);
+			$this->save();
 			
-			$currentSlides = get_option('total_slider_slides_' . $this->groupSlug);
+			$currentSlides = get_option('total_slider_slides_' . $this->slug);
 			if ($currentSlides === false)
 			{
 				return false; //can't do it
@@ -317,22 +272,23 @@ class Total_Slider_Backend {
 		
 		$currentSlides[count($currentSlides)] = $newSlide;
 		
-		if ($this->writeNewSlidesOptionWithSlides($currentSlides))
+		if ($this->saveSlides($currentSlides))
 		{
 			return $newId;
 		}
 		else {
 			return false;
 		}
-	
+		
+		
 	}
 	
-	public function getSlideDataWithID($slideID) {
+	public function getSlide($slideID) {
 	/*
 		Fetch the whole object for the given slide ID.
 	*/
 	
-		$currentSlides = get_option('total_slider_slides_' . $this->groupSlug);
+		$currentSlides = get_option('total_slider_slides_' . $this->slug);
 		
 		if ($currentSlides === false || !is_array($currentSlides) || count($currentSlides) < 0)
 		{
@@ -375,14 +331,14 @@ class Total_Slider_Backend {
 	
 	}
 	
-	public function updateSlideWithIDAndData($slideID, $title, $description, $background, $link, $title_pos_x, $title_pos_y)
+	public function updateSlide($slideID, $title, $description, $background, $link, $title_pos_x, $title_pos_y)
 	{
 	/*
-		Given the slideID, update that slide with the pre-filtered data specified.
+		Given the slide ID, update that slide with the pre-filtered data specified.
 	*/
 	
-	$currentSlides = get_option('total_slider_slides_' . $this->groupSlug);
-	$originalSlides = $currentSlides;
+		$currentSlides = get_option('total_slider_slides_' . $this->slug);
+		$originalSlides = $currentSlides;
 		
 		if ($currentSlides === false || !is_array($currentSlides) || count($currentSlides) < 0)
 		{
@@ -423,20 +379,10 @@ class Total_Slider_Backend {
 		}
 		
 		// $currentSlides now holds the slides we want to save
-		return $this->writeNewSlidesOptionWithSlides($currentSlides);
+		return $this->saveSlides($currentSlides);
 	
 	}
 	
-	private function writeNewSlidesOptionWithSlides($slidesToWrite)
-	{
-	/*
-		Dumb function that just updates the option with the array it is given.
-	*/
-	
-		return update_option('total_slider_slides_' . $this->groupSlug, $slidesToWrite);
-	
-	}
-
 	public function validateURL($url)
 	{
 	/*
@@ -478,19 +424,19 @@ class Total_Slider_Backend {
 	
 	}
 	
-	public function deleteSlideWithID($slideID) {
+	public function deleteSlide($slideID) {
 	/*
 		Remove the slide with slideID from the slides
 		option.
 	*/
 	
-		$currentSlides = get_option('total_slider_slides_' . $this->groupSlug);
+		$currentSlides = get_option('total_slider_slides_' . $this->slug);
 		
 		if ($currentSlides === false)
 		{
-			$this->createSlideGroup($this->groupSlug);
+			$this->save();
 			
-			$currentSlides = get_option('total_slider_slides_' . $this->groupSlug);
+			$currentSlides = get_option('total_slider_slides_' . $this->slug);
 			if ($currentSlides === false)
 			{
 				return false; //can't do it
@@ -517,7 +463,7 @@ class Total_Slider_Backend {
 				return false;
 			else
 			{
-				return $this->writeNewSlidesOptionWithSlides($currentSlides);
+				return $this->saveSlides($currentSlides);
 			}
 		
 		}
@@ -527,8 +473,8 @@ class Total_Slider_Backend {
 		}			
 	
 	}
-
-	public function reshuffleSlides($newSlideOrder)
+	
+	public function reshuffle($newSlideOrder)
 	{
 	/*
 		Given a new, serialised set of slide order IDs in an array,
@@ -536,14 +482,14 @@ class Total_Slider_Backend {
 		IDs in the options array.
 	*/
 	
-		$currentSlides = get_option('total_slider_slides_' . $this->groupSlug);
+		$currentSlides = get_option('total_slider_slides_' . $this->slug);
 		
 		if ($currentSlides === false)
 		{
 			
-			$this->createSlideGroup($this->groupSlug);
+			$this->save();
 			
-			$currentSlides = get_option('total_slider_slides_' . $this->groupSlug);
+			$currentSlides = get_option('total_slider_slides_' . $this->slug);
 			if ($currentSlides === false)
 			{
 				return false; //can't do it
@@ -590,7 +536,7 @@ class Total_Slider_Backend {
 				return true;
 			}
 			
-			return $this->writeNewSlidesOptionWithSlides($newSlides);
+			return $this->saveSlides($newSlides);
 		
 		}
 		else
@@ -598,10 +544,21 @@ class Total_Slider_Backend {
 			return false;
 		}
 	
-	}
+	}	
 
+	
+	private function saveSlides($slidesToWrite)
+	{
+	/*
+		Dumb function that just updates the option with the array it is given.
+	*/
+	
+		return update_option('total_slider_slides_' . $this->slug, $slidesToWrite);
+	
+	}
+	
+	
 
 };
-
 
 ?>

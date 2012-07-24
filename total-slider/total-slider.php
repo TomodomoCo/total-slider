@@ -42,7 +42,7 @@ if (!version_compare(get_bloginfo('version'), '3.4', '>='))
 }
 
 
-require_once(dirname(__FILE__).'/slides_backend.php');
+require_once(dirname(__FILE__).'/includes/slide_group.php');
 
 /******************************************** Total_Slider main class ********************************************/
 
@@ -401,7 +401,7 @@ class Total_Slider {
 			array_key_exists('total-slider-ajax', $_GET) && $_GET['total-slider-ajax'] == 'true'
 		)
 		{
-			require_once(dirname(__FILE__).'/ajax_interface.php');
+			require_once(dirname(__FILE__).'/includes/ajax_interface.php');
 		}
 
 	}
@@ -437,7 +437,7 @@ class Total_Slider {
 				plugin_dir_url( __FILE__ ).'js/interface.'.$maybeDev.'js',	/* src */
 				array(
 					'jquery', 'jquery-ui-draggable', 'jquery-ui-droppable',
-					'jquery-ui-sortable', 'total-slider-canjs'
+					'jquery-ui-sortable', //'total-slider-canjs'
 				),															/* deps */
 				date("YmdHis", @filemtime( plugin_dir_path( __FILE__ ) .
 							'js/interface.'.$maybeDev.'js'	) ),			/* ver */
@@ -462,7 +462,7 @@ class Total_Slider {
 			wp_enqueue_style('wp-pointer');
 			wp_enqueue_script('wp-pointer');
 
-			wp_enqueue_script('total-slider-canjs');
+			//wp_enqueue_script('total-slider-canjs');
 			
 			wp_enqueue_script('total-slider-interface');
 
@@ -602,7 +602,7 @@ class Total_Slider {
 		
 	}
 
-	public static function enqueueSliderFrontend($context = 'frontend')
+	public static function enqueueSliderFrontend($context = 'frontend', $templateLocation = 'builtin', $template = 'default')
 	{
 	/*
 		When WordPress is enqueueing the styles, inject our slider CSS and JavaScript in.
