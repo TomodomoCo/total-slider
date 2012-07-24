@@ -259,6 +259,10 @@ ul#new-slide-button li {
 	max-width: 100px !important;
 }
 
+.column-template {
+	width:90px;	
+}
+
 .column-actions {
 	width: 220px;
 }

@@ -79,8 +79,8 @@ class Total_Slide_Group {
 	public $slug;
 	public $originalSlug;
 	public $name;
-	public $templateLocation;
-	public $template;
+	public $templateLocation; //TODO should I really be public?
+	public $template; //TODO should I really be public?
 	
 	public function __construct($slug, $name = null)
 	{

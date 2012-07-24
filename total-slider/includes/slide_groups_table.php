@@ -1,12 +1,12 @@
 <?php
-/********************************************************************************
+/*
 
 	Slide Groups WP_List_Table subclass
 	
 	To facilitate the display of Slide Groups in a WP_List_Table on the main
 	Slide Groups screen.
 
-*********************************************************************************/
+/* ----------------------------------------------*/
 
 /*  Copyright (C) 2011-2012 Peter Upfold.
 
@@ -52,6 +52,7 @@ class Slide_Groups_Table extends WP_List_Table {
 		
 	        'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text	
 			'name'		=>	__('Group Name', 'total_slider'),
+			'template'  =>	__('Template', 'total_slider'),
 			'slides_count'		=>	__('Slides', 'total_slider')
 		
 		);
@@ -94,6 +95,23 @@ class Slide_Groups_Table extends WP_List_Table {
 		
 		return count(get_option('total_slider_slides_' . esc_attr($item->slug) ));		
 	
+	}
+	
+	public function column_template($item)
+	{
+	/*
+		Return the template name used for the slide group.	
+	*/
+		//STUB
+		//TODO I need pretty names
+		
+		if (property_exists($item, 'template') && !empty($item->template))
+		{
+			return esc_html($item->template);
+		}
+		else {
+			return 'Default';			
+		}
 	}
 	
 	public function column_default($item, $colName)
