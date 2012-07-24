@@ -30,6 +30,11 @@ if (!defined('TOTAL_SLIDER_IN_FUNCTIONS'))
 	die('<h1>Forbidden</h1>');
 }
 
+static $allowedTemplateContexts = array(
+	'builtin',
+	'theme',
+	'downloaded'
+);
 
 	/* data strucutre
 	
@@ -78,6 +83,8 @@ class Total_Slide_Group {
 	public $slug;
 	public $originalSlug;
 	public $name;
+	public $templateContext;
+	public $template;
 	
 	public function __construct($slug, $name = null)
 	{
@@ -126,6 +133,18 @@ class Total_Slide_Group {
 		else {
 			$this->name = $currentGroups[$theIndex]->name;
 			$this->slug = Total_Slider::sanitizeSlideGroupSlug($currentGroups[$theIndex]->slug);
+			
+			if (property_exists($currentGroups[$theIndex], 'templateContext') &&
+				in_array($currentGroups[$theIndex]->templateContext, $allowedTemplateContexts)
+			)
+			{
+				$this->templateContext = $currentGroups[$theIndex]->templateContext;
+			}
+			if (property_exists($currentGroups[$theIndex], 'template'))
+			{
+				$this->template = $currentGroups[$theIndex]->template;
+			}
+			
 			return true;
 		}
 	}

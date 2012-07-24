@@ -80,7 +80,7 @@ class Total_Slider {
 
 	/***********	Registration, first-time, etc.	***********/
 
-	public function createSlidesOptionField() {
+	public static function createSlidesOptionField() {
 	/*
 		Upon plugin activation, creates the total_slider_slide_groups option
 		in wp_options, if it does not already exist.
@@ -110,7 +110,7 @@ class Total_Slider {
 
 	}
 
-	public function registerAsWidget() {
+	public static function registerAsWidget() {
 	/*
 		Register the output to the theme as a widget
 	*/
@@ -119,7 +119,7 @@ class Total_Slider {
 
 	}
 
-	public function loadTextDomain()
+	public static function loadTextDomain()
 	{
 	/*
 		Load the GetText domain for this plugin's translatable strings.
@@ -131,7 +131,7 @@ class Total_Slider {
 
 	/***********	Utility Functions	***********/
 
-	public function sanitizeSlideGroupSlug($slug)
+	public static function sanitizeSlideGroupSlug($slug)
 	{
 	/*
 		Sanitize a slide group slug, for accessing the wp_option row with that slug name.
@@ -163,7 +163,7 @@ class Total_Slider {
 
 	}
 
-	public function uglyJSRedirect($location, $data = false)
+	public static function uglyJSRedirect($location, $data = false)
 	{
 	/*
 		Redirect, from within the admin panel for this plugin back to the plugin's main page.
@@ -194,7 +194,7 @@ class Total_Slider {
 
 	}
 
-	public function determineTemplateOptions()
+	public static function determineTemplateOptions()
 	{
 	/*
 		Using the active Slider template, determine the desired crop height
@@ -302,7 +302,7 @@ class Total_Slider {
 
 	}
 
-	public function setCapabilityForRoles($rolesToSet)
+	public static function setCapabilityForRoles($rolesToSet)
 	{
 	/*
 		Set the TOTAL_SLIDER_REQUIRED_CAPABILITY capability against this role, so this WordPress
@@ -351,7 +351,7 @@ class Total_Slider {
 
 	}
 	
-	public function shortcodeHandler($atts, $content, $tag)
+	public static function shortcodeHandler($atts, $content, $tag)
 	{
 	/*
 		Create a Total Slider WP_Widget from a [totalslider] shortcode in
@@ -387,7 +387,7 @@ class Total_Slider {
 
 	/***********	Control passing, runtime UI setup, enqueuing etc.	***********/
 
-	public function passControlToAjaxHandler()
+	public static function passControlToAjaxHandler()
 	{
 	/*
 		If the user is trying to perform an Ajax action, immediately pass
@@ -406,7 +406,7 @@ class Total_Slider {
 
 	}
 
-	public function addAdminSubMenu() {
+	public static function addAdminSubMenu() {
 	/*
 		Add the submenu to the admin sidebar for the configuration screen.
 	*/
@@ -415,6 +415,20 @@ class Total_Slider {
 		
 			// load .dev.js if available, if SCRIPT_DEBUG is true in wp-config.php
 			$maybeDev = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? 'dev.' : '';		
+			
+			// can.js
+			
+			wp_register_script(
+				'total-slider-canjs',										/* handle */
+				plugin_dir_url(__FILE__).'js/can.custom.'.$maybeDev.'js',	/* src */
+				array(
+					'jquery', 'jquery-ui-draggable', 'jquery-ui-droppable',
+					'jquery-ui-sortable'
+				),															/* deps */
+				date("YmdHis", @filemtime( plugin_dir_path( __FILE__ ) .
+							'js/can.custom.'.$maybeDev.'js'	) ),			/* ver */
+				true														/* in_footer */				
+			);
 
 			// get our JavaScript on
 			wp_register_script(
@@ -423,7 +437,7 @@ class Total_Slider {
 				plugin_dir_url( __FILE__ ).'js/interface.'.$maybeDev.'js',	/* src */
 				array(
 					'jquery', 'jquery-ui-draggable', 'jquery-ui-droppable',
-					'jquery-ui-sortable'
+					'jquery-ui-sortable', 'total-slider-canjs'
 				),															/* deps */
 				date("YmdHis", @filemtime( plugin_dir_path( __FILE__ ) .
 							'js/interface.'.$maybeDev.'js'	) ),			/* ver */
@@ -448,7 +462,7 @@ class Total_Slider {
 			wp_enqueue_style('wp-pointer');
 			wp_enqueue_script('wp-pointer');
 
-			
+			wp_enqueue_script('total-slider-canjs');
 			
 			wp_enqueue_script('total-slider-interface');
 
@@ -510,7 +524,7 @@ class Total_Slider {
 
 	}
 
-	public function printHelpPointerJS()
+	public static function printHelpPointerJS()
 	{
 	/*
 		Print the help pointer JavaScript.
@@ -567,7 +581,7 @@ class Total_Slider {
 
 	}
 	
-	public function printJSAdminPageReference()
+	public static function printJSAdminPageReference()
 	{
 	/*
 		When WordPress is displaying the WP-Admin page headers, add a reference to the
@@ -588,7 +602,7 @@ class Total_Slider {
 		
 	}
 
-	public function enqueueSliderFrontend($context = 'frontend')
+	public static function enqueueSliderFrontend($context = 'frontend')
 	{
 	/*
 		When WordPress is enqueueing the styles, inject our slider CSS and JavaScript in.
@@ -720,7 +734,7 @@ class Total_Slider {
 
 	}
 
-	public function addSlidesHelp()
+	public static function addSlidesHelp()
 	{
 	/*
 		Add our help tab to the Slides page.
@@ -780,7 +794,7 @@ class Total_Slider {
 
 	}
 
-	public function jsL10n()
+	public static function jsL10n()
 	{
 	/*
 		Return the object containing all of the i18n-capable and l10n-capable
@@ -822,7 +836,7 @@ class Total_Slider {
 
 	}
 	
-	public function bootstrapTinyMCEPlugin()
+	public static function bootstrapTinyMCEPlugin()
 	{
 	/*
 		Bootstrap the setup of the Total Slider insert button on the rich text
@@ -843,7 +857,7 @@ class Total_Slider {
 	
 	}
 	
-	public function registerTinyMCEPlugin($plugin_array)
+	public static function registerTinyMCEPlugin($plugin_array)
 	{
 	/*
 		Register our TinyMCE plugin JavaScript, so it can be run by TinyMCE.
@@ -853,7 +867,7 @@ class Total_Slider {
 		
 	}
 	
-	public function registerTinyMCEButton($buttons)
+	public static function registerTinyMCEButton($buttons)
 	{
 	/*
 		Add our new Total Slider button to the TinyMCE buttons toolbar.
@@ -865,7 +879,7 @@ class Total_Slider {
 
 	/***********	Print functions for each plugin admin page	***********/
 
-	public function printSlideGroupsPage()
+	public static function printSlideGroupsPage()
 	{
 	/*
 		Print the page for adding, deleting Slide Groups and for pushing people over
@@ -1010,6 +1024,18 @@ class Total_Slider {
 						<th scope="row"><label for="group-name"><?php _e('Group Name', 'total_slider');?></label></th>
 						<td><input name="group-name" type="text" id="group-name" value="" /></td>
 					</tr>
+					<tr class="form-field form-required">
+						<th scope="row"><label for="template-slug"><?php _e('Template', 'total_slider');?></label></th>
+						<td>
+							<select name="template-slug" id="template-slug">
+								<optgroup label="Built-in"></optgroup>
+								
+								<optgroup label="Theme"></optgroup>
+								
+								<optgroup label="Downloaded"></optgroup>							
+							</select>
+						</td>
+					</tr>
 				</table>
 				<p class="submit"><input type="submit" class="button-primary" value="<?php _e('Add Slide Group', 'total_slider');?>"  />
 				<input type="button" id="new-slide-group-cancel" class="button-secondary" value="<?php _e('Cancel', 'total_slider');?>" /></p></form>
@@ -1041,7 +1067,7 @@ class Total_Slider {
 		<?php
 	}
 
-	public function printSlidesPage() {
+	public static function printSlidesPage() {
 	/*
 		Print the actual slides page for adding, editing and removing the slides.
 	*/
@@ -1137,7 +1163,7 @@ class Total_Slider {
 
 
 
-	public function printSettingsPage()
+	public static function printSettingsPage()
 	{
 	/*
 		Print the settings page to output, and also handle any of the Settings forms if they
@@ -1308,7 +1334,7 @@ class Total_Slider {
 
 	}
 
-	public function printUploaderJavaScript()
+	public static function printUploaderJavaScript()
 	{
 	/*
 		Print the JavaScript to inject into the Media Uploader
@@ -1355,7 +1381,7 @@ class Total_Slider {
 
 	/***********	Metabox printer callbacks	***********/
 
-	public function printCreditsMetabox()
+	public static function printCreditsMetabox()
 	{
 	/*
 		Print to output the contents of the credits/notes metabox.
@@ -1396,7 +1422,7 @@ class Total_Slider {
 
 	}
 
-	public function printSlideSorterMetabox()
+	public static function printSlideSorterMetabox()
 	{
 	/*
 		Print to output the contents of the slide sorter/slide listing metabox.
@@ -1449,7 +1475,7 @@ class Total_Slider {
 
 	}
 
-	public function printSlidePreviewMetabox()
+	public static function printSlidePreviewMetabox()
 	{
 	/*
 		Print to output the contents of the slide preview metabox.
@@ -1478,7 +1504,7 @@ class Total_Slider {
 
 	}
 
-	public function printSlideEditorMetabox()
+	public static function printSlideEditorMetabox()
 	{
 	/*
 		Print to output the contents of the slide editor metabox.
@@ -1573,7 +1599,7 @@ class Total_Slider {
 
 	}
 
-	public function printAdminCSS() {
+	public static function printAdminCSS() {
 	/*
 		Print the admin CSS to show our admin menu icons.
 	*/
