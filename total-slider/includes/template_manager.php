@@ -71,7 +71,7 @@ class Total_Slider_Template {
 	private $jsDevURI = null;
 	private $cssURI = null;
 	
-	private static $allowedTemplateLocations = array(
+	private $allowedTemplateLocations = array(
 		'builtin',
 		'theme',
 		'downloaded'
@@ -140,11 +140,11 @@ class Total_Slider_Template {
 		{
 			
 			case 'builtin':
-				$pathPrefix = plugin_dir_path( __FILE__ ) . '/' . TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR . '/';
-				$uriPrefix = plugin_dir_url( __FILE__ ) . '/'. TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR . '/';
+				$pathPrefix = plugin_dir_path( dirname(__FILE__) ) . '/' . TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR . '/';
+				$uriPrefix = plugin_dir_url( dirname(__FILE__) ) . '/'. TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR . '/';
 				
 				$phpExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.php' );
-				$cssExists = @file_exists($pathPrefix . $this->slug . '/' . 'style.css';
+				$cssExists = @file_exists($pathPrefix . $this->slug . '/' . 'style.css');
 				$jsExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.js' );
 				$jsDevExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.dev.js' ); 
 				
@@ -230,10 +230,10 @@ class Total_Slider_Template {
 					{
 						//TODO decide on whether it's [slug].js, or script.js, or something else
 						// #19 -- decide on js expected filename
-						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.js' )
+						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.js' ))
 						{
-							$this->jsPath = $p['path'] . $this->slug . '/' . $this->slug . '.js' );
-							$this->jsURI = $p['uri'] . $this->slug . '/' . $this->slug . '.js' ); 
+							$this->jsPath = $p['path'] . $this->slug . '/' . $this->slug . '.js';
+							$this->jsURI = $p['uri'] . $this->slug . '/' . $this->slug . '.js'; 
 						}
 						else {
 							$this->jsPath = null;
@@ -328,7 +328,7 @@ class Total_Slider_Template {
 				$uriPrefix = content_url() . '/'. TOTAL_SLIDER_TEMPLATES_DIR . '/';
 				
 				$phpExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.php' );
-				$cssExists = @file_exists($pathPrefix . $this->slug . '/style.css';
+				$cssExists = @file_exists($pathPrefix . $this->slug . '/style.css');
 				$jsExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.js' );
 				$jsDevExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.dev.js' );
 								
@@ -394,7 +394,7 @@ class Total_Slider_Template {
 		
 	}
 	
-	public function renderForJS()
+	public function render()
 	{
 	/*
 		Render this template, using the pseudo-widget class, so that it will be executed,
@@ -604,7 +604,7 @@ class Total_Slider_Widget_Templater
 		and, for example, not output the starting <ul>.
 	*/
 
-		return '<%= slides_count %>';
+		return 1;
 
 	}
 

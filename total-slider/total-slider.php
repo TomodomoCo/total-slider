@@ -1483,7 +1483,7 @@ class Total_Slider {
 		?>
 		<div id="edit-area">
 
-			<ul id="total-slider" class="total-slider">
+			<!--<ul id="total-slider" class="total-slider">
 
 				<li id="preview-area" class="total-slider-slide">
 
@@ -1496,7 +1496,17 @@ class Total_Slider {
 
 				</li>
 
-			</ul>
+			</ul>-->
+			
+			<?php
+			
+			// for now, just render our default template
+			require_once(dirname(__FILE__) . '/includes/template_manager.php');
+			$template = new Total_Slider_Template('default', 'builtin');
+			
+			echo $template->render();
+			
+			?>
 
 		</div>
 
