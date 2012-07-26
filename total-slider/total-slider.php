@@ -78,7 +78,7 @@ class Total_Slider {
 
 	*/
 
-	/***********	Registration, first-time, etc.	***********/
+	/***********	// !Registration, first-time, etc.	***********/
 
 	public static function createSlidesOptionField() {
 	/*
@@ -385,7 +385,7 @@ class Total_Slider {
 	
 	}
 
-	/***********	Control passing, runtime UI setup, enqueuing etc.	***********/
+	/***********	// !Control passing, runtime UI setup, enqueuing etc.	***********/
 
 	public static function passControlToAjaxHandler()
 	{
@@ -877,7 +877,7 @@ class Total_Slider {
 				
 	}
 
-	/***********	Print functions for each plugin admin page	***********/
+	/***********	// !Print functions for each plugin admin page	***********/
 
 	public static function printSlideGroupsPage()
 	{
@@ -1379,7 +1379,7 @@ class Total_Slider {
 
 	}
 
-	/***********	Metabox printer callbacks	***********/
+	/***********	// !Metabox printer callbacks	***********/
 
 	public static function printCreditsMetabox()
 	{
@@ -1617,7 +1617,7 @@ class Total_Slider {
 
 };
 
-/******************************************** Total_Slider_Widget ********************************************/
+/******************************************** // !Total_Slider_Widget ********************************************/
 
 
 class Total_Slider_Widget extends WP_Widget {

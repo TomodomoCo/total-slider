@@ -394,7 +394,45 @@ class Total_Slider_Template {
 		
 	}
 	
-	/***********	Canonical path and URI accessor methods		***********/
+	public function renderForJS()
+	{
+	/*
+		Render this template, using the pseudo-widget class, so that it will be executed,
+		calls to the widget public methods will product the EJS placeholder text instead of
+		rendering actual slide information.
+		
+		The result will be buffered and ready for use by the client-side code.
+	*/
+	
+		if (!$this->phpPath)
+		{
+			$this->canonicalize();
+		}
+		
+		// prepare a widget templater for the template's use
+		$s = new Total_Slider_Widget_Templater();
+		
+		// a modicum of "time between check and use" protection
+		if (!@file_exists($this->phpPath))
+		{
+			throw new RuntimeException(
+				sprintf(__("The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider'), 'PHP', $this->phpPath)
+			, 201);
+			return false;
+		}
+		
+		ob_start();
+		require($this->phpPath);
+
+		$renderedTemplate = ob_get_clean();
+		
+		unset($s);
+		
+		return $renderedTemplate;	
+		
+	}
+	
+	/***********	// !Canonical path and URI accessor methods		***********/
 	
 	public function pathPrefix()
 	{
@@ -540,7 +578,207 @@ class Total_Slider_Template {
 		
 	}
 	
+	/***********	// !Metadata accessor methods		***********/
+	
 };
 
+
+class Total_Slider_Widget_Templater
+{
+/*
+	A 'dummy' class that behaves like Total_Slider_Widget, and that is used to render the template's
+	$s calls to CanJS EJS-friendly tokens, so that the editing interface JS can alter the template's
+	placeholder data in real-time.
+*/
+
+	private $counter = 0;
+
+	//NOTE: the FE format for these tokens is not finalised and is placeholder only
+
+	public function slides_count()
+	{
+	/*
+		Return the number of slides in this slide group.
+
+		Can also be used by templates to test if there are any slides to show at all,
+		and, for example, not output the starting <ul>.
+	*/
+
+		return '<%= slides_count %>';
+
+	}
+
+
+	public function has_slides()
+	{
+	/*
+		For our purposes, we want the slide previewer to load the template for one slide only.
+	*/
+	
+		++$this->counter;
+		
+		if ($this->counter > 1)
+			return false;
+		else
+			return true;
+
+
+	}
+
+	public function the_title()
+	{
+	/*
+		Print the slide title token to output.
+	*/
+
+		echo $this->get_the_title();
+
+	}
+
+	public function get_the_title()
+	{
+	/*
+		Return the slide title token.
+	*/
+
+		return '<%= slides_title %>';
+
+	}
+
+	public function the_description()
+	{
+	/*
+		Print the slide description token.
+	*/
+
+		echo $this->get_the_description();
+
+	}
+
+	public function get_the_description()
+	{
+	/*
+		Return the slide description token.
+	*/
+
+		return '<%= slides_description %>';
+
+	}
+
+	public function the_background_url()
+	{
+	/*
+		Print the background URL token.
+	*/
+
+		echo $this->get_the_background_url();
+
+	}
+
+	public function get_the_background_url()
+	{
+	/*
+		Return the background URL token.
+	*/
+
+		return '<%= slides_background %>';
+
+	}
+
+	public function the_link()
+	{
+	/*
+		Print the slide link token.
+	*/
+
+		echo $this->get_the_link();
+
+	}
+
+	public function get_the_link()
+	{
+	/*
+		Return the slide link token.
+	*/
+
+		return '<%= slides_link %>';
+
+	}
+
+	public function the_x()
+	{
+	/*
+		Print the X coordinate token.
+	*/
+
+		echo $this->get_the_x();
+
+	}
+
+	public function get_the_x()
+	{
+	/*
+		Return the X coordinate token.
+	*/
+
+		return '<%= slides_x %>';
+
+	}
+
+	public function the_y()
+	{
+	/*
+		Print the Y coordinate token.
+	*/
+
+		echo $this->get_the_y();
+
+	}
+
+	public function get_the_y()
+	{
+	/*
+		Return the Y coordinate token.
+	*/
+
+		return '<%= slides_y %>';
+
+	}
+
+	public function the_identifier()
+	{
+	/*
+		Print the slide identifier token.
+	*/
+
+		echo $this->get_the_identifier();
+
+	}
+
+	public function get_the_identifier()
+	{
+	/*
+		Return the slide identifier token.
+	*/
+
+		return '<%= slides_identifier %>';
+
+	}
+
+	public function iteration()
+	{
+	/*
+		Return the iteration number. How many slides have we been through?
+	*/
+
+		return intval ( $this->counter - 1 );
+		// has_slides() always bumps the iteration ready for the next run, but we
+		// are still running, for the theme's purposes, on the previous iteration.
+		// Hence, returning the iteration - 1.
+
+	}
+
+
+}
 
 ?>
