@@ -437,7 +437,7 @@ class Total_Slider {
 				plugin_dir_url( __FILE__ ).'js/interface.'.$maybeDev.'js',	/* src */
 				array(
 					'jquery', 'jquery-ui-draggable', 'jquery-ui-droppable',
-					'jquery-ui-sortable', //'total-slider-canjs'
+					'jquery-ui-sortable'//, 'total-slider-canjs'
 				),															/* deps */
 				date("YmdHis", @filemtime( plugin_dir_path( __FILE__ ) .
 							'js/interface.'.$maybeDev.'js'	) ),			/* ver */
