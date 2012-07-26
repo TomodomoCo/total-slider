@@ -40,6 +40,7 @@ define('TOTAL_SLIDER_TEMPLATES_DIR', 'total-slider-templates');
 	1xx -- invalid input or arguments
 
 		101 -- the template location is not one of the allowed template locations.
+		102 -- Unable to determine the WP_CONTENT_DIR to load this template.
 		
 	2xx -- unable to load the template
 		201 -- The template's %s file was not found, but we expected to find it at '%s'.
@@ -55,17 +56,20 @@ class Total_Slider_Template {
 	private $mdURI;
 	private $mdDescription;
 	private $mdVersion;
-	private $mdAuthor;	
+	private $mdAuthor;
 	
-	private $phpPath;
-	private $jsPath;
-	private $jsDevPath;
-	private $cssPath;
+	private $pathPrefix = null;
+	private $uriPrefix = null;
 	
-	private $phpURI;
-	private $jsURI;
-	private $jsDevURI;
-	private $cssURI;
+	private $phpPath = null;
+	private $jsPath = null;
+	private $jsDevPath = null;
+	private $cssPath = null;
+	
+	private $phpURI = null;
+	private $jsURI = null;
+	private $jsDevURI = null;
+	private $cssURI = null;
 	
 	private static $allowedTemplateLocations = array(
 		'builtin',
@@ -98,7 +102,7 @@ class Total_Slider_Template {
 		}
 		
 		// we will load canonicalised paths and urls, and check for existence, but be lazy about metadata
-		
+		$this->canonicalize();
 		
 	}
 	
@@ -126,9 +130,10 @@ class Total_Slider_Template {
 	{
 	/*
 		Construct canonical paths and URLs for this template, by using the template slug
-		and the location to work out where the template is located.
+		and the location to work out where the template files are.
 		
-		We must check that these canonical paths correspond to existing files.
+		We must check that these canonical paths correspond to files that exist, so we are ready
+		for enqueuing and such.
 	*/
 	
 		switch ($this->location)
@@ -141,6 +146,7 @@ class Total_Slider_Template {
 				$phpExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.php' );
 				$cssExists = @file_exists($pathPrefix . $this->slug . '/' . 'style.css';
 				$jsExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.js' );
+				$jsDevExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.dev.js' ); 
 				
 				$missingFile = '';
 				
@@ -165,11 +171,20 @@ class Total_Slider_Template {
 					$this->phpPath = $pathPrefix . $this->slug . '/' . $this->slug . '.php';
 					$this->phpURI = $uriPrefix . $this->slug . '/' . $this->slug . '.php';
 					
-					$this->cssPath = $pathPrefix . $this->slug . '/' . 'style.css';
-					$this->cssURI = $uriPrefix . $this->slug . '/' . 'style.css';
+					$this->cssPath = $pathPrefix . $this->slug . '/style.css';
+					$this->cssURI = $uriPrefix . $this->slug . '/style.css';
 
 					$this->jsPath = $pathPrefix . $this->slug . '/' . $this->slug . '.js';
 					$this->jsURI = $uriPrefix . $this->slug . '/' . $this->slug . '.js';
+					
+					if ($jsDevExists)
+					{
+						$this->jsDevPath = $pathPrefix . $this->slug . '/' . $this->slug . '.dev.js';
+						$this->jsDevURI = $uriPrefix . $this->slug . '/' . $this->slug . '.dev.js';
+					}
+					
+					$this->pathPrefix = $pathPrefix;
+					$this->uriPrefix = $uriPrefix;
 					
 					return true;
 					
@@ -224,7 +239,17 @@ class Total_Slider_Template {
 							$this->jsPath = null;
 							$this->jsURI = null;
 						}
-					}				
+						
+						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.dev.js'))
+						{
+							$this->jsDevPath = $p['path'] . $this->slug . '/' . $this->slug . '.dev.js';
+							$this->jsDevURI = $p['uri'] . $this->slug . '/' . $this->slug . '.dev.js';						
+						}
+						else {
+							$this->jsDevPath = null;
+							$this->jsDevURI = null;
+						}
+					}			
 				
 					if (!$this->cssPath || !$this->cssURI || !$this->phpPath || !$this->phpURI) {
 					
@@ -234,10 +259,14 @@ class Total_Slider_Template {
 						)
 						{
 							$this->phpPath = $p['path'] . $this->slug . '/' . $this->slug . '.php';
-							$this->cssPath = $p['path'] . $this->slug . '/' . 'style.css';
+							$this->cssPath = $p['path'] . $this->slug . '/style.css';
 							
 							$this->phpURI = $p['uri'] . $this->slug . '/'. $this->slug . '.php';
-							$this->cssURI = $p['uri'] . $this->slug . '/'. 'style.css';								
+							$this->cssURI = $p['uri'] . $this->slug . '/style.css';
+							
+							$this->pathPrefix = $p['path'];
+							$this->uriPrefix = $p['uri'];
+												
 						}
 						else {
 							$this->phpPath = null;
@@ -268,8 +297,8 @@ class Total_Slider_Template {
 				else if (!$this->cssPath || !$this->cssURI)
 				{
 					$missingFile = 'CSS';
-					$expectedLocation = $prefix['child']['path'] . $this->slug . '/' . 'style.css\' or \'';
-					$expectedLocation .= $prefix['parent']['path'] . $this->slug . '/' . 'style.css';					
+					$expectedLocation = $prefix['child']['path'] . $this->slug . '/style.css\' or \'';
+					$expectedLocation .= $prefix['parent']['path'] . $this->slug . '/style.css';					
 				}
 				
 				// if a file was missing, then bubble up a relevant exception
@@ -287,7 +316,72 @@ class Total_Slider_Template {
 			break;
 			
 			case 'downloaded':
-			
+				//NOTE: in the conspicious absence of a `content_path()` function, we must use the WP_CONTENT_DIR constant
+				
+				if (!defined('WP_CONTENT_DIR'))
+				{
+					throw new UnexpectedValueException(__('Unable to determine the WP_CONTENT_DIR, so cannot load this template.', 'total_slider'), 102);
+					return false;					
+				}
+				
+				$pathPrefix = WP_CONTENT_DIR . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				$uriPrefix = content_url() . '/'. TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				
+				$phpExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.php' );
+				$cssExists = @file_exists($pathPrefix . $this->slug . '/style.css';
+				$jsExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.js' );
+				$jsDevExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.dev.js' );
+								
+				$missingFile = '';
+				
+				if (!$phpExists)
+				{
+					$missingFile = 'PHP';
+					$expectedLocation = $pathPrefix . $this->slug . '/' . $this->slug . '.php';			
+				}
+				else if (!$jsExists)
+				{
+					$missingFile = 'JS';
+					$expectedLocation = $pathPrefix . $this->slug . '/' . $this->slug . '.js';								
+				}
+				else if (!$cssExists)
+				{
+					$missingFile = 'CSS';
+					$expectedLocation = $pathPrefix . $this->slug . '/style.css';										
+				}
+				
+				else
+				{
+					$this->phpPath = $pathPrefix . $this->slug . '/' . $this->slug . '.php';
+					$this->phpURI = $uriPrefix . $this->slug . '/' . $this->slug . '.php';
+					
+					$this->cssPath = $pathPrefix . $this->slug . '/style.css';
+					$this->cssURI = $uriPrefix . $this->slug . '/style.css';
+
+					$this->jsPath = $pathPrefix . $this->slug . '/' . $this->slug . '.js';
+					$this->jsURI = $uriPrefix . $this->slug . '/' . $this->slug . '.js';
+					
+					if ($jsDevExists)
+					{
+						$this->jsDevPath = $pathPrefix . $this->slug . '/' . $this->slug . '.dev.js';
+						$this->jsDevURI = $uriPrefix . $this->slug . '/' . $this->slug . '.dev.js';
+					}					
+					
+					$this->pathPrefix = $pathPrefix;
+					$this->uriPrefix = $uriPrefix;					
+					
+					return true;
+					
+				}
+				
+				// if a file was missing, then bubble up a relevant exception
+				if (!empty($missingFile))
+				{
+					throw new RuntimeException(
+						sprintf(__("The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider'), $missingFile, $expectedLocation)
+					, 201);
+					return false;
+				}			
 			break;
 			
 			default:
@@ -297,6 +391,152 @@ class Total_Slider_Template {
 			
 			
 		}
+		
+	}
+	
+	/***********	Canonical path and URI accessor methods		***********/
+	
+	public function pathPrefix()
+	{
+	/*
+		Return the canonical path for this template.
+	*/	
+	
+		if (!$this->pathPrefix)
+		{
+			$this->canonicalize();
+		}
+		
+		return $this->pathPrefix;
+		
+	}
+	
+	public function uriPrefix()
+	{
+	/*
+		Return the canonical URI for this template.
+	*/
+	
+		if (!$this->uriPrefix)
+		{
+			$this->canonicalize();
+		}
+		
+		return $this->uriPrefix;
+		
+	}
+	
+	public function phpPath()
+	{
+	/*
+		Return the canonical path to this template's PHP file.
+	*/
+		
+		if (!$this->phpPath)
+		{
+			$this->canonicalize();
+		}
+		
+		return $this->phpPath;
+		
+	}
+	
+	public function jsPath()
+	{
+	/*
+		Return the canonical path to this template's JavaScript file.
+	*/
+	
+		if (!$this->jsPath)
+		{
+			$this->canonicalize();
+		}
+		
+		return $this->jsPath;
+	
+	}
+	
+	public function jsDevPath()
+	{
+	/*
+		Return the canonical path to this template's development (non-minified) JavaScript file.
+	*/	
+	
+		if (!$this->jsDevPath)
+		{
+			return $this->jsPath;
+		}
+		
+		return $this->jsDevPath;
+				
+	}
+	
+	public function cssPath()
+	{
+	/*
+		Return the canonical path to this template's CSS file.
+	*/	
+		if (!$this->cssPath)
+		{
+			$this->canonicalize();
+		}
+		
+		return $this->cssPath;		
+	}
+	
+	public function phpURI()
+	{
+	/*
+		Return the canonical URI for this template's PHP file.
+	*/
+		if (!$this->phpURI)
+		{
+			$this->canonicalize();
+		}
+		
+		return $this->phpURI;	
+		
+	}
+	
+	public function jsURI()
+	{
+	/*
+		Return the canonical URI for this template's JavaScript file.
+	*/
+		if (!$this->jsURI)
+		{
+			$this->canonicalize();
+		}
+		
+		return $this->jsURI;
+		
+	}
+	
+	public function jsDevURI()
+	{
+	/*
+		Return the canonical URI for this template's development (non-minified) JavaScript file.
+	*/
+		if (!$this->jsDevURI)
+		{
+			return $this->jsURI;
+		}
+		
+		return $this->jsDevURI;
+		
+	}
+	
+	public function cssURI()
+	{
+	/*
+		Return the canonical URI for this template's PHP file.
+	*/
+		if (!$this->cssURI)
+		{
+			$this->canonicalize();
+		}
+		
+		return $this->cssURI;	
 		
 	}
 	
