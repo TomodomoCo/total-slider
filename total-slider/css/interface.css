@@ -144,6 +144,9 @@ ul#new-slide-button li {
 	cursor: move;
 }
 
+.preview-var-placeholder {
+	display: none;	
+}
 
 /* Edit area */
 

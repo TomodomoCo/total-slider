@@ -1486,21 +1486,23 @@ class Total_Slider {
 		?>
 		<div id="edit-area">
 
-			<!--<ul id="total-slider" class="total-slider">
-
-				<li id="preview-area" class="total-slider-slide">
-
-					<div id="slide-preview" class="total-slider-overlay">
-						<h2 class="total-slider-title" id="slide-preview-title"><?php _e('untitled', 'total_slider');?></h2>
-						<div class="total-slider-description">
-							<p id="slide-preview-description"><?php _e('(no text)', 'total_slider');?></p>
-						</div>
-					</div>
-
-				</li>
-
-			</ul>-->
+			<?php /*
 			
+				These elements are placeholders. We will briefly put the title and description in these elements,
+				so we can pull the values back out from $.text() on the objects.
+				
+				Doing so neuters executable stuff and HTML that we don't want to inject into the EJS template
+				and possibly break things or be a local security issue.
+			
+			*/ ?>
+			<div id="preview-var-title" class="preview-var-placeholder"></div>
+			<div id="preview-var-description" class="preview-var-placeholder"></div>
+			
+			<!--
+				The div 'preview-slide' is where EJS will render to.
+				
+				The EJS template to begin with must itself live in a separate text/ejs script block.
+			-->
 			<div id="preview-slide">
 			<script id="slide-ejs" type="text/ejs">
 			<?php
