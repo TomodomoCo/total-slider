@@ -414,21 +414,21 @@ class Total_Slider {
 		{
 		
 			// load .dev.js if available, if SCRIPT_DEBUG is true in wp-config.php
-			$maybeDev = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? 'dev.' : '';		
-			
-			// can.js
+			$maybeDev = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? 'dev.' : '';
 			
 			wp_register_script(
-				'total-slider-canjs',										/* handle */
-				plugin_dir_url(__FILE__).'js/can.custom.'.$maybeDev.'js',	/* src */
+			
+				'total-slider-ejs', 										/* handle */
+				plugin_dir_url( __FILE__ ).'js/ejs.'.$maybeDev.'js',		/* src */
 				array(
 					'jquery', 'jquery-ui-draggable', 'jquery-ui-droppable',
-					'jquery-ui-sortable'
+					'jquery-ui-sortable', 'prototype'
 				),															/* deps */
 				date("YmdHis", @filemtime( plugin_dir_path( __FILE__ ) .
-							'js/can.custom.'.$maybeDev.'js'	) ),			/* ver */
-				true														/* in_footer */				
+							'js/ejs.'.$maybeDev.'js'	) ),				/* ver */
+				true														/* in_footer */		
 			);
+
 
 			// get our JavaScript on
 			wp_register_script(
@@ -437,14 +437,17 @@ class Total_Slider {
 				plugin_dir_url( __FILE__ ).'js/interface.'.$maybeDev.'js',	/* src */
 				array(
 					'jquery', 'jquery-ui-draggable', 'jquery-ui-droppable',
-					'jquery-ui-sortable'//, 'total-slider-canjs'
+					'jquery-ui-sortable', 'total-slider-ejs'
 				),															/* deps */
 				date("YmdHis", @filemtime( plugin_dir_path( __FILE__ ) .
 							'js/interface.'.$maybeDev.'js'	) ),			/* ver */
 				true														/* in_footer */		
 			);
 			
+			
 			wp_enqueue_script('jquery');
+			
+			wp_enqueue_script('prototype');
 
 			wp_enqueue_script('wp-ajax-response');
 
@@ -461,8 +464,8 @@ class Total_Slider {
 
 			wp_enqueue_style('wp-pointer');
 			wp_enqueue_script('wp-pointer');
-
-			//wp_enqueue_script('total-slider-canjs');
+			
+			wp_enqueue_script('total-slider-ejs');
 			
 			wp_enqueue_script('total-slider-interface');
 
@@ -1498,6 +1501,7 @@ class Total_Slider {
 
 			</ul>-->
 			
+			<div id="preview-slide">
 			<?php
 			
 			// for now, just render our default template
@@ -1507,7 +1511,7 @@ class Total_Slider {
 			echo $template->render();
 			
 			?>
-
+			</div>
 		</div>
 
 		<div style="clear:both;"></div><?php

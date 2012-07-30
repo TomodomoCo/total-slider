@@ -641,7 +641,7 @@ class Total_Slider_Widget_Templater
 		Return the slide title token.
 	*/
 
-		return '<%= slides_title %>';
+		return "<%= title %>";
 
 	}
 
@@ -661,7 +661,7 @@ class Total_Slider_Widget_Templater
 		Return the slide description token.
 	*/
 
-		return '<%= slides_description %>';
+		return "<%= description %>";
 
 	}
 
@@ -681,7 +681,7 @@ class Total_Slider_Widget_Templater
 		Return the background URL token.
 	*/
 
-		return '<%= slides_background %>';
+		return '<%= background_url %>'; // use other quote style -- likely in a url() CSS block
 
 	}
 
@@ -701,7 +701,7 @@ class Total_Slider_Widget_Templater
 		Return the slide link token.
 	*/
 
-		return '<%= slides_link %>';
+		return "<%= link %>";
 
 	}
 
@@ -721,7 +721,7 @@ class Total_Slider_Widget_Templater
 		Return the X coordinate token.
 	*/
 
-		return '<%= slides_x %>';
+		return "<%= x %>";
 
 	}
 
@@ -741,7 +741,7 @@ class Total_Slider_Widget_Templater
 		Return the Y coordinate token.
 	*/
 
-		return '<%= slides_y %>';
+		return "<%= y %>";
 
 	}
 
@@ -761,7 +761,7 @@ class Total_Slider_Widget_Templater
 		Return the slide identifier token.
 	*/
 
-		return '<%= slides_identifier %>';
+		return "<%= identifier %>";
 
 	}
 

@@ -23,6 +23,7 @@ var dontStartEdit = false;
 var newShouldShuffle = false;
 var deleteCaller = false;
 var linkToSave = '';
+var tplEJS = false;
 
 /* language is now done by total_slider.php:jsL10n() */
 
@@ -881,5 +882,12 @@ jQuery(document).ready(function() {
 		});
 	
 	}
+	
+	
+	// EJS renderer
+	var psEl = jQuery('#preview-slide');
+	tplEJS = new EJS({element: psEl});
+	alert(tplEJS.render({title: 'Test'} ));
+	
 
 });
