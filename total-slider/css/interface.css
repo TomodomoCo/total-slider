@@ -140,8 +140,8 @@ ul#new-slide-button li {
 	min-height:250px;
 }
 
-#slide-preview {
-	cursor: move;
+.total-slider-template-draggable {
+	cursor: move !important;
 }
 
 .preview-var-placeholder {

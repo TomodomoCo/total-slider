@@ -14,6 +14,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 var isEditing = false;
 var isEditingUntitledSlide = false;
 var editingSlideSortButton = false;
@@ -37,7 +38,7 @@ var slidePreviewData = {
 	
 };
 
-var slidePreviewUntitledData = slidePreviewData;
+var slidePreviewUntitledData;
 
 /* language is now done by total_slider.php:jsL10n() */
 
@@ -54,6 +55,8 @@ window.onbeforeunload = function() {
 
 jQuery(document).ready(function($) {
 
+	/* !Preserve slidePreviewUntitledData */
+	slidePreviewUntitledData = $.extend(true, {}, slidePreviewData);
 	
 	/* !Instantiate and initially render preview area */
 	tplEJS = new EJS({element: 'slide-ejs'});
@@ -183,6 +186,7 @@ jQuery(document).ready(function($) {
 			$('#slidesort-container').animate({ scrollLeft: parseInt($('#slidesort').css('width')) - 180 }, 1500);
 			
 			$().clearForm();
+			
 		}
 	
 	});
@@ -198,18 +202,16 @@ jQuery(document).ready(function($) {
 		$('#edit-slide-description').val('');
 		$('#edit-slide-image-url').val('');
 		$('#edit-slide-link').val('');
-		$('#slide-preview-title').html(_total_slider_L10n.newSlideTemplateUntitled);
-		$('#slide-preview-description').html(_total_slider_L10n.newSlideTemplateNoText);
 		$('#slide-link-internal-id').val('');
 		$('#slide-link-internal-display').html(_total_slider_L10n.slideEditNoPostSelected);
 		$('#slide-link-is-internal').prop('checked', false);
 		$('#slide-link-is-external').prop('checked', false);
 		$('#slide-link-internal-settings').hide();
 		$('#slide-link-external-settings').hide();	
-		//$('#edit-slide-image-title').text('');
 		
-		$('#slide-preview').offset({ left: $('#preview-area').offset().left, top: $('#preview-area').offset().top } ); 
-		// reset offset on box
+		// reset preview area
+		slidePreviewData = $.extend(true, {}, slidePreviewUntitledData);
+		$().updateSlidePreview();
 		
 		$('#edit-controls-saving').fadeTo(0,0).hide();
 		
@@ -217,11 +219,6 @@ jQuery(document).ready(function($) {
 		$('#edit-controls-save').val(_total_slider_L10n.saveButtonValue);
 		
 		linkToSave = '';
-		
-		$('#preview-area').css('background', '');
-		
-		window.setTimeout(function() { }, 550);
-			
 	
 	}
 	
@@ -238,9 +235,7 @@ jQuery(document).ready(function($) {
 	*/
 	
 	$.fn.clickSlideObject = function(object) {
-	
-		
-	
+
 		if (dontStartEdit)
 			return;
 	
@@ -318,22 +313,22 @@ jQuery(document).ready(function($) {
 							$('#slide-link-external-settings').hide();
 						}
 						
-						$('#slide-preview-title').text(result.title);
-						$('#slide-preview-description').text(result.description);
+						slidePreviewData.title = result.title;
+						slidePreviewData.description = result.description;
 						
 						// put the background image on
-						$('#preview-area').css('background', 'url(' + result.background + ')');
+						slidePreviewData.background_url = result.background;
 						originalBackground = result.background;
 						
 						// restore the pos x and pos y of the slide preview box
 						if (!VPM_SHOULD_DISABLE_XY)
 						{
-							var containerPos = $('#preview-area').offset();
-							
-							var newLeft = containerPos.left + result.title_pos_x;
-							var newTop = containerPos.top + result.title_pos_y
-							
-							$('#slide-preview').offset({ left: newLeft, top: newTop });
+							slidePreviewData.x = result.title_pos_x;
+							slidePreviewData.y = result.title_pos_y;
+						}
+						else {
+							slidePreviewData.x = slidePreviewUntitledData.x;
+							slidePreviewData.y = slidePreviewUntitledData.y;
 						}
 						
 						// ok, do the grand unveiling
@@ -341,6 +336,8 @@ jQuery(document).ready(function($) {
 						$('#edit-controls-choose-hint').fadeTo(400,0).hide();
 						
 						editingSlideSortButton = $(object).attr('id');
+						
+						$().updateSlidePreview();
 						
 					}				
 				},
@@ -419,9 +416,11 @@ jQuery(document).ready(function($) {
 		/*
 		We do a little dance here, pushing the values for description and title
 		into the preview-var-* div's text(), then pulling the text() back out.
-		This is to neuter any HTML or JS that might otherwise be potent, so we
+		This is to help neuter any HTML or JS that might otherwise be potent, so we
 		don't unintentionally inject executable data into the EJS rendering.
 		*/
+		
+		// we are doing a PHP htmlspecialchars() imitation as well
 		
 		$('#preview-var-title').text(slidePreviewData.title);
 		slidePreviewData.title = $('#preview-var-title').text().replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#039;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -447,17 +446,34 @@ jQuery(document).ready(function($) {
 		}
 		
 		tplEJS.update('preview-slide', slidePreviewData );
+		
+		$().makeDraggable();
 				
 	}
 	
-	/* !Make the preview slide in the edit area draggable */
-	if (!VPM_SHOULD_DISABLE_XY)
-	{
-		$('#slide-preview').draggable({ containment: '#preview-area' } );
-	}
-	else {
-	/* or disable the drag cursor if X/Y positioned is disabled in template */
-		$('#slide-preview').css('cursor', 'default');
+	$.fn.makeDraggable = function() {
+	/* Make the preview slide in the edit area draggable */
+		if (!VPM_SHOULD_DISABLE_XY)
+		{
+			$('.total-slider-template-draggable').draggable({
+				containment: '.total-slider-template-draggable-parent',
+				stop: function(event, ui) {
+					// recalculate offsets and update our slidePreviewData for refreshing state properly
+					var calcBoxOffsetLeft = $('.total-slider-template-draggable').offset().left - $('.total-slider-template-draggable-parent').offset().left;
+					var calcBoxOffsetTop  = $('.total-slider-template-draggable').offset().top - $('.total-slider-template-draggable-parent').offset().top;
+					
+					slidePreviewData.x = parseInt(calcBoxOffsetLeft);
+					slidePreviewData.y = parseInt(calcBoxOffsetTop);
+					
+					console.log("x = " + slidePreviewData.x + ", y = " + slidePreviewData.y);
+					
+				},
+			});
+		}
+		else {
+		/* or disable the drag cursor if X/Y positioned is disabled in template */
+			$('.total-slider-template-draggable').css('cursor', 'default');
+		}
 	}
 	
 	/* !Trigger the upload thickbox for the background image */
@@ -485,10 +501,12 @@ jQuery(document).ready(function($) {
 		//$('#edit-slide-image-title').text(imgTitle);
 		
 		// update the preview to show this background
-		$('#preview-area').css('background', 'url(' + imgurl + ')');
+		slidePreviewData.background_url = imgurl;
 		$('#' + editingSlideSortButton).children('.slidesort_slidebox').css('background', 'url(' + imgurl + ')');
 		
 		tb_remove();
+		
+		$().updateSlidePreview();
 		
 	}
 	
@@ -556,8 +574,9 @@ jQuery(document).ready(function($) {
 		$('#edit-controls-save,#edit-controls-cancel').prop('disabled', 'disabled');
 		// $('#edit-controls-save').val('Saving');
 			
-		var calcBoxOffsetLeft = $('#slide-preview').offset().left - $('#preview-area').offset().left;
-		var calcBoxOffsetTop  = $('#slide-preview').offset().top - $('#preview-area').offset().top;
+		//TODO solution
+		var calcBoxOffsetLeft = $('.total-slider-template-draggable').offset().left - $('.total-slider-template-draggable-parent').offset().left;
+		var calcBoxOffsetTop  = $('.total-slider-template-draggable').offset().top - $('.total-slider-template-draggable-parent').offset().top;
 	
 		if (isEditingUntitledSlide) {
 		
@@ -954,5 +973,7 @@ jQuery(document).ready(function($) {
 		});
 	
 	}
+	
+	$().makeDraggable();
 
 });

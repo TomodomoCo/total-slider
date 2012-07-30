@@ -607,6 +607,18 @@ class Total_Slider_Widget_Templater
 		return 1;
 
 	}
+	
+	public function is_runtime()
+	{
+	/*
+		Allows the template to be aware of whether it is running at runtime (viewing as part of the
+		actual site): 'true', or at edit-time (the user is editing slides in the admin interface, and
+		the template is executing as a preview): 'false'.
+	*/
+	
+		return false;
+		
+	}
 
 
 	public function has_slides()
@@ -776,6 +788,39 @@ class Total_Slider_Widget_Templater
 		// are still running, for the theme's purposes, on the previous iteration.
 		// Hence, returning the iteration - 1.
 
+	}
+	
+	public function make_draggable()
+	{
+	/*
+		Outputs a class that in edit-time mode makes the object draggable (for X/Y positioning
+		of the title/description overlay).
+	
+		Should be called when inside a DOM object's 'class' attribute.
+		
+		Does nothing at runtime.
+	*/
+		
+		echo 'total-slider-template-draggable';
+		
+	}	
+	
+	public function draggable_parent()
+	{
+	/*
+		Outputs a class that in edit-time mode makes the object the draggable's parent. This
+		will be used to calculate the X/Y offset for the title/description box.
+		
+		This element will also be used as the containment for the draggable title/description box,
+		i.e. the box will not be able to be dragged outside of the object marked with this class.
+		
+		Should be called when inside a DOM object's 'class' attribute.
+		
+		Does nothing at runtime.
+	*/
+		
+		echo 'total-slider-template-draggable-parent';
+		
 	}
 
 

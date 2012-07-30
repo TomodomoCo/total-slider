@@ -422,7 +422,7 @@ class Total_Slider {
 				plugin_dir_url( __FILE__ ).'js/ejs.'.$maybeDev.'js',		/* src */
 				array(
 					'jquery', 'jquery-ui-draggable', 'jquery-ui-droppable',
-					'jquery-ui-sortable', 'prototype'
+					'jquery-ui-sortable'
 				),															/* deps */
 				date("YmdHis", @filemtime( plugin_dir_path( __FILE__ ) .
 							'js/ejs.'.$maybeDev.'js'	) ),				/* ver */
@@ -446,8 +446,6 @@ class Total_Slider {
 			
 			
 			wp_enqueue_script('jquery');
-			
-			wp_enqueue_script('prototype');
 
 			wp_enqueue_script('wp-ajax-response');
 
@@ -1491,7 +1489,7 @@ class Total_Slider {
 				These elements are placeholders. We will briefly put the title and description in these elements,
 				so we can pull the values back out from $.text() on the objects.
 				
-				Doing so neuters executable stuff and HTML that we don't want to inject into the EJS template
+				Doing so helps to neuter executable stuff and HTML that we don't want to inject into the EJS template
 				and possibly break things or be a local security issue.
 			
 			*/ ?>
@@ -1560,7 +1558,6 @@ class Total_Slider {
 								</th>
 								<td>
 									<input id="edit-slide-image-url" type="hidden" name="slide-image" />
-									<!--<span id="edit-slide-image-title"></span>-->
 									<input id="edit-slide-image-upload" type="button" class="button" value="<?php _e('Upload or choose image', 'total_slider');?>" />
 								</td>
 							</tr>
@@ -1786,6 +1783,18 @@ class Total_Slider_Widget extends WP_Widget {
 
 		return count($this->slides);
 
+	}
+	
+	public function is_runtime()
+	{
+	/*
+		Allows the template to be aware of whether it is running at runtime (viewing as part of the
+		actual site): 'true', or at edit-time (the user is editing slides in the admin interface, and
+		the template is executing as a preview): 'false'.
+	*/
+	
+		return true;
+		
 	}
 
 
@@ -2037,6 +2046,40 @@ class Total_Slider_Widget extends WP_Widget {
 		// Hence, returning the iteration - 1.
 
 	}
+	
+		
+	public function make_draggable()
+	{
+	/*
+		Outputs a class that in edit-time mode makes the object draggable (for X/Y positioning
+		of the title/description overlay).
+	
+		Should be called when inside a DOM object's 'class' attribute.
+	*/
+	
+		// here in runtime, we do nothing
+		
+		return;
+		
+	}
+	
+	public function draggable_parent()
+	{
+	/*
+		Outputs a class that in edit-time mode makes the object the draggable's parent. This
+		will be used to calculate the X/Y offset for the title/description box.
+		
+		This element will also be used as the containment for the draggable title/description box,
+		i.e. the box will not be able to be dragged outside of the object marked with this class.
+		
+		Should be called when inside a DOM object's 'class' attribute.
+		
+		Does nothing at runtime.
+	*/
+		
+		return;
+		
+	}	
 
 
 };
