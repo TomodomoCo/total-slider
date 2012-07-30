@@ -110,6 +110,12 @@ class Total_Slide_Group {
 		Load this slide group's name and slug into the object, from the DB.
 	*/
 	
+		$allowedTemplateLocations = 	array(
+			'builtin',
+			'theme',
+			'downloaded'
+		);
+	
 		if (!get_option('total_slider_slide_groups'))
 		{
 			return false;
@@ -138,15 +144,23 @@ class Total_Slide_Group {
 			$this->name = $currentGroups[$theIndex]->name;
 			$this->slug = Total_Slider::sanitizeSlideGroupSlug($currentGroups[$theIndex]->slug);
 			
-			if (property_exists($currentGroups[$theIndex], 'templateContext') &&
-				in_array($currentGroups[$theIndex]->templateLocation, $allowedTemplateContexts)
+			if (property_exists($currentGroups[$theIndex], 'templateLocation') &&
+				in_array($currentGroups[$theIndex]->templateLocation, $allowedTemplateLocations)
 			)
 			{
 				$this->templateLocation = $currentGroups[$theIndex]->templateLocation;
 			}
-			if (property_exists($currentGroups[$theIndex], 'template'))
+			else {
+				$this->templateLocation = 'builtin';
+			}
+			
+			if (property_exists($currentGroups[$theIndex], 'template') &&
+			strlen($currentGroups[$theIndex]->template) > 0)
 			{
 				$this->template = $currentGroups[$theIndex]->template;
+			}
+			else {
+				$this->template = 'default';
 			}
 			
 			return true;

@@ -46,7 +46,7 @@
 .total-slider-overlay {
 	position: absolute;
 	width: 300px;
-	background: url(../img/slider-desc-bg.png);
+	background: url(img/slider-desc-bg.png);
 	padding: 2px 9px 0;
 	text-align: left !important
 }

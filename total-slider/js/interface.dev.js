@@ -465,7 +465,8 @@ jQuery(document).ready(function($) {
 					slidePreviewData.x = parseInt(calcBoxOffsetLeft);
 					slidePreviewData.y = parseInt(calcBoxOffsetTop);
 					
-					console.log("x = " + slidePreviewData.x + ", y = " + slidePreviewData.y);
+					isEditing = true;
+					//console.log("x = " + slidePreviewData.x + ", y = " + slidePreviewData.y);
 					
 				},
 			});

@@ -43,6 +43,10 @@ if (!version_compare(get_bloginfo('version'), '3.4', '>='))
 
 
 require_once(dirname(__FILE__).'/includes/slide_group.php');
+require_once(dirname(__FILE__) . '/includes/template_manager.php');
+
+$theSlug = false;
+$theTemplate = false;
 
 /******************************************** Total_Slider main class ********************************************/
 
@@ -300,6 +304,52 @@ class Total_Slider {
 		$templateOptions = array('crop_width' => $cropWidth, 'crop_height' => $cropHeight, 'disable_xy' => $disableXY);
 		return $templateOptions;
 
+	}
+	
+	public static function determineTemplate()
+	{
+	/*
+		Determine which template we should use, and its location, from the slide group's template
+		attribute.
+	*/
+	
+		global $theSlug, $theTemplate;
+		
+		if ($theTemplate)
+		{
+			return $theTemplate;
+		}
+		
+		if (!$theSlug)
+		{
+			if (!array_key_exists('group', $_GET))
+			{
+				return false;
+			}
+			
+			$theSlug = Total_Slider::sanitizeSlideGroupSlug($_GET['group']);		
+		}
+		
+		$slideGroup = new Total_Slide_Group($theSlug);
+		if (!$slideGroup->load())
+		{
+			return false;
+		}
+		
+		$slug = $slideGroup->template;
+		$location = $slideGroup->templateLocation;
+		
+		try {
+			$theTemplate = new Total_Slider_Template($slug, $location);
+		}
+		catch (Exception $e)
+		{
+			//TODO fixme
+			echo '<h1>' . esc_html($e->getMessage()) . '</h1>';
+		}
+		
+		return $theTemplate;
+		
 	}
 
 	public static function setCapabilityForRoles($rolesToSet)
@@ -603,19 +653,20 @@ class Total_Slider {
 		
 	}
 
-	public static function enqueueSliderFrontend($context = 'frontend', $templateLocation = 'builtin', $template = 'default')
+	public static function enqueueSliderFrontend($context = 'frontend')
 	{
 	/*
-		When WordPress is enqueueing the styles, inject our slider CSS and JavaScript in.
-		Use the default template if not available in the active theme, or use the active theme's
-		Total Slider templates if they do indeed exist.
+		When WordPress is enqueueing the styles, inject our slider CSS and JavaScript in. We will use the Template Manager
+		to canonicalize the URIs and paths for the JS and CSS (including .dev.js etc.), and simply enqueue what it tells us to here.
 
 		If $context is 'backend', we will load the CSS only and not the JS.
 
 	*/
 	
+		global $theTemplate;
+	
 		// load .dev.js if available, if SCRIPT_DEBUG is true in wp-config.php
-		$maybeDev = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? 'dev.' : '';
+		$isDev = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? true : false;
 
 		$generalOptions = get_option('total_slider_general_options');
 
@@ -625,113 +676,55 @@ class Total_Slider {
 		{
 			return false;
 		}
-
-		// look for a template file for total-slider in the current active theme
-		$themePath = get_stylesheet_directory();
-
-		if (
-			@file_exists($themePath . '/total-slider-templates' )
-			&& @is_dir($themePath . '/total-slider-templates' )
-			&& @file_exists($themePath . '/total-slider-templates/total-slider-template.css')
-		)
+		
+		if (!$theTemplate || !is_a($theTemplate, 'Total_Slider_Template'))
+		{	
+			// determine the current template
+			if (!Total_Slider::determineTemplate())	{
+				return false;		
+			}		
+		}
+		
+		// load the CSS
+		wp_register_style(
+			
+			'total-slider-frontend',										/* handle */
+			$theTemplate->cssURI(),											/* src */
+			array(),														/* deps */
+			date("YmdHis", @filemtime($theTemplate->cssPath() ) ),			/* ver */
+			'all'															/* media */
+		
+		);
+		
+		wp_enqueue_style('total-slider-frontend');
+		
+		if ($context != 'backend')
 		{
-
-			// determine theme URL
-			$themeURL = get_stylesheet_directory_uri(); // get 'stylesheet' not 'template' will support child themes
-
-			// enqueue the user's custom CSS template
-			wp_register_style(
-				'total-slider-frontend',																			/* handle */
-				$themeURL . '/total-slider-templates/total-slider-template.css',									/* src */
-				array(),																							/* deps */
-				date("YmdHis", @filemtime($themePath . '/total-slider-templates/total-slider-template.css') ) , 	/* ver */
-				'all'																								/* media */
-			);
-
-			wp_enqueue_style('total-slider-frontend');
-
-			if ($context != 'backend')
+			if ($isDev)
 			{
-				// is there a custom JS to use?
-				if ( @file_exists($themePath . '/total-slider-templates/total-slider-template.'.$maybeDev.'js') )
-				{
-
-					// enqueue the user's custom JS template
-					wp_register_script(
-						'total-slider-frontend',																		/* handle */
-						$themeURL . '/total-slider-templates/total-slider-template.'.$maybeDev.'js',					/* src */
-						array('jquery'),																				/* deps */
-						date("YmdHis", @filemtime($themePath .
-												'/total-slider-templates/total-slider-template.'.$maybeDev.'js') ) ,	/* ver */
-						true																							/* in_footer */
-					);
-
-					wp_enqueue_script('total-slider-frontend');
-
-				}
-				else if ( @file_exists($themePath . '/total-slider-templates/total-slider-template.js') )
-				{
-					// dev.js doesn't exist, but .js does
-					wp_register_script(
-						'total-slider-frontend',																		/* handle */
-						$themeURL . '/total-slider-templates/total-slider-template.js',									/* src */
-						array('jquery'),																				/* deps */
-						date("YmdHis", @filemtime($themePath .
-												'/total-slider-templates/total-slider-template.js') ) ,					/* ver */
-						true																							/* in_footer */
-					);
-
-					wp_enqueue_script('total-slider-frontend');					
-				}
-				else {
-					// use the default JS
-
-					// and the frontend
-					wp_register_script(
-						'total-slider-frontend',															/* handle */
-						plugin_dir_url( __FILE__ ) . 'templates/total-slider-template.'.$maybeDev.'js',		/* src */
-						array('jquery'),																	/* deps */
-						date("YmdHis", @filemtime(plugin_dir_path( __FILE__ ) .
-														 '/templates/total-slider-template.'.$maybeDev.'js')) , 			/* ver */
-						true																				/* in_footer */
-					);
-					
-					wp_enqueue_script('total-slider-frontend');
-				}
+				$jsURI = $theTemplate->jsDevURI();
+				$jsPath = $theTemplate->jsDevPath();				
 			}
-
-		}
-		else {
-
-			// enqueue our defaults
-			wp_register_style(
-				'total-slider-frontend',																	/* handle */
-				plugin_dir_url( __FILE__ ) . 'templates/total-slider-template.css',							/* src */
-				array(),																					/* deps */
-				date("YmdHis", @filemtime(plugin_dir_path( __FILE__ ) .
-													 '/templates/total-slider-template.css')) , 			/* ver */
-				'all'																						/* media */
+			else {
+				$jsURI = $theTemplate->jsURI();
+				$jsPath = $theTemplate->jsPath();				
+			}
+			
+			// enqueue the JS
+			
+			wp_register_script(
+			
+				'total-slider-frontend',										/* handle */
+				$jsURI,															/* src */
+				array('jquery'),												/* deps */
+				date("YmdHis", @filemtime($jsPath) ),							/* ver */
+				true															/* in_footer */				
+			
 			);
-
-			wp_enqueue_style('total-slider-frontend');
-
-			if ($context != 'backend')
-			{
-
-				// and the frontend
-				wp_register_script(
-					'total-slider-frontend',															/* handle */
-					plugin_dir_url( __FILE__ ) . 'templates/total-slider-template.'.$maybeDev.'js',		/* src */
-					array('jquery'),																	/* deps */
-					date("YmdHis", @filemtime(plugin_dir_path( __FILE__ ) .
-													 '/templates/total-slider-template.'.$maybeDev.'js')) , 			/* ver */
-					true																				/* in_footer */
-				);
-
-				wp_enqueue_script('total-slider-frontend');
-
-			}
-		}
+			
+			wp_enqueue_script('total-slider-frontend');
+			
+		}		
 
 	}
 
@@ -1506,7 +1499,7 @@ class Total_Slider {
 			<?php
 			
 			// for now, just render our default template
-			require_once(dirname(__FILE__) . '/includes/template_manager.php');
+
 			$template = new Total_Slider_Template('default', 'builtin');
 			
 			echo $template->render();
