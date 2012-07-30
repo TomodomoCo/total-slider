@@ -1502,6 +1502,7 @@ class Total_Slider {
 			</ul>-->
 			
 			<div id="preview-slide">
+			<script id="slide-ejs" type="text/ejs">
 			<?php
 			
 			// for now, just render our default template
@@ -1511,6 +1512,7 @@ class Total_Slider {
 			echo $template->render();
 			
 			?>
+			</script>
 			</div>
 		</div>
 

@@ -885,9 +885,9 @@ jQuery(document).ready(function() {
 	
 	
 	// EJS renderer
-	var psEl = jQuery('#preview-slide');
+	var psEl = 'slide-ejs';
 	tplEJS = new EJS({element: psEl});
-	alert(tplEJS.render({title: 'Test'} ));
+	tplEJS.update('preview-slide', {title: 'Test', description: 'Description', x: '40', y: '50', identifier: 'preview', background_url: 'http://media.upfold.org.uk/pwdb40/images/me_small.jpg', link: '' } );
 	
 
 });

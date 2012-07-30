@@ -137,6 +137,7 @@ ul#new-slide-button li {
 	background: url(../img/slider-workspace-bg.png);
 	padding: 30px;
 	border: 1px solid #BBB;
+	min-height:250px;
 }
 
 #slide-preview {
