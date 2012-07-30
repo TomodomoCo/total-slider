@@ -1498,6 +1498,9 @@ class Total_Slider {
 	/*
 		Print to output the contents of the slide preview metabox.
 	*/
+	
+		global $theTemplate;
+	
 		?>
 		<div id="edit-area">
 
@@ -1521,12 +1524,15 @@ class Total_Slider {
 			<div id="preview-slide">
 			<script id="slide-ejs" type="text/ejs">
 			<?php
-			
-			// for now, just render our default template
-
-			$template = new Total_Slider_Template('default', 'builtin');
-			
-			echo $template->render();
+			if (!$theTemplate || !is_a($theTemplate, 'Total_Slider_Template'))
+			{	
+				// determine the current template
+				if (!Total_Slider::determineTemplate())	{
+					return false;		
+				}		
+			}
+		
+			echo $theTemplate->render();
 			
 			?>
 			</script>
@@ -1712,6 +1718,8 @@ class Total_Slider_Widget extends WP_Widget {
 		// look for a template file for total-slider in the current active theme
 		$themePath = get_stylesheet_directory();
 
+		//TODO widget needs to use new template manager for loading this in
+		
 		if (
 			@file_exists($themePath . '/total-slider-templates' )
 			&& @is_dir($themePath . '/total-slider-templates' )
