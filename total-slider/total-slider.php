@@ -944,7 +944,7 @@ class Total_Slider {
 		}
 
 		// if we are to create a new slide group, do that and redirect to edit
-		if (array_key_exists('action', $_GET) && $_GET['action'] == 'new_slide_group')
+		if (array_key_exists('action', $_GET) && $_GET['action'] == 'new_slide_group' && array_key_exists('_wpnonce', $_REQUEST))
 		{
 			if (wp_verify_nonce($_REQUEST['_wpnonce'], 'new-slide-group'))
 			{
@@ -1021,12 +1021,36 @@ class Total_Slider {
 					<tr class="form-field form-required">
 						<th scope="row"><label for="template-slug"><?php _e('Template', 'total_slider');?></label></th>
 						<td>
+							<?php $t = new Total_Slider_Template_Iterator(); ?>
 							<select name="template-slug" id="template-slug">
-								<optgroup label="Built-in"></optgroup>
 								
-								<optgroup label="Theme"></optgroup>
+								<?php $builtin = $t->discoverTemplates('builtin'); ?>
+								<?php if (is_array($builtin) && count($builtin) > 0): ?>
+								<optgroup label="Built-in">
+									<?php foreach($builtin as $tpl): ?>
+										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
+									<?php endforeach; ?>
+								</optgroup>
+								<?php endif; ?>
 								
-								<optgroup label="Downloaded"></optgroup>							
+								<?php $theme = $t->discoverTemplates('theme'); ?>
+								<?php if (is_array($theme) && count($theme) > 0): ?>
+								<optgroup label="Theme">
+									<?php foreach($theme as $tpl): ?>
+										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
+									<?php endforeach; ?>
+								</optgroup>
+								<?php endif; ?>								
+						
+								<?php $downloaded = $t->discoverTemplates('downloaded'); ?>
+								<?php if (is_array($downloaded) && count($downloaded) > 0): ?>
+								<!--<optgroup label="Downloaded">
+									<?php foreach($downloaded as $tpl): ?>
+										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
+									<?php endforeach; ?>																
+								</optgroup>	-->
+								<?php endif; ?>
+																
 							</select>
 						</td>
 					</tr>

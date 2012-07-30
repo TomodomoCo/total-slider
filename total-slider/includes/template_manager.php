@@ -35,12 +35,17 @@ if (!defined('TOTAL_SLIDER_IN_FUNCTIONS'))
 define('TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR', 'templates');
 define('TOTAL_SLIDER_TEMPLATES_DIR', 'total-slider-templates');
 
+if ( ! defined( 'WP_CONTENT_DIR' ) )
+	define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
+
+
 /* Exceptions:
 
 	1xx -- invalid input or arguments
 
 		101 -- the template location is not one of the allowed template locations.
 		102 -- Unable to determine the WP_CONTENT_DIR to load this template.
+		103 -- The allowed template locations are not available. This file must not be loaded without slide_group.php
 		
 	2xx -- unable to load the template
 		201 -- The template's %s file was not found, but we expected to find it at '%s'.
@@ -71,12 +76,6 @@ class Total_Slider_Template {
 	private $jsDevURI = null;
 	private $cssURI = null;
 	
-	private $allowedTemplateLocations = array(
-		'builtin',
-		'theme',
-		'downloaded'
-	);
-	
 	public function __construct($slug, $location)
 	{
 	/*
@@ -88,10 +87,18 @@ class Total_Slider_Template {
 		from the PHP file, and render the template for JavaScript edit-side purposes.
 	*/
 	
+		global $allowedTemplateLocations;
+		
+		if (!is_array($allowedTemplateLocations))
+		{
+			throw new UnexpectedValueException(__('The allowed template locations are not available. This file must not be loaded without slide_group.php', 'total_slider'), 103);
+			return;
+		}
+	
 		// get some key things ready
 		$this->slug = $this->sanitizeSlug($slug);
 		
-		if (in_array($location, $this->allowedTemplateLocations))
+		if (in_array($location, $allowedTemplateLocations))
 		{
 			$this->location = $location;
 		}
@@ -106,7 +113,7 @@ class Total_Slider_Template {
 		
 	}
 	
-	private function sanitizeSlug($slug)
+	public static function sanitizeSlug($slug)
 	{
 	/*
 		Sanitize a template slug before we assign it to our instance internally, or print
@@ -204,7 +211,7 @@ class Total_Slider_Template {
 			
 			case 'theme':
 				// check in child theme 'get_stylesheet_*', if not, look in parent theme 'get_template_directory()'
-				$prefix['child']['path'] = get_stylesheet_diretory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				$prefix['child']['path'] = get_stylesheet_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
 				$prefix['child']['uri'] = get_stylesheet_directory_uri() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
 				$prefix['parent']['path'] = get_template_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR .'/';
 				$prefix['parent']['uri'] = get_template_directory_uri() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
@@ -824,6 +831,128 @@ class Total_Slider_Widget_Templater
 	}
 
 
-}
+};
+
+class Total_Slider_Template_Iterator {
+/*
+	This class hunts through any of the builtin, theme (stylesheet_ and template_)
+	and downloaded (wp-content) directories to find templates.
+	
+	It will do crude checking for file existence and grab the template name, but leaves more detailed
+	inspection to the Total_Slider_Template class (e.g. more metadata parsing).
+*/
+
+	public function discoverTemplates($location) {
+	/*
+		Discovers the template files that are available in the given location (one of 'builtin',
+		'theme', 'downloaded'.
+		
+		Returns an array of the template slugs and names, which can be used for further inspection by
+		instantiating the Total_Slider_Template class with the slug and location.
+	*/
+		global $allowedTemplateLocations;
+		
+		if (!is_array($allowedTemplateLocations))
+		{
+			throw new UnexpectedValueException(__('The allowed template locations are not available. This file must not be loaded without slide_group.php', 'total_slider'), 103);
+			return false;
+		}
+		
+		// check the location given is valid	
+		if (!in_array($location, $allowedTemplateLocations))
+		{
+			throw new UnexpectedValueException(__('The supplied template location is not one of the allowed template locations', 'total_slider'), 101);
+			return false;
+		}
+		
+		// what path(s) should we walk?
+		$paths = array();
+		
+		switch ($location) {
+			
+			case 'builtin':
+				$paths[] = plugin_dir_path( dirname(__FILE__) ) . '/' . TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR . '/';
+			break;
+			
+			case 'theme':
+				$paths[] = get_stylesheet_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				
+				if (get_stylesheet_directory() != get_template_directory())
+					$paths[] = get_template_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR .'/';				
+			break;
+			
+			case 'downloaded':
+				if (!defined('WP_CONTENT_DIR'))
+				{
+					throw new UnexpectedValueException(__('Unable to determine the WP_CONTENT_DIR, so cannot find relevant templates.', 'total_slider'), 102);
+					return false;					
+				}
+				
+				// in the absence of content_dir() existing, we must use the WP_CONTENT_DIR constant. Sorry!
+				$paths[] = WP_CONTENT_DIR . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				
+			break;
+			
+			default:
+				return false;
+			break;
+						
+		}
+		
+		$templates = array();
+		$i = 0;
+		
+		// walk the walk
+		foreach($paths as $key => $path)
+		{
+			if (!@file_exists($path) || !@is_dir($path) ) {
+				continue;
+			}
+			
+			$files = @scandir($path);
+			
+			if (!$files)
+			{
+				continue;
+			}
+			
+			foreach($files as $f)
+			{
+			
+				if ($f == '.' || $f == '..')
+					continue;
+			
+				if (@is_dir($path . '/' . $f))
+				{			
+					if (@file_exists($path . '/' . $f . '/style.css'))
+					{
+					
+						$tplContent = @file_get_contents( $path . '/' . $f . '/style.css' );
+					
+						// extract the template name
+						$matches = array();
+						preg_match('/^\s*Template\sName:\s*(.*)/im', $tplContent, $matches);
+						
+						unset($tplContent);
+						
+						if ($matches && count($matches) > 1)
+						{
+							$templates[$i]['name'] = $matches[1];
+							$templates[$i]['slug'] = Total_Slider_Template::sanitizeSlug(basename($f));
+							++$i;
+						}
+						
+					}
+				}
+			}
+			
+		}
+		
+		return $templates;		
+		
+	}
+	
+	
+};
 
 ?>

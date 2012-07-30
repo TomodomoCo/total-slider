@@ -29,6 +29,12 @@ if (!defined('TOTAL_SLIDER_IN_FUNCTIONS'))
 	die('<h1>Forbidden</h1>');
 }
 
+static $allowedTemplateLocations = array(
+	'builtin',
+	'theme',
+	'downloaded'
+);
+
 	/* data structure
 	
 		a serialized array stored as a wp_option
@@ -110,11 +116,7 @@ class Total_Slide_Group {
 		Load this slide group's name and slug into the object, from the DB.
 	*/
 	
-		$allowedTemplateLocations = 	array(
-			'builtin',
-			'theme',
-			'downloaded'
-		);
+		global $allowedTemplateLocations;
 	
 		if (!get_option('total_slider_slide_groups'))
 		{

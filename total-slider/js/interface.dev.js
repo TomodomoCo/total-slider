@@ -59,8 +59,10 @@ jQuery(document).ready(function($) {
 	slidePreviewUntitledData = $.extend(true, {}, slidePreviewData);
 	
 	/* !Instantiate and initially render preview area */
-	tplEJS = new EJS({element: 'slide-ejs'});
-	tplEJS.update('preview-slide', slidePreviewData );
+	$('#slide-ejs').each(function() {
+		tplEJS = new EJS({element: 'slide-ejs'});
+		tplEJS.update('preview-slide', slidePreviewData );
+	});
 
 	$.fn.sortSlides = function () {
 	
