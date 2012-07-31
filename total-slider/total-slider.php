@@ -43,10 +43,11 @@ if (!version_compare(get_bloginfo('version'), '3.4', '>='))
 
 
 require_once(dirname(__FILE__).'/includes/slide_group.php');
-require_once(dirname(__FILE__) . '/includes/template_manager.php');
+require_once(dirname(__FILE__) . '/includes/template_manager.php'); //TODO efficiency -- conditional on 'page'? What about the widget?
 
 $theSlug = false;
 $theTemplate = false;
+$theTplError = false;
 
 /******************************************** Total_Slider main class ********************************************/
 
@@ -313,7 +314,7 @@ class Total_Slider {
 		attribute.
 	*/
 	
-		global $theSlug, $theTemplate;
+		global $theSlug, $theTemplate, $theTplError;
 		
 		if ($theTemplate)
 		{
@@ -344,8 +345,7 @@ class Total_Slider {
 		}
 		catch (Exception $e)
 		{
-			//TODO fixme
-			echo '<h1>' . esc_html($e->getMessage()) . '</h1>';
+			$theTplError = $e;
 		}
 		
 		return $theTemplate;
@@ -1090,7 +1090,7 @@ class Total_Slider {
 		Print the actual slides page for adding, editing and removing the slides.
 	*/
 
-		global $theSlug;
+		global $theSlug, $theTplError;
 
 		// permissions check
 		if (!current_user_can(TOTAL_SLIDER_REQUIRED_CAPABILITY))
@@ -1117,7 +1117,6 @@ class Total_Slider {
 			echo '</h1></div>';
 			return;
 		}
-
 
 		// add the metaboxes
 		add_meta_box('slide-sorter-mb', __('Slides', 'total_slider'), array('Total_Slider', 'printSlideSorterMetabox'), '_total_slider_slide', 'normal', 'core');
@@ -1154,6 +1153,14 @@ class Total_Slider {
 		<h3><?php _e('Sorry, this interface requires JavaScript to function.', 'total_slider');?></h3>
 		<p><?php _e('You will need to enable JavaScript for this page before any of the controls below will work.', 'total_slider');?></p>
 		</noscript>
+		
+		<?php if ($theTplError): ?>
+			<div id="template-error" class="updated settings-error below-h2">
+			<p><?php _e('There is a problem with this slide group&rsquo;s template.', 'total_slider'); ?></p>
+			<p><em><?php echo esc_html($theTplError->getMessage()); ?></em> (<?php echo esc_attr($theTplError->getCode()); ?>)</p>
+			<p><?php _e('Please either resolve this problem, or choose a different template for this slide group', 'total_slider'); ?></p>
+			</div>
+		<?php endif; ?>
 
 		<form name="vpm-the-slides">
 
@@ -1713,26 +1720,52 @@ class Total_Slider_Widget extends WP_Widget {
 		$this->slides = null;
 		$this->slider_iteration = 0;
 
-		$s = &$this; // $s is used by the theme to call our functions to actually display the data
-
-		// look for a template file for total-slider in the current active theme
-		$themePath = get_stylesheet_directory();
-
-		//TODO widget needs to use new template manager for loading this in
-		
-		if (
-			@file_exists($themePath . '/total-slider-templates' )
-			&& @is_dir($themePath . '/total-slider-templates' )
-			&& @file_exists($themePath . '/total-slider-templates/total-slider-template.php')
-		)
+		// determine the correct template to use
+		$group = new Total_Slide_Group(Total_Slider::sanitizeSlideGroupSlug($this->instance['groupSlug']));
+		if (!$group->load())
 		{
-			require($themePath . '/total-slider-templates/total-slider-template.php' );
+			_e('<strong>Total Slider:</strong> Could not find the selected slide group to show. Does it still exist?', 'total_slider');
+			return;
 		}
-		else
-		{ // if not, use our default
-			require( dirname(__FILE__) . '/templates/total-slider-template.php' );
+		
+		try {
+			$tpl = new Total_Slider_Template($group->template, $group->templateLocation);		
 		}
-
+		catch (Exception $e)
+		{
+			_e('<strong>Total Slider:</strong> Unable to load the template for this slide group.', 'total_slider');
+			echo ' <em>' . esc_html($e->getMessage) . '</em>';
+			return;
+		}
+		
+		// enqueue CSS and JS
+		wp_register_style(
+			'total-slider-' . esc_attr($group->template),					/* handle */
+			$tpl->cssURI(),													/* src */
+			array(),														/* deps */
+			date("YmdHis", @filemtime($tpl->cssPath() ) ),					/* ver */
+			'all'															/* media */	
+		);
+		
+		wp_enqueue_style( 'total-slider-' . esc_attr($group->template) );
+		
+		wp_register_script(	
+				'total-slider-' . esc_attr($group->template), 				/* handle */
+				$tpl->jsURI(),												/* src */
+				array(
+					'jquery'
+				),															/* deps */
+				date("YmdHis", @filemtime( $tpl->jsPath()) ),				/* ver */
+				true														/* in_footer */		
+		);
+		
+		wp_enqueue_script( 'total-slider-' . esc_attr($group->template) );
+		
+		$s = &$this; // $s is used by the theme to call our functions to actually display the data
+		
+		// include the template
+		include ( $tpl->phpPath() );
+		
 		unset($s);
 
 	}
@@ -2126,7 +2159,5 @@ add_action('admin_init', array('Total_Slider', 'passControlToAjaxHandler'));
 add_action('admin_head-media-upload-popup', array('Total_Slider', 'printUploaderJavaScript'));
 
 add_shortcode('totalslider', 'total_slider_shortcode');
-
-add_action('wp_enqueue_scripts', array('Total_Slider', 'enqueueSliderFrontend'));
 
 ?>
