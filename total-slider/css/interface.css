@@ -129,6 +129,10 @@ ul#new-slide-button li {
 	font-size:120%;
 }
 
+select#template-slug {
+	min-width:170px;	
+}
+
 
 /* Slide preview canvas */
 
@@ -219,10 +223,19 @@ ul#new-slide-button li {
 	top: 1px;
 }
 
+#template-switch-controls {
+	margin-bottom: 0;
+	padding:0;
+	margin-left:auto;
+	margin-right:auto;
+	text-align: center;
+	max-width:360px;
+}
+
 
 /* HINT TEXT */
 
-#edit-controls-choose-hint, .slidesort-add-hint, .no-items td {
+#edit-controls-choose-hint p, .slidesort-add-hint, .no-items td {
 	font-size: 150% !important;
 	color: #888 !important;
 	text-align: center !important;

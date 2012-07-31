@@ -385,10 +385,12 @@ jQuery(document).ready(function($) {
 		if ($(this).val().length < 1)
 		{
 			slidePreviewData.title = slidePreviewUntitledData.title;
+			$('#' + editingSlideSortButton + '_text').text(_total_slider_L10n.newSlideTemplateUntitled);
 			$().updateSlidePreview();
 		}
 		else {
 			slidePreviewData.title = $(this).val();
+			$('#' + editingSlideSortButton + '_text').text($(this).val());
 			$().updateSlidePreview();
 		}		
 

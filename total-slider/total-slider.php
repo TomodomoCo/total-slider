@@ -1209,6 +1209,20 @@ class Total_Slider {
 			</div>
 		<?php endif; ?>
 
+
+		<!-- unfinished style/placement -->
+		<!--TODO -->
+
+		<div id="template-switch-controls">
+			<p><?php _e('Template:', 'total_slider'); ?>							
+			<select name="template-slug" id="template-slug">
+				<option value="Default">Default</option>
+				
+			</select>
+			<input type="submit" class="button-secondary action" style="max-width:100px;" value="<?php _e('Change Template', 'total_slider');?>" />
+			</p>
+		</div>	
+
 		<form name="vpm-the-slides">
 
 			<div id="message-area" class="updated settings-error below-h2"></div>
@@ -1504,7 +1518,6 @@ class Total_Slider {
 
 		?><!--sortable slides-->
 		<?php $currentSlides = Total_Slider::getCurrentSlides($theSlug); ?>
-
 		<div id="slidesort-container">
 		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*180); ?>px;">
 		<?php
@@ -1610,7 +1623,7 @@ class Total_Slider {
 	?>
 
 				<div id="edit-controls-choose-hint">
-					<p><?php _e('Click a slide to edit it, or click ‘Add New’.', 'total_slider');?></p>
+					<p><?php _e('Click a slide to edit it, or click ‘Add New’.', 'total_slider');?></p>					
 				</div>
 
 				<div id="edit-controls">
@@ -1692,7 +1705,8 @@ class Total_Slider {
 					</div>
 				</form>
 
-			</div><?php
+			</div>
+			<?php
 
 	}
 
