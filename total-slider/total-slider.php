@@ -879,6 +879,8 @@ class Total_Slider {
 		Print the page for adding, deleting Slide Groups and for pushing people over
 		to the 'actual' slides editing interface for that Slide Group.
 	*/
+	
+		global $allowedTemplateLocations;
 
 
 		// permissions check
@@ -949,7 +951,7 @@ class Total_Slider {
 			if (wp_verify_nonce($_REQUEST['_wpnonce'], 'new-slide-group'))
 			{
 
-				if (!empty($_POST['group-name']))
+				if (!empty($_POST['group-name']) && !empty($_POST['template-slug']))
 				{
 					// add the new slide group
 					$newSlug = Total_Slider::sanitizeSlideGroupSlug(sanitize_title_with_dashes($_POST['group-name']));
@@ -970,6 +972,51 @@ class Total_Slider {
 					}
 
 					$newGroup = new Total_Slide_Group($newSlug, $_POST['group-name']);
+					
+					// set the new template
+					$desiredTplSlug = Total_Slider_Template::sanitizeSlug($_POST['template-slug']);
+					$tplLocation = false;
+					$tplSlug = false;
+
+					// determine which template location this template is from
+					$t = new Total_Slider_Template_Iterator();
+					
+					foreach($allowedTemplateLocations as $l)
+					{
+					
+						if ($tplLocation || $tplSlug)
+						{
+							break;
+						}
+					
+						$choices = $t->discoverTemplates($l, false);						
+
+						// find the right template and set our provision template slug and location to it
+						if (is_array($choices) && count($choices) > 0)
+						{
+							foreach($choices as $c)
+							{
+								if ($desiredTplSlug == $c['slug'])
+								{
+									$tplLocation = $l;
+									$tplSlug = $desiredTplSlug;
+									break;
+								}								
+							}
+						}
+												
+					}
+					
+					if ($tplLocation && $tplSlug)
+					{
+						$newGroup->templateLocation = $tplLocation;
+						$newGroup->template = $tplSlug;
+					}
+					else {
+						$newGroup->templateLocation = 'builtin';
+						$newGroup->template = 'default';
+					}
+					
 					$newGroup->save();
 
 					// add the new slides option for this group

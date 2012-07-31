@@ -886,7 +886,7 @@ class Total_Slider_Template_Iterator {
 	inspection to the Total_Slider_Template class (e.g. more metadata parsing).
 */
 
-	public function discoverTemplates($location) {
+	public function discoverTemplates($location, $shouldParseName = true) {
 	/*
 		Discovers the template files that are available in the given location (one of 'builtin',
 		'theme', 'downloaded'.
@@ -971,19 +971,31 @@ class Total_Slider_Template_Iterator {
 					if (@file_exists($path . '/' . $f . '/style.css'))
 					{
 					
-						$tplContent = @file_get_contents( $path . '/' . $f . '/style.css' );
+						if ($shouldParseName) {
 					
-						// extract the template name
-						$matches = array();
-						preg_match('/^\s*Template\sName:\s*(.*)/im', $tplContent, $matches);
+							$tplContent = @file_get_contents( $path . '/' . $f . '/style.css' );
 						
-						unset($tplContent);
+							// extract the template name
+							$matches = array();
+							preg_match('/^\s*Template\sName:\s*(.*)/im', $tplContent, $matches);
+							
+							unset($tplContent);
+							
+							$templates[$i]['slug'] = Total_Slider_Template::sanitizeSlug(basename($f));
+							
+							if ($matches && count($matches) > 1)
+							{
+								$templates[$i]['name'] = $matches[1];
+							}
+							
+							++$i;
+							
+						}
+						else {
 						
-						if ($matches && count($matches) > 1)
-						{
-							$templates[$i]['name'] = $matches[1];
 							$templates[$i]['slug'] = Total_Slider_Template::sanitizeSlug(basename($f));
 							++$i;
+														
 						}
 						
 					}
