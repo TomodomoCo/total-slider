@@ -63,6 +63,8 @@ class Total_Slider_Template {
 	private $mdVersion;
 	private $mdAuthor;
 	
+	private $templateFile = null;
+	
 	private $pathPrefix = null;
 	private $uriPrefix = null;
 	
@@ -593,6 +595,41 @@ class Total_Slider_Template {
 	}
 	
 	/***********	// !Metadata accessor methods		***********/
+	
+	public function name()
+	{
+	/*
+		Return the friendly name for this template.
+	*/	
+	
+		if ($this->mdName)
+		{
+			return $this->mdName; // caching
+		}
+	
+		if (!$this->templateFile)
+		{
+			if (!$this->phpPath)
+			{
+				return false;
+			}
+			$this->templateFile = @file_get_contents($this->phpPath);	
+		}
+		
+		// extract the template name
+		$matches = array();
+		preg_match('/^\s*Template\sName:\s*(.*)/im', $this->templateFile, $matches);
+
+		if ($matches && count($matches) > 1)
+		{
+			$this->mdName = $matches[1];
+			return $this->mdName;
+		}
+		else {
+			return false;			
+		}
+		
+	}
 	
 };
 

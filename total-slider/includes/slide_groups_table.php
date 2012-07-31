@@ -102,12 +102,29 @@ class Slide_Groups_Table extends WP_List_Table {
 	/*
 		Return the template name used for the slide group.	
 	*/
-		//STUB
-		//TODO I need pretty names
 		
-		if (property_exists($item, 'template') && !empty($item->template))
+		if (property_exists($item, 'template') && !empty($item->template) &&
+			property_exists($item, 'templateLocation') && !empty($item->templateLocation)
+		)
 		{
-			return esc_html($item->template);
+		
+			// load template's friendly name
+			try {
+				$t = new Total_Slider_Template($item->template, $item->templateLocation);
+			}
+			catch (Exception $e)
+			{
+				return esc_html($item->template);
+			}
+			
+			if ($t->name())
+			{
+				return esc_html($t->name());	
+			}
+			else {
+				return esc_html($item->template);
+			}
+			
 		}
 		else {
 			return 'Default';			
