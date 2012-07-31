@@ -261,26 +261,24 @@ class Total_Slider_Template {
 					if (!$this->cssPath || !$this->cssURI || !$this->phpPath || !$this->phpURI) {
 					
 						// check for the PHP file and the CSS file
-						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.php' ) &&
-							 @file_exists($p['path'] . $this->slug . '/' . 'style.css' )
-						)
+						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.php' ) )
 						{
 							$this->phpPath = $p['path'] . $this->slug . '/' . $this->slug . '.php';
-							$this->cssPath = $p['path'] . $this->slug . '/style.css';
-							
 							$this->phpURI = $p['uri'] . $this->slug . '/'. $this->slug . '.php';
-							$this->cssURI = $p['uri'] . $this->slug . '/style.css';
-							
-							$this->pathPrefix = $p['path'];
-							$this->uriPrefix = $p['uri'];
-												
 						}
 						else {
 							$this->phpPath = null;
+							$this->phpURI = null;				
+						}
+						
+						if ( @file_exists($p['path'] . $this->slug . '/' . 'style.css' ) )
+						{
+							$this->cssPath = $p['path'] . $this->slug . '/style.css';
+							$this->cssURI = $p['uri'] . $this->slug . '/style.css';
+						}
+						else {
 							$this->cssPath = null;
-							
-							$this->phpURI = null;
-							$this->cssURI = null;
+							$this->cssURI = null;						
 						}
 					}
 										
@@ -292,20 +290,29 @@ class Total_Slider_Template {
 				if (!$this->phpPath || !$this->phpURI)
 				{
 					$missingFile = 'PHP';
-					$expectedLocation = $prefix['child']['path'] . $this->slug . '/' . $this->slug . '.php\' or \''; // allow the error message to include 'or' parent hint
-					$expectedLocation .= $prefix['parent']['path'] . $this->slug . '/' . $this->slug . '.php';
+					$expectedLocation = $prefix['child']['path'] . $this->slug . '/' . $this->slug . '.php';
+					if ($prefix['child']['path'] != $prefix['parent']['path']) {
+						$expectedLocation .=  '\' or \''; // allow the error message to include 'or' parent hint
+						$expectedLocation .= $prefix['parent']['path'] . $this->slug . '/' . $this->slug . '.php';
+					}
 				}
 				else if (!$this->jsPath || !$this->jsURI)
 				{
 					$missingFile = 'JS';
-					$expectedLocation = $prefix['child']['path'] . $this->slug . '/' . $this->slug . '.js\' or \'';
-					$expectedLocation .= $prefix['parent']['path'] . $this->slug . '/' . $this->slug . '.js';
+					$expectedLocation = $prefix['child']['path'] . $this->slug . '/' . $this->slug . '.js';
+					if ($prefix['child']['path'] != $prefix['parent']['path']) {
+						$expectedLocation .=  '\' or \''; // allow the error message to include 'or' parent hint
+						$expectedLocation .= $prefix['parent']['path'] . $this->slug . '/' . $this->slug . '.js';
+					}
 				}
 				else if (!$this->cssPath || !$this->cssURI)
 				{
 					$missingFile = 'CSS';
-					$expectedLocation = $prefix['child']['path'] . $this->slug . '/style.css\' or \'';
-					$expectedLocation .= $prefix['parent']['path'] . $this->slug . '/style.css';					
+					$expectedLocation = $prefix['child']['path'] . $this->slug . '/style.css';
+					if ($prefix['child']['path'] != $prefix['parent']['path']) {
+						$expectedLocation .=  '\' or \''; // allow the error message to include 'or' parent hint
+						$expectedLocation .= $prefix['parent']['path'] . $this->slug . '/' . $this->slug . '.css';
+					}
 				}
 				
 				// if a file was missing, then bubble up a relevant exception

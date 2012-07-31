@@ -1156,9 +1156,9 @@ class Total_Slider {
 		
 		<?php if ($theTplError): ?>
 			<div id="template-error" class="updated settings-error below-h2">
-			<p><?php _e('There is a problem with this slide group&rsquo;s template.', 'total_slider'); ?></p>
-			<p><em><?php echo esc_html($theTplError->getMessage()); ?></em> (<?php echo esc_attr($theTplError->getCode()); ?>)</p>
-			<p><?php _e('Please either resolve this problem, or choose a different template for this slide group', 'total_slider'); ?></p>
+			<h3><?php _e('There is a problem with this slide group&rsquo;s template.', 'total_slider'); ?></h3>
+			<p><?php echo esc_html($theTplError->getMessage()); ?> <em><?php printf(__('(error code %d)', 'total_slider'), intval($theTplError->getCode()) ); ?></em></p>
+			<p><?php _e('Please either resolve this problem, or choose a different template for this slide group.', 'total_slider'); ?></p>
 			</div>
 		<?php endif; ?>
 
@@ -1535,11 +1535,16 @@ class Total_Slider {
 			{	
 				// determine the current template
 				if (!Total_Slider::determineTemplate())	{
-					return false;		
-				}		
+					?><div class="template-render-error"><?php
+					_e('Unable to load the preview.', 'total_slider');
+					?></div><?php
+				}
 			}
-		
-			echo $theTemplate->render();
+			
+			if ( is_a($theTemplate, 'Total_Slider_Template') )
+			{
+				echo $theTemplate->render();
+			}
 			
 			?>
 			</script>

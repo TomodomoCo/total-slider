@@ -148,6 +148,15 @@ ul#new-slide-button li {
 	display: none;	
 }
 
+.template-render-error {
+	text-align:center;
+	font-size:14pt;
+	background-color:#fffcd3;
+	border:1px solid #d4d400;
+	padding:20px;
+	height:auto;
+	width:auto;
+}
 /* Edit area */
 
 #edit-controls {
