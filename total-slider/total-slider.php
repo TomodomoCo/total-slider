@@ -824,8 +824,10 @@ class Total_Slider {
 			'uploadSlideBgImage'			=> __('Upload slide background image', 'total_slider'),
 			'unableToSaveSlide'				=> __('Sorry, unable to save the new slide.', 'total_slider'),
 			'unableToDeleteSlideNoID'		=> __('Unable to delete -- could not get the slide ID for the current slide.', 'total_slider'),
-			'unableToDeleteSlide'			=> __('Sorry, unable to delete the slide.', 'total_slider')
-
+			'unableToDeleteSlide'			=> __('Sorry, unable to delete the slide.', 'total_slider'),
+			'templateChangeWouldLoseData'	=> __("Changing this slide’s template may cause the background images to look quite different. You should review the background images after the change.\n\nAny custom positions for the title and description on each slide will be lost.\n\nDo you want to change the template?", 'total_slider'),
+			'mustFinishEditingFirst'		=> __('You must finish editing the slide before performing this action. Please either save your changes to the slide, or click Cancel.', 'total_slider')
+			
 		);
 
 	}
@@ -1073,7 +1075,7 @@ class Total_Slider {
 								
 								<?php $builtin = $t->discoverTemplates('builtin'); ?>
 								<?php if (is_array($builtin) && count($builtin) > 0): ?>
-								<optgroup label="Built-in">
+								<optgroup label="<?php _e('Built-in', 'total-slider');?>">
 									<?php foreach($builtin as $tpl): ?>
 										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
 									<?php endforeach; ?>
@@ -1082,7 +1084,7 @@ class Total_Slider {
 								
 								<?php $theme = $t->discoverTemplates('theme'); ?>
 								<?php if (is_array($theme) && count($theme) > 0): ?>
-								<optgroup label="Theme">
+								<optgroup label="<?php _e('Theme', 'total-slider');?>">
 									<?php foreach($theme as $tpl): ?>
 										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
 									<?php endforeach; ?>
@@ -1091,7 +1093,7 @@ class Total_Slider {
 						
 								<?php $downloaded = $t->discoverTemplates('downloaded'); ?>
 								<?php if (is_array($downloaded) && count($downloaded) > 0): ?>
-								<!--<optgroup label="Downloaded">
+								<!--<optgroup label="<?php _e('Downloaded', 'total-slider');?>">
 									<?php foreach($downloaded as $tpl): ?>
 										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
 									<?php endforeach; ?>																
@@ -1137,7 +1139,7 @@ class Total_Slider {
 		Print the actual slides page for adding, editing and removing the slides.
 	*/
 
-		global $theSlug, $theTplError;
+		global $theSlug, $theTplError, $allowedTemplateLocations;
 
 		// permissions check
 		if (!current_user_can(TOTAL_SLIDER_REQUIRED_CAPABILITY))
@@ -1163,6 +1165,74 @@ class Total_Slider {
 			_e('Could not load the selected Slide Group. Does it exist?', 'total_slider');
 			echo '</h1></div>';
 			return;
+		}
+		
+		if (strtolower($_SERVER['REQUEST_METHOD']) == 'post' && array_key_exists('action', $_GET) && $_GET['action'] == 'changeTemplate') {
+			
+			// change the template and redirect
+			if (!wp_verify_nonce($_POST['total-slider-change-template-nonce'], 'total-slider-change-template')) {
+				die(__('Unable to confirm the form’s security.', 'total_slider'));
+			}
+			
+			// update the new template
+			$desiredTplSlug = Total_Slider_Template::sanitizeSlug($_POST['template-slug']);
+			$tplLocation = false;
+			$tplSlug = false;
+
+			// determine which template location this template is from
+			$t = new Total_Slider_Template_Iterator();
+			
+			foreach($allowedTemplateLocations as $l)
+			{
+			
+				if ($tplLocation || $tplSlug)
+				{
+					break;
+				}
+			
+				$choices = $t->discoverTemplates($l, false);						
+
+				// find the right template and set our provision template slug and location to it
+				if (is_array($choices) && count($choices) > 0)
+				{
+					foreach($choices as $c)
+					{
+						if ($desiredTplSlug == $c['slug'])
+						{
+							$tplLocation = $l;
+							$tplSlug = $desiredTplSlug;
+							break;
+						}								
+					}
+				}
+										
+			}
+			
+			if ($tplLocation == $slideGroup->templateLocation && $tplSlug == $slideGroup->template)
+			{
+				// avoid being destructive if it's unnecessary
+				// there is no change, so just go back
+				Total_Slider::uglyJSRedirect('edit-slide-group', $slideGroup->slug);
+				die();								
+			}
+			
+			if ($tplLocation && $tplSlug)
+			{
+				$slideGroup->templateLocation = $tplLocation;
+				$slideGroup->template = $tplSlug;
+			}
+			else {
+				$slideGroup->templateLocation = 'builtin';
+				$slideGroup->template = 'default';
+			}
+
+			// remove X/Y positioning data, or else we may have an off-screen title box on the new template
+			$slideGroup->removeXYData();
+			$slideGroup->save();
+			
+			Total_Slider::uglyJSRedirect('edit-slide-group', $slideGroup->slug);
+			die();
+			
 		}
 
 		// add the metaboxes
@@ -1214,13 +1284,62 @@ class Total_Slider {
 		<!--TODO -->
 
 		<div id="template-switch-controls">
+			<form name="template-switch-form" id="template-switch-form" method="POST" action="admin.php?page=total-slider&amp;group=<?php echo $theSlug;?>&amp;action=changeTemplate">
+			<?php wp_nonce_field('total-slider-change-template', 'total-slider-change-template-nonce'); ?>
 			<p><?php _e('Template:', 'total_slider'); ?>							
-			<select name="template-slug" id="template-slug">
-				<option value="Default">Default</option>
-				
-			</select>
+			<?php $t = new Total_Slider_Template_Iterator(); ?>
+				<select name="template-slug" id="template-slug">
+					
+					<?php $builtin = $t->discoverTemplates('builtin'); ?>
+					<?php if (is_array($builtin) && count($builtin) > 0): ?>
+					<optgroup label="<?php _e('Built-in', 'total-slider');?>">
+						<?php foreach($builtin as $tpl): ?>
+
+							<option
+								value="<?php echo esc_attr($tpl['slug']);?>"
+								<?php if ($slideGroup->templateLocation == 'builtin' && $slideGroup->template == $tpl['slug']): ?>
+								selected="selected"
+								<?php endif; ?>
+								
+							><?php echo esc_html($tpl['name']);?></option>
+						<?php endforeach; ?>
+					</optgroup>
+					<?php endif; ?>
+					
+					<?php $theme = $t->discoverTemplates('theme'); ?>
+					<?php if (is_array($theme) && count($theme) > 0): ?>
+					<optgroup label="<?php _e('Theme', 'total-slider');?>">
+						<?php foreach($theme as $tpl): ?>
+							<option
+								value="<?php echo esc_attr($tpl['slug']);?>"
+								<?php if ($slideGroup->templateLocation == 'theme' && $slideGroup->template == $tpl['slug']): ?>
+								selected="selected"
+								<?php endif; ?>
+								
+							><?php echo esc_html($tpl['name']);?></option>
+						<?php endforeach; ?>
+					</optgroup>
+					<?php endif; ?>								
+			
+					<?php $downloaded = $t->discoverTemplates('downloaded'); ?>
+					<?php if (is_array($downloaded) && count($downloaded) > 0): ?>
+					<!--<optgroup label="<?php _e('Downloaded', 'total-slider');?>">
+						<?php foreach($downloaded as $tpl): ?>
+							<option
+								value="<?php echo esc_attr($tpl['slug']);?>"
+								<?php if ($slideGroup->templateLocation == 'downloaded' && $slideGroup->template == $tpl['slug']): ?>
+								selected="selected"
+								<?php endif; ?>
+								
+							><?php echo esc_html($tpl['name']);?></option>
+						<?php endforeach; ?>																
+					</optgroup>	-->
+					<?php endif; ?>
+													
+				</select>
 			<input type="submit" class="button-secondary action" style="max-width:100px;" value="<?php _e('Change Template', 'total_slider');?>" />
 			</p>
+			</form>
 		</div>	
 
 		<form name="vpm-the-slides">
@@ -1591,6 +1710,7 @@ class Total_Slider {
 			<div id="preview-slide">
 			<script id="slide-ejs" type="text/ejs">
 			<?php
+			
 			if (!$theTemplate || !is_a($theTemplate, 'Total_Slider_Template'))
 			{	
 				// determine the current template

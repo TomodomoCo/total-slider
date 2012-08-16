@@ -560,7 +560,7 @@ class Total_Slide_Group {
 			return false;
 		}
 	
-	}	
+	}
 
 	
 	private function saveSlides($slidesToWrite)
@@ -571,6 +571,45 @@ class Total_Slide_Group {
 	
 		return update_option('total_slider_slides_' . $this->slug, $slidesToWrite);
 	
+	}
+	
+	public function removeXYData() {
+	/*
+		Remove all the X/Y positional information from this slide group's slides. This
+		is used when changing the slide group template, to avoid the title/description
+		box from being off-screen on the new template.
+	*/
+	
+		$currentSlides = get_option('total_slider_slides_' . $this->slug);
+		
+		if ($currentSlides === false)
+		{
+			
+			$this->save();
+			
+			$currentSlides = get_option('total_slider_slides_' . $this->slug);
+			if ($currentSlides === false)
+			{
+				return false; //can't do it
+			}
+		}
+		
+		if (is_array($currentSlides) && count($currentSlides) > 0)
+		{
+			foreach($currentSlides as $i => $slide)
+			{
+				$currentSlides[$i]['title_pos_x'] = 0;
+				$currentSlides[$i]['title_pos_y'] = 0;	
+			}
+			
+			$this->saveSlides($currentSlides);
+			return true;
+			
+		}
+		else {
+			return true;
+		}				
+		
 	}
 	
 	

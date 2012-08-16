@@ -922,6 +922,21 @@ jQuery(document).ready(function($) {
 		$('body').animate({ scrollTop: 0 }, 1000);
 	});
 	
+	/* !Button for changing slide template on existing slide group */
+	$('#template-switch-form').submit(function(e) {
+		if (isEditing)
+		{
+			alert(_total_slider_L10n.mustFinishEditingFirst);
+			e.preventDefault();
+			return false;
+		}
+		if (!confirm(_total_slider_L10n.templateChangeWouldLoseData))
+		{
+			e.preventDefault();
+			return false;
+		}		
+	});
+	
 	/* !Find post/page button for links */
 	$('#slide-link-finder').click(function() {
 	
