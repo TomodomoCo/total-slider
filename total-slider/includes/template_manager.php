@@ -609,11 +609,11 @@ class Total_Slider_Template {
 	
 		if (!$this->templateFile)
 		{
-			if (!$this->phpPath)
+			if (!$this->cssPath())
 			{
 				return false;
 			}
-			$this->templateFile = @file_get_contents($this->phpPath);	
+			$this->templateFile = @file_get_contents($this->cssPath());	
 		}
 		
 		// extract the template name
