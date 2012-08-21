@@ -20,6 +20,7 @@ var isEditingUntitledSlide = false;
 var editingSlideSortButton = false;
 var originalTitle = false;
 var originalBackground = false;
+var originalBackgroundID = false;
 var dontStartEdit = false;
 var newShouldShuffle = false;
 var deleteCaller = false;
@@ -32,6 +33,7 @@ var slidePreviewData = {
 		description: _total_slider_L10n.newSlideTemplateNoText,
 		identifier: 'preview',
 		background_url: '',
+		background_attachment_id: 0,
 		link: 'javascript:;',
 		x: '0',
 		y: '0'
@@ -290,7 +292,14 @@ jQuery(document).ready(function($) {
 						// fill the fields
 						$('#edit-slide-title').val(result.title);
 						$('#edit-slide-description').val(result.description);
-						$('#edit-slide-image-url').val(result.background);
+
+						if (parseInt(result.background) == result.background)
+						{
+							$('#edit-slide-image-url').val(result.background_url);
+						}
+						else {
+							$('#edit-slide-image-url').val(result.background);
+						}
 						
 						// if link is numeric, then load in the post
 						if (!isNaN(result.link) && result.link != 0)
@@ -319,8 +328,22 @@ jQuery(document).ready(function($) {
 						slidePreviewData.description = result.description;
 						
 						// put the background image on
-						slidePreviewData.background_url = result.background;
-						originalBackground = result.background;
+						if (parseInt(result.background) == result.background)
+						{
+							// it is an attachment ID-based background
+							slidePreviewData.background_url = result.background_url;
+							originalBackground = result.background_url;
+							originalBackgroundID = result.background;
+							slidePreviewData.background_attachment_id = result.background;
+							
+						}
+						else {
+							// it is a URL-based background
+							slidePreviewData.background_url = result.background;
+							originalBackground = result.background;
+							slidePreviewData.background_attachment_id = 0;
+							originalBackgroundID = 0;
+						}
 						
 						// restore the pos x and pos y of the slide preview box
 						if (!VPM_SHOULD_DISABLE_XY)
@@ -507,6 +530,8 @@ jQuery(document).ready(function($) {
 		
 		// update the preview to show this background
 		slidePreviewData.background_url = imgurl;
+		slidePreviewData.background_attachment_id = attachmentID;
+		
 		$('#' + editingSlideSortButton).children('.slidesort_slidebox').css('background', 'url(' + imgurl + ')');
 		
 		tb_remove();
@@ -592,7 +617,7 @@ jQuery(document).ready(function($) {
 				data: {
 					'title': $('#edit-slide-title').val(),
 					'description': $('#edit-slide-description').val(),
-					'background': $('#edit-slide-image-url').val(),
+					'background': slidePreviewData.background_attachment_id,
 					'link': linkToSave,
 					'title_pos_x': calcBoxOffsetLeft,
 					'title_pos_y': calcBoxOffsetTop						
@@ -662,6 +687,15 @@ jQuery(document).ready(function($) {
 		else {
 			
 			// update existing slide
+			
+			if (slidePreviewData.background_attachment_id)
+			{
+				backgroundToSave = slidePreviewData.background_attachment_id;				
+			}
+			else {
+				backgroundToSave = 	$('#edit-slide-image-url').val();			
+			}
+			
 			$.ajax({
 				type: 'POST',
 				url: VPM_HPS_PLUGIN_URL + 'action=updateSlide&group=' + VPM_HPS_GROUP,
@@ -669,7 +703,7 @@ jQuery(document).ready(function($) {
 					'id': $('#' + editingSlideSortButton).attr('id').substr( $('#' + editingSlideSortButton).attr('id').indexOf('slidesort_')+10, $('#' + editingSlideSortButton).attr('id').length ),
 					'title': $('#edit-slide-title').val(),
 					'description': $('#edit-slide-description').val(),
-					'background': $('#edit-slide-image-url').val(),
+					'background': backgroundToSave,
 					'link': linkToSave,
 					'title_pos_x': calcBoxOffsetLeft,
 					'title_pos_y': calcBoxOffsetTop									

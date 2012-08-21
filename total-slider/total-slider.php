@@ -1649,12 +1649,20 @@ class Total_Slider {
 			foreach($currentSlides as $slide) {
 
 				$myId = Total_Slider::idFilter($slide['id']);
+				
+				if (is_numeric($slide['background']))
+				{
+					$background_url = wp_get_attachment_url((int)$slide['background']);
+				}
+				else {
+					$background_url = $slide['background'];
+				}
 
 				?>
 
 				<li id="slidesort_<?php echo $myId;?>">
 
-					<div class="slidesort_slidebox" style="background: url(<?php echo esc_attr($slide['background']);?>)">
+					<div class="slidesort_slidebox" style="background: url(<?php echo esc_attr($background_url);?>)">
 						<div id="slidesort_<?php echo $myId;?>_text" class="slidesort_text"><?php echo stripslashes(esc_html($slide['title']));?></div>
 
 						<a id="slidesort_<?php echo $myId;?>_move_button" class="slidesort-icon slide-move-button" href="#"><?php _e('Move', 'total_slider');?></a>

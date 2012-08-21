@@ -171,12 +171,25 @@ switch ($_GET['action'])
 			die();			
 		}
 		
-		if (!empty($_POST['background']) && !$g->validateURL($_POST['background']))
+		if (!empty($_POST['background']))
 		{
-			header('HTTP/1.0 400 Bad Request');
-			header('Content-Type: application/json');
-			echo json_encode(array('error' => __('Invalid URL format for the specified background URL.', 'total_slider')));
-			die();			
+			if (is_numeric($_POST['background']))
+			{
+				if ((int)$_POST['background'] != $_POST['background'])
+				{
+					header('HTTP/1.0 400 Bad Request');
+					header('Content-Type: application/json');
+					echo json_encode(array('error' => __('Invalid attachment ID for the specified background.', 'total_slider')));
+					die();	
+				}
+			}
+			else if (!$g->validateURL($_POST['background']))
+			{
+				header('HTTP/1.0 400 Bad Request');
+				header('Content-Type: application/json');
+				echo json_encode(array('error' => __('Invalid URL format for the specified background URL.', 'total_slider')));
+				die();			
+			}	
 		}
 		
 		if (!empty($_POST['link']))
@@ -342,12 +355,25 @@ switch ($_GET['action'])
 			die();			
 		}
 		
-		if (!empty($_POST['background']) && !$g->validateURL($_POST['background']))
+		if (!empty($_POST['background']))
 		{
-			header('HTTP/1.0 400 Bad Request');
-			header('Content-Type: application/json');
-			echo json_encode(array('error' => __('Invalid URL format for the specified background URL.', 'total_slider')));
-			die();			
+			if (is_numeric($_POST['background']))
+			{
+				if ((int)$_POST['background'] != $_POST['background'])
+				{
+					header('HTTP/1.0 400 Bad Request');
+					header('Content-Type: application/json');
+					echo json_encode(array('error' => __('Invalid attachment ID for the specified background.', 'total_slider')));
+					die();	
+				}
+			}
+			else if (!$g->validateURL($_POST['background']))
+			{
+				header('HTTP/1.0 400 Bad Request');
+				header('Content-Type: application/json');
+				echo json_encode(array('error' => __('Invalid URL format for the specified background URL.', 'total_slider')));
+				die();			
+			}	
 		}
 		
 		if (!empty($_POST['link']))
