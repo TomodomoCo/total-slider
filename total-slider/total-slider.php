@@ -45,9 +45,9 @@ if (!version_compare(get_bloginfo('version'), '3.4', '>='))
 require_once(dirname(__FILE__).'/includes/slide_group.php');
 require_once(dirname(__FILE__) . '/includes/template_manager.php'); //TODO efficiency -- conditional on 'page'? What about the widget?
 
-$theSlug = false;
-$theTemplate = false;
-$theTplError = false;
+$TSTheSlug = false;
+$TSTheTemplate = false;
+$TSTheTplError = false;
 
 /******************************************** Total_Slider main class ********************************************/
 
@@ -109,7 +109,7 @@ class Total_Slider {
 		if (!get_option('total_slider_general_options'))
 		{
 			add_option('total_slider_general_options', array(
-				'should_enqueue_template'	=> 	'1'
+				'should_enqueue_template'	=> 	'1',
 			));
 		}
 
@@ -314,24 +314,24 @@ class Total_Slider {
 		attribute.
 	*/
 	
-		global $theSlug, $theTemplate, $theTplError;
+		global $TSTheSlug, $TSTheTemplate, $TSTheTplError;
 		
-		if ($theTemplate)
+		if ($TSTheTemplate)
 		{
-			return $theTemplate;
+			return $TSTheTemplate;
 		}
 		
-		if (!$theSlug)
+		if (!$TSTheSlug)
 		{
 			if (!array_key_exists('group', $_GET))
 			{
 				return false;
 			}
 			
-			$theSlug = Total_Slider::sanitizeSlideGroupSlug($_GET['group']);		
+			$TSTheSlug = Total_Slider::sanitizeSlideGroupSlug($_GET['group']);		
 		}
 		
-		$slideGroup = new Total_Slide_Group($theSlug);
+		$slideGroup = new Total_Slide_Group($TSTheSlug);
 		if (!$slideGroup->load())
 		{
 			return false;
@@ -341,14 +341,14 @@ class Total_Slider {
 		$location = $slideGroup->templateLocation;
 		
 		try {
-			$theTemplate = new Total_Slider_Template($slug, $location);
+			$TSTheTemplate = new Total_Slider_Template($slug, $location);
 		}
 		catch (Exception $e)
 		{
-			$theTplError = $e;
+			$TSTheTplError = $e;
 		}
 		
-		return $theTemplate;
+		return $TSTheTemplate;
 		
 	}
 
@@ -647,6 +647,8 @@ class Total_Slider {
 		window._total_slider_ajax = '<?php echo get_admin_url(); ?>admin.php?page=total-slider&total-slider-ajax=true';
 		window._total_slider_jq = '<?php echo includes_url(); ?>js/jquery/jquery.js';
 		window._total_slider_tmp = '<?php echo includes_url(); ?>js/tinymce/tiny_mce_popup.js';
+	    var _total_slider_mce_l10n = '<?php if (defined('WPLANG') && WPLANG != '' && strpos(strtolower(WPLANG), 'en') !== 0 ) echo '_' . esc_attr(WPLANG); ?>';
+	    var _total_slider_mce_l10n_insert = '<?php _e('Insert Slider', 'total_slider');?>';
 		//]]>
 		</script>
 		<?php
@@ -663,7 +665,7 @@ class Total_Slider {
 
 	*/
 	
-		global $theTemplate;
+		global $TSTheTemplate;
 	
 		// load .dev.js if available, if SCRIPT_DEBUG is true in wp-config.php
 		$isDev = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? true : false;
@@ -677,7 +679,7 @@ class Total_Slider {
 			return false;
 		}
 		
-		if (!$theTemplate || !is_a($theTemplate, 'Total_Slider_Template'))
+		if (!$TSTheTemplate || !is_a($TSTheTemplate, 'Total_Slider_Template'))
 		{	
 			// determine the current template
 			if (!Total_Slider::determineTemplate())	{
@@ -689,9 +691,9 @@ class Total_Slider {
 		wp_register_style(
 			
 			'total-slider-frontend',										/* handle */
-			$theTemplate->cssURI(),											/* src */
+			$TSTheTemplate->cssURI(),											/* src */
 			array(),														/* deps */
-			date("YmdHis", @filemtime($theTemplate->cssPath() ) ),			/* ver */
+			date("YmdHis", @filemtime($TSTheTemplate->cssPath() ) ),			/* ver */
 			'all'															/* media */
 		
 		);
@@ -702,12 +704,12 @@ class Total_Slider {
 		{
 			if ($isDev)
 			{
-				$jsURI = $theTemplate->jsDevURI();
-				$jsPath = $theTemplate->jsDevPath();				
+				$jsURI = $TSTheTemplate->jsDevURI();
+				$jsPath = $TSTheTemplate->jsDevPath();				
 			}
 			else {
-				$jsURI = $theTemplate->jsURI();
-				$jsPath = $theTemplate->jsPath();				
+				$jsURI = $TSTheTemplate->jsURI();
+				$jsPath = $TSTheTemplate->jsPath();				
 			}
 			
 			// enqueue the JS
@@ -1139,7 +1141,7 @@ class Total_Slider {
 		Print the actual slides page for adding, editing and removing the slides.
 	*/
 
-		global $theSlug, $theTplError, $allowedTemplateLocations;
+		global $TSTheSlug, $TSTheTplError, $allowedTemplateLocations;
 
 		// permissions check
 		if (!current_user_can(TOTAL_SLIDER_REQUIRED_CAPABILITY))
@@ -1148,8 +1150,8 @@ class Total_Slider {
 			return;
 		}
 
-		$theSlug = Total_Slider::sanitizeSlideGroupSlug($_GET['group']);
-		if (empty($theSlug))
+		$TSTheSlug = Total_Slider::sanitizeSlideGroupSlug($_GET['group']);
+		if (empty($TSTheSlug))
 		{
 			echo '<div class="wrap"><h1>';
 			_e('No Slide Group selected.', 'total_slider');
@@ -1250,7 +1252,7 @@ class Total_Slider {
 		//<![CDATA[
 		var VPM_WP_ROOT = '<?php echo admin_url(); ?>';
 		var VPM_HPS_PLUGIN_URL = '<?php echo admin_url();?>admin.php?page=total-slider&total-slider-ajax=true&';
-		var VPM_HPS_GROUP = '<?php echo esc_attr($theSlug);?>';
+		var VPM_HPS_GROUP = '<?php echo esc_attr($TSTheSlug);?>';
 		document.title = '‘<?php echo esc_attr($slideGroup->name);?>’ Slides ' + document.title.substring(13, document.title.length);//TODO i18n
 		var VPM_SHOULD_WORKAROUND_16655 = <?php echo (version_compare(get_bloginfo('version'), '3.4', '>=') ? 'false' : 'true');?>;
 		// on WordPress version <3.4, we need to work around https://core.trac.wordpress.org/ticket/16655. It is fixed in 3.4.
@@ -1271,10 +1273,10 @@ class Total_Slider {
 		<p><?php _e('You will need to enable JavaScript for this page before any of the controls below will work.', 'total_slider');?></p>
 		</noscript>
 		
-		<?php if ($theTplError): ?>
+		<?php if ($TSTheTplError): ?>
 			<div id="template-error" class="updated settings-error below-h2">
 			<h3><?php _e('There is a problem with this slide group&rsquo;s template.', 'total_slider'); ?></h3>
-			<p><?php echo esc_html($theTplError->getMessage()); ?> <em><?php printf(__('(error code %d)', 'total_slider'), intval($theTplError->getCode()) ); ?></em></p>
+			<p><?php echo esc_html($TSTheTplError->getMessage()); ?> <em><?php printf(__('(error code %d)', 'total_slider'), intval($TSTheTplError->getCode()) ); ?></em></p>
 			<p><?php _e('Please either resolve this problem, or choose a different template for this slide group.', 'total_slider'); ?></p>
 			</div>
 		<?php endif; ?>
@@ -1284,7 +1286,7 @@ class Total_Slider {
 		<!--TODO -->
 
 		<div id="template-switch-controls">
-			<form name="template-switch-form" id="template-switch-form" method="POST" action="admin.php?page=total-slider&amp;group=<?php echo $theSlug;?>&amp;action=changeTemplate">
+			<form name="template-switch-form" id="template-switch-form" method="POST" action="admin.php?page=total-slider&amp;group=<?php echo $TSTheSlug;?>&amp;action=changeTemplate">
 			<?php wp_nonce_field('total-slider-change-template', 'total-slider-change-template-nonce'); ?>
 			<p><?php _e('Template:', 'total_slider'); ?>							
 			<?php $t = new Total_Slider_Template_Iterator(); ?>
@@ -1633,10 +1635,10 @@ class Total_Slider {
 		Print to output the contents of the slide sorter/slide listing metabox.
 	*/
 
-		global $theSlug;
+		global $TSTheSlug;
 
 		?><!--sortable slides-->
-		<?php $currentSlides = Total_Slider::getCurrentSlides($theSlug); ?>
+		<?php $currentSlides = Total_Slider::getCurrentSlides($TSTheSlug); ?>
 		<div id="slidesort-container">
 		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*180); ?>px;">
 		<?php
@@ -1685,7 +1687,7 @@ class Total_Slider {
 		Print to output the contents of the slide preview metabox.
 	*/
 	
-		global $theTemplate;
+		global $TSTheTemplate;
 	
 		?>
 		<div id="edit-area">
@@ -1711,7 +1713,7 @@ class Total_Slider {
 			<script id="slide-ejs" type="text/ejs">
 			<?php
 			
-			if (!$theTemplate || !is_a($theTemplate, 'Total_Slider_Template'))
+			if (!$TSTheTemplate || !is_a($TSTheTemplate, 'Total_Slider_Template'))
 			{	
 				// determine the current template
 				if (!Total_Slider::determineTemplate())	{
@@ -1721,9 +1723,9 @@ class Total_Slider {
 				}
 			}
 			
-			if ( is_a($theTemplate, 'Total_Slider_Template') )
+			if ( is_a($TSTheTemplate, 'Total_Slider_Template') )
 			{
-				echo $theTemplate->render();
+				echo $TSTheTemplate->render();
 			}
 			
 			?>
@@ -1836,6 +1838,7 @@ class Total_Slider {
 	*/
 
 		?>
+		<!-- Total Slider inline admin style -->
 		<style type="text/css" id="total-slider-menu-css">
 		#toplevel_page_total-slider .wp-menu-image img { visibility: hidden; }
 		#toplevel_page_total-slider .wp-menu-image { background: url( <?php echo plugin_dir_url( __FILE__ ).'img/slider-icon-switch.png'; ?> ) 0 90% no-repeat; }

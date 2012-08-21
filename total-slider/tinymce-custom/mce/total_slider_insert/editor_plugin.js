@@ -5,7 +5,7 @@
 			// Register commands
 			ed.addCommand('mceTotalSliderInsert', function() {
 				ed.windowManager.open({
-					file : url + '/slider_insert.html',
+					file : url + '/slider_insert' + _total_slider_mce_l10n + '.html',
 					width : 300,
 					height : 190,
 					inline : 1
@@ -15,7 +15,7 @@
 			});
 
 			// Register buttons
-			ed.addButton('total_slider_insert', {title : 'Insert Slider', cmd : 'mceTotalSliderInsert', image: url + '/total-slider-mce-icon.png' });
+			ed.addButton('total_slider_insert', {title : _total_slider_mce_l10n_insert, cmd : 'mceTotalSliderInsert', image: url + '/total-slider-mce-icon.png' });
 		},
 
 		getInfo : function() {
