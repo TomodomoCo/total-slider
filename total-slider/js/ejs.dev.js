@@ -1,3 +1,6 @@
+// EJS Embedded JavaScript Framework -- https://code.google.com/p/embeddedjavascript/
+// Copyright (C) 2009 Edward Benson, Justin B Meyer, Brian Moschel
+// Licensed under <http://www.opensource.org/licenses/mit-license.php>
 (function(){
     
 

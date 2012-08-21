@@ -62,6 +62,10 @@ class Total_Slider_Template {
 	private $mdDescription;
 	private $mdVersion;
 	private $mdAuthor;
+	private $mdAuthorURI;
+	private $mdLicense;
+	private $mdLicenseURI;
+	private $mdTags;
 	
 	private $templateFile = null;
 	
@@ -631,6 +635,280 @@ class Total_Slider_Template {
 		
 	}
 	
+	public function uri()
+	{
+	/*
+		Return the Template URI metadata for this template.
+	*/	
+		if ($this->mdURI)
+		{
+			return $this->mdURI; // caching
+		}
+	
+		if (!$this->templateFile)
+		{
+			if (!$this->cssPath())
+			{
+				return false;
+			}
+			$this->templateFile = @file_get_contents($this->cssPath());	
+		}
+		
+		// extract the template name
+		$matches = array();
+		preg_match('/^\s*Template\sURI:\s*(.*)/im', $this->templateFile, $matches);
+
+		if ($matches && count($matches) > 1)
+		{
+			$this->mdURI = $matches[1];
+			return $this->mdURI;
+		}
+		else {
+			return false;			
+		}		
+		
+	}
+
+	public function description()
+	{
+	/*
+		Return the Template URI metadata for this template.
+	*/	
+		if ($this->mdDescription)
+		{
+			return $this->mdDescription; // caching
+		}
+	
+		if (!$this->templateFile)
+		{
+			if (!$this->cssPath())
+			{
+				return false;
+			}
+			$this->templateFile = @file_get_contents($this->cssPath());	
+		}
+		
+		// extract the template name
+		$matches = array();
+		preg_match('/^\s*Description:\s*(.*)/im', $this->templateFile, $matches);
+
+		if ($matches && count($matches) > 1)
+		{
+			$this->mdDescription = $matches[1];
+			return $this->mdDescription;
+		}
+		else {
+			return false;			
+		}		
+		
+	}
+	
+	public function version()
+	{
+	/*
+		Return the version number for this template.
+	*/	
+		if ($this->mdVersion)
+		{
+			return $this->mdVersion; // caching
+		}
+	
+		if (!$this->templateFile)
+		{
+			if (!$this->cssPath())
+			{
+				return false;
+			}
+			$this->templateFile = @file_get_contents($this->cssPath());	
+		}
+		
+		// extract the template name
+		$matches = array();
+		preg_match('/^\s*Version:\s*(.*)/im', $this->templateFile, $matches);
+
+		if ($matches && count($matches) > 1)
+		{
+			$this->mdVersion = $matches[1];
+			return $this->mdVersion;
+		}
+		else {
+			return false;			
+		}		
+		
+	}
+	
+	public function author()
+	{
+	/*
+		Return the author name for this template.
+	*/	
+		if ($this->mdAuthor)
+		{
+			return $this->mdAuthor; // caching
+		}
+	
+		if (!$this->templateFile)
+		{
+			if (!$this->cssPath())
+			{
+				return false;
+			}
+			$this->templateFile = @file_get_contents($this->cssPath());	
+		}
+		
+		// extract the template name
+		$matches = array();
+		preg_match('/^\s*Author:\s*(.*)/im', $this->templateFile, $matches);
+
+		if ($matches && count($matches) > 1)
+		{
+			$this->mdAuthor = $matches[1];
+			return $this->mdAuthor;
+		}
+		else {
+			return false;			
+		}		
+		
+	}
+	
+	public function authorURI()
+	{
+	/*
+		Return the author URI for this template.
+	*/	
+		if ($this->mdAuthorURI)
+		{
+			return $this->mdAuthorURI; // caching
+		}
+	
+		if (!$this->templateFile)
+		{
+			if (!$this->cssPath())
+			{
+				return false;
+			}
+			$this->templateFile = @file_get_contents($this->cssPath());	
+		}
+		
+		// extract the template name
+		$matches = array();
+		preg_match('/^\s*Author\s*URI:\s*(.*)/im', $this->templateFile, $matches);
+
+		if ($matches && count($matches) > 1)
+		{
+			$this->mdAuthorURI = $matches[1];
+			return $this->mdAuthorURI;
+		}
+		else {
+			return false;			
+		}		
+		
+	}
+	
+	public function license()
+	{
+	/*
+		Return the license metadata for this template.
+	*/	
+		if ($this->mdLicense)
+		{
+			return $this->mdLicense; // caching
+		}
+	
+		if (!$this->templateFile)
+		{
+			if (!$this->cssPath())
+			{
+				return false;
+			}
+			$this->templateFile = @file_get_contents($this->cssPath());	
+		}
+		
+		// extract the template name
+		$matches = array();
+		preg_match('/^\s*License:\s*(.*)/im', $this->templateFile, $matches);
+
+		if ($matches && count($matches) > 1)
+		{
+			$this->mdLicense = $matches[1];
+			return $this->mdLicense;
+		}
+		else {
+			return false;			
+		}
+		
+	}
+	
+	public function licenseURI()
+	{
+	/*
+		Return the license URI for this template.
+	*/	
+		if ($this->mdLicenseURI)
+		{
+			return $this->mdLicenseURI; // caching
+		}
+	
+		if (!$this->templateFile)
+		{
+			if (!$this->cssPath())
+			{
+				return false;
+			}
+			$this->templateFile = @file_get_contents($this->cssPath());	
+		}
+		
+		// extract the template name
+		$matches = array();
+		preg_match('/^\s*License\s*URI:\s*(.*)/im', $this->templateFile, $matches);
+
+		if ($matches && count($matches) > 1)
+		{
+			$this->mdLicenseURI = $matches[1];
+			return $this->mdLicenseURI;
+		}
+		else {
+			return false;			
+		}
+		
+	}
+	
+	public function tags()
+	{
+	/*
+		Return the license URI for this template.
+	*/	
+		if ($this->mdTags)
+		{
+			return $this->mdTags; // caching
+		}
+	
+		if (!$this->templateFile)
+		{
+			if (!$this->cssPath())
+			{
+				return false;
+			}
+			$this->templateFile = @file_get_contents($this->cssPath());	
+		}
+		
+		// extract the template name
+		$matches = array();
+		preg_match('/^\s*Tags:\s*(.*)/im', $this->templateFile, $matches);
+
+		if ($matches && count($matches) > 1)
+		{
+			$this->mdTags = $matches[1];
+			$this->mdTags = explode(',', $this->mdTags);
+			
+			return $this->mdTags;
+		}
+		else {
+			return false;			
+		}
+		
+	}	
+	
 };
 
 
@@ -638,7 +916,7 @@ class Total_Slider_Widget_Templater
 {
 /*
 	A 'dummy' class that behaves like Total_Slider_Widget, and that is used to render the template's
-	$s calls to CanJS EJS-friendly tokens, so that the editing interface JS can alter the template's
+	$s calls to EJS-friendly tokens, so that the editing interface JS can alter the template's
 	placeholder data in real-time.
 */
 
