@@ -509,7 +509,7 @@ jQuery(document).ready(function($) {
 	$('#edit-slide-image-upload').click(function () {		
 		var myTop = $(this).offset();
 
-		tb_show(_total_slider_L10n.uploadSlideBgImage, 'media-upload.php?total-slider-uploader=bgimage&type=image&post_id=0&TB_iframe=true&height=400&width=600');
+		tb_show(_total_slider_L10n.uploadSlideBgImage, 'media-upload.php?total-slider-uploader=bgimage&total-slider-slide-group-template=' + encodeURIComponent(VPM_SLIDE_GROUP_TEMPLATE) + '&total-slider-slide-group-template-location=' + encodeURIComponent(VPM_SLIDE_GROUP_TEMPLATE_LOCATION) + '&type=image&post_id=0&TB_iframe=true&height=400&width=600');
 		
 		return false;
 	

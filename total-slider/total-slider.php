@@ -198,114 +198,6 @@ class Total_Slider {
 		die();
 
 	}
-
-	public static function determineTemplateOptions()
-	{
-	/*
-		Using the active Slider template, determine the desired crop height
-		and crop width for the background image, as well as other options, including
-		disabling X/Y positioning in admin.
-
-		Requires that custom theme PHP include something like the following:
-			/*
-			Template Options
-
-			Crop-Suggested-Width: 600
-			Crop-Suggested-Height: 300
-			Disable-XY-Positioning-In-Admin: No
-			*/
-		/*
-
-		These are parsed as configuration directives for the admin-side.
-
-	*/
-
-		static $templateOptions = array(); // save for caching
-
-		if (isset($templateOptions) && is_array($templateOptions) && count($templateOptions) > 0)
-		{
-			// cache results
-			return $templateOptions;
-		}
-
-		$themePath = get_stylesheet_directory();
-
-		if (@file_exists($themePath . '/total-slider-templates/total-slider-template.css'))
-		{
-			$tpl = @file_get_contents($themePath . '/total-slider-templates/total-slider-template.php');
-		}
-		else {
-			$tpl = @file_get_contents(dirname(__FILE__) . '/templates/total-slider-template.php');
-		}
-
-		if ($tpl !== false)
-		{
-			// look for Crop-Suggested-Width: xx directive
-			$matches = array();
-			preg_match('/^\s*Crop\-Suggested\-Width:\s*([0-9]+)/im', $tpl, $matches);
-			if (count($matches) == 2)
-			{
-				if (intval($matches[1]) == $matches[1])
-				{
-					$cropWidth = intval( $matches[1] );
-				}
-				else {
-					$cropWidth = TOTAL_SLIDER_DEFAULT_CROP_WIDTH;
-				}
-			}
-			else {
-				$cropWidth = TOTAL_SLIDER_DEFAULT_CROP_WIDTH;
-			}
-
-			// look for Crop-Suggested-Height: xx directive
-			$matches = array();
-			preg_match('/^\s*Crop\-Suggested\-Height:\s*([0-9]+)/im', $tpl, $matches);
-			if (count($matches) == 2)
-			{
-				if (intval($matches[1]) == $matches[1])
-				{
-					$cropHeight = intval( $matches[1] );
-				}
-				else {
-					$cropHeight = TOTAL_SLIDER_DEFAULT_CROP_HEIGHT;
-				}
-			}
-			else {
-				$cropHeight = TOTAL_SLIDER_DEFAULT_CROP_HEIGHT;
-			}
-
-			// look for Disable-XY-Positioning-In-Admin directive
-			$matches = array();
-			preg_match('/^\s*Disable\-XY\-Positioning\-In\-Admin:\s*(Yes|No|On|Off|1|0|True|False)/im', $tpl, $matches);
-			$affirmativeResponses = array('yes', 'on', '1', 'true');
-			//$negativeResponses = array('no', 'off', '0', 'false');
-
-			if (count($matches) == 2)
-			{
-				if (in_array(strtolower($matches[1]), $affirmativeResponses))
-				{
-					$disableXY = true;
-				}
-				else {
-					$disableXY = false;
-				}
-			}
-			else {
-				$disableXY = false;
-			}
-
-		}
-		else {
-			$cropWidth = TOTAL_SLIDER_DEFAULT_CROP_WIDTH;
-			$cropHeight = TOTAL_SLIDER_DEFAULT_CROP_HEIGHT;
-			$disableXY = false;
-		}
-
-		// cache results in global $templateOptions
-		$templateOptions = array('crop_width' => $cropWidth, 'crop_height' => $cropHeight, 'disable_xy' => $disableXY);
-		return $templateOptions;
-
-	}
 	
 	public static function determineTemplate()
 	{
@@ -772,9 +664,7 @@ class Total_Slider {
 
 		) );
 
-		$crop = Total_Slider::determineTemplateOptions();
-
-		$hintsTips[0] = sprintf( __('For the best visual results, crop your background images to the size used by your slide template — %d×%d', 'total_slider'), $crop['crop_width'], $crop['crop_height'] );
+		$hintsTips[0] = __('For the best visual results, crop your background images to the size used by your slide template.', 'total_slider');
 		$hintsTips[1] = __('Experiment with dragging and dropping the title and description over different parts of the background to achieve a different visual effect.', 'total_slider');
 		$hintsTips[2] = __('Keep your site fresh — create multiple slide groups ahead of time, then simply edit the <strong>Total Slider</strong> widget to switch over to display another slide group every now and then.', 'total_slider');
 		$hintsTips[3] = __('Completely customise the look of your slides — create a <em>total-slider-templates</em> subfolder in your theme. You can use our <em>templates</em> folder in the plugin as a starting point.', 'total_slider');
@@ -1141,7 +1031,7 @@ class Total_Slider {
 		Print the actual slides page for adding, editing and removing the slides.
 	*/
 
-		global $TSTheSlug, $TSTheTplError, $allowedTemplateLocations;
+		global $TSTheSlug, $TSTheTplError, $allowedTemplateLocations, $TSTheTemplate;
 
 		// permissions check
 		if (!current_user_can(TOTAL_SLIDER_REQUIRED_CAPABILITY))
@@ -1167,6 +1057,12 @@ class Total_Slider {
 			_e('Could not load the selected Slide Group. Does it exist?', 'total_slider');
 			echo '</h1></div>';
 			return;
+		}
+		
+		// determine and load template
+		if (!$TSTheTemplate || !is_a($TSTheTemplate, 'Total_Slider_Template'))
+		{
+			Total_Slider::determineTemplate();
 		}
 		
 		if (strtolower($_SERVER['REQUEST_METHOD']) == 'post' && array_key_exists('action', $_GET) && $_GET['action'] == 'changeTemplate') {
@@ -1256,7 +1152,13 @@ class Total_Slider {
 		document.title = '‘<?php echo esc_attr($slideGroup->name);?>’ Slides ' + document.title.substring(13, document.title.length);//TODO i18n
 		var VPM_SHOULD_WORKAROUND_16655 = <?php echo (version_compare(get_bloginfo('version'), '3.4', '>=') ? 'false' : 'true');?>;
 		// on WordPress version <3.4, we need to work around https://core.trac.wordpress.org/ticket/16655. It is fixed in 3.4.
-		<?php $templateOptions = Total_Slider::determineTemplateOptions(); ?>
+		
+		var VPM_SLIDE_GROUP_TEMPLATE = '<?php echo esc_attr( $slideGroup->template );?>';
+		var VPM_SLIDE_GROUP_TEMPLATE_LOCATION = '<?php echo esc_attr( $slideGroup->templateLocation );?>';
+		
+		<?php if ($TSTheTemplate && is_a($TSTheTemplate, 'Total_Slider_Template')) {
+			$templateOptions = $TSTheTemplate->determineOptions(); 	
+		} ?>
 
 		var VPM_SHOULD_DISABLE_XY = <?php echo ($templateOptions['disable_xy']) ? 'true' : 'false';?>;
 		//]]>
@@ -1550,7 +1452,23 @@ class Total_Slider {
 		if (array_key_exists('total-slider-uploader', $_GET) && $_GET['total-slider-uploader'] == 'bgimage')
 		{
 
-			$crop = Total_Slider::determineTemplateOptions();
+			if (!array_key_exists('total-slider-slide-group-template', $_GET) || empty($_GET['total-slider-slide-group-template']) || 
+				!array_key_exists('total-slider-slide-group-template-location', $_GET) || empty($_GET['total-slider-slide-group-template-location'])
+			)
+			{
+				$crop = array('crop_width' => TOTAL_SLIDER_DEFAULT_CROP_WIDTH, 'crop_height' => TOTAL_SLIDER_DEFAULT_CROP_HEIGHT);
+			}
+			else {
+				try {
+					$t = new Total_Slider_Template($_GET['total-slider-slide-group-template'], $_GET['total-slider-slide-group-template-location']);
+					
+					$crop = $t->determineOptions();					
+				}
+				catch (Exception $e)
+				{
+					$crop = array('crop_width' => TOTAL_SLIDER_DEFAULT_CROP_WIDTH, 'crop_height' => TOTAL_SLIDER_DEFAULT_CROP_HEIGHT);
+				}			
+			}
 
 		?>
 		<!-- a little shimming to prettify the uploader/media library options for Total Slider purposes -->
@@ -1985,6 +1903,7 @@ class Total_Slider_Widget extends WP_Widget {
 			// find all the slide groups and offer them for the widget
 
 			$slideGroups = get_option('total_slider_slide_groups');
+			$slideTemplates = array();
 
 			if (is_array($slideGroups) && count($slideGroups) > 0)
 			{
@@ -1995,6 +1914,10 @@ class Total_Slider_Widget extends WP_Widget {
 							echo ($group->slug == $instance['groupSlug']) ? ' selected="selected"' : '';
 						endif; ?>
 					><?php echo esc_html($group->name);?></option><?php
+					
+					// get the template for this slide group					
+					$slideTemplates[esc_attr($group->slug)] = $group->template;
+					
 				}
 
 			}

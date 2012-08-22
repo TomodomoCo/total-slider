@@ -612,6 +612,46 @@ class Total_Slide_Group {
 		
 	}
 	
+	public function miniPreview()
+	{
+	/*
+		Render an HTML mini-preview of the slide images, for use in the widget selector. This allows
+		an at-a-glance verification that the selected slide group is the desired slide group.
+	*/	
+		
+		/*
+			* Extract background images from slides.
+			* (Get thumbnail versions?)
+			* Get suggested crop width and height, scale down proportionally to calculate thumbnail size of template
+			* Render thumbnail images against those dimensions
+			* JS to spin through them with some kind of animation?
+			
+			How do we disclaim that this isn't truly WYSIWYG? Is that a problem?
+		*/
+		
+		if ( empty($this->template) || empty($this->templateLocation) )
+		{
+			if (! $this->load() )
+				return false;
+		}
+		
+		// load template information
+		try {
+			$t = new Total_Slider_Template($this->template, $this->templateLocation);
+		}
+		catch (Exception $e)
+		{
+			if ( defined('WP_DEBUG') && WP_DEBUG ) {
+				printf(__('Unable to render the slide mini-preview: %s (error code %d)', 'total_slider'), $e->getMessage(), $e->getCode() );
+			}
+			return false;
+		}		
+		
+		?><p><strong><?php _e('Template:', 'total_slider');?></strong> <?php echo esc_html( $t->name() );?></p><?php
+		
+		
+		
+	}
 	
 
 };

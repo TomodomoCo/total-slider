@@ -67,7 +67,10 @@ class Total_Slider_Template {
 	private $mdLicenseURI;
 	private $mdTags;
 	
+	private $options;
+	
 	private $templateFile = null;
+	private $templatePHPFile = null;
 	
 	private $pathPrefix = null;
 	private $uriPrefix = null;
@@ -615,7 +618,7 @@ class Total_Slider_Template {
 		{
 			if (!$this->cssPath())
 			{
-				return false;
+				return $this->slug;
 			}
 			$this->templateFile = @file_get_contents($this->cssPath());	
 		}
@@ -630,7 +633,7 @@ class Total_Slider_Template {
 			return $this->mdName;
 		}
 		else {
-			return false;			
+			return $this->slug;
 		}
 		
 	}
@@ -907,7 +910,111 @@ class Total_Slider_Template {
 			return false;			
 		}
 		
-	}	
+	}
+	
+	public function determineOptions()
+	{
+	/*
+		Determine the desired crop height and crop width for the background image, as well as other options, including
+		disabling X/Y positioning in admin.
+
+		Requires that custom template PHP include something like the following:
+			/*
+			Template Options
+
+			Crop-Suggested-Width: 600
+			Crop-Suggested-Height: 300
+			Disable-XY-Positioning-In-Admin: No
+			*/
+		/*
+
+		These are parsed as configuration directives for the admin-side.
+
+	*/
+
+		if (isset($this->options) && is_array($this->options) && count($this->options) > 0)
+		{
+			// cache results
+			return $this->options;
+		}
+		
+		if (!$this->templatePHPFile)
+		{
+			if (!$this->phpPath())
+			{
+				return false;
+			}
+			$this->templatePHPFile = @file_get_contents($this->phpPath());	
+		}
+
+		if ($this->templatePHPFile !== false)
+		{
+			// look for Crop-Suggested-Width: xx directive
+			$matches = array();
+			preg_match('/^\s*Crop\-Suggested\-Width:\s*([0-9]+)/im', $this->templatePHPFile, $matches);
+			if (count($matches) == 2)
+			{
+				if (intval($matches[1]) == $matches[1])
+				{
+					$cropWidth = intval( $matches[1] );
+				}
+				else {
+					$cropWidth = TOTAL_SLIDER_DEFAULT_CROP_WIDTH;
+				}
+			}
+			else {
+				$cropWidth = TOTAL_SLIDER_DEFAULT_CROP_WIDTH;
+			}
+
+			// look for Crop-Suggested-Height: xx directive
+			$matches = array();
+			preg_match('/^\s*Crop\-Suggested\-Height:\s*([0-9]+)/im', $this->templatePHPFile, $matches);
+			if (count($matches) == 2)
+			{
+				if (intval($matches[1]) == $matches[1])
+				{
+					$cropHeight = intval( $matches[1] );
+				}
+				else {
+					$cropHeight = TOTAL_SLIDER_DEFAULT_CROP_HEIGHT;
+				}
+			}
+			else {
+				$cropHeight = TOTAL_SLIDER_DEFAULT_CROP_HEIGHT;
+			}
+
+			// look for Disable-XY-Positioning-In-Admin directive
+			$matches = array();
+			preg_match('/^\s*Disable\-XY\-Positioning\-In\-Admin:\s*(Yes|No|On|Off|1|0|True|False)/im', $this->templatePHPFile, $matches);
+			$affirmativeResponses = array('yes', 'on', '1', 'true');
+			//$negativeResponses = array('no', 'off', '0', 'false');
+
+			if (count($matches) == 2)
+			{
+				if (in_array(strtolower($matches[1]), $affirmativeResponses))
+				{
+					$disableXY = true;
+				}
+				else {
+					$disableXY = false;
+				}
+			}
+			else {
+				$disableXY = false;
+			}
+
+		}
+		else {
+			$cropWidth = TOTAL_SLIDER_DEFAULT_CROP_WIDTH;
+			$cropHeight = TOTAL_SLIDER_DEFAULT_CROP_HEIGHT;
+			$disableXY = false;
+		}
+
+		// cache results in global $templateOptions
+		$this->options = array('crop_width' => $cropWidth, 'crop_height' => $cropHeight, 'disable_xy' => $disableXY);
+		return $this->options;
+				
+	}
 	
 };
 
