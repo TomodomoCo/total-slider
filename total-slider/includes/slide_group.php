@@ -647,9 +647,40 @@ class Total_Slide_Group {
 			return false;
 		}		
 		
+		$templateOptions = $t->determineOptions();
+		
 		?><p><strong><?php _e('Template:', 'total_slider');?></strong> <?php echo esc_html( $t->name() );?></p><?php
 		
 		
+		$currentSlides = get_option('total_slider_slides_' . $this->slug);
+		
+		if ($currentSlides === false || !is_array($currentSlides) || count($currentSlides) < 0)
+		{
+			?><p><?php _e('There are no slides to show.', 'total_slider');?></p><?php
+			return true;
+		}
+		
+		?><div class="total-slider-mini-preview">
+		<ul><?php
+		
+		foreach( $currentSlides as $idx => $slide )
+		{
+		
+			if ( is_numeric($slide['background']) && intval($slide['background']) == $slide['background'] ) {
+				// background references an attachment ID
+				$image = wp_get_attachment_image_src( intval($slide['background']), 'thumbnail' );
+				$image = $image[0];
+			}
+			else {
+				$image = $slide['background'];				
+			}
+			?><li><img src="<?php echo esc_url($image);?>" alt="<?php echo esc_attr($slide['title']);?>" title="<?php echo esc_attr($slide['title']);?>" width="100" height="32" /></li><?php
+			
+		}
+		
+		?>
+		</ul>
+		</div><?php
 		
 	}
 	
