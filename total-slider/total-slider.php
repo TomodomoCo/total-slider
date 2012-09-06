@@ -1322,7 +1322,7 @@ class Total_Slider {
 
 				Total_Slider::setCapabilityForRoles($rolesToAdd);
 				$success = true;
-				$message .= __('Required role level saved.', 'total_slider') . ' ';
+				$message = __('Settings saved.', 'total_slider');
 
 			}
 
@@ -1332,7 +1332,7 @@ class Total_Slider {
 				if (array_key_exists('should_enqueue_template', $otherOptions) && $otherOptions['should_enqueue_template'] != '1')
 				{
 					$success = true;
-					$message .= __('Advanced settings saved.', 'total_slider') . ' ';
+					$message = __('Settings saved.', 'total_slider');
 				}
 
 				$otherOptions['should_enqueue_template'] = '1';
@@ -1343,7 +1343,7 @@ class Total_Slider {
 				if (array_key_exists('should_enqueue_template', $otherOptions) && $otherOptions['should_enqueue_template'] != '0')
 				{
 					$success = true;
-					$message .= __('Advanced settings saved.', 'total_slider') . ' ';
+					$message = __('Settings saved.', 'total_slider');
 				}
 
 				$otherOptions['should_enqueue_template'] = '0';
@@ -1864,13 +1864,26 @@ class Total_Slider_Widget extends WP_Widget {
 		
 		wp_enqueue_style( 'total-slider-' . esc_attr($group->template) );
 		
+		// load .min.js if available, if SCRIPT_DEBUG is not true in wp-config.php
+		$isMin = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? false : true;
+		
+		if ($isMin)
+		{
+			$jsURI = $tpl->jsMinURI();
+			$jsPath = $tpl->jsMinPath();				
+		}
+		else {
+			$jsURI = $tpl->jsURI();
+			$jsPath = $tpl->jsPath();				
+		}
+		
 		wp_register_script(	
 				'total-slider-' . esc_attr($group->template), 				/* handle */
-				$tpl->jsURI(),												/* src */
+				$jsURI,														/* src */
 				array(
 					'jquery'
 				),															/* deps */
-				date("YmdHis", @filemtime( $tpl->jsPath()) ),				/* ver */
+				date("YmdHis", @filemtime( $jsPath) ),						/* ver */
 				true														/* in_footer */		
 		);
 		
