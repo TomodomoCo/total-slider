@@ -355,19 +355,19 @@ class Total_Slider {
 		if ( array_key_exists( 'page', $_GET ) && $_GET['page'] == 'total-slider' )
 		{
 		
-			// load .dev.js if available, if SCRIPT_DEBUG is true in wp-config.php
-			$maybeDev = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? 'dev.' : '';
+			// load .js if SCRIPT_DEBUG is true, or load .min.js otherwise
+			$maybeMin = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : 'min.';
 			
 			wp_register_script(
 			
 				'total-slider-ejs', 										/* handle */
-				plugin_dir_url( __FILE__ ).'js/ejs.'.$maybeDev.'js',		/* src */
+				plugin_dir_url( __FILE__ ).'js/ejs.'.$maybeMin.'js',		/* src */
 				array(
 					'jquery', 'jquery-ui-draggable', 'jquery-ui-droppable',
 					'jquery-ui-sortable'
 				),															/* deps */
 				date("YmdHis", @filemtime( plugin_dir_path( __FILE__ ) .
-							'js/ejs.'.$maybeDev.'js'	) ),				/* ver */
+							'js/ejs.'.$maybeMin.'js'	) ),				/* ver */
 				true														/* in_footer */		
 			);
 
@@ -376,13 +376,13 @@ class Total_Slider {
 			wp_register_script(
 			
 				'total-slider-interface', 									/* handle */
-				plugin_dir_url( __FILE__ ).'js/interface.'.$maybeDev.'js',	/* src */
+				plugin_dir_url( __FILE__ ).'js/interface.'.$maybeMin.'js',	/* src */
 				array(
 					'jquery', 'jquery-ui-draggable', 'jquery-ui-droppable',
 					'jquery-ui-sortable', 'total-slider-ejs'
 				),															/* deps */
 				date("YmdHis", @filemtime( plugin_dir_path( __FILE__ ) .
-							'js/interface.'.$maybeDev.'js'	) ),			/* ver */
+							'js/interface.'.$maybeMin.'js'	) ),			/* ver */
 				true														/* in_footer */		
 			);
 			
@@ -551,7 +551,7 @@ class Total_Slider {
 	{
 	/*
 		When WordPress is enqueueing the styles, inject our slider CSS and JavaScript in. We will use the Template Manager
-		to canonicalize the URIs and paths for the JS and CSS (including .dev.js etc.), and simply enqueue what it tells us to here.
+		to canonicalize the URIs and paths for the JS and CSS (including .min.js etc.), and simply enqueue what it tells us to here.
 
 		If $context is 'backend', we will load the CSS only and not the JS.
 
@@ -559,8 +559,8 @@ class Total_Slider {
 	
 		global $TSTheTemplate;
 	
-		// load .dev.js if available, if SCRIPT_DEBUG is true in wp-config.php
-		$isDev = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? true : false;
+		// load .min.js if available, if SCRIPT_DEBUG is not true in wp-config.php
+		$isMin = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? false : true;
 
 		$generalOptions = get_option('total_slider_general_options');
 
@@ -594,10 +594,10 @@ class Total_Slider {
 		
 		if ($context != 'backend')
 		{
-			if ($isDev)
+			if ($isMin)
 			{
-				$jsURI = $TSTheTemplate->jsDevURI();
-				$jsPath = $TSTheTemplate->jsDevPath();				
+				$jsURI = $TSTheTemplate->jsMinURI();
+				$jsPath = $TSTheTemplate->jsMinPath();				
 			}
 			else {
 				$jsURI = $TSTheTemplate->jsURI();

@@ -77,12 +77,12 @@ class Total_Slider_Template {
 	
 	private $phpPath = null;
 	private $jsPath = null;
-	private $jsDevPath = null;
+	private $jsMinPath = null;
 	private $cssPath = null;
 	
 	private $phpURI = null;
 	private $jsURI = null;
-	private $jsDevURI = null;
+	private $jsMinURI = null;
 	private $cssURI = null;
 	
 	public function __construct($slug, $location)
@@ -162,7 +162,7 @@ class Total_Slider_Template {
 				$phpExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.php' );
 				$cssExists = @file_exists($pathPrefix . $this->slug . '/' . 'style.css');
 				$jsExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.js' );
-				$jsDevExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.dev.js' ); 
+				$jsMinExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.min.js' ); 
 				
 				$missingFile = '';
 				
@@ -193,10 +193,10 @@ class Total_Slider_Template {
 					$this->jsPath = $pathPrefix . $this->slug . '/' . $this->slug . '.js';
 					$this->jsURI = $uriPrefix . $this->slug . '/' . $this->slug . '.js';
 					
-					if ($jsDevExists)
+					if ($jsMinExists)
 					{
-						$this->jsDevPath = $pathPrefix . $this->slug . '/' . $this->slug . '.dev.js';
-						$this->jsDevURI = $uriPrefix . $this->slug . '/' . $this->slug . '.dev.js';
+						$this->jsMinPath = $pathPrefix . $this->slug . '/' . $this->slug . '.min.js';
+						$this->jsMinURI = $uriPrefix . $this->slug . '/' . $this->slug . '.min.js';
 					}
 					
 					$this->pathPrefix = $pathPrefix;
@@ -256,14 +256,14 @@ class Total_Slider_Template {
 							$this->jsURI = null;
 						}
 						
-						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.dev.js'))
+						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.min.js'))
 						{
-							$this->jsDevPath = $p['path'] . $this->slug . '/' . $this->slug . '.dev.js';
-							$this->jsDevURI = $p['uri'] . $this->slug . '/' . $this->slug . '.dev.js';						
+							$this->jsMinPath = $p['path'] . $this->slug . '/' . $this->slug . '.min.js';
+							$this->jsMinURI = $p['uri'] . $this->slug . '/' . $this->slug . '.min.js';						
 						}
 						else {
-							$this->jsDevPath = null;
-							$this->jsDevURI = null;
+							$this->jsMinPath = null;
+							$this->jsMinURI = null;
 						}
 					}			
 				
@@ -353,7 +353,7 @@ class Total_Slider_Template {
 				$phpExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.php' );
 				$cssExists = @file_exists($pathPrefix . $this->slug . '/style.css');
 				$jsExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.js' );
-				$jsDevExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.dev.js' );
+				$jsMinExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.min.js' );
 								
 				$missingFile = '';
 				
@@ -384,10 +384,10 @@ class Total_Slider_Template {
 					$this->jsPath = $pathPrefix . $this->slug . '/' . $this->slug . '.js';
 					$this->jsURI = $uriPrefix . $this->slug . '/' . $this->slug . '.js';
 					
-					if ($jsDevExists)
+					if ($jsMinExists)
 					{
-						$this->jsDevPath = $pathPrefix . $this->slug . '/' . $this->slug . '.dev.js';
-						$this->jsDevURI = $uriPrefix . $this->slug . '/' . $this->slug . '.dev.js';
+						$this->jsMinPath = $pathPrefix . $this->slug . '/' . $this->slug . '.min.js';
+						$this->jsMinURI = $uriPrefix . $this->slug . '/' . $this->slug . '.min.js';
 					}					
 					
 					$this->pathPrefix = $pathPrefix;
@@ -517,18 +517,18 @@ class Total_Slider_Template {
 	
 	}
 	
-	public function jsDevPath()
+	public function jsMinPath()
 	{
 	/*
-		Return the canonical path to this template's development (non-minified) JavaScript file.
+		Return the canonical path to this template's minified JavaScript file.
 	*/	
 	
-		if (!$this->jsDevPath)
+		if (!$this->jsMinPath)
 		{
 			return $this->jsPath;
 		}
 		
-		return $this->jsDevPath;
+		return $this->jsMinPath;
 				
 	}
 	
@@ -573,17 +573,17 @@ class Total_Slider_Template {
 		
 	}
 	
-	public function jsDevURI()
+	public function jsMinURI()
 	{
 	/*
-		Return the canonical URI for this template's development (non-minified) JavaScript file.
+		Return the canonical URI for this template's minified JavaScript file.
 	*/
-		if (!$this->jsDevURI)
+		if (!$this->jsMinURI)
 		{
 			return $this->jsURI;
 		}
 		
-		return $this->jsDevURI;
+		return $this->jsMinURI;
 		
 	}
 	
