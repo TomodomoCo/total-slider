@@ -1924,41 +1924,49 @@ class Total_Slider_Widget extends WP_Widget {
 			return;
 		}
 		
-		// enqueue CSS and JS
-		wp_register_style(
-			'total-slider-' . esc_attr($group->template),					/* handle */
-			$tpl->cssURI(),													/* src */
-			array(),														/* deps */
-			date("YmdHis", @filemtime($tpl->cssPath() ) ),					/* ver */
-			'all'															/* media */	
-		);
+		$general_options = get_option('total_slider_general_options');
 		
-		wp_enqueue_style( 'total-slider-' . esc_attr($group->template) );
-		
-		// load .min.js if available, if SCRIPT_DEBUG is not true in wp-config.php
-		$isMin = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? false : true;
-		
-		if ($isMin)
+		// only enqueue template if relevant option is set (fixes #29)
+		if ( is_array($general_options) && array_key_exists('should_enqueue_template', $general_options) &&
+		$general_options['should_enqueue_template'] == '1' )
 		{
-			$jsURI = $tpl->jsMinURI();
-			$jsPath = $tpl->jsMinPath();				
+			// enqueue CSS and JS
+			wp_register_style(
+				'total-slider-' . esc_attr($group->template),					/* handle */
+				$tpl->cssURI(),													/* src */
+				array(),														/* deps */
+				date("YmdHis", @filemtime($tpl->cssPath() ) ),					/* ver */
+				'all'															/* media */	
+			);
+			
+			wp_enqueue_style( 'total-slider-' . esc_attr($group->template) );
+	
+			
+			// load .min.js if available, if SCRIPT_DEBUG is not true in wp-config.php
+			$isMin = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? false : true;
+			
+			if ($isMin)
+			{
+				$jsURI = $tpl->jsMinURI();
+				$jsPath = $tpl->jsMinPath();				
+			}
+			else {
+				$jsURI = $tpl->jsURI();
+				$jsPath = $tpl->jsPath();				
+			}
+			
+			wp_register_script(	
+					'total-slider-' . esc_attr($group->template), 				/* handle */
+					$jsURI,														/* src */
+					array(
+						'jquery'
+					),															/* deps */
+					date("YmdHis", @filemtime( $jsPath) ),						/* ver */
+					true														/* in_footer */		
+			);
+			
+			wp_enqueue_script( 'total-slider-' . esc_attr($group->template) );
 		}
-		else {
-			$jsURI = $tpl->jsURI();
-			$jsPath = $tpl->jsPath();				
-		}
-		
-		wp_register_script(	
-				'total-slider-' . esc_attr($group->template), 				/* handle */
-				$jsURI,														/* src */
-				array(
-					'jquery'
-				),															/* deps */
-				date("YmdHis", @filemtime( $jsPath) ),						/* ver */
-				true														/* in_footer */		
-		);
-		
-		wp_enqueue_script( 'total-slider-' . esc_attr($group->template) );
 		
 		$s = &$this; // $s is used by the theme to call our functions to actually display the data
 		
