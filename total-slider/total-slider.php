@@ -1555,16 +1555,18 @@ class Total_Slider {
 				jQuery(this).attr('value', '<?php _e('Use as background image', 'total_slider');?>');
 			});
 
-			uploader.bind('FileUploaded', function() {
-				window.setTimeout(function() {
-
-					jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider'), $crop['crop_width'], $crop['crop_height']);?></p>');
-					// rename the main action button
-					jQuery('.savesend .button').each(function() {
-						jQuery(this).attr('value', '<?php _e('Use as background image', 'total_slider');?>');
-					});
-				}, 680);
-			});
+			if (typeof uploader == 'object') {
+				uploader.bind('FileUploaded', function() {
+					window.setTimeout(function() {
+	
+						jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider'), $crop['crop_width'], $crop['crop_height']);?></p>');
+						// rename the main action button
+						jQuery('.savesend .button').each(function() {
+							jQuery(this).attr('value', '<?php _e('Use as background image', 'total_slider');?>');
+						});
+					}, 680);
+				});
+			}
 		});
 		//]]>
 		</script>

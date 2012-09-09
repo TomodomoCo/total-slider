@@ -327,7 +327,7 @@ class Total_Slide_Group {
 						}
 					}
 					
-					if ((int)$slide['background'] == $slide['background'] && $slide['background'] < 1)
+					if ((int)$slide['background'] == $slide['background'] && $slide['background'] > 0)
 					{
 						// if slide background is a number, it must be an attachment ID
 						// so get its URL
