@@ -34,6 +34,7 @@ define('TOTAL_SLIDER_REQUIRED_CAPABILITY', 'total_slider_manage_slides');
 define('TOTAL_SLIDER_MAX_SLIDE_GROUPS', 24);
 define('TOTAL_SLIDER_DEFAULT_CROP_WIDTH', 600);
 define('TOTAL_SLIDER_DEFAULT_CROP_HEIGHT', 300);
+define('TOTAL_SLIDER_DATAFORMAT_VERSION', '1.1');
 
 /*VPM_33x_CONDITIONAL*/
 if (!version_compare(get_bloginfo('version'), '3.4', '>='))
@@ -110,9 +111,33 @@ class Total_Slider {
 		{
 			add_option('total_slider_general_options', array(
 				'should_enqueue_template'	=> 	'1',
+				'should_show_tinymce_button' => '1'
 			));
 		}
+		
+		if (!get_option('total_slider_dataformat_version'))
+		{
+			add_option('total_slider_dataformat_version', TOTAL_SLIDER_DATAFORMAT_VERSION);
+		}
 
+	}
+	
+	public function upgrade() {
+	/*
+		Check to see if an upgrade to Total Slider's data format is required, and if
+		so, kick off the appropriate code to run the upgrade.
+	*/
+	
+		if (!get_option('total_slider_dataformat_version'))
+		{
+			// Total Slider has not been data-upgraded since before the version was introduced (1.0.x)
+			
+			// run an upgrade
+			require_once( dirname(__FILE__) . '/includes/upgrade/v1.0.x-to-v1.1.php' );	
+			
+		}
+		// eventually, there will be additional conditionals here for various incremental upgrade scenarios (version_compare??)
+	
 	}
 
 	public static function registerAsWidget() {
@@ -355,6 +380,9 @@ class Total_Slider {
 		if ( array_key_exists( 'page', $_GET ) && $_GET['page'] == 'total-slider' )
 		{
 		
+			// this is a convenient point to upgrade our database if necessary
+			Total_Slider::upgrade();
+					
 			// load .js if SCRIPT_DEBUG is true, or load .min.js otherwise
 			$maybeMin = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : 'min.';
 			
@@ -738,9 +766,16 @@ class Total_Slider {
 		
 		if ( get_user_option('rich_editing') == 'true')
 		{	
-			add_filter('mce_external_plugins', array('Total_Slider', 'registerTinyMCEPlugin'));
-			add_filter('mce_buttons', array('Total_Slider', 'registerTinyMCEButton'));
-			add_action('admin_head', array('Total_Slider', 'printJSAdminPageReference'));
+		
+			// check option to see if we should add the button to the toolbar or not
+			$general_options = get_option('total_slider_general_options');
+			
+			if ( array_key_exists('should_show_tinymce_button', $general_options) && $general_options['should_show_tinymce_button'] == '1' )
+			{		
+				add_filter('mce_external_plugins', array('Total_Slider', 'registerTinyMCEPlugin'));
+				add_filter('mce_buttons', array('Total_Slider', 'registerTinyMCEButton'));
+				add_action('admin_head', array('Total_Slider', 'printJSAdminPageReference'));
+			}
 		}
 	
 	}
@@ -1350,6 +1385,29 @@ class Total_Slider {
 				update_option('total_slider_general_options', $otherOptions);
 
 			}
+			
+			if ( array_key_exists('should_show_tinymce_button', $_POST) && $_POST['should_show_tinymce_button'] == '1' )
+			{
+				if ( array_key_exists('should_show_tinymce_button', $otherOptions) && $otherOptions['should_show_tinymce_button'] != '1' )
+				{
+					$success = true;
+					$message = __('Settings saved.', 'total_slider');
+				}
+				
+				$otherOptions['should_show_tinymce_button'] = '1';
+				update_option('total_slider_general_options', $otherOptions);
+			}
+			else {
+				// disable the option
+				if (array_key_exists('should_show_tinymce_button', $otherOptions) && $otherOptions['should_show_tinymce_button'] != '0')
+				{
+					$success = true;
+					$message = __('Settings saved.', 'total_slider');
+				}
+
+				$otherOptions['should_show_tinymce_button'] = '0';
+				update_option('total_slider_general_options', $otherOptions);				
+			}
 
 
 		}
@@ -1406,6 +1464,19 @@ class Total_Slider {
 									</label><br/>
 							<?php endforeach; endif; ?>
 							<span class="description"><?php _e('Users belonging to checked roles will be able to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the Total Slider widget, which makes the slides show up on your site.', 'total_slider');?></span>
+						</td>
+					</tr>
+					
+					<tr class="form-field">
+						<th scope="row">
+							<label for="should_show_tinymce_button"><?php _e('Editor', 'total_slider');?></label>			
+						</th>
+						<td>
+							<label for="should_show_tinymce_button">
+								<input type="checkbox" name="should_show_tinymce_button" id="should_show_tinymce_button" value="1" style="width:20px;"
+								<?php echo ( intval($otherOptions['should_show_tinymce_button']) ) ? ' checked="checked"' : ''; ?>
+								/><?php _e('Show the Total Slider button in the editor toolbar', 'total_slider');?>
+							</label>
 						</td>
 					</tr>
 
