@@ -327,11 +327,24 @@ class Total_Slide_Group {
 						}
 					}
 					
-					if ((int)$slide['background'] == $slide['background'])
+					if ((int)$slide['background'] == $slide['background'] && $slide['background'] < 1)
 					{
 						// if slide background is a number, it must be an attachment ID
 						// so get its URL
 						$slide['background_url'] = wp_get_attachment_url((int)$slide['background']);
+						
+						if ($slide['background_url'] == false)
+						{
+							/* 
+								If it failed to look up, simply fail to provide the URL.
+								We must not provide (string)'false' as the URL or things will break.
+								
+								'false' isn't a valid URL, but will be loaded into the frontend, and stays unless replaced by the user
+								during the edit process. This will bite the user when they then try and save, as they will be told
+								the background URL is not valid.
+							*/
+							unset($slide['background_url']);
+						}
 					}
 				
 					return $slide;

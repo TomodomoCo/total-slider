@@ -603,11 +603,17 @@ jQuery(document).ready(function($) {
 		
 		$('#edit-controls-save,#edit-controls-cancel').prop('disabled', 'disabled');
 		// $('#edit-controls-save').val('Saving');
+		
+		if ($('.total-slider-template-draggable').length < 1 || $('.total-slider-template-draggable-parent').length < 1)
+		{
+			var calcBoxOffsetLeft = 0;
+			var calcBoxOffsetTop = 0;
+		}
+		else {
+			var calcBoxOffsetLeft = $('.total-slider-template-draggable').offset().left - $('.total-slider-template-draggable-parent').offset().left;
+			var calcBoxOffsetTop  = $('.total-slider-template-draggable').offset().top - $('.total-slider-template-draggable-parent').offset().top;
+		}
 			
-		//TODO solution
-		var calcBoxOffsetLeft = $('.total-slider-template-draggable').offset().left - $('.total-slider-template-draggable-parent').offset().left;
-		var calcBoxOffsetTop  = $('.total-slider-template-draggable').offset().top - $('.total-slider-template-draggable-parent').offset().top;
-	
 		if (isEditingUntitledSlide) {
 		
 			// create new slide

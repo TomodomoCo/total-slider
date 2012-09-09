@@ -1771,7 +1771,7 @@ class Total_Slider {
 									<label for="edit-slide-image-upload"><?php _e('Background', 'total_slider');?></label>
 								</th>
 								<td>
-									<input id="edit-slide-image-url" type="hidden" name="slide-image" />
+									<input id="edit-slide-image-url" type="hidden" name="slide-image" value="" />
 									<input id="edit-slide-image-upload" type="button" class="button" value="<?php _e('Upload or choose image', 'total_slider');?>" />
 								</td>
 							</tr>
