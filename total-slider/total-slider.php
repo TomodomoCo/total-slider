@@ -2032,7 +2032,7 @@ class Total_Slider_Widget extends WP_Widget {
 			return array('groupSlug' => Total_Slider::sanitizeSlideGroupSlug($newInstance['groupSlug']));
 		}
 		else {
-			return false;
+			return $oldInstance;
 		}
 
 	}
