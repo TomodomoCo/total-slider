@@ -437,14 +437,13 @@ class Total_Slider {
 			
 			wp_enqueue_script('total-slider-interface');
 
-			wp_localize_script('total-slider-interface', '_total_slider_L10n', Total_Slider::jsL10n());
-
-
-			// enqueue the frontend so that the interface will be ready
-			Total_Slider::enqueueSliderFrontend('backend');
+			wp_localize_script('total-slider-interface', '_total_slider_L10n', Total_Slider::jsL10n());			
 
 			wp_register_style('total-slider-interface-styles', plugin_dir_url( __FILE__ ).'css/interface.css');
 			wp_enqueue_style('total-slider-interface-styles');
+			
+			// enqueue the frontend so that the interface will be ready
+			Total_Slider::enqueueSliderFrontend('backend');			
 
 			// load the WP_Pointer if we are on the Slides page
 			if (array_key_exists('group', $_GET))
