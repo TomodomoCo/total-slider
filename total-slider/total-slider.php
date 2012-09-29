@@ -122,7 +122,7 @@ class Total_Slider {
 
 	}
 	
-	public function upgrade() {
+	public static function upgrade() {
 	/*
 		Check to see if an upgrade to Total Slider's data format is required, and if
 		so, kick off the appropriate code to run the upgrade.
@@ -1015,9 +1015,19 @@ class Total_Slider {
 										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
 									<?php endforeach; ?>
 								</optgroup>
-								<?php endif; ?>								
+								<?php endif; ?>
+								
+								<?php $legacy = $t->discoverTemplates('legacy', false); ?>
+								<?php if (is_array($legacy) && count($legacy) > 0): ?>
+								<optgroup label="<?php _e('v1.0 Templates', 'total-slider');?>">
+									<?php foreach($legacy as $tpl): ?>
+										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
+									<?php endforeach; ?>
+								</optgroup>								
+								<?php endif; ?>
 						
-								<?php $downloaded = $t->discoverTemplates('downloaded'); ?>
+								<?php //$downloaded = $t->discoverTemplates('downloaded'); ?>
+								<?php $download = false; ?>
 								<?php if (is_array($downloaded) && count($downloaded) > 0): ?>
 								<!--<optgroup label="<?php _e('Downloaded', 'total-slider');?>">
 									<?php foreach($downloaded as $tpl): ?>
@@ -1257,9 +1267,24 @@ class Total_Slider {
 							><?php echo esc_html($tpl['name']);?></option>
 						<?php endforeach; ?>
 					</optgroup>
-					<?php endif; ?>								
+					<?php endif; ?>
+					
+					<?php $legacy = $t->discoverTemplates('legacy', false); ?>
+					<?php if (is_array($legacy) && count($legacy) > 0): ?>
+					<optgroup label="<?php _e('v1.0 Templates', 'total-slider');?>">
+						<?php foreach($legacy as $tpl): ?>
+							<option
+							value="<?php echo esc_attr($tpl['slug']);?>"
+							<?php if ($slideGroup->templateLocation == 'legacy'): ?>
+								selected="selected"
+								<?php endif; ?>
+							><?php echo esc_html($tpl['name']);?></option>
+						<?php endforeach; ?>
+					</optgroup>								
+					<?php endif; ?>										
 			
-					<?php $downloaded = $t->discoverTemplates('downloaded'); ?>
+					<?php //$downloaded = $t->discoverTemplates('downloaded'); ?>
+					<?php $downloaded = false; ?>
 					<?php if (is_array($downloaded) && count($downloaded) > 0): ?>
 					<!--<optgroup label="<?php _e('Downloaded', 'total-slider');?>">
 						<?php foreach($downloaded as $tpl): ?>

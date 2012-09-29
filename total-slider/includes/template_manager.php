@@ -407,6 +407,71 @@ class Total_Slider_Template {
 				}			
 			break;
 			
+			case 'legacy':
+			
+				// in the theme, but simply 'loose' in the total-slider-templates folder, rather than in its own subfolder
+			
+				$pathPrefix = get_stylesheet_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				$uriPrefix = get_stylesheet_directory_uri() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				
+				$phpExists = @file_exists($pathPrefix .  'total-slider-template.php' );
+				$cssExists = @file_exists($pathPrefix . 'total-slider-template.css');
+				$jsExists = @file_exists($pathPrefix . 'total-slider-template.js' );
+				$jsMinExists = @file_exists($pathPrefix . 'total-slider-template.min.js' );
+								
+				$missingFile = '';
+				
+				if (!$phpExists)
+				{
+					$missingFile = 'PHP';
+					$expectedLocation = $pathPrefix .  'total-slider-template.php';
+				}
+				else if (!$jsExists)
+				{
+					$missingFile = 'JS';
+					$expectedLocation = $pathPrefix . 'total-slider-template.js';	
+				}
+				else if (!$cssExists)
+				{
+					$missingFile = 'CSS';
+					$expectedLocation = $pathPrefix . 'total-slider-template.css';
+				}
+				
+				else
+				{
+					$this->phpPath = $pathPrefix . 'total-slider-template.php';
+					$this->phpURI = $uriPrefix . 'total-slider-template.php';
+					
+					$this->cssPath = $pathPrefix . 'total-slider-template.css';
+					$this->cssURI = $uriPrefix . 'total-slider-template.css';
+
+					$this->jsPath = $pathPrefix . 'total-slider-template.js';
+					$this->jsURI = $uriPrefix . 'total-slider-template.js';
+					
+					if ($jsMinExists)
+					{
+						$this->jsMinPath = $pathPrefix . 'total-slider-template.min.js';
+						$this->jsMinURI = $uriPrefix . 'total-slider-template.min.js';
+					}					
+					
+					$this->pathPrefix = $pathPrefix;
+					$this->uriPrefix = $uriPrefix;
+					
+					return true;
+					
+				}
+				
+				// if a file was missing, then bubble up a relevant exception
+				if (!empty($missingFile))
+				{
+					throw new RuntimeException(
+						sprintf(__("The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider'), $missingFile, $expectedLocation)
+					, 201);
+					return false;
+				}					
+			
+			break;
+			
 			default:
 				throw new UnexpectedValueException(__('The supplied template location is not one of the allowed template locations', 'total_slider'), 101);
 				return false;				
@@ -633,7 +698,13 @@ class Total_Slider_Template {
 			return $this->mdName;
 		}
 		else {
-			return $this->slug;
+			if ($this->location == 'legacy')
+			{
+				return __('v1.0 Custom Template', 'total_slider');
+			}
+			else {
+				return $this->slug;
+			}
 		}
 		
 	}
@@ -1274,7 +1345,7 @@ class Total_Slider_Template_Iterator {
 	public function discoverTemplates($location, $shouldParseName = true) {
 	/*
 		Discovers the template files that are available in the given location (one of 'builtin',
-		'theme', 'downloaded'.
+		'theme', 'downloaded', 'legacy'.
 		
 		Returns an array of the template slugs and names, which can be used for further inspection by
 		instantiating the Total_Slider_Template class with the slug and location.
@@ -1296,6 +1367,8 @@ class Total_Slider_Template_Iterator {
 		
 		// what path(s) should we walk?
 		$paths = array();
+		
+		$cssName = 'style.css';
 		
 		switch ($location) {
 			
@@ -1319,6 +1392,37 @@ class Total_Slider_Template_Iterator {
 				
 				// in the absence of content_dir() existing, we must use the WP_CONTENT_DIR constant. Sorry!
 				$paths[] = WP_CONTENT_DIR . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				
+			break;
+			
+			case 'legacy':
+				$path = get_stylesheet_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				
+				if (!@file_exists($path) || !@is_dir($path) ) {
+					return false;
+				}
+				
+				$files = @scandir($path);
+				
+				if (!$files)
+				{
+					return false;
+				}
+				
+				foreach($files as $f)
+				{
+					$templates = array();
+					$i = 0;
+					
+					if ($f == 'total-slider-template.php' )
+					{
+						$templates[$i]['slug'] = Total_Slider_Template::sanitizeSlug(basename($f));
+						$templates[$i]['name'] = __('v1.0 Custom Template', 'total_slider');
+						return $templates;
+					}
+				}
+				
+				return false;
 				
 			break;
 			
@@ -1353,12 +1457,12 @@ class Total_Slider_Template_Iterator {
 			
 				if (@is_dir($path . '/' . $f))
 				{			
-					if (@file_exists($path . '/' . $f . '/style.css'))
+					if (@file_exists($path . '/' . $f . '/' . $cssName ))
 					{
 					
 						if ($shouldParseName) {
 					
-							$tplContent = @file_get_contents( $path . '/' . $f . '/style.css' );
+							$tplContent = @file_get_contents( $path . '/' . $f . '/' . $cssName );
 						
 							// extract the template name
 							$matches = array();

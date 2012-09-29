@@ -32,7 +32,8 @@ if (!defined('TOTAL_SLIDER_IN_FUNCTIONS'))
 static $allowedTemplateLocations = array(
 	'builtin',
 	'theme',
-	'downloaded'
+	'downloaded',
+	'legacy'
 );
 
 	/* data structure

@@ -67,6 +67,55 @@ else {
 	}
 		
 }
+
+/*
+Search for use of legacy custom templates. Find them, and mark the slide groups as 'legacy' so they continue to work
+with the new Template Manager.
+*/
+
+if ( !get_option('total_slider_upgrade_v1.0.x_to_v1.1') )
+{
+
+	$pathPrefix = get_stylesheet_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+	$uriPrefix = get_stylesheet_directory_uri() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+	
+	$phpExists = @file_exists($pathPrefix .  'total-slider-template.php' );
+	$cssExists = @file_exists($pathPrefix . 'total-slider-template.css');
+	$jsExists = @file_exists($pathPrefix . 'total-slider-template.js' );
+	$jsMinExists = @file_exists($pathPrefix . 'total-slider-template.min.js' );
+	
+	if ( $phpExists && $cssExists && $jsExists )
+	{
+		// we have to assume all current slide groups use the legacy template, so we must update them all
+		$currentSlides = get_option( 'total_slider_slide_groups' );
 		
+		if ( is_array($currentSlides) && count($currentSlides) > 0 )
+		{
+			foreach ( $currentSlides as $slide )
+			{
+				if ( is_a($slide, 'Total_Slide_Group') )
+				{
+					$slide->load();
+					
+					if ( $slide->templateLocation == 'builtin' )
+					{
+						// flip it to 'legacy'
+						$slide->templateLocation = 'legacy';
+						$slide->template = 'total-slider-template';
+						
+						$slide->save();
+												
+					}
+				}
+			}
+		}
+		
+		
+	}
+	
+	// make sure we don't run this ever again
+	add_option( 'total_slider_upgrade_v1.0.x_to_v1.1', 'completed', '', 'no' );
+
+}
 
 ?>
