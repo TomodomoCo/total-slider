@@ -744,7 +744,7 @@ class Total_Slider {
 			'unableToSaveSlide'				=> __('Sorry, unable to save the new slide.', 'total_slider'),
 			'unableToDeleteSlideNoID'		=> __('Unable to delete -- could not get the slide ID for the current slide.', 'total_slider'),
 			'unableToDeleteSlide'			=> __('Sorry, unable to delete the slide.', 'total_slider'),
-			'templateChangeWouldLoseData'	=> __("Changing this slide’s template may cause the background images to look quite different. You should review the background images after the change.\n\nAny custom positions for the title and description on each slide will be lost.\n\nDo you want to change the template?", 'total_slider'),
+			'templateChangeWouldLoseData'	=> __("Changing the template affects all slides in this group.\n\nAny custom positions for the title and description will be lost. You should review your slides after the change.\n\nDo you want to change the template?", 'total_slider'),
 			'mustFinishEditingFirst'		=> __('You must finish editing the slide before performing this action. Please either save your changes to the slide, or click Cancel.', 'total_slider')
 			
 		);
@@ -1182,12 +1182,19 @@ class Total_Slider {
 		add_meta_box('slide-preview-mb', __('Preview', 'total_slider'), array('Total_Slider', 'printSlidePreviewMetabox'), '_total_slider_slide', 'normal', 'core');
 
 		add_meta_box('slide-editor-mb', __('Edit', 'total_slider'), array('Total_Slider', 'printSlideEditorMetabox'), '_total_slider_slide_bottom', 'normal', 'core');
+		add_meta_box('slide-template-mb', __('Template', 'total_slider'), array('Total_Slider', 'printSlideTemplateMetabox'), '_total_slider_slide_bottom', 'side', 'core'); 
 		add_meta_box('credits-notes-mb', __('Credits', 'total_slider'), array('Total_Slider', 'printCreditsMetabox'), '_total_slider_slide_bottom', 'side', 'core');
 
 		if (function_exists('find_posts_div')) { find_posts_div(); } // bring in the post/page finder interface for links
 
 		?>
-
+		<!-- Proxy template change form -->
+		<form name="template-switch-form" id="template-switch-form" method="POST" action="admin.php?page=total-slider&amp;group=<?php echo $TSTheSlug;?>&amp;action=changeTemplate">
+		<?php wp_nonce_field('total-slider-change-template', 'total-slider-change-template-nonce'); ?>
+		<input type="hidden" id="template-slug" name="template-slug" value="<?php echo esc_attr($slideGroup->template);?>" />
+		</form>
+		
+		
 		<script type="text/javascript">
 		//<![CDATA[
 		var VPM_WP_ROOT = '<?php echo admin_url(); ?>';
@@ -1226,84 +1233,6 @@ class Total_Slider {
 			<p><?php _e('Please either resolve this problem, or choose a different template for this slide group.', 'total_slider'); ?></p>
 			</div>
 		<?php endif; ?>
-
-
-		<!-- unfinished style/placement -->
-		<!--TODO -->
-
-		<div id="template-switch-controls">
-			<form name="template-switch-form" id="template-switch-form" method="POST" action="admin.php?page=total-slider&amp;group=<?php echo $TSTheSlug;?>&amp;action=changeTemplate">
-			<?php wp_nonce_field('total-slider-change-template', 'total-slider-change-template-nonce'); ?>
-			<p><?php _e('Template:', 'total_slider'); ?>							
-			<?php $t = new Total_Slider_Template_Iterator(); ?>
-				<select name="template-slug" id="template-slug">
-					
-					<?php $builtin = $t->discoverTemplates('builtin'); ?>
-					<?php if (is_array($builtin) && count($builtin) > 0): ?>
-					<optgroup label="<?php _e('Built-in', 'total-slider');?>">
-						<?php foreach($builtin as $tpl): ?>
-
-							<option
-								value="<?php echo esc_attr($tpl['slug']);?>"
-								<?php if ($slideGroup->templateLocation == 'builtin' && $slideGroup->template == $tpl['slug']): ?>
-								selected="selected"
-								<?php endif; ?>
-								
-							><?php echo esc_html($tpl['name']);?></option>
-						<?php endforeach; ?>
-					</optgroup>
-					<?php endif; ?>
-					
-					<?php $theme = $t->discoverTemplates('theme'); ?>
-					<?php if (is_array($theme) && count($theme) > 0): ?>
-					<optgroup label="<?php _e('Theme', 'total-slider');?>">
-						<?php foreach($theme as $tpl): ?>
-							<option
-								value="<?php echo esc_attr($tpl['slug']);?>"
-								<?php if ($slideGroup->templateLocation == 'theme' && $slideGroup->template == $tpl['slug']): ?>
-								selected="selected"
-								<?php endif; ?>
-								
-							><?php echo esc_html($tpl['name']);?></option>
-						<?php endforeach; ?>
-					</optgroup>
-					<?php endif; ?>
-					
-					<?php $legacy = $t->discoverTemplates('legacy', false); ?>
-					<?php if (is_array($legacy) && count($legacy) > 0): ?>
-					<optgroup label="<?php _e('v1.0 Templates', 'total-slider');?>">
-						<?php foreach($legacy as $tpl): ?>
-							<option
-							value="<?php echo esc_attr($tpl['slug']);?>"
-							<?php if ($slideGroup->templateLocation == 'legacy'): ?>
-								selected="selected"
-								<?php endif; ?>
-							><?php echo esc_html($tpl['name']);?></option>
-						<?php endforeach; ?>
-					</optgroup>								
-					<?php endif; ?>										
-			
-					<?php //$downloaded = $t->discoverTemplates('downloaded'); ?>
-					<?php $downloaded = false; ?>
-					<?php if (is_array($downloaded) && count($downloaded) > 0): ?>
-					<!--<optgroup label="<?php _e('Downloaded', 'total-slider');?>">
-						<?php foreach($downloaded as $tpl): ?>
-							<option
-								value="<?php echo esc_attr($tpl['slug']);?>"
-								<?php if ($slideGroup->templateLocation == 'downloaded' && $slideGroup->template == $tpl['slug']): ?>
-								selected="selected"
-								<?php endif; ?>
-								
-							><?php echo esc_html($tpl['name']);?></option>
-						<?php endforeach; ?>																
-					</optgroup>	-->
-					<?php endif; ?>
-													
-				</select>
-			<input type="submit" class="button-secondary action" style="max-width:100px;" value="<?php _e('Change Template', 'total_slider');?>" />
-			</p>
-			</form>
-		</div>	
 
 		<form name="vpm-the-slides">
 
@@ -1702,6 +1631,105 @@ class Total_Slider {
 
 		<?php
 
+	}
+	
+	public static function printSlideTemplateMetabox()
+	{
+	/*
+		Print to output the contents of the slide template metabox.
+	*/
+	
+		global $TSTheSlug;
+	
+		if (!$TSTheSlug)
+		{
+			if (!array_key_exists('group', $_GET))
+			{
+				return false;
+			}
+			
+			$TSTheSlug = Total_Slider::sanitizeSlideGroupSlug($_GET['group']);		
+		}
+		
+		$slideGroup = new Total_Slide_Group($TSTheSlug);
+		if (!$slideGroup->load())
+		{
+			return false;
+		}
+	
+		?><div id="template-switch-controls">
+			<form name="template-switch-form" id="template-switch-form" method="POST" action="admin.php?page=total-slider&amp;group=<?php echo $TSTheSlug;?>&amp;action=changeTemplate">
+			<p>
+			<?php $t = new Total_Slider_Template_Iterator(); ?>
+				<select name="template-slug" id="template-slug-selector">
+					
+					<?php $builtin = $t->discoverTemplates('builtin'); ?>
+					<?php if (is_array($builtin) && count($builtin) > 0): ?>
+					<optgroup label="<?php _e('Built-in', 'total-slider');?>">
+						<?php foreach($builtin as $tpl): ?>
+
+							<option
+								value="<?php echo esc_attr($tpl['slug']);?>"
+								<?php if ($slideGroup->templateLocation == 'builtin' && $slideGroup->template == $tpl['slug']): ?>
+								selected="selected"
+								<?php endif; ?>
+								
+							><?php echo esc_html($tpl['name']);?></option>
+						<?php endforeach; ?>
+					</optgroup>
+					<?php endif; ?>
+					
+					<?php $theme = $t->discoverTemplates('theme'); ?>
+					<?php if (is_array($theme) && count($theme) > 0): ?>
+					<optgroup label="<?php _e('Theme', 'total-slider');?>">
+						<?php foreach($theme as $tpl): ?>
+							<option
+								value="<?php echo esc_attr($tpl['slug']);?>"
+								<?php if ($slideGroup->templateLocation == 'theme' && $slideGroup->template == $tpl['slug']): ?>
+								selected="selected"
+								<?php endif; ?>
+								
+							><?php echo esc_html($tpl['name']);?></option>
+						<?php endforeach; ?>
+					</optgroup>
+					<?php endif; ?>
+					
+					<?php $legacy = $t->discoverTemplates('legacy', false); ?>
+					<?php if (is_array($legacy) && count($legacy) > 0): ?>
+					<optgroup label="<?php _e('v1.0 Templates', 'total-slider');?>">
+						<?php foreach($legacy as $tpl): ?>
+							<option
+							value="<?php echo esc_attr($tpl['slug']);?>"
+							<?php if ($slideGroup->templateLocation == 'legacy'): ?>
+								selected="selected"
+								<?php endif; ?>
+							><?php echo esc_html($tpl['name']);?></option>
+						<?php endforeach; ?>
+					</optgroup>								
+					<?php endif; ?>										
+			
+					<?php //$downloaded = $t->discoverTemplates('downloaded'); ?>
+					<?php $downloaded = false; ?>
+					<?php if (is_array($downloaded) && count($downloaded) > 0): ?>
+					<!--<optgroup label="<?php _e('Downloaded', 'total-slider');?>">
+						<?php foreach($downloaded as $tpl): ?>
+							<option
+								value="<?php echo esc_attr($tpl['slug']);?>"
+								<?php if ($slideGroup->templateLocation == 'downloaded' && $slideGroup->template == $tpl['slug']): ?>
+								selected="selected"
+								<?php endif; ?>
+								
+							><?php echo esc_html($tpl['name']);?></option>
+						<?php endforeach; ?>																
+					</optgroup>	-->
+					<?php endif; ?>
+													
+				</select>
+			<input id="template-switch-button" type="submit" class="button-secondary action" style="margin-top:8px; max-width:100px;" value="<?php _e('Change Template', 'total_slider');?>" />
+			</p>
+			</form>
+		</div><?php	
+		
 	}
 
 	public static function printSlidePreviewMetabox()

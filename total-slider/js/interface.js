@@ -962,7 +962,16 @@ jQuery(document).ready(function($) {
 		$('body').animate({ scrollTop: 0 }, 1000);
 	});
 	
-	/* !Button for changing slide template on existing slide group */
+	/* !Changing slide template */
+	$('#template-switch-button').click(function(e) {
+		e.preventDefault();
+		$('#template-switch-form').submit();		
+	});
+	
+	$('#template-slug-selector').change(function(e) {
+		$('#template-slug').val($('select#template-slug-selector option:selected').val());
+	});
+			
 	$('#template-switch-form').submit(function(e) {
 		if (isEditing)
 		{
