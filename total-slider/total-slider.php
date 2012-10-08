@@ -3,7 +3,7 @@
 Plugin Name: Total Slider
 Plugin URI: http://www.totalslider.com/
 Description: The best experience for building sliders, with true WYSIWYG, drag & drop and more!
-Version: 1.1-alpha
+Version: 1.1
 Author: Peter Upfold
 Author URI: http://www.vanpattenmedia.com/
 License: GPLv2 or later
@@ -2103,6 +2103,7 @@ class Total_Slider_Widget extends WP_Widget {
 		if (!is_array($this->slides))
 		{
 			$this->slides = get_option('total_slider_slides_' . Total_Slider::sanitizeSlideGroupSlug($this->instance['groupSlug']));
+			$this->slides = array_values($this->slides);
 		}
 
 		return count($this->slides);
@@ -2141,6 +2142,7 @@ class Total_Slider_Widget extends WP_Widget {
 		if (!is_array($this->slides) || count($this->slides) < 1)
 		{
 			$this->slides = get_option('total_slider_slides_' . Total_Slider::sanitizeSlideGroupSlug($this->instance['groupSlug']));
+			$this->slides = array_values($this->slides);
 		}
 
 		// on which slide should we work? does it exist?
