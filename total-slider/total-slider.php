@@ -1001,7 +1001,7 @@ class Total_Slider {
 								
 								<?php $builtin = $t->discoverTemplates('builtin'); ?>
 								<?php if (is_array($builtin) && count($builtin) > 0): ?>
-								<optgroup label="<?php _e('Built-in', 'total-slider');?>">
+								<optgroup label="<?php _e('Built-in', 'total_slider');?>">
 									<?php foreach($builtin as $tpl): ?>
 										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
 									<?php endforeach; ?>
@@ -1010,7 +1010,7 @@ class Total_Slider {
 								
 								<?php $theme = $t->discoverTemplates('theme'); ?>
 								<?php if (is_array($theme) && count($theme) > 0): ?>
-								<optgroup label="<?php _e('Theme', 'total-slider');?>">
+								<optgroup label="<?php _e('Theme', 'total_slider');?>">
 									<?php foreach($theme as $tpl): ?>
 										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
 									<?php endforeach; ?>
@@ -1019,7 +1019,7 @@ class Total_Slider {
 								
 								<?php $legacy = $t->discoverTemplates('legacy', false); ?>
 								<?php if (is_array($legacy) && count($legacy) > 0): ?>
-								<optgroup label="<?php _e('v1.0 Templates', 'total-slider');?>">
+								<optgroup label="<?php _e('v1.0 Templates', 'total_slider');?>">
 									<?php foreach($legacy as $tpl): ?>
 										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
 									<?php endforeach; ?>
@@ -1029,7 +1029,7 @@ class Total_Slider {
 								<?php //$downloaded = $t->discoverTemplates('downloaded'); ?>
 								<?php $download = false; ?>
 								<?php if (is_array($downloaded) && count($downloaded) > 0): ?>
-								<!--<optgroup label="<?php _e('Downloaded', 'total-slider');?>">
+								<!--<optgroup label="<?php _e('Downloaded', 'total_slider');?>">
 									<?php foreach($downloaded as $tpl): ?>
 										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
 									<?php endforeach; ?>																
@@ -1665,7 +1665,7 @@ class Total_Slider {
 					
 					<?php $builtin = $t->discoverTemplates('builtin'); ?>
 					<?php if (is_array($builtin) && count($builtin) > 0): ?>
-					<optgroup label="<?php _e('Built-in', 'total-slider');?>">
+					<optgroup label="<?php _e('Built-in', 'total_slider');?>">
 						<?php foreach($builtin as $tpl): ?>
 
 							<option
@@ -1681,7 +1681,7 @@ class Total_Slider {
 					
 					<?php $theme = $t->discoverTemplates('theme'); ?>
 					<?php if (is_array($theme) && count($theme) > 0): ?>
-					<optgroup label="<?php _e('Theme', 'total-slider');?>">
+					<optgroup label="<?php _e('Theme', 'total_slider');?>">
 						<?php foreach($theme as $tpl): ?>
 							<option
 								value="<?php echo esc_attr($tpl['slug']);?>"
@@ -1696,7 +1696,7 @@ class Total_Slider {
 					
 					<?php $legacy = $t->discoverTemplates('legacy', false); ?>
 					<?php if (is_array($legacy) && count($legacy) > 0): ?>
-					<optgroup label="<?php _e('v1.0 Templates', 'total-slider');?>">
+					<optgroup label="<?php _e('v1.0 Templates', 'total_slider');?>">
 						<?php foreach($legacy as $tpl): ?>
 							<option
 							value="<?php echo esc_attr($tpl['slug']);?>"
@@ -1711,7 +1711,7 @@ class Total_Slider {
 					<?php //$downloaded = $t->discoverTemplates('downloaded'); ?>
 					<?php $downloaded = false; ?>
 					<?php if (is_array($downloaded) && count($downloaded) > 0): ?>
-					<!--<optgroup label="<?php _e('Downloaded', 'total-slider');?>">
+					<!--<optgroup label="<?php _e('Downloaded', 'total_slider');?>">
 						<?php foreach($downloaded as $tpl): ?>
 							<option
 								value="<?php echo esc_attr($tpl['slug']);?>"
