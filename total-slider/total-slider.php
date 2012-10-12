@@ -782,7 +782,7 @@ class Total_Slider {
 			// check option to see if we should add the button to the toolbar or not
 			$general_options = get_option('total_slider_general_options');
 			
-			if ( array_key_exists('should_show_tinymce_button', $general_options) && $general_options['should_show_tinymce_button'] == '1' )
+			if ( is_array($general_options) && array_key_exists('should_show_tinymce_button', $general_options) && $general_options['should_show_tinymce_button'] == '1' )
 			{		
 				add_filter('mce_external_plugins', array('Total_Slider', 'registerTinyMCEPlugin'));
 				add_filter('mce_buttons', array('Total_Slider', 'registerTinyMCEButton'));
