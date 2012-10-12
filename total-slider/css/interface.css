@@ -107,26 +107,16 @@ ul#slidesort li:hover .slidesort-icon {
 }
 
 
-/* New slide button */
+/* Yay for vendor prefices */
 
-ul#new-slide-button {
-	text-align:right;
-	margin:20px;
-	padding:5px;
+input#edit-slide-link:-webkit-input-placeholder {
+    color:rgba(178,178,178,0.82);
 }
-
-ul#new-slide-button li {
-	text-align:right;
-	border-width: 3px;
-	border-color: #566b4d;
-	border-style: solid;
-	background-color: #a8d097;
-	display:inline;
-	margin: 10px 10px 10px 10px;
-	padding: 10px 16px 10px 16px;
-	cursor:pointer;
-	font-weight:bold;
-	font-size:120%;
+input#edit-slide-link:-moz-placeholder {
+    color:rgba(178,178,178,0.82);
+}
+input#edit-slide-link:-ms-input-placeholder {
+    color:rgba(178,178,178,0.82);
 }
 
 select#template-slug {

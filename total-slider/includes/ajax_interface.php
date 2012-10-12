@@ -225,8 +225,6 @@ switch ($_GET['action'])
 		
 		if ($result) {
 			header('Content-Type: application/json');
-			$result['title'] = stripslashes($result['title']);
-			$result['description'] = stripslashes($result['description']);
 			echo json_encode(array('new_id' => $result));
 			die();
 		}
