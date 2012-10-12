@@ -1040,7 +1040,7 @@ class Total_Slider {
 								<?php endif; ?>
 						
 								<?php //$downloaded = $t->discoverTemplates('downloaded'); ?>
-								<?php $download = false; ?>
+								<?php $downloaded = false; ?>
 								<?php if (is_array($downloaded) && count($downloaded) > 0): ?>
 								<!--<optgroup label="<?php _e('Downloaded', 'total_slider');?>">
 									<?php foreach($downloaded as $tpl): ?>
