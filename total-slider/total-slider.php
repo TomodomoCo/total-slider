@@ -94,9 +94,11 @@ class Total_Slider {
 		Also set up a base capability for administrator to access the Slider
 		Admin page, and configure some default general options.
 	*/
+	
+		$noSlideGroups = false;
 
 		if (!get_option('total_slider_slide_groups')) {
-
+			$noSlideGroups = true;
 			add_option('total_slider_slide_groups', array()); // create with a blank array
 
 		}
@@ -115,7 +117,18 @@ class Total_Slider {
 			));
 		}
 		
-		if (!get_option('total_slider_dataformat_version'))
+		
+		/* Do not create the data format version if we are upgrading from v1.0.x, but upgrade() hasn't been called --
+		   for example, the plugin has been removed and reactivated.
+		   In this instance, we should run upgrade(), which will set the data format version and run other upgrade
+		   tasks.
+		*/
+		if (!get_option('total_slider_dataformat_version') && !$noSlideGroups)
+		{
+			return Total_Slider::upgrade();
+		}
+		
+		if (!get_option('total_slider_dataformat_version') )
 		{
 			add_option('total_slider_dataformat_version', TOTAL_SLIDER_DATAFORMAT_VERSION);
 		}
@@ -1427,7 +1440,7 @@ class Total_Slider {
 						<td>
 							<label for="should_show_tinymce_button">
 								<input type="checkbox" name="should_show_tinymce_button" id="should_show_tinymce_button" value="1" style="width:20px;"
-								<?php echo ( intval($otherOptions['should_show_tinymce_button']) ) ? ' checked="checked"' : ''; ?>
+								<?php echo ( array_key_exists('should_show_tinymce_button', $otherOptions) && intval($otherOptions['should_show_tinymce_button']) ) ? ' checked="checked"' : ''; ?>
 								/><?php _e('Show the Total Slider button in the editor toolbar', 'total_slider');?>
 							</label>
 						</td>
