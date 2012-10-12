@@ -1671,7 +1671,6 @@ class Total_Slider {
 		}
 	
 		?><div id="template-switch-controls">
-			<form name="template-switch-form" id="template-switch-form" method="POST" action="admin.php?page=total-slider&amp;group=<?php echo $TSTheSlug;?>&amp;action=changeTemplate">
 			<p>
 			<?php $t = new Total_Slider_Template_Iterator(); ?>
 				<select name="template-slug" id="template-slug-selector">
@@ -1740,7 +1739,6 @@ class Total_Slider {
 				</select>
 			<input id="template-switch-button" type="submit" class="button-secondary action" style="margin-top:8px; max-width:100px;" value="<?php _e('Change Template', 'total_slider');?>" />
 			</p>
-			</form>
 		</div><?php	
 		
 	}
