@@ -28,7 +28,7 @@ $.fn.cycle = function( options ) {
         if ( container.data('cycle.opts') )
             return; // already initialized
 
-        if ( container.data('cycle-log') === false || 
+        if ( container.data('cycle-log') === false ||
             ( options && options.log === false ) ||
             ( opts && opts.log === false) ) {
             log = $.noop;
@@ -83,7 +83,7 @@ $.fn.cycle.API = {
         var slides = opts.slides;
         opts.slideCount = 0;
         opts.slides = $(); // empty set
-        
+
         // add slides that already exist
         slides = slides.jquery ? slides : opts.container.find( slides );
         opts.API.add( slides );
@@ -123,12 +123,12 @@ $.fn.cycle.API = {
                 pauseObj = $( opts.pauseOnHover );
 
             pauseObj.hover(
-                function(){ 
-                    opts.paused = 1; 
+                function(){
+                    opts.paused = 1;
                     opts.API.trigger('cycle-paused', [ opts ] );
-                }, 
-                function(){ 
-                    opts.paused = 0; 
+                },
+                function(){
+                    opts.paused = 0;
                     opts.API.trigger('cycle-resumed', [ opts ] );
                 }
             );
@@ -332,8 +332,8 @@ $.fn.cycle.API = {
             return;
         }
         if (slideOpts.timeout) {
-            opts.timeoutId = setTimeout(function() { 
-                opts.API.prepareTx( false, !opts.reverse ); 
+            opts.timeoutId = setTimeout(function() {
+                opts.API.prepareTx( false, !opts.reverse );
             }, slideOpts.timeout );
         }
     },
@@ -355,7 +355,7 @@ $.fn.cycle.API = {
         clearTimeout(opts.timeoutId);
         opts.timeoutId = 0;
         opts.nextSlide = opts.currSlide + val;
-        
+
         if (opts.nextSlide < 0)
             opts.nextSlide = opts.slides.length - 1;
         else if (opts.nextSlide >= opts.slides.length)
@@ -404,7 +404,7 @@ $.fn.cycle.API = {
         var slideOpts = $(slide).data('cycle.opts');
         return $.extend( {}, opts, slideOpts );
     },
-    
+
     initSlide: function( slideOpts, slide, suggestedZindex ) {
         var opts = this.opts();
         slide.css( slideOpts.slideCss || {} );
@@ -447,7 +447,7 @@ $.fn.cycle.API = {
         }
         if (selector.jquery)
             return selector;
-        
+
         return $(selector);
     },
 
@@ -579,7 +579,7 @@ $(document).ready(function() {
 
 $.extend($.fn.cycle.defaults, {
     autoHeight: 0
-});    
+});
 
 $(document).on( 'cycle-initialized', function( e, opts ) {
     var ratio;
@@ -591,7 +591,7 @@ $(document).on( 'cycle-initialized', function( e, opts ) {
             display: 'block'
         }).prependTo( opts.container ).removeClass().addClass('cycle-sentinel cycle-slide');
     }
-    else if ( $.type( opts.autoHeight ) == 'string' && /\d+\:\d+/.test( opts.autoHeight ) ) { 
+    else if ( $.type( opts.autoHeight ) == 'string' && /\d+\:\d+/.test( opts.autoHeight ) ) {
         // use ratio
         ratio = opts.autoHeight.match(/(\d+)\:(\d+)/);
         ratio = ratio[1] / ratio[2];
@@ -625,7 +625,7 @@ $.extend($.fn.cycle.defaults, {
     captionTemplate:  '{{slideNum}} / {{slideCount}}',
     overlay:          '> .cycle-overlay',
     overlayTemplate:  '<div>{{title}}</div><div>{{desc}}</div>'
-});    
+});
 
 $(document).on( 'cycle-update-view', function( e, opts, slideOpts, currSlide ) {
     var el;
@@ -853,7 +853,7 @@ function onHashChange( opts, setStartingSlide ) {
         opts._hashFence = false;
         return;
     }
-    
+
     hash = window.location.hash.substring(1);
 
     opts.slides.each(function(i) {
@@ -937,7 +937,7 @@ $(document).on( 'cycle-bootstrap', function( e, opts ) {
 
         if ( slideCount )
             opts.container.addClass('cycle-loading');
-        
+
 
         function addSlide( slide ) {
             var curr;
@@ -969,7 +969,7 @@ $.extend($.fn.cycle.defaults, {
     pagerActiveClass: 'cycle-pager-active',
     pagerEvent:       'click.cycle',
     pagerTemplate:    '<span>&bull;</span>'
-});    
+});
 
 $(document).on( 'cycle-bootstrap', function( e, opts, API ) {
     // add method to API
@@ -1060,7 +1060,7 @@ $.extend($.fn.cycle.defaults, {
     prev:           '> .cycle-prev',
     prevEvent:      'click.cycle',
     swipe:          false
-});    
+});
 
 $(document).on( 'cycle-initialized', function( e, opts ) {
     opts.API.getComponent( 'next' ).off( opts.nextEvent ).on( opts.nextEvent, function(e) {
@@ -1202,11 +1202,11 @@ $(document).on( 'cycle-pre-initialize', function( e, opts ) {
                 opts.API.add( slide );
             }
             else {
-                nextFn.apply( opts.API );    
+                nextFn.apply( opts.API );
             }
         };
     }
-    
+
     if ( prevFn ) {
         API.prev = function() {
             var opts = this.opts();
@@ -1260,7 +1260,7 @@ $.extend($.fn.cycle.API, {
             });
         }
     }
-});    
+});
 
 })(jQuery);
 
@@ -1271,38 +1271,38 @@ $.extend($.fn.cycle.API, {
 
 */
 
-jQuery('.total-slider-container .total-slider').each( function(i) {
+jQuery('.ts-twentytwelve-alt-container .ts-twentytwelve-alt').each( function(i) {
 	jQuery(this)
-	
+
 	// Initialize Cycle2
 	.cycle({
-		slides: '.total-slider-slide',
-	
+		slides: '.ts-twentytwelve-alt-slide',
+
 		// Edit the slide delay here. This is in milliseconds. The current delay is 10 seconds.
 		timeout: 10000
 	})
 
-	.find('.total-slider-slide .total-slider-link-wrapper').appendTo( jQuery(this).parent().find('.total-slider-nav') )
+	.find('.ts-twentytwelve-alt-slide .ts-twentytwelve-alt-link-wrapper').appendTo( jQuery(this).parent().find('.ts-twentytwelve-alt-nav') )
 
 	.ready( function() {
-		// Initially set the first slide to "total-slider-current"
-		jQuery(this).find('.total-slider-link-wrapper:nth-child(1)').children().addClass('total-slider-current');
+		// Initially set the first slide to "ts-twentytwelve-alt-current"
+		jQuery(this).find('.ts-twentytwelve-alt-link-wrapper:nth-child(1)').children().addClass('ts-twentytwelve-alt-current');
 	})
 
-	// Update the "total-slider-current" class when automatically cycling
+	// Update the "ts-twentytwelve-alt-current" class when automatically cycling
 	.on('cycle-before', function(event, opts) {
 		var index = parseInt(opts.nextSlide) + 1;
 
-		// Set the "total-slider-current" class on the active link
-		jQuery(this).parent().find('.total-slider-nav-link').removeClass('total-slider-current');
-		jQuery(this).parent().find('.total-slider-link-wrapper:nth-child(' + index + ')').children().addClass('total-slider-current');
+		// Set the "ts-twentytwelve-alt-current" class on the active link
+		jQuery(this).parent().find('.ts-twentytwelve-alt-nav-link').removeClass('ts-twentytwelve-alt-current');
+		jQuery(this).parent().find('.ts-twentytwelve-alt-link-wrapper:nth-child(' + index + ')').children().addClass('ts-twentytwelve-alt-current');
 	})
 
 	;
 });
 
 // Set up the nav click action
-jQuery('.total-slider-container .total-slider').parent().find('.total-slider-nav-link').click( function(event) {
+jQuery('.ts-twentytwelve-alt-container .ts-twentytwelve-alt').parent().find('.ts-twentytwelve-alt-nav-link').click( function(event) {
 	// Keep links from working as links by default
 	event.preventDefault();
 
@@ -1310,9 +1310,9 @@ jQuery('.total-slider-container .total-slider').parent().find('.total-slider-nav
 	slide_iteration = jQuery(this).data('slideIteration');
 
 	// Navigate to the selected slide
-	jQuery(this).parent().parent().parent().find('.total-slider').cycle('goto', slide_iteration);
+	jQuery(this).parent().parent().parent().find('.ts-twentytwelve-alt').cycle('goto', slide_iteration);
 
-	// Set the "total-slider-current" class on the active link
-	jQuery(this).parent().parent().find('.total-slider-nav-link').removeClass('total-slider-current');
-	jQuery(this).addClass('total-slider-current');
+	// Set the "ts-twentytwelve-alt-current" class on the active link
+	jQuery(this).parent().parent().find('.ts-twentytwelve-alt-nav-link').removeClass('ts-twentytwelve-alt-current');
+	jQuery(this).addClass('ts-twentytwelve-alt-current');
 });

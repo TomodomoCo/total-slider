@@ -28,7 +28,7 @@ Disable-XY-Positioning-In-Admin: Yes
 <?php if ( !$s->is_runtime() ) : ?>
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400' rel='stylesheet' type='text/css'>
 <style type="text/css">
-.total-slider {
+.ts-twentytwelve-alt {
 	font-family: "Open Sans", Helvetica, Arial, sans-serif;
 	max-width: 960px;
 }
@@ -36,20 +36,20 @@ Disable-XY-Positioning-In-Admin: Yes
 <?php endif; ?>
 
 <?php if ( $s->slides_count() > 0 ) : ?>
-	<div class="total-slider-container">
-		<ul class="total-slider <?php if ( !$s->is_runtime() ) : ?>total-slider-admin<?php else : ?>total-slider-live<?php endif; ?>">
+	<div class="ts-twentytwelve-alt-container">
+		<ul class="ts-twentytwelve-alt <?php if ( !$s->is_runtime() ) : ?>ts-twentytwelve-alt-admin<?php else : ?>ts-twentytwelve-alt-live<?php endif; ?>">
 		<?php while ( $s->has_slides() ) : ?>
-			<li id="total-slider-slide-<?php $s->the_identifier(); ?>" class="total-slider-slide">
-				<a href="<?php $s->the_link(); ?>" class="total-slider-link" style="background-image: url(<?php $s->the_background_url(); ?>);"></a>
-				<div class="total-slider-link-wrapper">
-					<a class="total-slider-nav-link" data-slide-iteration="<?php echo $s->iteration(); ?>" href="#">
-						<h1 class="total-slider-title"><?php $s->the_title(); ?></h1>
-						<p class="total-slider-description"><?php $s->the_description(); ?></p>
+			<li id="ts-twentytwelve-alt-slide-<?php $s->the_identifier(); ?>" class="ts-twentytwelve-alt-slide">
+				<a href="<?php $s->the_link(); ?>" class="ts-twentytwelve-alt-link" style="background-image: url(<?php $s->the_background_url(); ?>);" title="<?php $s->the_title(); ?>"></a>
+				<div class="ts-twentytwelve-alt-link-wrapper">
+					<a class="ts-twentytwelve-alt-nav-link" data-slide-iteration="<?php echo $s->iteration(); ?>" href="#">
+						<h1 class="ts-twentytwelve-alt-title"><?php $s->the_title(); ?></h1>
+						<p class="ts-twentytwelve-alt-description"><?php $s->the_description(); ?></p>
 					</a>
 				</div>
 			</li>
 		<?php endwhile; ?>
 		</ul>
-		<ul class="total-slider-nav"></ul>
+		<ul class="ts-twentytwelve-alt-nav"></ul>
 	</div>
 <?php endif; ?>
