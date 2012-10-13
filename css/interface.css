@@ -74,6 +74,7 @@ ul#slidesort li.slidesort-selected {
 	color: #FFF;
 	text-shadow: 0 1px 1px #000;
 	background: url(../img/slider-desc-bg.png);
+	background: rgba(0, 0, 0, 0.65);
 }
 
 .slidesort-icon {
