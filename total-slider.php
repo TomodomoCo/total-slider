@@ -1787,7 +1787,17 @@ class Total_Slider {
 			
 			if ( is_a($TSTheTemplate, 'Total_Slider_Template') )
 			{
-				echo $TSTheTemplate->render();
+				try {
+					echo $TSTheTemplate->render();
+				}
+				catch (Exception $e)
+				{
+					?><div class="template-render-error"><?php
+					_e('Unable to load the preview.', 'total_slider');
+					?><br />
+					<em><?php echo esc_html( $e->getMessage() ); ?></em>
+					</div><?php					
+				}
 			}
 			
 			?>
@@ -1985,7 +1995,9 @@ class Total_Slider_Widget extends WP_Widget {
 		catch (Exception $e)
 		{
 			_e('<strong>Total Slider:</strong> Unable to load the template for this slide group.', 'total_slider');
-			echo ' <em>' . esc_html($e->getMessage) . '</em>';
+			if ( is_user_logged_in() ) {
+				echo ' <em>' . esc_html($e->getMessage()) . '</em>';
+			}
 			return;
 		}
 		

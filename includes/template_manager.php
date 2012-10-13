@@ -171,7 +171,7 @@ class Total_Slider_Template {
 					$missingFile = 'PHP';
 					$expectedLocation = $pathPrefix . $this->slug . '/' . $this->slug . '.php';			
 				}
-				else if (!$jsExists)
+				else if (!$jsExists && !$jsMinExists)
 				{
 					$missingFile = 'JS';
 					$expectedLocation = $pathPrefix . $this->slug . '/' . $this->slug . '.js';								
@@ -190,8 +190,11 @@ class Total_Slider_Template {
 					$this->cssPath = $pathPrefix . $this->slug . '/style.css';
 					$this->cssURI = $uriPrefix . $this->slug . '/style.css';
 
-					$this->jsPath = $pathPrefix . $this->slug . '/' . $this->slug . '.js';
-					$this->jsURI = $uriPrefix . $this->slug . '/' . $this->slug . '.js';
+					if ($jsExists)
+					{
+						$this->jsPath = $pathPrefix . $this->slug . '/' . $this->slug . '.js';
+						$this->jsURI = $uriPrefix . $this->slug . '/' . $this->slug . '.js';
+					}
 					
 					if ($jsMinExists)
 					{
@@ -305,7 +308,7 @@ class Total_Slider_Template {
 						$expectedLocation .= $prefix['parent']['path'] . $this->slug . '/' . $this->slug . '.php';
 					}
 				}
-				else if (!$this->jsPath || !$this->jsURI)
+				else if ( (!$this->jsPath || !$this->jsURI) && (!$this->jsMinPath || !$this->jsMinURI) )
 				{
 					$missingFile = 'JS';
 					$expectedLocation = $prefix['child']['path'] . $this->slug . '/' . $this->slug . '.js';
@@ -362,7 +365,7 @@ class Total_Slider_Template {
 					$missingFile = 'PHP';
 					$expectedLocation = $pathPrefix . $this->slug . '/' . $this->slug . '.php';			
 				}
-				else if (!$jsExists)
+				else if (!$jsExists && !$jsMinExists)
 				{
 					$missingFile = 'JS';
 					$expectedLocation = $pathPrefix . $this->slug . '/' . $this->slug . '.js';								
@@ -380,9 +383,12 @@ class Total_Slider_Template {
 					
 					$this->cssPath = $pathPrefix . $this->slug . '/style.css';
 					$this->cssURI = $uriPrefix . $this->slug . '/style.css';
-
-					$this->jsPath = $pathPrefix . $this->slug . '/' . $this->slug . '.js';
-					$this->jsURI = $uriPrefix . $this->slug . '/' . $this->slug . '.js';
+					
+					if ($jsExists)
+					{
+						$this->jsPath = $pathPrefix . $this->slug . '/' . $this->slug . '.js';
+						$this->jsURI = $uriPrefix . $this->slug . '/' . $this->slug . '.js';
+					}
 					
 					if ($jsMinExists)
 					{
@@ -426,7 +432,7 @@ class Total_Slider_Template {
 					$missingFile = 'PHP';
 					$expectedLocation = $pathPrefix .  'total-slider-template.php';
 				}
-				else if (!$jsExists)
+				else if (!$jsExists && !$jsMinExists)
 				{
 					$missingFile = 'JS';
 					$expectedLocation = $pathPrefix . 'total-slider-template.js';	
@@ -573,13 +579,19 @@ class Total_Slider_Template {
 		Return the canonical path to this template's JavaScript file.
 	*/
 	
-		if (!$this->jsPath)
+		if (!$this->jsPath && !$this->jsMinPath)
 		{
 			$this->canonicalize();
 		}
 		
-		return $this->jsPath;
-	
+		if (!$this->jsPath && $this->jsMinPath)
+		{
+			return $this->jsMinPath;
+		}
+		else
+		{
+			return $this->jsPath;
+		}
 	}
 	
 	public function jsMinPath()
@@ -588,13 +600,18 @@ class Total_Slider_Template {
 		Return the canonical path to this template's minified JavaScript file.
 	*/	
 	
-		if (!$this->jsMinPath)
+		if (!$this->jsMinPath && !$this->jsPath)
+		{
+			$this->canonicalize();
+		}
+
+		if (!$this->jsMinPath && $this->jsPath)
 		{
 			return $this->jsPath;
 		}
-		
-		return $this->jsMinPath;
-				
+		else {
+			return $this->jsMinPath;
+		}		
 	}
 	
 	public function cssPath()
@@ -629,13 +646,19 @@ class Total_Slider_Template {
 	/*
 		Return the canonical URI for this template's JavaScript file.
 	*/
-		if (!$this->jsURI)
+		if (!$this->jsURI && !$this->jsMinURI)
 		{
 			$this->canonicalize();
 		}
 		
-		return $this->jsURI;
-		
+		if (!$this->jsURI && $this->jsMinURI)
+		{
+			return $this->jsMinURI;
+		}
+		else
+		{	
+			return $this->jsURI;
+		}
 	}
 	
 	public function jsMinURI()
@@ -643,13 +666,19 @@ class Total_Slider_Template {
 	/*
 		Return the canonical URI for this template's minified JavaScript file.
 	*/
-		if (!$this->jsMinURI)
+		if (!$this->jsMinURI && !$this->jsURI)
+		{
+			$this->canonicalize();
+		}
+		
+		if (!$this->jsMinURI && $this->jsURI)
 		{
 			return $this->jsURI;
 		}
-		
-		return $this->jsMinURI;
-		
+		else
+		{
+			return $this->jsMinURI;
+		}
 	}
 	
 	public function cssURI()
