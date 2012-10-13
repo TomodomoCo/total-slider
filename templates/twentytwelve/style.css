@@ -9,7 +9,7 @@ License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-.total-slider {
+.ts-twentytwelve {
 	width: 100%;
 	max-width: 960px;
 	max-width: 68.571428571rem;
@@ -18,7 +18,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	position: relative;
 }
 
-.total-slider-slide {
+.ts-twentytwelve-slide {
 	background-size: cover;
 	background-color: #ECECEC;
 	background-position: center;
@@ -31,7 +31,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
-.total-slider-link {
+.ts-twentytwelve-link {
 	position: relative;
 	display: block;
 	max-width: 400px;
@@ -43,21 +43,21 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	text-decoration: none;
 }
 
-.total-slider-overlay {
+.ts-twentytwelve-overlay {
 	background: rgba(255, 255, 255, 0.9);
 	padding: 20px;
 	border-radius: 3px;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
-.total-slider-title {
+.ts-twentytwelve-title {
 	margin: 0 0 24px !important;
 	line-height: 1.2 !important;
 	font-size: 22px;
 	font-weight: normal;
 }
 
-.total-slider-description {
+.ts-twentytwelve-description {
 	line-height: 1.714285714;
 	margin: 0 !important;
 }

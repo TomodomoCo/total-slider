@@ -28,7 +28,7 @@ Disable-XY-Positioning-In-Admin: No
 <?php if ( !$s->is_runtime() ) : ?>
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400' rel='stylesheet' type='text/css'>
 <style type="text/css">
-.total-slider {
+.ts-twentytwelve {
 	font-family: "Open Sans", Helvetica, Arial, sans-serif;
 	max-width: 960px;
 }
@@ -36,13 +36,13 @@ Disable-XY-Positioning-In-Admin: No
 <?php endif; ?>
 
 <?php if ( $s->slides_count() > 0 ) : ?>
-	<ul class="total-slider">
+	<ul class="ts-twentytwelve">
 	<?php while ( $s->has_slides() ) : ?>
-		<li id="total-slider-slide-<?php $s->the_identifier(); ?>" class="total-slider-slide <?php $s->draggable_parent(); ?>" style="background-image: url(<?php $s->the_background_url(); ?>);">
-			<a href="<?php $s->the_link(); ?>" class="total-slider-link <?php $s->make_draggable(); ?>" style="left: <?php $s->the_x(); ?>px; top: <?php $s->the_y(); ?>px">
-				<div class="total-slider-overlay">
-					<h1 class="total-slider-title"><?php $s->the_title(); ?></h1>
-					<p class="total-slider-description"><?php $s->the_description(); ?></p>
+		<li id="ts-twentytwelve-slide-<?php $s->the_identifier(); ?>" class="ts-twentytwelve-slide <?php $s->draggable_parent(); ?>" style="background-image: url(<?php $s->the_background_url(); ?>);">
+			<a href="<?php $s->the_link(); ?>" class="ts-twentytwelve-link <?php $s->make_draggable(); ?>" style="left: <?php $s->the_x(); ?>px; top: <?php $s->the_y(); ?>px">
+				<div class="ts-twentytwelve-overlay">
+					<h1 class="ts-twentytwelve-title"><?php $s->the_title(); ?></h1>
+					<p class="ts-twentytwelve-description"><?php $s->the_description(); ?></p>
 				</div>
 			</a>
 		</li>
