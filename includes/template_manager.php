@@ -247,8 +247,6 @@ class Total_Slider_Template {
 					// load in either the child or parent JS
 					if (!$this->jsPath || !$this->jsURI)
 					{
-						//TODO decide on whether it's [slug].js, or script.js, or something else
-						// #19 -- decide on js expected filename
 						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.js' ))
 						{
 							$this->jsPath = $p['path'] . $this->slug . '/' . $this->slug . '.js';
