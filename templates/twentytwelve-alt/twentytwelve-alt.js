@@ -1,5 +1,3 @@
-
-
 /*!
  * jQuery Cycle2 - Version: BETA-20120923
  * http://malsup.com/jquery/cycle2/
@@ -1267,36 +1265,44 @@ $.extend($.fn.cycle.API, {
 })(jQuery);
 
 
-// Initialize Cycle2
-jQuery('.total-slider').cycle({
-	slides: '.total-slider-slide',
+/*
 
-	// Edit the slide delay here. This is in milliseconds. The current delay is 10 seconds.
-	timeout: 10000
-});
+ Twenty Twelve (Alternate) code below
 
-// Initially set the first slide to "total-slider-current"
-jQuery('.total-slider').ready(function() {
-	jQuery('.total-slider-link-wrapper:nth-child(1)').children().addClass('total-slider-current');
-});
+*/
 
-// Update the "total-slider-current" class when automatically cycling
-jQuery('.total-slider').on('cycle-before', function(event, opts) {
-	var index = parseInt(opts.nextSlide) + 1;
+jQuery('.total-slider-container .total-slider').each( function(i) {
+	jQuery(this)
 	
-	// Set the "total-slider-current" class on the active link
-	jQuery('.total-slider-nav-link').removeClass('total-slider-current');
-	jQuery('.total-slider-link-wrapper:nth-child(' + index + ')').children().addClass('total-slider-current');
+	// Initialize Cycle2
+	.cycle({
+		slides: '.total-slider-slide',
 	
-});
+		// Edit the slide delay here. This is in milliseconds. The current delay is 10 seconds.
+		timeout: 10000
+	})
 
-// Set up the paging/nav element
-jQuery('.total-slider-slide .total-slider-link-wrapper').each( function(i) {
-	jQuery(this).appendTo('.total-slider-nav').replaceWith('<li class="total-slider-link-wrapper">' + jQuery(this).html() + '</li>');
+	.find('.total-slider-slide .total-slider-link-wrapper').appendTo( jQuery(this).parent().find('.total-slider-nav') )
+
+	.ready( function() {
+		// Initially set the first slide to "total-slider-current"
+		jQuery(this).find('.total-slider-link-wrapper:nth-child(1)').children().addClass('total-slider-current');
+	})
+
+	// Update the "total-slider-current" class when automatically cycling
+	.on('cycle-before', function(event, opts) {
+		var index = parseInt(opts.nextSlide) + 1;
+
+		// Set the "total-slider-current" class on the active link
+		jQuery(this).parent().find('.total-slider-nav-link').removeClass('total-slider-current');
+		jQuery(this).parent().find('.total-slider-link-wrapper:nth-child(' + index + ')').children().addClass('total-slider-current');
+	})
+
+	;
 });
 
 // Set up the nav click action
-jQuery('.total-slider-nav-link').click( function(event) {
+jQuery('.total-slider-container .total-slider').parent().find('.total-slider-nav-link').click( function(event) {
 	// Keep links from working as links by default
 	event.preventDefault();
 
@@ -1304,9 +1310,9 @@ jQuery('.total-slider-nav-link').click( function(event) {
 	slide_iteration = jQuery(this).data('slideIteration');
 
 	// Navigate to the selected slide
-	jQuery('.total-slider').cycle('goto', slide_iteration);
+	jQuery(this).parent().parent().parent().find('.total-slider').cycle('goto', slide_iteration);
 
 	// Set the "total-slider-current" class on the active link
-	jQuery('.total-slider-nav-link').removeClass('total-slider-current');
+	jQuery(this).parent().parent().find('.total-slider-nav-link').removeClass('total-slider-current');
 	jQuery(this).addClass('total-slider-current');
 });
