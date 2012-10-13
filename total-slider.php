@@ -1995,7 +1995,7 @@ class Total_Slider_Widget extends WP_Widget {
 		catch (Exception $e)
 		{
 			_e('<strong>Total Slider:</strong> Unable to load the template for this slide group.', 'total_slider');
-			if ( is_user_logged_in() ) {
+			if ( is_user_logged_in() && current_user_can('publish_posts') ) {
 				echo ' <em>' . esc_html($e->getMessage()) . '</em>';
 			}
 			return;
