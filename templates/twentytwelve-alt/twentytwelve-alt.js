@@ -1287,10 +1287,13 @@ jQuery('.ts-twentytwelve-alt-container .ts-twentytwelve-alt').each( function(i) 
 	.ready( function() {
 		// Initially set the first slide to "ts-twentytwelve-alt-current"
 		jQuery(this).find('.ts-twentytwelve-alt-link-wrapper:nth-child(1)').children().addClass('ts-twentytwelve-alt-current');
-	})
+	});
+	
+	jQuery(this)
 
 	// Update the "ts-twentytwelve-alt-current" class when automatically cycling
 	.on('cycle-before', function(event, opts) {
+
 		var index = parseInt(opts.nextSlide) + 1;
 
 		// Set the "ts-twentytwelve-alt-current" class on the active link
