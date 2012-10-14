@@ -38,7 +38,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	width: 80%;
 	min-width: 200px;
 	border: 10px solid transparent;
-	color: #444;
+	color: #444 !important;
 	font-size: 14px;
 	text-decoration: none;
 }
@@ -55,9 +55,11 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	line-height: 1.2 !important;
 	font-size: 22px;
 	font-weight: normal;
+	color: inherit !important;
 }
 
 .ts-twentytwelve-description {
 	line-height: 1.714285714;
 	margin: 0 !important;
+	color: inherit !important;
 }
