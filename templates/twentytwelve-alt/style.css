@@ -9,11 +9,16 @@ License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-.ts-twentytwelve-alt {
+.ts-twentytwelve-alt-container {
 	width: 100%;
 	max-width: 960px;
 	max-width: 68.571428571rem;
 	margin: 0 auto;
+}
+
+.ts-twentytwelve-alt-live {
+	max-height: 325px;
+	margin-left: 0 !important;
 }
 
 .ts-twentytwelve-alt-admin.ts-twentytwelve-alt {
