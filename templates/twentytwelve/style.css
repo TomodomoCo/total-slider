@@ -13,7 +13,8 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	width: 100%;
 	max-width: 960px;
 	max-width: 68.571428571rem;
-	margin: 0 auto;
+	margin-left: auto;
+	margin-right: auto;
 	height: 325px;
 	position: relative;
 }
