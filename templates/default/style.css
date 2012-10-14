@@ -1,0 +1,76 @@
+/*  Copyright (C) 2011-2012 Peter Upfold.
+
+    This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/*
+Template Name: Default
+*/
+
+.ts-default {
+	width: 600px;
+	height: 300px;
+	margin: 0 auto !important;
+	padding: 0 !important;
+	overflow: hidden;
+	border: 1px solid #000;
+	list-style: none !important;
+}
+
+.ts-default-slide {
+	width: 600px !important;
+	height: 300px !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	position: relative;
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+.ts-default-slide .ts-default-link {
+	display: block;
+	width: 600px;
+	height: 300px;
+	position: absolute;
+	top: 0;
+	text-decoration: none
+}
+
+.ts-default-overlay {
+	position: absolute;
+	width: 300px;
+	background: url(img/slider-desc-bg.png);
+	padding: 5px 11px 11px;
+	text-align: left !important
+}
+
+.ts-default-overlay .ts-default-title {
+	font: 24px Georgia, serif;
+	color: #FFF !important;
+	text-shadow: 0 1px 1px black;
+	padding: 0px 0 0 !important;
+	margin: 0 0 5px !important
+}
+
+.ts-default-description {
+	overflow: hidden;
+	position: relative
+}
+
+.ts-default-description p {
+	font: 14px/20px Helvetica, Arial, sans-serif;
+	color: #FFF;
+	text-shadow: 0 1px 1px black;
+	margin: 0 !important
+}

@@ -1,0 +1,128 @@
+/*
+Template Name: Twenty Twelve (Alternate)
+Template URI: http://www.totalslider.com/
+Description: Template designed for integration with the WordPress Twenty Twelve theme.
+Author: Chris Van Patten (inspired by work done by the WordPress team)
+Author URI: http://www.totalslider.com/
+Version: 1.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+.ts-twentytwelve-alt-container {
+	width: 100%;
+	max-width: 960px;
+	max-width: 68.571428571rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ts-twentytwelve-alt-live {
+	max-height: 325px;
+	margin-left: 0 !important;
+}
+
+.ts-twentytwelve-alt-admin.ts-twentytwelve-alt {
+	border: 30px solid #FFF;
+	box-sizing: border-box;
+	background: #FFF;
+}
+
+.ts-twentytwelve-alt .cycle-sentinel .ts-twentytwelve-alt-link-wrapper {
+	display: none;
+}
+
+.ts-twentytwelve-alt-slide {
+	list-style: none;
+	margin: 0 !important;
+	width: 100%;
+	height: 325px;
+}
+
+.ts-twentytwelve-alt-live, .ts-twentytwelve-alt-admin .ts-twentytwelve-alt-link {
+	width: 70%;
+	float: left;
+}
+
+.ts-twentytwelve-alt-link {
+	display: block;
+	height: 325px;
+	background-size: cover;
+	background-color: #ECECEC;
+	background-position: center;
+	border-radius: 4px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+	text-decoration: none;
+}
+
+.ts-twentytwelve-alt-nav, .ts-twentytwelve-alt-admin .ts-twentytwelve-alt-link-wrapper {
+	width: 30%;
+	float: right;
+}
+
+.ts-twentytwelve-alt-nav {
+	margin: 0 !important;
+	max-height: 325px;
+	overflow: auto;
+	list-style: none !important;
+}
+
+.ts-twentytwelve-alt-link-wrapper {
+	display: block;
+	margin: 0 0 0 20px !important;
+	padding: 17px 0 13px 0;
+	border-top: 4px double #EDEDED;
+}
+
+.ts-twentytwelve-alt-link-wrapper:first-child {
+	padding-top: 0;
+	border-top: 0;
+}
+
+.ts-twentytwelve-alt-admin .ts-twentytwelve-alt-link-wrapper {
+	margin: 0 !important;
+	padding: 0 !important;
+	border-top: 0px !important;
+}
+
+.ts-twentytwelve-alt-nav-link {
+	display: block;
+	color: #777 !important;
+	text-decoration: none;
+}
+
+.ts-twentytwelve-alt-nav-link:hover {
+	text-decoration: none;
+	color: #555 !important;
+}
+
+.ts-twentytwelve-alt-nav-link.ts-twentytwelve-alt-current {
+	color: #000 !important;
+}
+
+.ts-twentytwelve-alt-admin .ts-twentytwelve-alt-nav-link {
+	margin: 0 0 20px 20px !important;
+	padding: 0 0 13px 0 !important;
+	border-bottom: 4px double #EDEDED !important;
+	color: #000;
+}
+
+.ts-twentytwelve-alt-title {
+	margin: 0 0 5px !important;
+	font-size: 11px !important;
+	font-weight: bold !important;
+	line-height: 1.2 !important;
+	text-transform: uppercase;
+	color: inherit !important;
+}
+
+.ts-twentytwelve-alt-description {
+	margin: 0 !important;
+	overflow: hidden;
+	height: 25px;
+	line-height: 1.714285714;
+	font-size: 13px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	color: inherit !important;
+}

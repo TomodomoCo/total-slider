@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Total Slider</title>
+	<style type="text/css">
+	body {
+		font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px;
+		background:#f1f1f1;
+		padding:0;
+		margin:8px 8px 0 8px;
+	}
+	
+	.howto
+	{
+		font-style:italic;
+		color:#666;		
+	}
+	
+	h1 {
+		color:#2B6FB6; margin:0; padding:0; padding-top:5px;
+		font-size:12px;
+	}
+	
+	select
+	{
+		min-width:250px;
+	}
+	
+	.loading
+	{
+		text-align: center;
+		margin-top:30px;
+	}
+	
+	.select-group
+	{
+		display:none;
+	}
+	
+	</style>
+	<script type="text/javascript">
+	//<![CDATA[
+	
+	function execute() {
+		jQuery(document).ready(function($) {
+			$(document).ready(function() {
+			
+				$.ajax({
+				
+					type: 'POST',
+					url: window.parent._total_slider_ajax + '&action=getSlideGroups',
+					dataType: 'json',
+					
+					success: function(data, textStatus, jqXHR) {
+						
+						// hide the loading area
+						$('.loading').hide();
+						$('.select-group').show();
+						$('#groups').show();
+						
+						$('#groups').removeAttr('disabled');
+
+						var options = $('#groups').attr('options');
+
+						$.each(data, function(index, dataEl) {
+							$('#groups').append('<option value="' + dataEl.slug + '">' + dataEl.name + '</option>');
+						});									
+						
+						// enable the button
+						$('.primary-button').removeClass('button-disabled');
+						$('.primary-button').removeAttr('disabled');
+					}
+									
+				});
+				
+				// form submit
+				$('#sgform').submit(function(e) {
+					e.preventDefault();
+					var selectedSlug = $('#groups option:selected').val();
+					// send to TMCE
+					window.parent.tinyMCE.execCommand('mceInsertContent',false,'[totalslider group="' + selectedSlug + '"]');
+					// close window
+					tinyMCEPopup.close();
+				});
+				
+				$('#cancel').click(function(e) {
+					e.preventDefault();
+					tinyMCEPopup.close();
+				});
+				
+			});
+		});
+	}
+	
+	if (typeof window.parent._total_slider_jq == 'undefined' ||
+		typeof window.parent._total_slider_ajax == 'undefined' ||
+		typeof window.parent._total_slider_tmp == 'undefined') {
+		
+		alert('This file should only be accessed from within a logged-in WordPress dashboard.');
+				
+	}
+	
+	// bring in the jQuery
+	var head = document.getElementsByTagName('head')[0];
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	
+	script.onload = script.onreadystatechange = function() {
+	
+		if (script.readyState)
+		{
+			if (script.readyState === 'complete' || script.readyState === 'loaded') {
+				script.onreadystatechange = null;
+				execute();				
+			}			
+		}
+		else {
+			execute();
+		}	
+		
+	};
+	
+	script.src = window.parent._total_slider_jq;
+	
+	head.appendChild(script);
+	
+	var popup_script = document.createElement('script');
+	popup_script.type = 'text/javascript';
+	popup_script.src = window.parent._total_slider_tmp;
+	head.appendChild(popup_script);
+
+	//]]>
+	</script>
+</head>
+<body id="total_slider_insert" role="application">
+	<span class="mceVoiceLabel" id="app_label" style="display:none;">Total Slider</span>
+	
+	<h1>Total Slider</h1>
+	
+<form id="sgform" action="#">
+	<div style="padding:10px; margin-bottom:25px;">
+		
+		<p class="loading"><img src="../../../img/loadingAnimation.gif" alt="Loading" title="Loading" /></p>
+		
+		<div class="select-group">
+			<p class="howto">Choisissez un groupe de diapositives :</p>
+			<select name="groups" id="groups" style="display:none">
+			</select>
+		</div>
+		
+	</div>
+	
+	<div style="float:left">
+		<input type="button" value="Annuler" id="cancel" />	
+	</div>
+	<div style="float:right">
+		<input type="submit" value="Ajouter" id="insert" class="primary-button button-disabled" disabled="disabled" />
+	</div>
+</form>
+
+</body>
+</html>
