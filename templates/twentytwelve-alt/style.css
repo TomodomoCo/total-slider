@@ -22,6 +22,10 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	background: #FFF;
 }
 
+.ts-twentytwelve-alt .cycle-sentinel .ts-twentytwelve-alt-link-wrapper {
+	display: none;
+}
+
 .ts-twentytwelve-alt-slide {
 	list-style: none;
 	margin: 0 !important;
@@ -54,6 +58,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	margin: 0 !important;
 	max-height: 325px;
 	overflow: auto;
+	list-style: none !important;
 }
 
 .ts-twentytwelve-alt-link-wrapper {

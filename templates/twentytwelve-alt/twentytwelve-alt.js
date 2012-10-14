@@ -1282,17 +1282,23 @@ jQuery('.ts-twentytwelve-alt-container .ts-twentytwelve-alt').each( function(i) 
 		timeout: 10000
 	})
 
+	// Set up the nav element
 	.find('.ts-twentytwelve-alt-slide .ts-twentytwelve-alt-link-wrapper').appendTo( jQuery(this).parent().find('.ts-twentytwelve-alt-nav') )
 
 	.ready( function() {
 		// Initially set the first slide to "ts-twentytwelve-alt-current"
 		jQuery(this).find('.ts-twentytwelve-alt-link-wrapper:nth-child(1)').children().addClass('ts-twentytwelve-alt-current');
 	});
-	
-	jQuery(this)
+
+
+	// Re-wrap <div>s with <li>s
+	jQuery(this).parent().find('.ts-twentytwelve-alt-link-wrapper').each( function(i) {
+		jQuery(this).replaceWith('<li class="ts-twentytwelve-alt-link-wrapper">' + jQuery(this).html() + '</li>');
+	});
+
 
 	// Update the "ts-twentytwelve-alt-current" class when automatically cycling
-	.on('cycle-before', function(event, opts) {
+	jQuery(this).on('cycle-before', function(event, opts) {
 
 		var index = parseInt(opts.nextSlide) + 1;
 
