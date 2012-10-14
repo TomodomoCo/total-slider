@@ -21,20 +21,21 @@ Template Name: Default
 .ts-default {
 	width: 600px;
 	height: 300px;
+	margin: 0 auto !important;
+	padding: 0 !important;
 	overflow: hidden;
-	margin: 0 auto;
 	border: 1px solid #000;
-	padding: 0;
 	list-style: none !important;
 }
 
 .ts-default-slide {
 	width: 600px !important;
 	height: 300px !important;
+	padding: 0 !important;
+	margin: 0 !important;
 	position: relative;
 	background-position: center center;
 	background-repeat: no-repeat;
-	padding: 0;
 }
 
 .ts-default-slide .ts-default-link {
@@ -50,20 +51,19 @@ Template Name: Default
 	position: absolute;
 	width: 300px;
 	background: url(img/slider-desc-bg.png);
-	padding: 2px 9px 0;
+	padding: 5px 11px 11px;
 	text-align: left !important
 }
 
 .ts-default-overlay .ts-default-title {
 	font: 24px Georgia, serif;
-	color: #FFF;
+	color: #FFF !important;
 	text-shadow: 0 1px 1px black;
-	padding: 5px 0 0 !important;
-	margin: 0 0 6px !important
+	padding: 0px 0 0 !important;
+	margin: 0 0 5px !important
 }
 
 .ts-default-description {
-	/* width: 400px; */
 	overflow: hidden;
 	position: relative
 }
@@ -72,5 +72,5 @@ Template Name: Default
 	font: 14px/20px Helvetica, Arial, sans-serif;
 	color: #FFF;
 	text-shadow: 0 1px 1px black;
-	margin: 0 0 7px !important
+	margin: 0 !important
 }
