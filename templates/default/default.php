@@ -39,17 +39,17 @@ Disable-XY-Positioning-In-Admin: No
 */
 ?>
 <?php if ($s->slides_count() > 0): ?>
-	<ul class="total-slider">
+	<ul class="ts-default">
 
 	<?php while ($s->has_slides()): ?>
-		<li id="total-slider-slide-<?php $s->the_identifier();?>"
-			class="total-slider-slide <?php $s->draggable_parent();?>"
+		<li id="ts-default-slide-<?php $s->the_identifier();?>"
+			class="ts-default-slide <?php $s->draggable_parent();?>"
 			style="background-image: url('<?php $s->the_background_url();?>');"
 		>
-			<a href="<?php $s->the_link();?>" class="total-slider-link">
-				<div class="total-slider-overlay <?php $s->make_draggable();?>" style="left: <?php $s->the_x();?>px; top: <?php $s->the_y();?>px">
-					<h2 class="total-slider-title"><?php $s->the_title();?></h2>
-					<div class="total-slider-description">
+			<a href="<?php $s->the_link();?>" class="ts-default-link">
+				<div class="ts-default-overlay <?php $s->make_draggable();?>" style="left: <?php $s->the_x();?>px; top: <?php $s->the_y();?>px">
+					<h2 class="ts-default-title"><?php $s->the_title();?></h2>
+					<div class="ts-default-description">
 						<p><?php $s->the_description();?></p>
 					</div>
 				</div>
