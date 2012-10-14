@@ -91,6 +91,11 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	text-decoration: none;
 }
 
+.ts-twentytwelve-alt-nav-link:hover {
+	text-decoration: none;
+	color: #555 !important;
+}
+
 .ts-twentytwelve-alt-nav-link.ts-twentytwelve-alt-current {
 	color: #000 !important;
 }

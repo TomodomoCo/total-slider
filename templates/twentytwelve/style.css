@@ -44,6 +44,10 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	text-decoration: none;
 }
 
+.ts-twentytwelve-link:hover {
+	text-decoration: none;
+}
+
 .ts-twentytwelve-overlay {
 	background: rgba(255, 255, 255, 0.9);
 	padding: 20px;
