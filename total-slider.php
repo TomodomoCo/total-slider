@@ -3,7 +3,7 @@
 Plugin Name: Total Slider
 Plugin URI: http://www.totalslider.com/
 Description: The best experience for building sliders, with true WYSIWYG, drag & drop and more!
-Version: 1.1
+Version: 1.1.1-alpha
 Author: Peter Upfold
 Author URI: http://www.vanpattenmedia.com/
 License: GPLv2 or later
@@ -1737,7 +1737,7 @@ class Total_Slider {
 					<?php endif; ?>
 													
 				</select>
-			<input id="template-switch-button" type="submit" class="button-secondary action" style="margin-top:8px; max-width:100px;" value="<?php _e('Change Template', 'total_slider');?>" />
+			<input id="template-switch-button" type="submit" class="button-secondary action" style="margin-top:8px; max-width:180px;" value="<?php _e('Change Template', 'total_slider');?>" />
 			</p>
 		</div><?php	
 		
@@ -1875,7 +1875,7 @@ class Total_Slider {
 								<td>
 									<span id="slide-link-internal-display"><?php _e('No post selected', 'total_slider');?></span>
 									<input id="slide-link-internal-id" name="slide-link-internal" value="" type="hidden" />
-									<input id="slide-link-finder" type="button" class="button" value="<?php _e('Find post', 'total_slider');?>" style="width:50px;" />
+									<input id="slide-link-finder" type="button" class="button" value="<?php _e('Find post', 'total_slider');?>" style="width:70px;" />
 								</td>
 							</tr>
 
