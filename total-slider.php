@@ -1402,7 +1402,7 @@ class Total_Slider {
 						<th scope="row">
 							<label for="required_capabilities"><?php _e('Required role level', 'total_slider');?></label>
 						</th>
-						<td>
+						<td><fieldset>
 							<?php
 							$allRoles = get_editable_roles();
 							?>
@@ -1426,24 +1426,24 @@ class Total_Slider {
 											disabled="disabled"
 											 <?php endif; ?>
 
-										 /><?php echo esc_html($r['name']);?>
+										 /> <?php echo esc_html($r['name']);?>
 									</label><br/>
 							<?php endforeach; endif; ?>
 							<span class="description"><?php _e('Users belonging to checked roles will be able to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the Total Slider widget, which makes the slides show up on your site.', 'total_slider');?></span>
-						</td>
+						</fieldset></td>
 					</tr>
 					
 					<tr class="form-field">
 						<th scope="row">
 							<label for="should_show_tinymce_button"><?php _e('Editor', 'total_slider');?></label>			
 						</th>
-						<td>
+						<td><fieldset>
 							<label for="should_show_tinymce_button">
 								<input type="checkbox" name="should_show_tinymce_button" id="should_show_tinymce_button" value="1" style="width:20px;"
 								<?php echo ( array_key_exists('should_show_tinymce_button', $otherOptions) && intval($otherOptions['should_show_tinymce_button']) ) ? ' checked="checked"' : ''; ?>
-								/><?php _e('Show the Total Slider button in the editor toolbar', 'total_slider');?>
+								/> <?php _e('Show the Total Slider button in the editor toolbar', 'total_slider');?>
 							</label>
-						</td>
+						</fieldset></td>
 					</tr>
 
 				</tbody>
@@ -1457,14 +1457,14 @@ class Total_Slider {
 						<th scope="row">
 							<label for="should_enqueue_template"><?php _e('Load JS & CSS', 'total_slider');?></label>
 						</th>
-						<td>
+						<td><fieldset>
 							<label for="should_enqueue_template">
 								<input type="checkbox" name="should_enqueue_template" id="should_enqueue_template" value="1" style="width:20px;"
 								<?php echo ( intval($otherOptions['should_enqueue_template']) ) ? ' checked="checked"' : ''; ?>
-								/><?php _e('Automatically load slide template CSS and JavaScript into my theme', 'total_slider');?>
+								/> <?php _e('Automatically load slide template CSS and JavaScript into my theme', 'total_slider');?>
 							</label><br/>
 							<span class="description"><?php _e('Uncheck for manual control over how slide template CSS and JavaScript are included in your theme.', 'total_slider');?></span>
-						</td>
+						</fieldset></td>
 					</tr>
 				</tbody>
 			</table>
