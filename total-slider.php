@@ -95,6 +95,8 @@ class Total_Slider {
 		Admin page, and configure some default general options.
 	*/
 	
+		global $current_user;
+	
 		$noSlideGroups = false;
 
 		if (!get_option('total_slider_slide_groups')) {
@@ -105,7 +107,14 @@ class Total_Slider {
 
 		// set the capability for administrator so they can visit the options page
 		$admin = get_role('administrator');
-		$admin->add_cap(TOTAL_SLIDER_REQUIRED_CAPABILITY);
+		$admin->add_cap( TOTAL_SLIDER_REQUIRED_CAPABILITY );
+		
+		get_currentuserinfo();
+		
+		// ensure that the current user can manage the plugin once installed (references #49)
+		if ( current_user_can('install_plugins') ) {
+			$current_user->add_cap( TOTAL_SLIDER_REQUIRED_CAPABILITY );
+		}
 
 		// set up default general options
 
