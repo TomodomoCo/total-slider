@@ -23,13 +23,12 @@ It is used by ajax_interface.php, primarily.
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-if (!defined('TOTAL_SLIDER_IN_FUNCTIONS'))
-{
-	header('HTTP/1.1 403 Forbidden');
-	die('<h1>Forbidden</h1>');
+if ( ! defined('TOTAL_SLIDER_IN_FUNCTIONS' ) ) {
+	header( 'HTTP/1.1 403 Forbidden' );
+	die( '<h1>Forbidden</h1>' );
 }
 
-static $allowedTemplateLocations = array(
+static $allowed_template_locations = array(
 	'builtin',
 	'theme',
 	'downloaded',
@@ -89,13 +88,12 @@ class Total_Slide_Group {
 	public $templateLocation;
 	public $template;
 	
-	public function __construct($slug, $name = null)
-	{
+	public function __construct( $slug, $name = null ) {
 	/*
 		Set the slug and name for this group.
 	*/
 	
-		$this->slug = $this->sanitizeSlug($slug);
+		$this->slug = $this->sanitize_slug($slug);
 		$this->originalSlug = $this->slug;
 		
 		if ($name)
@@ -104,12 +102,11 @@ class Total_Slide_Group {
 		}
 	}
 	
-	public function sanitizeSlug($slug)
-	{
+	public function sanitize_slug( $slug ) {
 	/*
 		Sanitize a slide group slug, for accessing the wp_option row with that slug name.		
 	*/
-		return substr(preg_replace('/[^a-zA-Z0-9_\-]/', '', $slug), 0, (63 - strlen('total_slider_slides_') ) );
+		return substr( preg_replace( '/[^a-zA-Z0-9_\-]/', '', $slug ), 0, ( 63 - strlen( 'total_slider_slides_' ) ) );
 	}	
 	
 	public function load() {
@@ -117,50 +114,47 @@ class Total_Slide_Group {
 		Load this slide group's name and slug into the object, from the DB.
 	*/
 	
-		global $allowedTemplateLocations;
+		global $allowed_template_locations;
 	
-		if (!get_option('total_slider_slide_groups'))
-		{
+		if ( ! get_option( 'total_slider_slide_groups' ) ) {
 			return false;
 		}
 		
 		// get the current slide groups
-		$currentGroups = get_option('total_slider_slide_groups');
+		$current_groups = get_option( 'total_slider_slide_groups' );
 		
-		$theIndex = false;
+		$the_index = false;
 		
 		// loop through to find one with this original slug
-		foreach($currentGroups as $key => $group)
-		{
-			if ($group->slug == $this->originalSlug)
-			{
-				$theIndex = $key;
+		foreach( $current_groups as $key => $group ) {
+			if ( $group->slug == $this->originalSlug ) {
+				$the_index = $key;
 				break;
 			}
 		}
 		
-		if ($theIndex === false)
-		{
+		if ( false === $the_index ) {
 			return false;
 		}
 		else {
-			$this->name = $currentGroups[$theIndex]->name;
-			$this->slug = Total_Slider::sanitizeSlideGroupSlug($currentGroups[$theIndex]->slug);
+			$this->name = $current_groups[$the_index]->name;
 			
-			if (property_exists($currentGroups[$theIndex], 'templateLocation') &&
-				in_array($currentGroups[$theIndex]->templateLocation, $allowedTemplateLocations)
-			)
-			{
-				$this->templateLocation = $currentGroups[$theIndex]->templateLocation;
+			$this->slug = Total_Slider::sanitize_slide_group_slug($currentGroups[$the_index]->slug);
+			
+			if (
+				property_exists( $current_groups[$the_index], 'templateLocation' ) &&
+				in_array( $current_groups[$the_index]->templateLocation, $allowed_template_locations )
+			) {
+				$this->templateLocation = $current_groups[$the_index]->templateLocation;
 			}
 			else {
 				$this->templateLocation = 'builtin';
 			}
 			
-			if (property_exists($currentGroups[$theIndex], 'template') &&
-			strlen($currentGroups[$theIndex]->template) > 0)
-			{
-				$this->template = $currentGroups[$theIndex]->template;
+			if ( 
+				property_exists( $current_groups[$the_index], 'template' ) &&
+				strlen( $current_groups[$the_index]->template) > 0 ) {
+				$this->template = $current_groups[$the_index]->template;
 			}
 			else {
 				$this->template = 'default';
@@ -175,109 +169,99 @@ class Total_Slide_Group {
 		Save this new slide group to the slide groups option.
 	*/
 	
-		if (!get_option('total_slider_slide_groups'))
-		{
+		if ( ! get_option('total_slider_slide_groups' ) ) {
 			// create option
-			add_option('total_slider_slide_groups', array(), '', 'yes');
+			add_option( 'total_slider_slide_groups', array(), '', 'yes' );
 		}
 		
 		// get the current slide groups
-		$currentGroups = get_option('total_slider_slide_groups');
+		$current_groups = get_option( 'total_slider_slide_groups' );
 		
-		$theIndex = false;
+		$the_index = false;
 		
 		// loop through to find one with this original slug
-		foreach($currentGroups as $key => $group)
-		{
-			if ($group->slug == $this->originalSlug)
-			{
-				$theIndex = $key;
+		foreach( $current_groups as $key => $group ) {
+			if ( $group->slug == $this->originalSlug ) {
+				$the_index = $key;
 				break;
 			}
 		}
 		
-		if ($theIndex === false)
-		{
+		if ( false === $the_index ) {
 			// add this as a new slide group at the end
-			$currentGroups[] = $this;
+			$current_groups[] = $this;
 		}
 		else {
 			// replace the group at $theIndex with the new information
-			$currentGroups[$theIndex] = $this;
+			$current_groups[$the_index] = $this;
 		}
 		
 		// save the groups list
-		update_option('total_slider_slide_groups', $currentGroups);
+		update_option( 'total_slider_slide_groups', $current_groups );
 	
 	}
 	
-	public function delete()
-	{
+	public function delete() {
 	/*
 		Delete the slide group with this slug from the list.
 	*/
 	
-		if (!get_option('total_slider_slide_groups'))
-		{
+		if ( ! get_option('total_slider_slide_groups' ) ) {
 			return false;
 		}
 		
 		// get the current slide groups
-		$currentGroups = get_option('total_slider_slide_groups');
+		$current_groups = get_option( 'total_slider_slide_groups' );
 		
-		$theIndex = false;
+		$the_index = false;
 		
 		// loop through to find one with this original slug
-		foreach($currentGroups as $key => $group)
-		{
-			if ($group->slug == $this->originalSlug)
-			{
-				$theIndex = $key;
+		foreach( $current_groups as $key => $group ) {
+			if ( $group->slug == $this->originalSlug ) {
+				$the_index = $key;
 				break;
 			}
 		}
 		
-		if ($theIndex === false)
+		if ( false === $the_index )
 		{
 			return false;
 		}
 		else {
 			// remove this group at $theIndex
-			unset($currentGroups[$theIndex]);
+			unset($current_groups[$the_index]);
 		}
 		
 		// save the groups list
-		update_option('total_slider_slide_groups', $currentGroups);
+		update_option( 'total_slider_slide_groups', $current_groups );
 	
 	}
 	
-	public function newSlide($title, $description, $background, $link, $title_pos_x, $title_pos_y)
-	{
+	public function new_slide( $title, $description, $background, $link, $title_pos_x, $title_pos_y ) {
 	/*
 			Given a pre-validated set of data (title, description, backgorund,
 			link, title_pos_x and title_pos_y, create a new slide and add to the
 			option. Return the new slide ID for resorting in another function.	
 	*/
 	
-		$currentSlides = get_option('total_slider_slides_' . $this->slug);
+		$current_slides = get_option('total_slider_slides_' . $this->slug);
 		
-		if ($currentSlides === false)
-		{
+		if (false === $current_slides) {
 			
 			$this->save();
 			
-			$currentSlides = get_option('total_slider_slides_' . $this->slug);
-			if ($currentSlides === false)
+			$current_slides = get_option( 'total_slider_slides_' . $this->slug );
+			if (false === $current_slides)
 			{
 				return false; //can't do it
 			}
 		}
 		
-		$newId = str_replace('.', '', uniqid('', true));
+		$new_id = str_replace('.', '', uniqid('', true));
 		
-		$newSlide = array(
+		$new_slide = array(
 		
-			'id' => $newId,
+			'id' => $new_id,
 			'title' => $title,
 			'description' => $description,
 			'background' => $background,
@@ -287,11 +271,10 @@ class Total_Slide_Group {
 		
 		);	
 		
-		$currentSlides[count($currentSlides)] = $newSlide;
+		$current_slides[ count( $current_slides ) ] = $new_slide;
 		
-		if ($this->saveSlides($currentSlides))
-		{
-			return $newId;
+		if ( $this->save_slides( $current_slides) ) {
+			return $new_id;
 		}
 		else {
 			return false;
@@ -300,41 +283,43 @@ class Total_Slide_Group {
 		
 	}
 	
-	public function getSlide($slideID) {
+	public function get_slide( $slide_id ) {
 	/*
 		Fetch the whole object for the given slide ID.
 	*/
 	
-		$currentSlides = get_option('total_slider_slides_' . $this->slug);
+		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
 		
-		if ($currentSlides === false || !is_array($currentSlides) || count($currentSlides) < 0)
-		{
+		if (
+			false === $current_slides ||
+			! is_array( $current_slides ) ||
+			count( $current_slides ) < 0
+		) {
 			return false;
 		}
 		
 		else {
 		
-			foreach($currentSlides as $slide) {
+			foreach( $current_slides as $slide ) {
 			
-				if ($slide['id'] == $slideID) {
+				if ( $slide['id'] == $slide_id ) {
 				
-					if ((int)$slide['link'] == $slide['link'])
-					{	// if slide link is a number, and therefore a post ID of some sort
+					if ( (int) $slide['link'] == $slide['link'] ) {
+						// if slide link is a number, and therefore a post ID of some sort
 						$slp = (int) $slide['link'];
-						$linkPost = get_post($slp);
-						if ($linkPost)
+						$link_post = get_post($slp);
+						if ($link_post)
 						{
-							$slide['link_post_title'] = $linkPost->post_title;
+							$slide['link_post_title'] = $link_post->post_title;
 						}
 					}
 					
-					if ((int)$slide['background'] == $slide['background'] && $slide['background'] > 0)
-					{
+					if ( (int) $slide['background'] == $slide['background'] && $slide['background'] > 0 ) {
 						// if slide background is a number, it must be an attachment ID
 						// so get its URL
 						$slide['background_url'] = wp_get_attachment_url((int)$slide['background']);
 						
-						if ($slide['background_url'] == false)
+						if ( $slide['background_url'] == false )
 						{
 							/* 
 								If it failed to look up, simply fail to provide the URL.
@@ -344,7 +329,7 @@ class Total_Slide_Group {
 								during the edit process. This will bite the user when they then try and save, as they will be told
 								the background URL is not valid.
 							*/
-							unset($slide['background_url']);
+							unset( $slide['background_url'] );
 						}
 					}
 				
@@ -361,17 +346,19 @@ class Total_Slide_Group {
 	
 	}
 	
-	public function updateSlide($slideID, $title, $description, $background, $link, $title_pos_x, $title_pos_y)
-	{
+	public function update_slide( $slide_id, $title, $description, $background, $link, $title_pos_x, $title_pos_y ) {
 	/*
 		Given the slide ID, update that slide with the pre-filtered data specified.
 	*/
 	
-		$currentSlides = get_option('total_slider_slides_' . $this->slug);
-		$originalSlides = $currentSlides;
+		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
+		$original_slides = $current_slides;
 		
-		if ($currentSlides === false || !is_array($currentSlides) || count($currentSlides) < 0)
-		{
+		if (
+			false === $current_slides ||
+			!is_array( $current_slides ) ||
+			count( $current_slides ) < 0
+		) {
 			return false;
 		}
 		
@@ -379,9 +366,9 @@ class Total_Slide_Group {
 		
 			$found = false;
 		
-			foreach($currentSlides as $i => $slide) {
+			foreach( $current_slides as $i => $slide ) {
 			
-				if ($slide['id'] == $slideID) {
+				if ( $slide['id'] == $slide_id ) {
 				
 					// we found the record we were looking for. update it
 					$currentSlides[$i]['title'] = $title;
@@ -397,24 +384,22 @@ class Total_Slide_Group {
 			
 			}
 			
-			if (!$found)
-			{
+			if ( ! $found ) {
 				return false;
 			}
 		}
 		
-		if ($currentSlides === $originalSlides)
+		if ($current_slides === $original_slides)
 		{
 			return true; // no change, don't bother update_option as it returns false and errors us out
 		}
 		
 		// $currentSlides now holds the slides we want to save
-		return $this->saveSlides($currentSlides);
+		return $this->save_slides( $current_slides );
 	
 	}
 	
-	public function validateURL($url)
-	{
+	public function validate_url($url) {
 	/*
 		Assess whether or not a given string is a valid URL format, based on
 		parse_url(). Returns true for valid format, false otherwise.
@@ -426,14 +411,14 @@ class Total_Slide_Group {
 		
 	*/
 	
-		if ($url === '#')
+		if ( $url === '#' )
 		{
 			// allow a '#' character only
 			return true;
 		}
 		else {
 	
-			return (bool)preg_match("
+			return (bool) preg_match( "
 	      /^                                                      # Start at the beginning of the text
 	      (?:ftp|https?|feed):\/\/                                # Look for ftp, http, https or feed schemes
 	      (?:                                                     # Userinfo (optional) which is typically
@@ -448,52 +433,50 @@ class Total_Slide_Group {
 	      (?:[\/|\?]
 	        (?:[\w#!:\.\?\+=&@$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})   # The path and query (optional)
 	      *)?
-	    $/xi", $url);
+	    $/xi", $url );
     
     	}
 	
 	}
 	
-	public function deleteSlide($slideID) {
+	public function delete_slide( $slide_id ) {
 	/*
 		Remove the slide with slideID from the slides
 		option.
 	*/
 	
-		$currentSlides = get_option('total_slider_slides_' . $this->slug);
+		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
 		
-		if ($currentSlides === false)
-		{
+		if ( false === $current_slides ) {
 			$this->save();
 			
-			$currentSlides = get_option('total_slider_slides_' . $this->slug);
-			if ($currentSlides === false)
-			{
+			$current_slides = get_option( 'total_slider_slides_' . $this->slug );
+			if ( false === $current_slides ) {
 				return false; //can't do it
 			}
 		}	
 		
-		if (is_array($currentSlides) && count($currentSlides) > 0)
-		{
-			$foundIt = false;		
+		if ( is_array( $current_slides) && count($current_slides) > 0 ) {
+
+			$found_it = false;		
 			
-			foreach($currentSlides as $index => $slide)
+			foreach($current_slides as $index => $slide)
 			{
 			
-				if ($slide['id'] == $slideID)
+				if ($slide['id'] == $slide_id)
 				{
-					unset($currentSlides[$index]);
-					$foundIt = true;
+					unset($current_slides[$index]);
+					$found_it = true;
 					break;
 				}
 			
 			}
 			
-			if (!$foundIt)
+			if ( ! $found_it )
 				return false;
 			else
 			{
-				return $this->saveSlides($currentSlides);
+				return $this->save_slides($current_slides);
 			}
 		
 		}
@@ -504,7 +487,7 @@ class Total_Slide_Group {
 	
 	}
 	
-	public function reshuffle($newSlideOrder)
+	public function reshuffle($new_slide_order)
 	{
 	/*
 		Given a new, serialised set of slide order IDs in an array,
@@ -512,61 +495,56 @@ class Total_Slide_Group {
 		IDs in the options array.
 	*/
 	
-		$currentSlides = get_option('total_slider_slides_' . $this->slug);
+		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
 		
-		if ($currentSlides === false)
-		{
+		if ( false === $current_slides ) {
 			
 			$this->save();
 			
-			$currentSlides = get_option('total_slider_slides_' . $this->slug);
-			if ($currentSlides === false)
-			{
+			$current_slides = get_option( 'total_slider_slides_' . $this->slug );
+			if ( false === $current_slides ) {
 				return false; //can't do it
 			}
 		}	
 		
 		
-		if (is_array($currentSlides) && count($currentSlides) > 0)
-		{
+		if ( is_array( $current_slides ) && count( $currentSlides ) > 0 ) {
 		
-			$newSlides = array();	
+			$new_slides = array();	
 			
-			$newSlideNotFoundInCurrent = false;	
+			$new_slide_not_found_in_current = false;	
 			
-			foreach($newSlideOrder as $newIndex => $newSlideID)
-			{			
-				$foundThisSlide = false;
+			foreach( $new_slide_order as $new_index => $new_slide_id ) {			
+				$found_this_slide = false;
 			
-				foreach($currentSlides as $index => $slide)
-				{
-					if ($slide['id'] == $newSlideID)
-					{
-						$newSlides[count($newSlides)] = $slide;
-						$foundThisSlide = true;
+				foreach( $current_slides as $index => $slide ) {
+					if ( $slide['id'] == $new_slide_id ) {
+						$new_slides[ count( $new_slides ) ] = $slide;
+						$found_this_slide = true;
 						continue;
 					}
 				}
 				
-				if (!$foundThisSlide)
+				if (!$found_this_slide)
 				{
-					$newSlideNotFoundInCurrent = true;
+					$new_slide_not_found_in_current = true;
 				}
 				
 			}
 			
-			if (count($currentSlides) != count($newSlides) || $newSlideNotFoundInCurrent)
-			{
+			if (
+				count($current_slides ) != count( $newSlides ) ||
+				$new_slide_not_found_in_current
+			) {
 				// there is a disparity -- so a slide or more will be lost
 				return 'disparity';
 			}
 			
-			if ($newSlides === $currentSlides)
-			{
+			if ( $new_slides === $current_slides ) {
 				return true;
 			}
 			
-			return $this->saveSlides($newSlides);
+			return $this->save_slides($new_slides);
 		
 		}
 		else
@@ -577,46 +555,42 @@ class Total_Slide_Group {
 	}
 
 	
-	private function saveSlides($slidesToWrite)
-	{
+	private function save_slides($slides_to_write) {
 	/*
 		Dumb function that just updates the option with the array it is given.
 	*/
 	
-		return update_option('total_slider_slides_' . $this->slug, $slidesToWrite);
+		return update_option( 'total_slider_slides_' . $this->slug, $slides_to_write );
 	
 	}
 	
-	public function removeXYData() {
+	public function remove_xy_data() {
 	/*
 		Remove all the X/Y positional information from this slide group's slides. This
 		is used when changing the slide group template, to avoid the title/description
 		box from being off-screen on the new template.
 	*/
 	
-		$currentSlides = get_option('total_slider_slides_' . $this->slug);
+		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
 		
-		if ($currentSlides === false)
-		{
+		if ( false === $current_slides ) {
 			
 			$this->save();
 			
-			$currentSlides = get_option('total_slider_slides_' . $this->slug);
-			if ($currentSlides === false)
-			{
+			$current_slides = get_option( 'total_slider_slides_' . $this->slug );
+			
+			if ( false === $current_slides ) {
 				return false; //can't do it
 			}
 		}
 		
-		if (is_array($currentSlides) && count($currentSlides) > 0)
-		{
-			foreach($currentSlides as $i => $slide)
-			{
+		if ( is_array( $current_slides ) && count( $current_slides ) > 0 ) {
+			foreach( $current_slides as $i => $slide ) {
 				$currentSlides[$i]['title_pos_x'] = 0;
 				$currentSlides[$i]['title_pos_y'] = 0;	
 			}
 			
-			$this->saveSlides($currentSlides);
+			$this->save_slides($current_slides);
 			return true;
 			
 		}
@@ -626,8 +600,7 @@ class Total_Slide_Group {
 		
 	}
 	
-	public function miniPreview()
-	{
+	public function mini_preview() {
 	/*
 		Render an HTML mini-preview of the slide images, for use in the widget selector. This allows
 		an at-a-glance verification that the selected slide group is the desired slide group.
@@ -643,52 +616,49 @@ class Total_Slide_Group {
 			How do we disclaim that this isn't truly WYSIWYG? Is that a problem?
 		*/
 		
-		if ( empty($this->template) || empty($this->templateLocation) )
-		{
-			if (! $this->load() )
+		if ( empty($this->template) || empty($this->templateLocation) ) {
+			if ( ! $this->load() )
 				return false;
 		}
 		
 		// load template information
 		try {
-			$t = new Total_Slider_Template($this->template, $this->templateLocation);
+			$t = new Total_Slider_Template( $this->template, $this->templateLocation );
 		}
-		catch (Exception $e)
-		{
-			if ( defined('WP_DEBUG') && WP_DEBUG ) {
-				printf(__('Unable to render the slide mini-preview: %s (error code %d)', 'total_slider'), $e->getMessage(), $e->getCode() );
+		catch ( Exception $e ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				printf( __( 'Unable to render the slide mini-preview: %s (error code %d)', 'total_slider' ), $e->getMessage(), $e->getCode() );
 			}
 			return false;
 		}		
 		
-		$templateOptions = $t->determineOptions();
+		$template_options = $t->determine_options();
 		
-		?><p><strong><?php _e('Template:', 'total_slider');?></strong> <?php echo esc_html( $t->name() );?></p><?php
+		?><p><strong><?php _e( 'Template:', 'total_slider' );?></strong> <?php echo esc_html( $t->name() ); ?></p><?php
 		
 		
-		$currentSlides = get_option('total_slider_slides_' . $this->slug);
+		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
 		
-		if ($currentSlides === false || !is_array($currentSlides) || count($currentSlides) < 0)
+		if (false === $current_slides || !is_array( $current_slides ) || count( $current_slides ) < 0)
 		{
-			?><p><?php _e('There are no slides to show.', 'total_slider');?></p><?php
+			?><p><?php _e( 'There are no slides to show.', 'total_slider' );?></p><?php
 			return true;
 		}
 		
 		?><div class="total-slider-mini-preview">
 		<ul><?php
 		
-		foreach( $currentSlides as $idx => $slide )
-		{
+		foreach( $currentSlides as $idx => $slide ) {
 		
-			if ( is_numeric($slide['background']) && intval($slide['background']) == $slide['background'] ) {
+			if ( is_numeric($slide['background'] ) && intval( $slide['background'] ) == $slide['background'] ) {
 				// background references an attachment ID
-				$image = wp_get_attachment_image_src( intval($slide['background']), 'thumbnail' );
+				$image = wp_get_attachment_image_src( intval( $slide['background'] ), 'thumbnail' );
 				$image = $image[0];
 			}
 			else {
 				$image = $slide['background'];				
 			}
-			?><li><img src="<?php echo esc_url($image);?>" alt="<?php echo esc_attr($slide['title']);?>" title="<?php echo esc_attr($slide['title']);?>" width="100" height="32" /></li><?php
+			?><li><img src="<?php echo esc_url( $image ); ?>" alt="<?php echo esc_attr( $slide['title'] ); ?>" title="<?php echo esc_attr( $slide['title'] ); ?>" width="100" height="32" /></li><?php
 			
 		}
 		
