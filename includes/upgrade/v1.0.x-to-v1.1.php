@@ -24,45 +24,42 @@ to ensure that the data format has been upgraded to the latest version.
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-if (!defined('TOTAL_SLIDER_REQUIRED_CAPABILITY'))
-{
+if ( ! defined('TOTAL_SLIDER_REQUIRED_CAPABILITY' ) ) {
 	header('HTTP/1.1 403 Forbidden');
 	die('<h1>Forbidden</h1>');
 }
 
-if (!function_exists('__'))
+if ( ! function_exists( '__' ) )
 {
-	header('HTTP/1.1 403 Forbidden');
-	die('<h1>Forbidden</h1>');
+	header( 'HTTP/1.1 403 Forbidden' );
+	die( '<h1>Forbidden</h1>' );
 }
 
 // add the data format option
-if (!get_option('total_slider_dataformat_version'))
-{
-	add_option('total_slider_dataformat_version', TOTAL_SLIDER_DATAFORMAT_VERSION);
+if ( ! get_option( 'total_slider_dataformat_version' ) ) {
+	add_option( 'total_slider_dataformat_version', TOTAL_SLIDER_DATAFORMAT_VERSION );
 }
 
 // set default general options, if not set (unlikely)
-if (!get_option('total_slider_general_options'))
-{
-	add_option('total_slider_general_options', array(
+if ( ! get_option('total_slider_general_options' ) ) {
+	add_option( 'total_slider_general_options', array(
 		'should_enqueue_template'	=> 	'1',
 		'should_show_tinymce_button' => '1'
-	));
+	) );
 }
 else {
 	
-	$general_options = get_option('total_slider_general_options');
+	$general_options = get_option( 'total_slider_general_options' );
 	
 	// set should_show_tinymce_button to default on, if it is not set at all
 		
 	if ( is_array($general_options) && count($general_options) > 0 ) {
-		if ( !array_key_exists('should_show_tinymce_button', $general_options) || $general_options['should_show_tinymce_button'] == '' )
+		if ( ! array_key_exists( 'should_show_tinymce_button', $general_options ) || $general_options['should_show_tinymce_button'] == '' )
 		{
 			$general_options['should_show_tinymce_button'] = '1';
 			
 			// save our options back
-			update_option('total_slider_general_options', $general_options);
+			update_option( 'total_slider_general_options', $general_options );
 		}
 	}
 		
@@ -73,32 +70,27 @@ Search for use of legacy custom templates. Find them, and mark the slide groups 
 with the new Template Manager.
 */
 
-if ( !get_option('total_slider_upgrade_v1.0.x_to_v1.1') )
-{
+if ( !get_option('total_slider_upgrade_v1.0.x_to_v1.1') ) {
 
-	$pathPrefix = get_stylesheet_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
-	$uriPrefix = get_stylesheet_directory_uri() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+	$path_prefix = get_stylesheet_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+	$uri_prefix = get_stylesheet_directory_uri() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
 	
-	$phpExists = @file_exists($pathPrefix .  'total-slider-template.php' );
-	$cssExists = @file_exists($pathPrefix . 'total-slider-template.css');
-	$jsExists = @file_exists($pathPrefix . 'total-slider-template.js' );
-	$jsMinExists = @file_exists($pathPrefix . 'total-slider-template.min.js' );
+	$php_exists = @file_exists($path_prefix .  'total-slider-template.php' );
+	$css_exists = @file_exists($path_prefix . 'total-slider-template.css');
+	$js_exists = @file_exists($path_prefix . 'total-slider-template.js' );
+	$js_min_exists = @file_exists($path_prefix . 'total-slider-template.min.js' );
 	
-	if ( $phpExists && $cssExists && $jsExists )
+	if ( $php_exists && $css_exists && $js_exists )
 	{
 		// we have to assume all current slide groups use the legacy template, so we must update them all
-		$currentSlides = get_option( 'total_slider_slide_groups' );
+		$current_slides = get_option( 'total_slider_slide_groups' );
 		
-		if ( is_array($currentSlides) && count($currentSlides) > 0 )
-		{
-			foreach ( $currentSlides as $slide )
-			{
-				if ( is_a($slide, 'Total_Slide_Group') )
-				{
+		if ( is_array($current_slides) && count($current_slides) > 0 ) {
+			foreach ( $current_slides as $slide ) {
+				if ( is_a( $slide, 'Total_Slide_Group' ) ) {
 					$slide->load();
 					
-					if ( $slide->templateLocation == 'builtin' )
-					{
+					if ( 'builtin' == $slide->templateLocation ) {
 						// flip it to 'legacy'
 						$slide->templateLocation = 'legacy';
 						$slide->template = 'total-slider-template';

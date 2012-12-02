@@ -389,7 +389,7 @@ class Total_Slide_Group {
 			}
 		}
 		
-		if ($current_slides === $original_slides)
+		if ( $current_slides === $original_slides )
 		{
 			return true; // no change, don't bother update_option as it returns false and errors us out
 		}
@@ -460,8 +460,7 @@ class Total_Slide_Group {
 
 			$found_it = false;		
 			
-			foreach($current_slides as $index => $slide)
-			{
+			foreach( $current_slides as $index => $slide ) {
 			
 				if ($slide['id'] == $slide_id)
 				{

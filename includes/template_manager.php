@@ -25,15 +25,14 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-if (!defined('TOTAL_SLIDER_IN_FUNCTIONS'))
-{
-	header('HTTP/1.1 403 Forbidden');
-	die('<h1>Forbidden</h1>');
+if ( ! defined( 'TOTAL_SLIDER_IN_FUNCTIONS' ) ) {
+	header( 'HTTP/1.1 403 Forbidden' );
+	die( '<h1>Forbidden</h1>' );
 }
 
 // expected directories where we'll find templates, in the plugin (builtin) and elsewhere
-define('TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR', 'templates');
-define('TOTAL_SLIDER_TEMPLATES_DIR', 'total-slider-templates');
+define( 'TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR', 'templates' );
+define( 'TOTAL_SLIDER_TEMPLATES_DIR', 'total-slider-templates' );
 
 if ( ! defined( 'WP_CONTENT_DIR' ) )
 	define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
@@ -57,36 +56,35 @@ class Total_Slider_Template {
 	private $slug;
 	private $location; // one of 'builtin','theme','downloaded'
 	
-	private $mdName;
-	private $mdURI;
-	private $mdDescription;
-	private $mdVersion;
-	private $mdAuthor;
-	private $mdAuthorURI;
-	private $mdLicense;
-	private $mdLicenseURI;
-	private $mdTags;
+	private $md_name;
+	private $md_uri;
+	private $md_description;
+	private $md_version;
+	private $md_author;
+	private $md_author_uri;
+	private $md_license;
+	private $md_license_uri;
+	private $md_tags;
 	
 	private $options;
 	
-	private $templateFile = null;
-	private $templatePHPFile = null;
+	private $template_file = null;
+	private $template_php_file = null;
 	
-	private $pathPrefix = null;
-	private $uriPrefix = null;
+	private $path_prefix = null;
+	private $uri_prefix = null;
 	
-	private $phpPath = null;
-	private $jsPath = null;
-	private $jsMinPath = null;
-	private $cssPath = null;
+	private $php_path = null;
+	private $js_path = null;
+	private $js_min_path = null;
+	private $css_path = null;
 	
-	private $phpURI = null;
-	private $jsURI = null;
-	private $jsMinURI = null;
-	private $cssURI = null;
+	private $php_uri = null;
+	private $js_uri = null;
+	private $js_min_uri = null;
+	private $css_uri = null;
 	
-	public function __construct($slug, $location)
-	{
+	public function __construct( $slug, $location ) {
 	/*
 		Prepare this Template -- pass in the slug of its directory, as
 		well as the location ('builtin','theme','downloaded').
@@ -96,24 +94,21 @@ class Total_Slider_Template {
 		from the PHP file, and render the template for JavaScript edit-side purposes.
 	*/
 	
-		global $allowedTemplateLocations;
+		global $allowed_template_locations;
 		
-		if (!is_array($allowedTemplateLocations))
-		{
-			throw new UnexpectedValueException(__('The allowed template locations are not available. This file must not be loaded without slide_group.php', 'total_slider'), 103);
+		if ( ! is_array($allowed_template_locations ) )	{
+			throw new UnexpectedValueException( __( 'The allowed template locations are not available. This file must not be loaded without slide_group.php', 'total_slider' ), 103 );
 			return;
 		}
 	
 		// get some key things ready
-		$this->slug = $this->sanitizeSlug($slug);
+		$this->slug = $this->sanitize_slug( $slug );
 		
-		if (in_array($location, $allowedTemplateLocations))
-		{
+		if ( in_array( $location, $allowed_template_locations ) ) {
 			$this->location = $location;
 		}
-		else
-		{
-			throw new UnexpectedValueException(__('The supplied template location is not one of the allowed template locations', 'total_slider'), 101);
+		else {
+			throw new UnexpectedValueException( __( 'The supplied template location is not one of the allowed template locations', 'total_slider' ), 101 );
 			return;
 		}
 		
@@ -122,8 +117,7 @@ class Total_Slider_Template {
 		
 	}
 	
-	public static function sanitizeSlug($slug)
-	{
+	public static function sanitize_slug($slug) {
 	/*
 		Sanitize a template slug before we assign it to our instance internally, or print
 		it anywhere.
@@ -138,12 +132,11 @@ class Total_Slider_Template {
 		
 	*/
 	
-		return substr(preg_replace('/[^a-zA-Z0-9_\-]/', '', $slug), 0, 128 );
+		return substr( preg_replace( '/[^a-zA-Z0-9_\-]/', '', $slug ), 0, 128 );
 		
 	}
 	
-	private function canonicalize()
-	{
+	private function canonicalize() {
 	/*
 		Construct canonical paths and URLs for this template, by using the template slug
 		and the location to work out where the template files are.
@@ -152,69 +145,62 @@ class Total_Slider_Template {
 		for enqueuing and such.
 	*/
 	
-		switch ($this->location)
-		{
+		switch ( $this->location ) {
 			
 			case 'builtin':
-				$pathPrefix = plugin_dir_path( dirname(__FILE__) ) . '/' . TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR . '/';
-				$uriPrefix = plugin_dir_url( dirname(__FILE__) ) . '/'. TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR . '/';
+				$path_prefix = plugin_dir_path( dirname( __FILE__ ) ) . '/' . TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR . '/';
+				$uri_prefix = plugin_dir_url( dirname( __FILE__ ) ) . '/'. TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR . '/';
 				
-				$phpExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.php' );
-				$cssExists = @file_exists($pathPrefix . $this->slug . '/' . 'style.css');
-				$jsExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.js' );
-				$jsMinExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.min.js' ); 
+				$php_exists = @file_exists( $path_prefix . $this->slug . '/' . $this->slug . '.php' );
+				$css_exists = @file_exists($path_prefix . $this->slug . '/' . 'style.css' );
+				$js_exists = @file_exists( $path_prefix . $this->slug . '/' . $this->slug . '.js' );
+				$js_min_exists = @file_exists( $path_prefix . $this->slug . '/' . $this->slug . '.min.js' ); 
 				
-				$missingFile = '';
+				$missing_file = '';
 				
-				if (!$phpExists)
-				{
-					$missingFile = 'PHP';
-					$expectedLocation = $pathPrefix . $this->slug . '/' . $this->slug . '.php';			
+				if ( ! $php_exists ) {
+					$missing_file = 'PHP';
+					$expected_location = $path_prefix . $this->slug . '/' . $this->slug . '.php';			
 				}
-				else if (!$jsExists && !$jsMinExists)
-				{
-					$missingFile = 'JS';
-					$expectedLocation = $pathPrefix . $this->slug . '/' . $this->slug . '.js';								
+				else if ( ! $js_exists && ! $js_min_exists ) {
+					$missing_file = 'JS';
+					$expected_location = $path_prefix . $this->slug . '/' . $this->slug . '.js';								
 				}
-				else if (!$cssExists)
-				{
-					$missingFile = 'CSS';
-					$expectedLocation = $pathPrefix . $this->slug . '/style.css';										
+				else if ( ! $css_exists ) {
+					$missing_file = 'CSS';
+					$expected_location = $path_prefix . $this->slug . '/style.css';										
 				}
 				
 				else
 				{
-					$this->phpPath = $pathPrefix . $this->slug . '/' . $this->slug . '.php';
-					$this->phpURI = $uriPrefix . $this->slug . '/' . $this->slug . '.php';
+					$this->php_path = $path_prefix . $this->slug . '/' . $this->slug . '.php';
+					$this->php_uri = $uri_prefix . $this->slug . '/' . $this->slug . '.php';
 					
-					$this->cssPath = $pathPrefix . $this->slug . '/style.css';
-					$this->cssURI = $uriPrefix . $this->slug . '/style.css';
+					$this->css_path = $path_prefix . $this->slug . '/style.css';
+					$this->css_uri = $uri_prefix . $this->slug . '/style.css';
 
-					if ($jsExists)
-					{
-						$this->jsPath = $pathPrefix . $this->slug . '/' . $this->slug . '.js';
-						$this->jsURI = $uriPrefix . $this->slug . '/' . $this->slug . '.js';
+					if ( $js_exists ) {
+						$this->js_path = $path_prefix . $this->slug . '/' . $this->slug . '.js';
+						$this->js_uri = $uri_prefix . $this->slug . '/' . $this->slug . '.js';
 					}
 					
-					if ($jsMinExists)
-					{
-						$this->jsMinPath = $pathPrefix . $this->slug . '/' . $this->slug . '.min.js';
-						$this->jsMinURI = $uriPrefix . $this->slug . '/' . $this->slug . '.min.js';
+					if ( $js_min_exists ) {
+						$this->js_min_path = $path_prefix . $this->slug . '/' . $this->slug . '.min.js';
+						$this->js_min_uri = $uri_prefix . $this->slug . '/' . $this->slug . '.min.js';
 					}
 					
-					$this->pathPrefix = $pathPrefix;
-					$this->uriPrefix = $uriPrefix;
+					$this->path_prefix = $path_prefix;
+					$this->uri_prefix = $uri_prefix;
 					
 					return true;
 					
 				}
 				
 				// if a file was missing, then bubble up a relevant exception
-				if (!empty($missingFile))
-				{
+				if ( ! empty( $missing_file ) )	{
 					throw new RuntimeException(
-						sprintf(__("The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider'), $missingFile, $expectedLocation)
-					, 201);
+						sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider' ), $missing_file, $expected_location )
+					, 201 );
 					return false;
 				}
 				
@@ -241,96 +227,87 @@ class Total_Slider_Template {
 				Failing that, we can't load the template.
 				
 				*/
-				foreach ($prefix as $p)
-				{
+				foreach ( $prefix as $p ) {
 				
 					// load in either the child or parent JS
-					if (!$this->jsPath || !$this->jsURI)
-					{
-						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.js' ))
-						{
-							$this->jsPath = $p['path'] . $this->slug . '/' . $this->slug . '.js';
-							$this->jsURI = $p['uri'] . $this->slug . '/' . $this->slug . '.js'; 
+					if ( ! $this->js_path || ! $this->js_uri ) {
+						if ( @file_exists( $p['path'] . $this->slug . '/' . $this->slug . '.js'  ) ) {
+							$this->js_path = $p['path'] . $this->slug . '/' . $this->slug . '.js';
+							$this->js_uri = $p['uri'] . $this->slug . '/' . $this->slug . '.js'; 
 						}
 						else {
-							$this->jsPath = null;
-							$this->jsURI = null;
+							$this->js_path = null;
+							$this->js_uri = null;
 						}
 						
-						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.min.js'))
-						{
-							$this->jsMinPath = $p['path'] . $this->slug . '/' . $this->slug . '.min.js';
-							$this->jsMinURI = $p['uri'] . $this->slug . '/' . $this->slug . '.min.js';						
+						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.min.js' ) ) {
+							$this->js_min_path = $p['path'] . $this->slug . '/' . $this->slug . '.min.js';
+							$this->js_min_uri = $p['uri'] . $this->slug . '/' . $this->slug . '.min.js';						
 						}
 						else {
-							$this->jsMinPath = null;
-							$this->jsMinURI = null;
+							$this->js_min_path = null;
+							$this->js_min_uri = null;
 						}
 					}			
 				
-					if (!$this->cssPath || !$this->cssURI || !$this->phpPath || !$this->phpURI) {
+					if ( ! $this->css_path || ! $this->css_uri || ! $this->php_path || ! $this->php_uri ) {
 					
 						// check for the PHP file and the CSS file
-						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.php' ) )
-						{
-							$this->phpPath = $p['path'] . $this->slug . '/' . $this->slug . '.php';
-							$this->phpURI = $p['uri'] . $this->slug . '/'. $this->slug . '.php';
+						if ( @file_exists($p['path'] . $this->slug . '/' . $this->slug . '.php' ) ) {
+							$this->php_path = $p['path'] . $this->slug . '/' . $this->slug . '.php';
+							$this->php_uri = $p['uri'] . $this->slug . '/'. $this->slug . '.php';
 						}
 						else {
-							$this->phpPath = null;
-							$this->phpURI = null;				
+							$this->php_path = null;
+							$this->php_uri = null;				
 						}
 						
-						if ( @file_exists($p['path'] . $this->slug . '/' . 'style.css' ) )
-						{
-							$this->cssPath = $p['path'] . $this->slug . '/style.css';
-							$this->cssURI = $p['uri'] . $this->slug . '/style.css';
+						if ( @file_exists($p['path'] . $this->slug . '/' . 'style.css' ) ) {
+							$this->css_path = $p['path'] . $this->slug . '/style.css';
+							$this->css_uri = $p['uri'] . $this->slug . '/style.css';
 						}
 						else {
-							$this->cssPath = null;
-							$this->cssURI = null;						
+							$this->css_path = null;
+							$this->css_uri = null;						
 						}
 					}
 										
 				}
 				
-				$missingFile = '';
+				$missing_file = '';
 				
 				// if any paths are null, we can't load the template
-				if (!$this->phpPath || !$this->phpURI)
-				{
-					$missingFile = 'PHP';
-					$expectedLocation = $prefix['child']['path'] . $this->slug . '/' . $this->slug . '.php';
-					if ($prefix['child']['path'] != $prefix['parent']['path']) {
-						$expectedLocation .=  '\' or \''; // allow the error message to include 'or' parent hint
-						$expectedLocation .= $prefix['parent']['path'] . $this->slug . '/' . $this->slug . '.php';
+				if ( ! $this->php_path || !$this->php_uri )	{
+					$missing_file = 'PHP';
+					$expected_location = $prefix['child']['path'] . $this->slug . '/' . $this->slug . '.php';
+					
+					if ( $prefix['child']['path'] != $prefix['parent']['path'] ) {
+						$expected_location .=  '\' or \''; // allow the error message to include 'or' parent hint
+						$expected_location .= $prefix['parent']['path'] . $this->slug . '/' . $this->slug . '.php';
 					}
 				}
-				else if ( (!$this->jsPath || !$this->jsURI) && (!$this->jsMinPath || !$this->jsMinURI) )
-				{
-					$missingFile = 'JS';
-					$expectedLocation = $prefix['child']['path'] . $this->slug . '/' . $this->slug . '.js';
-					if ($prefix['child']['path'] != $prefix['parent']['path']) {
-						$expectedLocation .=  '\' or \''; // allow the error message to include 'or' parent hint
-						$expectedLocation .= $prefix['parent']['path'] . $this->slug . '/' . $this->slug . '.js';
+				else if ( (!$this->js_path || !$this->js_uri) && (!$this->js_min_path || !$this->js_min_uri) ) {
+					$missing_file = 'JS';
+					$expected_location = $prefix['child']['path'] . $this->slug . '/' . $this->slug . '.js';
+					if ( $prefix['child']['path'] != $prefix['parent']['path'] ) {
+						$expected_location .=  '\' or \''; // allow the error message to include 'or' parent hint
+						$expected_location .= $prefix['parent']['path'] . $this->slug . '/' . $this->slug . '.js';
 					}
 				}
-				else if (!$this->cssPath || !$this->cssURI)
-				{
-					$missingFile = 'CSS';
-					$expectedLocation = $prefix['child']['path'] . $this->slug . '/style.css';
-					if ($prefix['child']['path'] != $prefix['parent']['path']) {
-						$expectedLocation .=  '\' or \''; // allow the error message to include 'or' parent hint
-						$expectedLocation .= $prefix['parent']['path'] . $this->slug . '/' . $this->slug . '.css';
+				else if ( ! $this->css_path || !$this->css_uri ) {
+					$missing_file = 'CSS';
+					$expected_location = $prefix['child']['path'] . $this->slug . '/style.css';
+					if ( $prefix['child']['path'] != $prefix['parent']['path'] ) {
+						$expected_location .=  '\' or \''; // allow the error message to include 'or' parent hint
+						$expected_location .= $prefix['parent']['path'] . $this->slug . '/' . $this->slug . '.css';
 					}
 				}
 				
 				// if a file was missing, then bubble up a relevant exception
-				if (!empty($missingFile))
-				{
+				if ( ! empty( $missing_file ) ) {
 					throw new RuntimeException(
-						sprintf(__("The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider'), $missingFile, $expectedLocation)
-					, 201);
+						sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider'), $missing_file, $expected_location)
+					, 201 );
 					return false;
 				}
 				else {
@@ -342,71 +319,63 @@ class Total_Slider_Template {
 			case 'downloaded':
 				//NOTE: in the conspicious absence of a `content_path()` function, we must use the WP_CONTENT_DIR constant
 				
-				if (!defined('WP_CONTENT_DIR'))
-				{
+				if ( ! defined( 'WP_CONTENT_DIR' ) ) {
 					throw new UnexpectedValueException(__('Unable to determine the WP_CONTENT_DIR, so cannot load this template.', 'total_slider'), 102);
 					return false;					
 				}
 				
-				$pathPrefix = WP_CONTENT_DIR . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
-				$uriPrefix = content_url() . '/'. TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				$path_prefix = WP_CONTENT_DIR . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				$uri_prefix = content_url() . '/'. TOTAL_SLIDER_TEMPLATES_DIR . '/';
 				
-				$phpExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.php' );
-				$cssExists = @file_exists($pathPrefix . $this->slug . '/style.css');
-				$jsExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.js' );
-				$jsMinExists = @file_exists($pathPrefix . $this->slug . '/' . $this->slug . '.min.js' );
+				$php_exists = @file_exists( $path_prefix . $this->slug . '/' . $this->slug . '.php' );
+				$css_exists = @file_exists( $path_prefix . $this->slug . '/style.css');
+				$js_exists = @file_exists( $path_prefix . $this->slug . '/' . $this->slug . '.js' );
+				$js_min_exists = @file_exists( $path_prefix . $this->slug . '/' . $this->slug . '.min.js' );
 								
-				$missingFile = '';
+				$missing_file = '';
 				
-				if (!$phpExists)
-				{
-					$missingFile = 'PHP';
-					$expectedLocation = $pathPrefix . $this->slug . '/' . $this->slug . '.php';			
+				if ( ! $php_exists ) {
+					$missing_file = 'PHP';
+					$expected_location = $path_prefix . $this->slug . '/' . $this->slug . '.php';			
 				}
-				else if (!$jsExists && !$jsMinExists)
-				{
-					$missingFile = 'JS';
-					$expectedLocation = $pathPrefix . $this->slug . '/' . $this->slug . '.js';								
+				else if ( ! $js_exists && ! $js_min_exists ) {
+					$missing_file = 'JS';
+					$expected_location = $path_prefix . $this->slug . '/' . $this->slug . '.js';								
 				}
-				else if (!$cssExists)
-				{
-					$missingFile = 'CSS';
-					$expectedLocation = $pathPrefix . $this->slug . '/style.css';										
+				else if ( ! $css_exists ) {
+					$missing_file = 'CSS';
+					$expected_location = $path_prefix . $this->slug . '/style.css';										
 				}
 				
-				else
-				{
-					$this->phpPath = $pathPrefix . $this->slug . '/' . $this->slug . '.php';
-					$this->phpURI = $uriPrefix . $this->slug . '/' . $this->slug . '.php';
+				else {
+					$this->php_path = $path_prefix . $this->slug . '/' . $this->slug . '.php';
+					$this->php_uri = $uri_prefix . $this->slug . '/' . $this->slug . '.php';
 					
-					$this->cssPath = $pathPrefix . $this->slug . '/style.css';
-					$this->cssURI = $uriPrefix . $this->slug . '/style.css';
+					$this->css_path = $path_prefix . $this->slug . '/style.css';
+					$this->css_uri = $uri_prefix . $this->slug . '/style.css';
 					
-					if ($jsExists)
-					{
-						$this->jsPath = $pathPrefix . $this->slug . '/' . $this->slug . '.js';
-						$this->jsURI = $uriPrefix . $this->slug . '/' . $this->slug . '.js';
+					if ( $js_exists ) {
+						$this->js_path = $path_prefix . $this->slug . '/' . $this->slug . '.js';
+						$this->js_uri = $uri_prefix . $this->slug . '/' . $this->slug . '.js';
 					}
 					
-					if ($jsMinExists)
-					{
-						$this->jsMinPath = $pathPrefix . $this->slug . '/' . $this->slug . '.min.js';
-						$this->jsMinURI = $uriPrefix . $this->slug . '/' . $this->slug . '.min.js';
+					if ( $js_min_exists ) {
+						$this->js_min_path = $path_prefix . $this->slug . '/' . $this->slug . '.min.js';
+						$this->js_min_uri = $uri_prefix . $this->slug . '/' . $this->slug . '.min.js';
 					}					
 					
-					$this->pathPrefix = $pathPrefix;
-					$this->uriPrefix = $uriPrefix;					
+					$this->path_prefix = $path_prefix;
+					$this->uri_prefix = $uri_prefix;					
 					
 					return true;
 					
 				}
 				
 				// if a file was missing, then bubble up a relevant exception
-				if (!empty($missingFile))
-				{
+				if ( ! empty( $missing_file ) )	{
 					throw new RuntimeException(
-						sprintf(__("The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider'), $missingFile, $expectedLocation)
-					, 201);
+						sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider' ), $missing_file, $expected_location )
+					, 201 );
 					return false;
 				}			
 			break;
@@ -415,69 +384,63 @@ class Total_Slider_Template {
 			
 				// in the theme, but simply 'loose' in the total-slider-templates folder, rather than in its own subfolder
 			
-				$pathPrefix = get_stylesheet_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
-				$uriPrefix = get_stylesheet_directory_uri() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				$path_prefix = get_stylesheet_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
+				$uri_prefix = get_stylesheet_directory_uri() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
 				
-				$phpExists = @file_exists($pathPrefix .  'total-slider-template.php' );
-				$cssExists = @file_exists($pathPrefix . 'total-slider-template.css');
-				$jsExists = @file_exists($pathPrefix . 'total-slider-template.js' );
-				$jsMinExists = @file_exists($pathPrefix . 'total-slider-template.min.js' );
+				$php_exists = @file_exists( $path_prefix .  'total-slider-template.php' );
+				$css_exists = @file_exists( $path_prefix . 'total-slider-template.css');
+				$js_exists = @file_exists( $path_prefix . 'total-slider-template.js' );
+				$js_min_exists = @file_exists( $path_prefix . 'total-slider-template.min.js' );
 								
-				$missingFile = '';
+				$missing_file = '';
 				
-				if (!$phpExists)
-				{
-					$missingFile = 'PHP';
-					$expectedLocation = $pathPrefix .  'total-slider-template.php';
+				if ( ! $php_exists ) {
+					$missing_file = 'PHP';
+					$expected_location = $path_prefix .  'total-slider-template.php';
 				}
-				else if (!$jsExists && !$jsMinExists)
-				{
-					$missingFile = 'JS';
-					$expectedLocation = $pathPrefix . 'total-slider-template.js';	
+				else if ( ! $js_exists && ! $js_min_exists ) {
+					$missing_file = 'JS';
+					$expected_location = $path_prefix . 'total-slider-template.js';	
 				}
-				else if (!$cssExists)
-				{
-					$missingFile = 'CSS';
-					$expectedLocation = $pathPrefix . 'total-slider-template.css';
+				else if ( ! $css_exists ) {
+					$missing_file = 'CSS';
+					$expected_location = $path_prefix . 'total-slider-template.css';
 				}
 				
-				else
-				{
-					$this->phpPath = $pathPrefix . 'total-slider-template.php';
-					$this->phpURI = $uriPrefix . 'total-slider-template.php';
+				else {
+					$this->php_path = $path_prefix . 'total-slider-template.php';
+					$this->php_uri = $uri_prefix . 'total-slider-template.php';
 					
-					$this->cssPath = $pathPrefix . 'total-slider-template.css';
-					$this->cssURI = $uriPrefix . 'total-slider-template.css';
+					$this->css_path = $path_prefix . 'total-slider-template.css';
+					$this->css_uri = $uri_prefix . 'total-slider-template.css';
 
-					$this->jsPath = $pathPrefix . 'total-slider-template.js';
-					$this->jsURI = $uriPrefix . 'total-slider-template.js';
+					$this->js_path = $path_prefix . 'total-slider-template.js';
+					$this->js_uri = $uri_prefix . 'total-slider-template.js';
 					
-					if ($jsMinExists)
-					{
-						$this->jsMinPath = $pathPrefix . 'total-slider-template.min.js';
-						$this->jsMinURI = $uriPrefix . 'total-slider-template.min.js';
+					if ( $js_min_exists ) {
+						$this->js_min_path = $path_prefix . 'total-slider-template.min.js';
+						$this->js_min_uri = $uri_prefix . 'total-slider-template.min.js';
 					}					
 					
-					$this->pathPrefix = $pathPrefix;
-					$this->uriPrefix = $uriPrefix;
+					$this->path_prefix = $path_prefix;
+					$this->uri_prefix = $uri_prefix;
 					
 					return true;
 					
 				}
 				
 				// if a file was missing, then bubble up a relevant exception
-				if (!empty($missingFile))
-				{
+				if ( ! empty( $missing_file ) )	{
 					throw new RuntimeException(
-						sprintf(__("The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider'), $missingFile, $expectedLocation)
-					, 201);
+						sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider'), $missing_file, $expected_location)
+					, 201 );
 					return false;
 				}					
 			
 			break;
 			
 			default:
-				throw new UnexpectedValueException(__('The supplied template location is not one of the allowed template locations', 'total_slider'), 101);
+				throw new UnexpectedValueException( __( 'The supplied template location is not one of the allowed template locations', 'total_slider' ), 101 );
 				return false;				
 			break;
 			
@@ -486,8 +449,7 @@ class Total_Slider_Template {
 		
 	}
 	
-	public function render()
-	{
+	public function render() {
 	/*
 		Render this template, using the pseudo-widget class, so that it will be executed,
 		calls to the widget public methods will product the EJS placeholder text instead of
@@ -496,7 +458,7 @@ class Total_Slider_Template {
 		The result will be buffered and ready for use by the client-side code.
 	*/
 	
-		if (!$this->phpPath)
+		if ( ! $this->php_path )
 		{
 			$this->canonicalize();
 		}
@@ -505,229 +467,196 @@ class Total_Slider_Template {
 		$s = new Total_Slider_Widget_Templater();
 		
 		// a modicum of "time between check and use" protection
-		if (!@file_exists($this->phpPath))
+		if ( ! @ file_exists($this->php_path ) )
 		{
 			throw new RuntimeException(
-				sprintf(__("The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider'), 'PHP', $this->phpPath)
-			, 201);
+				sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider' ), 'PHP', $this->php_path )
+			, 201 );
 			return false;
 		}
 		
 		ob_start();
-		require($this->phpPath);
+		require($this->php_path);
 
-		$renderedTemplate = ob_get_clean();
+		$rendered_template = ob_get_clean();
 		
 		unset($s);
 		
-		return $renderedTemplate;	
+		return $rendered_template;	
 		
 	}
 	
 	/***********	// !Canonical path and URI accessor methods		***********/
 	
-	public function pathPrefix()
-	{
+	public function path_prefix() {
 	/*
 		Return the canonical path for this template.
 	*/	
 	
-		if (!$this->pathPrefix)
-		{
+		if ( ! $this->path_prefix ) {
 			$this->canonicalize();
 		}
 		
-		return $this->pathPrefix;
+		return $this->path_prefix;
 		
 	}
 	
-	public function uriPrefix()
-	{
+	public function uri_prefix() {
 	/*
 		Return the canonical URI for this template.
 	*/
 	
-		if (!$this->uriPrefix)
-		{
+		if ( ! $this->uri_prefix ) {
 			$this->canonicalize();
 		}
 		
-		return $this->uriPrefix;
+		return $this->uri_prefix;
 		
 	}
 	
-	public function phpPath()
-	{
+	public function php_path() {
 	/*
 		Return the canonical path to this template's PHP file.
 	*/
 		
-		if (!$this->phpPath)
-		{
+		if ( ! $this->php_path ) {
 			$this->canonicalize();
 		}
 		
-		return $this->phpPath;
+		return $this->php_path;
 		
 	}
 	
-	public function jsPath()
-	{
+	public function js_path() {
 	/*
 		Return the canonical path to this template's JavaScript file.
 	*/
 	
-		if (!$this->jsPath && !$this->jsMinPath)
-		{
+		if ( ! $this->js_path && ! $this->js_min_path ) {
 			$this->canonicalize();
 		}
 		
-		if (!$this->jsPath && $this->jsMinPath)
-		{
-			return $this->jsMinPath;
+		if ( ! $this->js_path && $this->js_min_path ) {
+			return $this->js_min_path;
 		}
-		else
-		{
-			return $this->jsPath;
+		else {
+			return $this->js_path;
 		}
 	}
 	
-	public function jsMinPath()
-	{
+	public function js_min_path() {
 	/*
 		Return the canonical path to this template's minified JavaScript file.
 	*/	
 	
-		if (!$this->jsMinPath && !$this->jsPath)
-		{
+		if ( ! $this->js_min_path && ! $this->js_path ) {
 			$this->canonicalize();
 		}
 
-		if (!$this->jsMinPath && $this->jsPath)
-		{
-			return $this->jsPath;
+		if ( ! $this->js_min_path && $this->js_path ) {
+			return $this->js_path;
 		}
 		else {
-			return $this->jsMinPath;
+			return $this->js_min_path;
 		}		
 	}
 	
-	public function cssPath()
-	{
+	public function css_path() {
 	/*
 		Return the canonical path to this template's CSS file.
 	*/	
-		if (!$this->cssPath)
-		{
+		if ( ! $this->css_path ) {
 			$this->canonicalize();
 		}
 		
-		return $this->cssPath;		
+		return $this->css_path;		
 	}
 	
-	public function phpURI()
-	{
+	public function php_uri() {
 	/*
 		Return the canonical URI for this template's PHP file.
 	*/
-		if (!$this->phpURI)
-		{
+		if ( ! $this->php_uri ) {
 			$this->canonicalize();
 		}
 		
-		return $this->phpURI;	
+		return $this->php_uri;	
 		
 	}
 	
-	public function jsURI()
-	{
+	public function js_uri() {
 	/*
 		Return the canonical URI for this template's JavaScript file.
 	*/
-		if (!$this->jsURI && !$this->jsMinURI)
-		{
+		if ( ! $this->js_uri && ! $this->js_min_uri ) {
 			$this->canonicalize();
 		}
 		
-		if (!$this->jsURI && $this->jsMinURI)
-		{
-			return $this->jsMinURI;
+		if ( ! $this->js_uri && $this->js_min_uri )	{
+			return $this->js_min_uri;
 		}
-		else
-		{	
-			return $this->jsURI;
+		else {	
+			return $this->js_uri;
 		}
 	}
 	
-	public function jsMinURI()
-	{
+	public function js_min_uri() {
 	/*
 		Return the canonical URI for this template's minified JavaScript file.
 	*/
-		if (!$this->jsMinURI && !$this->jsURI)
-		{
+		if ( ! $this->js_min_uri && ! $this->js_uri ) {
 			$this->canonicalize();
 		}
 		
-		if (!$this->jsMinURI && $this->jsURI)
-		{
-			return $this->jsURI;
+		if ( ! $this->js_min_uri && $this->js_uri ) {
+			return $this->js_uri;
 		}
-		else
-		{
-			return $this->jsMinURI;
+		else {
+			return $this->js_min_uri;
 		}
 	}
 	
-	public function cssURI()
-	{
+	public function css_uri() {
 	/*
 		Return the canonical URI for this template's PHP file.
 	*/
-		if (!$this->cssURI)
-		{
+		if ( ! $this->css_uri ) {
 			$this->canonicalize();
 		}
 		
-		return $this->cssURI;	
+		return $this->css_uri;	
 		
 	}
 	
 	/***********	// !Metadata accessor methods		***********/
 	
-	public function name()
-	{
+	public function name() {
 	/*
 		Return the friendly name for this template.
 	*/	
 	
-		if ($this->mdName)
-		{
-			return $this->mdName; // caching
+		if ( $this->md_name ) {
+			return $this->md_name; // caching
 		}
 	
-		if (!$this->templateFile)
-		{
-			if (!$this->cssPath())
-			{
+		if ( ! $this->template_file ) {
+			if ( ! $this->css_path() ) {
 				return $this->slug;
 			}
-			$this->templateFile = @file_get_contents($this->cssPath());	
+			$this->template_file = @file_get_contents( $this->css_path() );
 		}
 		
 		// extract the template name
 		$matches = array();
-		preg_match('/^\s*Template\sName:\s*(.*)/im', $this->templateFile, $matches);
+		preg_match( '/^\s*Template\sName:\s*(.*)/im', $this->template_file, $matches );
 
-		if ($matches && count($matches) > 1)
-		{
-			$this->mdName = $matches[1];
-			return $this->mdName;
+		if ( $matches && count( $matches ) > 1 ) {
+			$this->md_name = $matches[1];
+			return $this->md_name;
 		}
 		else {
-			if ($this->location == 'legacy')
-			{
-				return __('v1.0 Custom Template', 'total_slider');
+			if ( $this->location == 'legacy' ) {
+				return __( 'v1.0 Custom Template', 'total_slider' );
 			}
 			else {
 				return $this->slug;
@@ -736,33 +665,28 @@ class Total_Slider_Template {
 		
 	}
 	
-	public function uri()
-	{
+	public function uri() {
 	/*
 		Return the Template URI metadata for this template.
 	*/	
-		if ($this->mdURI)
-		{
-			return $this->mdURI; // caching
+		if ( $this->md_uri ) {
+			return $this->md_uri; // caching
 		}
 	
-		if (!$this->templateFile)
-		{
-			if (!$this->cssPath())
-			{
+		if ( ! $this->template_file ) {
+			if ( ! $this->css_path() ) {
 				return false;
 			}
-			$this->templateFile = @file_get_contents($this->cssPath());	
+			$this->template_file = @file_get_contents( $this->css_path() );
 		}
 		
 		// extract the template name
 		$matches = array();
-		preg_match('/^\s*Template\sURI:\s*(.*)/im', $this->templateFile, $matches);
+		preg_match( '/^\s*Template\sURI:\s*(.*)/im', $this->template_file, $matches );
 
-		if ($matches && count($matches) > 1)
-		{
-			$this->mdURI = $matches[1];
-			return $this->mdURI;
+		if ( $matches && count( $matches ) > 1 ) {
+			$this->md_uri = $matches[1];
+			return $this->md_uri;
 		}
 		else {
 			return false;			
@@ -770,33 +694,28 @@ class Total_Slider_Template {
 		
 	}
 
-	public function description()
-	{
+	public function description() {
 	/*
 		Return the Template URI metadata for this template.
 	*/	
-		if ($this->mdDescription)
-		{
-			return $this->mdDescription; // caching
+		if ( $this->md_description ) {
+			return $this->md_description; // caching
 		}
 	
-		if (!$this->templateFile)
-		{
-			if (!$this->cssPath())
-			{
+		if ( ! $this->template_file ) {
+			if ( ! $this->css_path() ) {
 				return false;
 			}
-			$this->templateFile = @file_get_contents($this->cssPath());	
+			$this->template_file = @file_get_contents( $this->css_path() );
 		}
 		
 		// extract the template name
 		$matches = array();
-		preg_match('/^\s*Description:\s*(.*)/im', $this->templateFile, $matches);
+		preg_match( '/^\s*Description:\s*(.*)/im', $this->template_file, $matches );
 
-		if ($matches && count($matches) > 1)
-		{
-			$this->mdDescription = $matches[1];
-			return $this->mdDescription;
+		if ( $matches && count( $matches ) > 1 ) {
+			$this->md_description = $matches[1];
+			return $this->md_description;
 		}
 		else {
 			return false;			
@@ -804,33 +723,28 @@ class Total_Slider_Template {
 		
 	}
 	
-	public function version()
-	{
+	public function version() {
 	/*
 		Return the version number for this template.
 	*/	
-		if ($this->mdVersion)
-		{
-			return $this->mdVersion; // caching
+		if ( $this->md_version ) {
+			return $this->md_version; // caching
 		}
 	
-		if (!$this->templateFile)
-		{
-			if (!$this->cssPath())
-			{
+		if ( ! $this->template_file ) {
+			if ( ! $this->css_path() ) {
 				return false;
 			}
-			$this->templateFile = @file_get_contents($this->cssPath());	
+			$this->template_file = @file_get_contents( $this->css_path() );
 		}
 		
 		// extract the template name
 		$matches = array();
-		preg_match('/^\s*Version:\s*(.*)/im', $this->templateFile, $matches);
+		preg_match( '/^\s*Version:\s*(.*)/im', $this->template_file, $matches );
 
-		if ($matches && count($matches) > 1)
-		{
-			$this->mdVersion = $matches[1];
-			return $this->mdVersion;
+		if ( $matches && count( $matches ) > 1 ) {
+			$this->md_version = $matches[1];
+			return $this->md_version;
 		}
 		else {
 			return false;			
@@ -838,33 +752,28 @@ class Total_Slider_Template {
 		
 	}
 	
-	public function author()
-	{
+	public function author() {
 	/*
 		Return the author name for this template.
 	*/	
-		if ($this->mdAuthor)
-		{
-			return $this->mdAuthor; // caching
+		if ( $this->md_author ) {
+			return $this->md_author; // caching
 		}
 	
-		if (!$this->templateFile)
-		{
-			if (!$this->cssPath())
-			{
+		if ( ! $this->template_file ) {
+			if ( ! $this->css_path() ) {
 				return false;
 			}
-			$this->templateFile = @file_get_contents($this->cssPath());	
+			$this->template_file = @file_get_contents( $this->css_path() );
 		}
 		
 		// extract the template name
 		$matches = array();
-		preg_match('/^\s*Author:\s*(.*)/im', $this->templateFile, $matches);
+		preg_match( '/^\s*Author:\s*(.*)/im', $this->template_file, $matches );
 
-		if ($matches && count($matches) > 1)
-		{
-			$this->mdAuthor = $matches[1];
-			return $this->mdAuthor;
+		if ( $matches && count( $matches ) > 1) {
+			$this->md_author = $matches[1];
+			return $this->md_author;
 		}
 		else {
 			return false;			
@@ -872,33 +781,28 @@ class Total_Slider_Template {
 		
 	}
 	
-	public function authorURI()
-	{
+	public function author_uri() {
 	/*
 		Return the author URI for this template.
 	*/	
-		if ($this->mdAuthorURI)
-		{
-			return $this->mdAuthorURI; // caching
+		if ( $this->md_author_uri ) {
+			return $this->md_author_uri; // caching
 		}
 	
-		if (!$this->templateFile)
-		{
-			if (!$this->cssPath())
-			{
+		if ( ! $this->template_file ) {
+			if ( ! $this->css_path() ) {
 				return false;
 			}
-			$this->templateFile = @file_get_contents($this->cssPath());	
+			$this->template_file = @file_get_contents( $this->css_path() );
 		}
 		
 		// extract the template name
 		$matches = array();
-		preg_match('/^\s*Author\s*URI:\s*(.*)/im', $this->templateFile, $matches);
+		preg_match( '/^\s*Author\s*URI:\s*(.*)/im', $this->template_file, $matches );
 
-		if ($matches && count($matches) > 1)
-		{
-			$this->mdAuthorURI = $matches[1];
-			return $this->mdAuthorURI;
+		if ( $matches && count( $matches ) > 1 ) {
+			$this->md_author_uri = $matches[1];
+			return $this->md_author_uri;
 		}
 		else {
 			return false;			
@@ -906,33 +810,28 @@ class Total_Slider_Template {
 		
 	}
 	
-	public function license()
-	{
+	public function license() {
 	/*
 		Return the license metadata for this template.
 	*/	
-		if ($this->mdLicense)
-		{
-			return $this->mdLicense; // caching
+		if ( $this->md_license ) {
+			return $this->md_license; // caching
 		}
 	
-		if (!$this->templateFile)
-		{
-			if (!$this->cssPath())
-			{
+		if ( ! $this->template_file ) {
+			if ( ! $this->css_path() ) {
 				return false;
 			}
-			$this->templateFile = @file_get_contents($this->cssPath());	
+			$this->template_file = @file_get_contents( $this->css_path() );
 		}
 		
 		// extract the template name
 		$matches = array();
-		preg_match('/^\s*License:\s*(.*)/im', $this->templateFile, $matches);
+		preg_match( '/^\s*License:\s*(.*)/im', $this->template_file, $matches );
 
-		if ($matches && count($matches) > 1)
-		{
-			$this->mdLicense = $matches[1];
-			return $this->mdLicense;
+		if ( $matches && count( $matches ) > 1 ) {
+			$this->md_license = $matches[1];
+			return $this->md_license;
 		}
 		else {
 			return false;			
@@ -940,33 +839,28 @@ class Total_Slider_Template {
 		
 	}
 	
-	public function licenseURI()
-	{
+	public function license_uri() {
 	/*
 		Return the license URI for this template.
 	*/	
-		if ($this->mdLicenseURI)
-		{
-			return $this->mdLicenseURI; // caching
+		if ( $this->md_license_uri ) {
+			return $this->md_license_uri; // caching
 		}
 	
-		if (!$this->templateFile)
-		{
-			if (!$this->cssPath())
-			{
+		if ( ! $this->template_file ) {
+			if ( ! $this->css_path() ) {
 				return false;
 			}
-			$this->templateFile = @file_get_contents($this->cssPath());	
+			$this->template_file = @file_get_contents( $this->css_path() );
 		}
 		
 		// extract the template name
 		$matches = array();
-		preg_match('/^\s*License\s*URI:\s*(.*)/im', $this->templateFile, $matches);
+		preg_match( '/^\s*License\s*URI:\s*(.*)/im', $this->template_file, $matches );
 
-		if ($matches && count($matches) > 1)
-		{
-			$this->mdLicenseURI = $matches[1];
-			return $this->mdLicenseURI;
+		if ( $matches && count( $matches ) > 1 ) {
+			$this->md_license_uri = $matches[1];
+			return $this->md_license_uri;
 		}
 		else {
 			return false;			
@@ -974,35 +868,30 @@ class Total_Slider_Template {
 		
 	}
 	
-	public function tags()
-	{
+	public function tags() {
 	/*
 		Return the license URI for this template.
 	*/	
-		if ($this->mdTags)
-		{
-			return $this->mdTags; // caching
+		if ( $this->md_tags ) {
+			return $this->md_tags; // caching
 		}
 	
-		if (!$this->templateFile)
-		{
-			if (!$this->cssPath())
-			{
+		if ( ! $this->template_file ) {
+			if ( ! $this->css_path() ) {
 				return false;
 			}
-			$this->templateFile = @file_get_contents($this->cssPath());	
+			$this->template_file = @file_get_contents( $this->css_path() );
 		}
 		
 		// extract the template name
 		$matches = array();
-		preg_match('/^\s*Tags:\s*(.*)/im', $this->templateFile, $matches);
+		preg_match( '/^\s*Tags:\s*(.*)/im', $this->template_file, $matches );
 
-		if ($matches && count($matches) > 1)
-		{
-			$this->mdTags = $matches[1];
-			$this->mdTags = explode(',', $this->mdTags);
+		if ( $matches && count( $matches ) > 1 ) {
+			$this->md_tags = $matches[1];
+			$this->md_tags = explode(',', $this->md_tags);
 			
-			return $this->mdTags;
+			return $this->md_tags;
 		}
 		else {
 			return false;			
@@ -1010,8 +899,7 @@ class Total_Slider_Template {
 		
 	}
 	
-	public function determineOptions()
-	{
+	public function determine_options() {
 	/*
 		Determine the desired crop height and crop width for the background image, as well as other options, including
 		disabling X/Y positioning in admin.
@@ -1030,86 +918,76 @@ class Total_Slider_Template {
 
 	*/
 
-		if (isset($this->options) && is_array($this->options) && count($this->options) > 0)
-		{
+		if ( isset( $this->options ) && is_array( $this->options ) && count( $this->options ) > 0 ) {
 			// cache results
 			return $this->options;
 		}
 		
-		if (!$this->templatePHPFile)
-		{
-			if (!$this->phpPath())
-			{
+		if ( ! $this->template_php_file ) {
+			if ( ! $this->php_path() ) {
 				return false;
 			}
-			$this->templatePHPFile = @file_get_contents($this->phpPath());	
+			$this->template_php_file = @file_get_contents( $this->php_path() );
 		}
 
-		if ($this->templatePHPFile !== false)
-		{
+		if ( $this->template_php_file !== false ) {
 			// look for Crop-Suggested-Width: xx directive
 			$matches = array();
-			preg_match('/^\s*Crop\-Suggested\-Width:\s*([0-9]+)/im', $this->templatePHPFile, $matches);
-			if (count($matches) == 2)
-			{
-				if (intval($matches[1]) == $matches[1])
-				{
-					$cropWidth = intval( $matches[1] );
+			preg_match( '/^\s*Crop\-Suggested\-Width:\s*([0-9]+)/im', $this->template_php_file, $matches );
+			if ( 2 == count( $matches ) ) {
+				if ( intval( $matches[1] ) == $matches[1] ) {
+					$crop_width = intval( $matches[1] );
 				}
 				else {
-					$cropWidth = TOTAL_SLIDER_DEFAULT_CROP_WIDTH;
+					$crop_width = TOTAL_SLIDER_DEFAULT_CROP_WIDTH;
 				}
 			}
 			else {
-				$cropWidth = TOTAL_SLIDER_DEFAULT_CROP_WIDTH;
+				$crop_width = TOTAL_SLIDER_DEFAULT_CROP_WIDTH;
 			}
 
 			// look for Crop-Suggested-Height: xx directive
 			$matches = array();
-			preg_match('/^\s*Crop\-Suggested\-Height:\s*([0-9]+)/im', $this->templatePHPFile, $matches);
-			if (count($matches) == 2)
-			{
-				if (intval($matches[1]) == $matches[1])
-				{
-					$cropHeight = intval( $matches[1] );
+			preg_match( '/^\s*Crop\-Suggested\-Height:\s*([0-9]+)/im', $this->template_php_file, $matches );
+			if ( 2 == count( $matches ) ) {
+				if ( intval( $matches[1] ) == $matches[1] ) {
+					$crop_height = intval( $matches[1] );
 				}
 				else {
-					$cropHeight = TOTAL_SLIDER_DEFAULT_CROP_HEIGHT;
+					$crop_height = TOTAL_SLIDER_DEFAULT_CROP_HEIGHT;
 				}
 			}
 			else {
-				$cropHeight = TOTAL_SLIDER_DEFAULT_CROP_HEIGHT;
+				$crop_height = TOTAL_SLIDER_DEFAULT_CROP_HEIGHT;
 			}
 
 			// look for Disable-XY-Positioning-In-Admin directive
 			$matches = array();
-			preg_match('/^\s*Disable\-XY\-Positioning\-In\-Admin:\s*(Yes|No|On|Off|1|0|True|False)/im', $this->templatePHPFile, $matches);
-			$affirmativeResponses = array('yes', 'on', '1', 'true');
-			//$negativeResponses = array('no', 'off', '0', 'false');
+			preg_match( '/^\s*Disable\-XY\-Positioning\-In\-Admin:\s*(Yes|No|On|Off|1|0|True|False)/im', $this->template_php_file, $matches );
+			$affirmative_responses = array( 'yes', 'on', '1', 'true' );
+			//$negative_responses = array( 'no', 'off', '0', 'false' );
 
-			if (count($matches) == 2)
-			{
-				if (in_array(strtolower($matches[1]), $affirmativeResponses))
-				{
-					$disableXY = true;
+			if ( 2 == count( $matches ) ) {
+				if ( in_array( strtolower( $matches[1] ), $affirmative_responses ) ) {
+					$disable_xy = true;
 				}
 				else {
-					$disableXY = false;
+					$disable_xy = false;
 				}
 			}
 			else {
-				$disableXY = false;
+				$disable_xy = false;
 			}
 
 		}
 		else {
-			$cropWidth = TOTAL_SLIDER_DEFAULT_CROP_WIDTH;
-			$cropHeight = TOTAL_SLIDER_DEFAULT_CROP_HEIGHT;
-			$disableXY = false;
+			$crop_width = TOTAL_SLIDER_DEFAULT_CROP_WIDTH;
+			$crop_height = TOTAL_SLIDER_DEFAULT_CROP_HEIGHT;
+			$disable_xy = false;
 		}
 
 		// cache results in global $templateOptions
-		$this->options = array('crop_width' => $cropWidth, 'crop_height' => $cropHeight, 'disable_xy' => $disableXY);
+		$this->options = array( 'crop_width' => $crop_width, 'crop_height' => $crop_height, 'disable_xy' => $disable_xy );
 		return $this->options;
 				
 	}
@@ -1129,8 +1007,7 @@ class Total_Slider_Widget_Templater
 
 	//NOTE: the FE format for these tokens is not finalised and is placeholder only
 
-	public function slides_count()
-	{
+	public function slides_count() {
 	/*
 		Return the number of slides in this slide group.
 
@@ -1142,8 +1019,7 @@ class Total_Slider_Widget_Templater
 
 	}
 	
-	public function is_runtime()
-	{
+	public function is_runtime() {
 	/*
 		Allows the template to be aware of whether it is running at runtime (viewing as part of the
 		actual site): 'true', or at edit-time (the user is editing slides in the admin interface, and
@@ -1155,8 +1031,7 @@ class Total_Slider_Widget_Templater
 	}
 
 
-	public function has_slides()
-	{
+	public function has_slides() {
 	/*
 		For our purposes, we want the slide previewer to load the template for one slide only.
 	*/
@@ -1171,8 +1046,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function the_title()
-	{
+	public function the_title() {
 	/*
 		Print the slide title token to output.
 	*/
@@ -1181,8 +1055,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function get_the_title()
-	{
+	public function get_the_title() {
 	/*
 		Return the slide title token.
 	*/
@@ -1191,8 +1064,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function the_description()
-	{
+	public function the_description() {
 	/*
 		Print the slide description token.
 	*/
@@ -1201,8 +1073,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function get_the_description()
-	{
+	public function get_the_description() {
 	/*
 		Return the slide description token.
 	*/
@@ -1211,8 +1082,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function the_background_url()
-	{
+	public function the_background_url() {
 	/*
 		Print the background URL token.
 	*/
@@ -1221,8 +1091,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function get_the_background_url()
-	{
+	public function get_the_background_url() {
 	/*
 		Return the background URL token.
 	*/
@@ -1231,8 +1100,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function the_link()
-	{
+	public function the_link() {
 	/*
 		Print the slide link token.
 	*/
@@ -1241,8 +1109,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function get_the_link()
-	{
+	public function get_the_link() {
 	/*
 		Return the slide link token.
 	*/
@@ -1251,8 +1118,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function the_x()
-	{
+	public function the_x() {
 	/*
 		Print the X coordinate token.
 	*/
@@ -1261,8 +1127,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function get_the_x()
-	{
+	public function get_the_x() {
 	/*
 		Return the X coordinate token.
 	*/
@@ -1271,8 +1136,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function the_y()
-	{
+	public function the_y() {
 	/*
 		Print the Y coordinate token.
 	*/
@@ -1281,8 +1145,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function get_the_y()
-	{
+	public function get_the_y() {
 	/*
 		Return the Y coordinate token.
 	*/
@@ -1291,8 +1154,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function the_identifier()
-	{
+	public function the_identifier() {
 	/*
 		Print the slide identifier token.
 	*/
@@ -1301,8 +1163,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function get_the_identifier()
-	{
+	public function get_the_identifier() {
 	/*
 		Return the slide identifier token.
 	*/
@@ -1311,8 +1172,7 @@ class Total_Slider_Widget_Templater
 
 	}
 
-	public function iteration()
-	{
+	public function iteration() {
 	/*
 		Return the iteration number. How many slides have we been through?
 	*/
@@ -1324,8 +1184,7 @@ class Total_Slider_Widget_Templater
 
 	}
 	
-	public function make_draggable()
-	{
+	public function make_draggable() {
 	/*
 		Outputs a class that in edit-time mode makes the object draggable (for X/Y positioning
 		of the title/description overlay).
@@ -1339,8 +1198,7 @@ class Total_Slider_Widget_Templater
 		
 	}	
 	
-	public function draggable_parent()
-	{
+	public function draggable_parent() {
 	/*
 		Outputs a class that in edit-time mode makes the object the draggable's parent. This
 		will be used to calculate the X/Y offset for the title/description box.
@@ -1369,7 +1227,7 @@ class Total_Slider_Template_Iterator {
 	inspection to the Total_Slider_Template class (e.g. more metadata parsing).
 */
 
-	public function discoverTemplates($location, $shouldParseName = true) {
+	public function discover_templates($location, $should_parse_name = true) {
 	/*
 		Discovers the template files that are available in the given location (one of 'builtin',
 		'theme', 'downloaded', 'legacy'.
@@ -1377,27 +1235,25 @@ class Total_Slider_Template_Iterator {
 		Returns an array of the template slugs and names, which can be used for further inspection by
 		instantiating the Total_Slider_Template class with the slug and location.
 	*/
-		global $allowedTemplateLocations;
+		global $allowed_template_locations;
 		
-		if (!is_array($allowedTemplateLocations))
-		{
-			throw new UnexpectedValueException(__('The allowed template locations are not available. This file must not be loaded without slide_group.php', 'total_slider'), 103);
+		if ( ! is_array( $allowed_template_locations ) ) {
+			throw new UnexpectedValueException( __( 'The allowed template locations are not available. This file must not be loaded without slide_group.php', 'total_slider' ), 103 );
 			return false;
 		}
 		
 		// check the location given is valid	
-		if (!in_array($location, $allowedTemplateLocations))
-		{
-			throw new UnexpectedValueException(__('The supplied template location is not one of the allowed template locations', 'total_slider'), 101);
+		if ( ! in_array( $location, $allowed_template_locations ) ) {
+			throw new UnexpectedValueException( __( 'The supplied template location is not one of the allowed template locations', 'total_slider' ), 101 );
 			return false;
 		}
 		
 		// what path(s) should we walk?
 		$paths = array();
 		
-		$cssName = 'style.css';
+		$css_name = 'style.css';
 		
-		switch ($location) {
+		switch ( $location ) {
 			
 			case 'builtin':
 				$paths[] = plugin_dir_path( dirname(__FILE__) ) . '/' . TOTAL_SLIDER_TEMPLATES_BUILTIN_DIR . '/';
@@ -1406,14 +1262,13 @@ class Total_Slider_Template_Iterator {
 			case 'theme':
 				$paths[] = get_stylesheet_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
 				
-				if (get_stylesheet_directory() != get_template_directory())
+				if ( get_stylesheet_directory() != get_template_directory() )
 					$paths[] = get_template_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR .'/';				
 			break;
 			
 			case 'downloaded':
-				if (!defined('WP_CONTENT_DIR'))
-				{
-					throw new UnexpectedValueException(__('Unable to determine the WP_CONTENT_DIR, so cannot find relevant templates.', 'total_slider'), 102);
+				if ( ! defined('WP_CONTENT_DIR') ) {
+					throw new UnexpectedValueException(__( 'Unable to determine the WP_CONTENT_DIR, so cannot find relevant templates.', 'total_slider' ), 102 );
 					return false;					
 				}
 				
@@ -1425,26 +1280,23 @@ class Total_Slider_Template_Iterator {
 			case 'legacy':
 				$path = get_stylesheet_directory() . '/' . TOTAL_SLIDER_TEMPLATES_DIR . '/';
 				
-				if (!@file_exists($path) || !@is_dir($path) ) {
+				if ( ! @file_exists( $path ) || ! @is_dir( $path) ) {
 					return false;
 				}
 				
-				$files = @scandir($path);
+				$files = @scandir( $path );
 				
-				if (!$files)
-				{
+				if ( ! $files )	{
 					return false;
 				}
 				
-				foreach($files as $f)
-				{
+				foreach( $files as $f ) {
 					$templates = array();
 					$i = 0;
 					
-					if ($f == 'total-slider-template.php' )
-					{
-						$templates[$i]['slug'] = Total_Slider_Template::sanitizeSlug(basename($f));
-						$templates[$i]['name'] = __('v1.0 Custom Template', 'total_slider');
+					if ( 'total-slider-template.php' == $f ) {
+						$templates[$i]['slug'] = Total_Slider_Template::sanitize_slug(basename($f));
+						$templates[$i]['name'] = __( 'v1.0 Custom Template', 'total_slider' );
 						return $templates;
 					}
 				}
@@ -1463,44 +1315,38 @@ class Total_Slider_Template_Iterator {
 		$i = 0;
 		
 		// walk the walk
-		foreach($paths as $key => $path)
-		{
-			if (!@file_exists($path) || !@is_dir($path) ) {
+		foreach( $paths as $key => $path ) {
+			if ( ! @file_exists( $path ) || ! @is_dir( $path ) ) {
 				continue;
 			}
 			
-			$files = @scandir($path);
+			$files = @scandir( $path );
 			
-			if (!$files)
-			{
+			if ( ! $files )	{
 				continue;
 			}
 			
-			foreach($files as $f)
-			{
+			foreach( $files as $f ) {
 			
-				if ($f == '.' || $f == '..')
+				if ( '.' == $f || '..' == $f )
 					continue;
 			
-				if (@is_dir($path . '/' . $f))
-				{			
-					if (@file_exists($path . '/' . $f . '/' . $cssName ))
-					{
+				if ( @is_dir( $path . '/' . $f ) ) {			
+					if ( @file_exists( $path . '/' . $f . '/' . $css_name ) ) {
 					
-						if ($shouldParseName) {
+						if ( $should_parse_name ) {
 					
-							$tplContent = @file_get_contents( $path . '/' . $f . '/' . $cssName );
+							$tpl_content = @file_get_contents( $path . '/' . $f . '/' . $css_name );
 						
 							// extract the template name
 							$matches = array();
-							preg_match('/^\s*Template\sName:\s*(.*)/im', $tplContent, $matches);
+							preg_match( '/^\s*Template\sName:\s*(.*)/im', $tpl_content, $matches );
 							
-							unset($tplContent);
+							unset($tpl_content);
 							
-							$templates[$i]['slug'] = Total_Slider_Template::sanitizeSlug(basename($f));
+							$templates[$i]['slug'] = Total_Slider_Template::sanitize_slug( basename( $f ) );
 							
-							if ($matches && count($matches) > 1)
-							{
+							if ( $matches && count( $matches ) > 1 ) {
 								$templates[$i]['name'] = $matches[1];
 							}
 							
@@ -1509,9 +1355,9 @@ class Total_Slider_Template_Iterator {
 						}
 						else {
 						
-							$templates[$i]['slug'] = Total_Slider_Template::sanitizeSlug(basename($f));
+							$templates[$i]['slug'] = Total_Slider_Template::sanitize_slug( basename( $f ) );
 							++$i;
-														
+
 						}
 						
 					}
