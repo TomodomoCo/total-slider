@@ -345,7 +345,7 @@ class Total_Slider {
 		ob_start();
 		
 		the_widget( 'Total_Slider_Widget', array(
-											'group_slug' => Total_Slider::sanitize_slide_group_slug($group)
+											'groupSlug' => Total_Slider::sanitize_slide_group_slug($group)
 											) );
 		
 		$output = ob_get_contents();
@@ -978,59 +978,59 @@ class Total_Slider {
 		<div id="icon-total-slides" class="icon32"><br /></div><h2><?php _e( 'Slide Groups', 'total_slider' );?> <a href="#" id="new-slide-group-button" class="add-new-h2"><?php _e( 'Add New', 'total_slider' );?></a></h2>
 
 		<noscript>
-		<h3><?php _e('Sorry, this interface requires JavaScript to function.', 'total_slider');?></h3>
-		<p><?php _e('You will need to enable JavaScript for this page before many of the controls below will work.', 'total_slider');?></p>
+		<h3><?php _e( 'Sorry, this interface requires JavaScript to function.', 'total_slider' ); ?></h3>
+		<p><?php _e( 'You will need to enable JavaScript for this page before many of the controls below will work.', 'total_slider' );?></p>
 		</noscript>
 
 		<div id="new-slide-group">
 			<form name="new-slide-group-form" id="new-slide-group-form" method="post" action="admin.php?page=total-slider&action=new_slide_group">
-				<h3 id="new-slide-group-header"><?php _e('Add a Slide Group', 'total_slider');?></h3>
-				<?php wp_nonce_field('new-slide-group');?>
+				<h3 id="new-slide-group-header"><?php _e( 'Add a Slide Group', 'total_slider' ); ?></h3>
+				<?php wp_nonce_field( 'new-slide-group' );?>
 				<table class="form-table" style="max-width:690px">
 
 					<tr class="form-field form-required">
-						<th scope="row"><label for="group-name"><?php _e('Group Name', 'total_slider');?></label></th>
+						<th scope="row"><label for="group-name"><?php _e( 'Group Name', 'total_slider' ); ?></label></th>
 						<td><input name="group-name" type="text" id="group-name" value="" /></td>
 					</tr>
 					<tr class="form-field form-required">
-						<th scope="row"><label for="template-slug"><?php _e('Template', 'total_slider');?></label></th>
+						<th scope="row"><label for="template-slug"><?php _e( 'Template', 'total_slider' ); ?></label></th>
 						<td>
 							<?php $t = new Total_Slider_Template_Iterator(); ?>
 							<select name="template-slug" id="template-slug">
 								
-								<?php $builtin = $t->discoverTemplates('builtin'); ?>
-								<?php if (is_array($builtin) && count($builtin) > 0): ?>
-								<optgroup label="<?php _e('Built-in', 'total_slider');?>">
-									<?php foreach($builtin as $tpl): ?>
-										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
+								<?php $builtin = $t->discover_templates( 'builtin' ); ?>
+								<?php if ( is_array( $builtin ) && count( $builtin ) > 0 ): ?>
+								<optgroup label="<?php _e( 'Built-in', 'total_slider' );?>">
+									<?php foreach( $builtin as $tpl ): ?>
+										<option value="<?php echo esc_attr( $tpl['slug'] ); ?>"><?php echo esc_html( $tpl['name'] ); ?></option>
 									<?php endforeach; ?>
 								</optgroup>
 								<?php endif; ?>
 								
-								<?php $theme = $t->discoverTemplates('theme'); ?>
-								<?php if (is_array($theme) && count($theme) > 0): ?>
-								<optgroup label="<?php _e('Theme', 'total_slider');?>">
+								<?php $theme = $t->discover_templates( 'theme' ); ?>
+								<?php if ( is_array( $theme ) && count( $theme ) > 0 ): ?>
+								<optgroup label="<?php _e( 'Theme', 'total_slider' ); ?>">
 									<?php foreach($theme as $tpl): ?>
-										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
+										<option value="<?php echo esc_attr( $tpl['slug' ]); ?>"><?php echo esc_html( $tpl['name'] ); ?></option>
 									<?php endforeach; ?>
 								</optgroup>
 								<?php endif; ?>
 								
-								<?php $legacy = $t->discoverTemplates('legacy', false); ?>
-								<?php if (is_array($legacy) && count($legacy) > 0): ?>
-								<optgroup label="<?php _e('v1.0 Templates', 'total_slider');?>">
+								<?php $legacy = $t->discover_templates( 'legacy', false ); ?>
+								<?php if ( is_array( $legacy ) && count( $legacy ) > 0 ): ?>
+								<optgroup label="<?php _e( 'v1.0 Templates', 'total_slider' ); ?>">
 									<?php foreach($legacy as $tpl): ?>
-										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
+										<option value="<?php echo esc_attr( $tpl['slug'] ); ?>"><?php echo esc_html( $tpl['name'] ); ?></option>
 									<?php endforeach; ?>
 								</optgroup>								
 								<?php endif; ?>
 						
-								<?php //$downloaded = $t->discoverTemplates('downloaded'); ?>
+								<?php //$downloaded = $t->discover_templates( 'downloaded' ); ?>
 								<?php $downloaded = false; ?>
-								<?php if (is_array($downloaded) && count($downloaded) > 0): ?>
-								<!--<optgroup label="<?php _e('Downloaded', 'total_slider');?>">
-									<?php foreach($downloaded as $tpl): ?>
-										<option value="<?php echo esc_attr($tpl['slug']);?>"><?php echo esc_html($tpl['name']);?></option>
+								<?php if ( is_array( $downloaded ) && count( $downloaded ) > 0 ): ?>
+								<!--<optgroup label="<?php _e( 'Downloaded', 'total_slider' ); ?>">
+									<?php foreach( $downloaded as $tpl ): ?>
+										<option value="<?php echo esc_attr( $tpl['slug'] ); ?>"><?php echo esc_html( $tpl['name'] ); ?></option>
 									<?php endforeach; ?>																
 								</optgroup>	-->
 								<?php endif; ?>
@@ -1039,22 +1039,22 @@ class Total_Slider {
 						</td>
 					</tr>
 				</table>
-				<p class="submit"><input type="submit" class="button-primary" value="<?php _e('Add Slide Group', 'total_slider');?>"  />
-				<input type="button" id="new-slide-group-cancel" class="button-secondary" value="<?php _e('Cancel', 'total_slider');?>" /></p></form>
+				<p class="submit"><input type="submit" class="button-primary" value="<?php _e( 'Add Slide Group', 'total_slider' ); ?>"  />
+				<input type="button" id="new-slide-group-cancel" class="button-secondary" value="<?php _e( 'Cancel', 'total_slider' ); ?>" /></p></form>
 			</form>
 		</div>
 
 		<div id="poststuff">
-			<div class="metabox-holder columns-2<?php /*VPM_33x_CONDITIONAL*/ echo (defined('TOTAL_SLIDER_33x_WORKAROUND')) ? ' has-right-sidebar' : ''; ?>">
+			<div class="metabox-holder columns-2<?php /*VPM_33x_CONDITIONAL*/ echo ( defined( 'TOTAL_SLIDER_33x_WORKAROUND' ) ) ? ' has-right-sidebar' : ''; ?>">
 
 				<div class="inner-sidebar" id="postbox-container-1">
-					<?php do_meta_boxes('_total_slider_slide_groups', 'side', null);?>
+					<?php do_meta_boxes( '_total_slider_slide_groups', 'side', null ); ?>
 				</div>
 
 				<div id="post-body" class="columns-2"><div id="post-body-content">
-				<form id="slide-groups-bulk-actions" method="post" action="admin.php?page=total-slider" onsubmit="if (jQuery('.slide-group-checkbox:checked').length > 0 && jQuery('option[value=remove]:selected').length > 0) { return confirm('<?php _e('Are you sure you want to delete these slide groups?\n\nThis action cannot be undone.', 'total_slider');?>'); }">
-					<input type="hidden" name="_bulk_wpnonce" value="<?php echo wp_create_nonce('remove-bulk-slide-group');?>" />
-					<?php require_once( dirname( __FILE__ ) . '/includes/slide_groups_table.php');
+				<form id="slide-groups-bulk-actions" method="post" action="admin.php?page=total-slider" onsubmit="if ( jQuery('.slide-group-checkbox:checked').length > 0 && jQuery('option[value=remove]:selected').length > 0) { return confirm('<?php _e( 'Are you sure you want to delete these slide groups?\n\nThis action cannot be undone.', 'total_slider' );?>'); }">
+					<input type="hidden" name="_bulk_wpnonce" value="<?php echo wp_create_nonce( 'remove-bulk-slide-group' ); ?>" />
+					<?php require_once( dirname( __FILE__ ) . '/includes/slide_groups_table.php' );
 					$table = new Slide_Groups_Table();
 					$table->prepare_items();
 					$table->display();
@@ -1069,79 +1069,78 @@ class Total_Slider {
 		<?php
 	}
 
-	public static function printSlidesPage() {
+	public static function print_slides_page() {
 	/*
 		Print the actual slides page for adding, editing and removing the slides.
 	*/
 
-		global $TS_The_Slug, $TS_The_Tpl_Error, $allowedTemplateLocations, $TS_The_Template;
+		global $TS_The_Slug, $TS_The_Tpl_Error, $allowed_template_locations, $TS_The_Template;
 
 		// permissions check
-		if (!current_user_can(TOTAL_SLIDER_REQUIRED_CAPABILITY))
+		if ( ! current_user_can( TOTAL_SLIDER_REQUIRED_CAPABILITY ) )
 		{
-			?><h1><?php _e('This page is not accessible to your user.', 'total_slider');?></h1><?php
+			?><h1><?php _e( 'This page is not accessible to your user.', 'total_slider' ); ?></h1><?php
 			return;
 		}
 
-		$TS_The_Slug = Total_Slider::sanitizeSlideGroupSlug($_GET['group']);
-		if (empty($TS_The_Slug))
-		{
+		$TS_The_Slug = Total_Slider::sanitize_slide_group_slug( $_GET['group'] );
+
+		if ( empty( $TS_The_Slug ) ) {
 			echo '<div class="wrap"><h1>';
-			_e('No Slide Group selected.', 'total_slider');
+			_e( 'No Slide Group selected.', 'total_slider' );
 			echo '</h1></div>';
 			return;
 		}
 
 		// get the name data for this slide group based on its slug
-		$slideGroup = new Total_Slide_Group($_GET['group']);
-		if (!$slideGroup->load())
-		{
+		$slide_group = new Total_Slide_Group( $TS_The_Slug );
+		
+		if ( ! $slide_group->load() ) {
 			echo '<div class="wrap"><h1>';
-			_e('Could not load the selected Slide Group. Does it exist?', 'total_slider');
+			_e( 'Could not load the selected Slide Group. Does it exist?', 'total_slider' );
 			echo '</h1></div>';
 			return;
 		}
 		
 		// determine and load template
-		if (!$TS_The_Template || !is_a($TS_The_Template, 'Total_Slider_Template'))
+		if ( ! $TS_The_Template || ! is_a( $TS_The_Template, 'Total_Slider_Template' ) )
 		{
-			Total_Slider::determineTemplate();
+			Total_Slider::determine_template();
 		}
 		
-		if (strtolower($_SERVER['REQUEST_METHOD']) == 'post' && array_key_exists('action', $_GET) && $_GET['action'] == 'changeTemplate') {
+		if (
+			'post' == strtolower( $_SERVER['REQUEST_METHOD'] ) &&
+			array_key_exists( 'action', $_GET ) &&
+			'changeTemplate' == $_GET['action']
+		) {
 			
 			// change the template and redirect
-			if (!wp_verify_nonce($_POST['total-slider-change-template-nonce'], 'total-slider-change-template')) {
-				die(__('Unable to confirm the form’s security.', 'total_slider'));
+			if ( ! wp_verify_nonce( $_POST['total-slider-change-template-nonce'], 'total-slider-change-template' ) ) {
+				die( __( 'Unable to confirm the form’s security.', 'total_slider' ) );
 			}
 			
 			// update the new template
-			$desiredTplSlug = Total_Slider_Template::sanitizeSlug($_POST['template-slug']);
-			$tplLocation = false;
-			$tplSlug = false;
+			$desired_tpl_slug = Total_Slider_Template::sanitize_slug( $_POST['template-slug'] );
+			$tpl_location = false;
+			$tpl_slug = false;
 
 			// determine which template location this template is from
 			$t = new Total_Slider_Template_Iterator();
 			
-			foreach($allowedTemplateLocations as $l)
-			{
+			foreach( $allowed_template_locations as $l ) {
 			
-				if ($tplLocation || $tplSlug)
-				{
+				if ( $tpl_location || $tpl_slug ) {
 					break;
 				}
 			
-				$choices = $t->discoverTemplates($l, false);						
+				$choices = $t->discover_templates($l, false);						
 
 				// find the right template and set our provision template slug and location to it
-				if (is_array($choices) && count($choices) > 0)
-				{
-					foreach($choices as $c)
-					{
-						if ($desiredTplSlug == $c['slug'])
-						{
-							$tplLocation = $l;
-							$tplSlug = $desiredTplSlug;
+				if ( is_array( $choices ) && count( $choices ) > 0 ) {
+					foreach( $choices as $c ) {
+						if ( $desired_tpl_slug == $c['slug'] ) {
+							$tpl_location = $l;
+							$tpl_slug = $desired_tpl_slug;
 							break;
 						}								
 					}
@@ -1149,87 +1148,91 @@ class Total_Slider {
 										
 			}
 			
-			if ($tplLocation == $slideGroup->templateLocation && $tplSlug == $slideGroup->template)
-			{
+			if (
+				$tpl_location == $slide_group->templateLocation &&
+				$tpl_slug == $slide_group->template
+			) {
 				// avoid being destructive if it's unnecessary
 				// there is no change, so just go back
-				Total_Slider::uglyJSRedirect('edit-slide-group', $slideGroup->slug);
+				Total_Slider::ugly_js_redirect( 'edit-slide-group', $slide_group->slug );
 				die();								
 			}
 			
-			if ($tplLocation && $tplSlug)
-			{
-				$slideGroup->templateLocation = $tplLocation;
-				$slideGroup->template = $tplSlug;
+			if ( $tpl_location && $tpl_slug ) {
+				$slide_group->templateLocation = $tpl_location;
+				$slide_group->template = $tpl_slug;
 			}
 			else {
-				$slideGroup->templateLocation = 'builtin';
-				$slideGroup->template = 'default';
+				$slide_group->templateLocation = 'builtin';
+				$slide_group->template = 'default';
 			}
 
 			// remove X/Y positioning data, or else we may have an off-screen title box on the new template
-			$slideGroup->removeXYData();
-			$slideGroup->save();
+			$slide_group->remove_xy_data();
+			$slide_group->save();
 			
-			Total_Slider::uglyJSRedirect('edit-slide-group', $slideGroup->slug);
+			Total_Slider::ugly_js_redirect( 'edit-slide-group', $slide_group->slug );
 			die();
 			
 		}
 
 		// add the metaboxes
-		add_meta_box('slide-sorter-mb', __('Slides', 'total_slider'), array('Total_Slider', 'printSlideSorterMetabox'), '_total_slider_slide', 'normal', 'core');
-		add_meta_box('slide-preview-mb', __('Preview', 'total_slider'), array('Total_Slider', 'printSlidePreviewMetabox'), '_total_slider_slide', 'normal', 'core');
+		add_meta_box( 'slide-sorter-mb', __( 'Slides', 'total_slider' ), array( 'Total_Slider', 'print_slide_sorter_metabox' ), '_total_slider_slide', 'normal', 'core' );
+		add_meta_box( 'slide-preview-mb', __( 'Preview', 'total_slider' ), array( 'Total_Slider', 'print_slide_preview_metabox' ), '_total_slider_slide', 'normal', 'core' );
 
-		add_meta_box('slide-editor-mb', __('Edit', 'total_slider'), array('Total_Slider', 'printSlideEditorMetabox'), '_total_slider_slide_bottom', 'normal', 'core');
-		add_meta_box('slide-template-mb', __('Template', 'total_slider'), array('Total_Slider', 'printSlideTemplateMetabox'), '_total_slider_slide_bottom', 'side', 'core'); 
-		add_meta_box('credits-notes-mb', __('Credits', 'total_slider'), array('Total_Slider', 'printCreditsMetabox'), '_total_slider_slide_bottom', 'side', 'core');
+		add_meta_box( 'slide-editor-mb', __( 'Edit', 'total_slider' ), array( 'Total_Slider', 'print_slide_editor_metabox' ), '_total_slider_slide_bottom', 'normal', 'core' );
+		add_meta_box( 'slide-template-mb', __( 'Template', 'total_slider' ), array( 'Total_Slider', 'print_slide_template_metabox' ), '_total_slider_slide_bottom', 'side', 'core' ); 
+		add_meta_box( 'credits-notes-mb', __( 'Credits', 'total_slider' ), array( 'Total_Slider', 'print_credits_metabox' ), '_total_slider_slide_bottom', 'side', 'core' );
 
-		if (function_exists('find_posts_div')) { find_posts_div(); } // bring in the post/page finder interface for links
+		if ( function_exists( 'find_posts_div' ) ) {
+			// bring in the post/page finder interface for links
+			find_posts_div();
+		}
 
 		?>
 		<!-- Proxy template change form -->
-		<form name="template-switch-form" id="template-switch-form" method="POST" action="admin.php?page=total-slider&amp;group=<?php echo $TS_The_Slug;?>&amp;action=changeTemplate">
-		<?php wp_nonce_field('total-slider-change-template', 'total-slider-change-template-nonce'); ?>
-		<input type="hidden" id="template-slug" name="template-slug" value="<?php echo esc_attr($slideGroup->template);?>" />
+		<form name="template-switch-form" id="template-switch-form" method="POST" action="admin.php?page=total-slider&amp;group=<?php echo $TS_The_Slug; ?>&amp;action=changeTemplate">
+		<?php wp_nonce_field( 'total-slider-change-template', 'total-slider-change-template-nonce' ); ?>
+		<input type="hidden" id="template-slug" name="template-slug" value="<?php echo esc_attr( $slideGroup->template ); ?>" />
 		</form>
 		
 		
 		<script type="text/javascript">
 		//<![CDATA[
 		var VPM_WP_ROOT = '<?php echo admin_url(); ?>';
-		var VPM_HPS_PLUGIN_URL = '<?php echo admin_url();?>admin.php?page=total-slider&total-slider-ajax=true&';
-		var VPM_HPS_GROUP = '<?php echo esc_attr($TS_The_Slug);?>';
-		document.title = '‘<?php echo esc_attr($slideGroup->name);?>’ Slides ' + document.title.substring(13, document.title.length);//TODO i18n
-		var VPM_SHOULD_WORKAROUND_16655 = <?php echo (version_compare(get_bloginfo('version'), '3.4', '>=') ? 'false' : 'true');?>;
+		var VPM_HPS_PLUGIN_URL = '<?php echo admin_url(); ?>admin.php?page=total-slider&total-slider-ajax=true&';
+		var VPM_HPS_GROUP = '<?php echo esc_attr($TS_The_Slug); ?>';
+		document.title = '‘<?php echo esc_attr($slide_group->name); ?>’ Slides ' + document.title.substring(13, document.title.length);//TODO i18n
+		var VPM_SHOULD_WORKAROUND_16655 = <?php echo ( version_compare( get_bloginfo( 'version' ), '3.4', '>=' ) ? 'false' : 'true' ); ?>;
 		// on WordPress version <3.4, we need to work around https://core.trac.wordpress.org/ticket/16655. It is fixed in 3.4.
 		
-		var VPM_SLIDE_GROUP_TEMPLATE = '<?php echo esc_attr( $slideGroup->template );?>';
-		var VPM_SLIDE_GROUP_TEMPLATE_LOCATION = '<?php echo esc_attr( $slideGroup->templateLocation );?>';
+		var VPM_SLIDE_GROUP_TEMPLATE = '<?php echo esc_attr( $slide_group->template );?>';
+		var VPM_SLIDE_GROUP_TEMPLATE_LOCATION = '<?php echo esc_attr( $slide_group->templateLocation );?>';
 		
-		<?php if ($TS_The_Template && is_a($TS_The_Template, 'Total_Slider_Template')) {
-			$templateOptions = $TS_The_Template->determineOptions(); 	
+		<?php if ( $TS_The_Template && is_a( $TS_The_Template, 'Total_Slider_Template' ) ) {
+			$template_options = $TS_The_Template->determine_options(); 	
 		} ?>
 
-		var VPM_SHOULD_DISABLE_XY = <?php echo ($templateOptions['disable_xy']) ? 'true' : 'false';?>;
+		var VPM_SHOULD_DISABLE_XY = <?php echo ( $template_options['disable_xy'] ) ? 'true' : 'false'; ?>;
 		//]]>
 		</script>
 
 		<div class="wrap">
 
 		<div id="icon-total-slides" class="icon32"><br /></div>
-		<h2><?php printf(__('‘%s’ Slides', 'total_slider'), esc_html($slideGroup->name));?>
-		<a href="#" id="new-slide-button" class="add-new-h2"><?php _e('Add New', 'total_slider');?></a></h2>
+		<h2><?php printf( __( '‘%s’ Slides', 'total_slider' ), esc_html( $slide_group->name ) );?>
+		<a href="#" id="new-slide-button" class="add-new-h2"><?php _e( 'Add New', 'total_slider' );?></a></h2>
 
 		<noscript>
-		<h3><?php _e('Sorry, this interface requires JavaScript to function.', 'total_slider');?></h3>
-		<p><?php _e('You will need to enable JavaScript for this page before any of the controls below will work.', 'total_slider');?></p>
+		<h3><?php _e( 'Sorry, this interface requires JavaScript to function.', 'total_slider' );?></h3>
+		<p><?php _e( 'You will need to enable JavaScript for this page before any of the controls below will work.', 'total_slider' );?></p>
 		</noscript>
 		
-		<?php if ($TS_The_Tpl_Error): ?>
+		<?php if ( $TS_The_Tpl_Error ): ?>
 			<div id="template-error" class="updated settings-error below-h2">
-			<h3><?php _e('There is a problem with this slide group&rsquo;s template.', 'total_slider'); ?></h3>
-			<p><?php echo esc_html($TS_The_Tpl_Error->getMessage()); ?> <em><?php printf(__('(error code %d)', 'total_slider'), intval($TS_The_Tpl_Error->getCode()) ); ?></em></p>
-			<p><?php _e('Please either resolve this problem, or choose a different template for this slide group.', 'total_slider'); ?></p>
+			<h3><?php _e( 'There is a problem with this slide group&rsquo;s template.', 'total_slider' ); ?></h3>
+			<p><?php echo esc_html( $TS_The_Tpl_Error->getMessage() ); ?> <em><?php printf( __( '(error code %d)', 'total_slider' ), intval( $TS_The_Tpl_Error->getCode() ) ); ?></em></p>
+			<p><?php _e( 'Please either resolve this problem, or choose a different template for this slide group.', 'total_slider' ); ?></p>
 			</div>
 		<?php endif; ?>
 
@@ -1238,16 +1241,16 @@ class Total_Slider {
 			<div id="message-area" class="updated settings-error below-h2"></div>
 			<div id="poststuff">
 				<div class="metabox-holder">
-					<?php do_meta_boxes('_total_slider_slide', 'normal', null);?>
+					<?php do_meta_boxes( '_total_slider_slide', 'normal', null );?>
 				</div>
 
-				<div class="metabox-holder columns-2<?php /*VPM_33x_CONDITIONAL*/ echo (defined('TOTAL_SLIDER_33x_WORKAROUND')) ? ' has-right-sidebar' : ''; ?>">
+				<div class="metabox-holder columns-2<?php /*VPM_33x_CONDITIONAL*/ echo ( defined( 'TOTAL_SLIDER_33x_WORKAROUND' ) ) ? ' has-right-sidebar' : ''; ?>">
 					<div class="inner-sidebar" id="postbox-container-1">
-						<?php do_meta_boxes('_total_slider_slide_bottom', 'side', null);?>
+						<?php do_meta_boxes( '_total_slider_slide_bottom', 'side', null );?>
 					</div>
 					<div id="post-body" class="columns-2">
 						<div id="post-body-content">
-							<?php do_meta_boxes('_total_slider_slide_bottom', 'normal', null);?>
+							<?php do_meta_boxes( '_total_slider_slide_bottom', 'normal', null );?>
 						</div>
 					</div>
 				</div>
@@ -1259,17 +1262,16 @@ class Total_Slider {
 
 
 
-	public static function printSettingsPage()
-	{
+	public static function print_settings_page() {
 	/*
 		Print the settings page to output, and also handle any of the Settings forms if they
 		have come back to us.
 	*/
 
-		if (!current_user_can(TOTAL_SLIDER_REQUIRED_CAPABILITY))
+		if ( ! current_user_can( TOTAL_SLIDER_REQUIRED_CAPABILITY ) )
 		{
 			echo '<h1>';
-			_e('You do not have permission to manage Slider settings.', 'total_slider');
+			_e( 'You do not have permission to manage Slider settings.', 'total_slider' );
 			echo '</h1>';
 			die();
 		}
@@ -1277,100 +1279,116 @@ class Total_Slider {
 		$success = null;
 		$message = '';
 
-		$otherOptions = get_option('total_slider_general_options');
+		$other_options = get_option( 'total_slider_general_options' );
 
-		if (strtolower($_SERVER['REQUEST_METHOD']) == 'post' && array_key_exists('total-slider-settings-submitted', $_POST))
-		{
+		if (
+			'post' == strtolower( $_SERVER['REQUEST_METHOD'] ) &&
+			array_key_exists( 'total-slider-settings-submitted', $_POST )
+		) {
 			// handle the submitted form
 
-			if (!wp_verify_nonce($_POST['_wpnonce'], 'total-slider-settings')) {
-				die(__('Unable to confirm the form’s security.', 'total_slider'));
+			if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'total-slider-settings' ) ) {
+				die( __( 'Unable to confirm the form’s security.', 'total_slider' ) );
 			}
 
-			if (current_user_can('manage_options'))
-			{
+			if ( current_user_can( 'manage_options' ) )	{
 
 				$rolesToAdd = array();
 
 				// find any checked roles to add our capability to
-				foreach($_POST as $pk => $po)
-				{
-					if (preg_match('/^required_capability_/', $pk))
-					{
-						$roleNameChopped = substr($pk, strlen('required_capability_'));
+				foreach( $_POST as $pk => $po ) {
+					if ( preg_match( '/^required_capability_/', $pk ) ) {
+					
+						$role_name_chopped = substr( $pk, strlen( 'required_capability_' ) );
 
 						// do not allow administrator to be modified
-						if ($roleNameChopped != 'administrator' && $po == '1')
+						if ( 'administrator' != $role_name_chopped && $po == '1' )
 						{
-							$rolesToAdd[] = $roleNameChopped;
+							$roles_to_add[] = $role_name_chopped;
 						}
 					}
 				}
 
-				Total_Slider::setCapabilityForRoles($rolesToAdd);
+				Total_Slider::set_capability_for_roles($roles_to_add);
 				$success = true;
-				$message = __('Settings saved.', 'total_slider');
+				$message = __( 'Settings saved.', 'total_slider' );
 
 			}
 
-			if ( array_key_exists('should_enqueue_template', $_POST) && $_POST['should_enqueue_template'] == '1' )
-			{
-
-				if (array_key_exists('should_enqueue_template', $otherOptions) && $otherOptions['should_enqueue_template'] != '1')
-				{
+			// should we update the should_enqueue_template option with '1'?
+			if (
+				array_key_exists( 'should_enqueue_template', $_POST ) &&
+				'1' == $_POST['should_enqueue_template']
+			) {
+				
+				// if it would be changed by this save, then set the message to 'Settings saved'.
+				if (
+					array_key_exists('should_enqueue_template', $other_options )
+					&& $other_options['should_enqueue_template'] != '1'
+				) {
 					$success = true;
 					$message = __('Settings saved.', 'total_slider');
 				}
 
-				$otherOptions['should_enqueue_template'] = '1';
-				update_option('total_slider_general_options', $otherOptions);
+				$other_options['should_enqueue_template'] = '1';
+				update_option( 'total_slider_general_options', $other_options );
 			}
 			else {
 				// disable the option
-				if (array_key_exists('should_enqueue_template', $otherOptions) && $otherOptions['should_enqueue_template'] != '0')
-				{
+				if (
+					array_key_exists( 'should_enqueue_template', $other_options) &&
+					'0' != $other_options['should_enqueue_template']
+				) {
 					$success = true;
 					$message = __('Settings saved.', 'total_slider');
 				}
 
-				$otherOptions['should_enqueue_template'] = '0';
-				update_option('total_slider_general_options', $otherOptions);
+				$other_options['should_enqueue_template'] = '0';
+				update_option( 'total_slider_general_options', $other_options );
 
 			}
+
+			// should we update the should_show_tinymce_button option with '1'?			
+			if (
+				array_key_exists('should_show_tinymce_button', $_POST) &&
+				'1' == $_POST['should_show_tinymce_button']
+			) {
 			
-			if ( array_key_exists('should_show_tinymce_button', $_POST) && $_POST['should_show_tinymce_button'] == '1' )
-			{
-				if ( array_key_exists('should_show_tinymce_button', $otherOptions) && $otherOptions['should_show_tinymce_button'] != '1' )
-				{
+				if (
+					array_key_exists('should_show_tinymce_button', $other_options) &&
+					'1' != $other_options['should_show_tinymce_button']
+				) {
 					$success = true;
-					$message = __('Settings saved.', 'total_slider');
+					$message = __( 'Settings saved.', 'total_slider' );
 				}
 				
-				$otherOptions['should_show_tinymce_button'] = '1';
-				update_option('total_slider_general_options', $otherOptions);
+				$other_options['should_show_tinymce_button'] = '1';
+				update_option('total_slider_general_options', $other_options);
 			}
 			else {
 				// disable the option
-				if (array_key_exists('should_show_tinymce_button', $otherOptions) && $otherOptions['should_show_tinymce_button'] != '0')
-				{
+				if (
+					array_key_exists('should_show_tinymce_button', $other_options) &&
+					'0' != $other_options['should_show_tinymce_button']
+				) {
 					$success = true;
-					$message = __('Settings saved.', 'total_slider');
+					$message = __( 'Settings saved.', 'total_slider' );
 				}
 
-				$otherOptions['should_show_tinymce_button'] = '0';
-				update_option('total_slider_general_options', $otherOptions);				
+				$other_options['should_show_tinymce_button'] = '0';
+				update_option('total_slider_general_options', $other_options);				
 			}
 
 
 		}
 
 		?><div class="wrap">
-		<div id="icon-total-slides" class="icon32" style="background:transparent url(<?php echo plugin_dir_url( __FILE__ );?>img/total-slider-icon-32.png?ver=20120229) no-repeat;"><br /></div><h2><?php _e('Settings', 'total_slider');?></h2>
+		<div id="icon-total-slides" class="icon32" style="background:transparent url(<?php echo plugin_dir_url( __FILE__ ); ?>img/total-slider-icon-32.png?ver=20120229) no-repeat;"><br /></div><h2><?php _e( 'Settings', 'total_slider' );?></h2>
 
 
-		<?php if ($success): ?>
+		<?php if ( $success ): ?>
 			<div class="updated settings-error">
-				<p><strong><?php echo esc_html($message); ?></strong></p>
+				<p><strong><?php echo esc_html( $message ); ?></strong></p>
 			</div>
 		<?php endif; ?>
 
@@ -1380,54 +1398,54 @@ class Total_Slider {
 			<?php wp_nonce_field ( 'total-slider-settings' ); ?>
 
 			<!-- Only display 'Required Role Level' to manage_options capable users -->
-			<?php if (current_user_can('manage_options')):?>
+			<?php if ( current_user_can( 'manage_options' ) ):?>
 
 			<table class="form-table edit-controls-form-table">
 				<tbody>
 					<tr class="form-field">
 						<th scope="row">
-							<label for="required_capabilities"><?php _e('Required role level', 'total_slider');?></label>
+							<label for="required_capabilities"><?php _e( 'Required role level', 'total_slider' );?></label>
 						</th>
 						<td><fieldset>
 							<?php
-							$allRoles = get_editable_roles();
+							$all_roles = get_editable_roles();
 							?>
 
 							<?php
-									if (is_array($allRoles) && count($allRoles) > 0):
-										foreach($allRoles as $rName => $r): ?>
-								<label for="required_capability_<?php echo esc_attr($rName);?>">
-										<input type="checkbox" name="required_capability_<?php echo esc_attr($rName);?>"
-										id="required_capability_<?php echo esc_attr($rName);?>" value="1" style="width:20px;"
+									if ( is_array( $all_roles ) && count( $all_roles ) > 0 ):
+										foreach( $allRoles as $r_name => $r ): ?>
+								<label for="required_capability_<?php echo esc_attr( $r_name ); ?>">
+										<input type="checkbox" name="required_capability_<?php echo esc_attr( $r_name ); ?>"
+										id="required_capability_<?php echo esc_attr( $r_name ); ?>" value="1" style="width:20px;"
 											<?php
 											/* if this role has the total_slider_manage_slides capability, mark it as selected */
 
-											if (array_key_exists(TOTAL_SLIDER_REQUIRED_CAPABILITY, $r['capabilities'])): ?>
+											if ( array_key_exists( TOTAL_SLIDER_REQUIRED_CAPABILITY, $r['capabilities'] ) ): ?>
 											checked="checked"
 											<?php endif;?>
 
 											<?php // lock administrator checkbox on
-											if ($rName == 'administrator'):
+											if ( 'administrator' == $r_name ):
 											 ?>
 											disabled="disabled"
 											 <?php endif; ?>
 
-										 /> <?php echo esc_html($r['name']);?>
+										 /> <?php echo esc_html( $r['name'] );?>
 									</label><br/>
 							<?php endforeach; endif; ?>
-							<span class="description"><?php _e('Users belonging to checked roles will be able to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the Total Slider widget, which makes the slides show up on your site.', 'total_slider');?></span>
+							<span class="description"><?php _e( 'Users belonging to checked roles will be able to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the Total Slider widget, which makes the slides show up on your site.', 'total_slider' );?></span>
 						</fieldset></td>
 					</tr>
 					
 					<tr class="form-field">
 						<th scope="row">
-							<label for="should_show_tinymce_button"><?php _e('Editor', 'total_slider');?></label>			
+							<label for="should_show_tinymce_button"><?php _e( 'Editor', 'total_slider' );?></label>			
 						</th>
 						<td><fieldset>
 							<label for="should_show_tinymce_button">
 								<input type="checkbox" name="should_show_tinymce_button" id="should_show_tinymce_button" value="1" style="width:20px;"
-								<?php echo ( array_key_exists('should_show_tinymce_button', $otherOptions) && intval($otherOptions['should_show_tinymce_button']) ) ? ' checked="checked"' : ''; ?>
-								/> <?php _e('Show the Total Slider button in the editor toolbar', 'total_slider');?>
+								<?php echo ( array_key_exists( 'should_show_tinymce_button', $other_options) && intval( $other_options['should_show_tinymce_button'] ) ) ? ' checked="checked"' : ''; ?>
+								/> <?php _e( 'Show the Total Slider button in the editor toolbar', 'total_slider' ); ?>
 							</label>
 						</fieldset></td>
 					</tr>
@@ -1435,21 +1453,21 @@ class Total_Slider {
 				</tbody>
 			</table>
 
-			<h3><?php _e('Advanced Settings', 'total_slider');?></h3>
+			<h3><?php _e( 'Advanced Settings', 'total_slider' );?></h3>
 
 			<table class="form-table edit-controls-form-table">
 				<tbody>
 					<tr class="form-field">
 						<th scope="row">
-							<label for="should_enqueue_template"><?php _e('Load JS & CSS', 'total_slider');?></label>
+							<label for="should_enqueue_template"><?php _e( 'Load JS & CSS', 'total_slider' );?></label>
 						</th>
 						<td><fieldset>
 							<label for="should_enqueue_template">
 								<input type="checkbox" name="should_enqueue_template" id="should_enqueue_template" value="1" style="width:20px;"
-								<?php echo ( intval($otherOptions['should_enqueue_template']) ) ? ' checked="checked"' : ''; ?>
-								/> <?php _e('Automatically load slide template CSS and JavaScript into my theme', 'total_slider');?>
+								<?php echo ( intval( $other_options['should_enqueue_template'] ) ) ? ' checked="checked"' : ''; ?>
+								/> <?php _e( 'Automatically load slide template CSS and JavaScript into my theme', 'total_slider' );?>
 							</label><br/>
-							<span class="description"><?php _e('Uncheck for manual control over how slide template CSS and JavaScript are included in your theme.', 'total_slider');?></span>
+							<span class="description"><?php _e( 'Uncheck for manual control over how slide template CSS and JavaScript are included in your theme.', 'total_slider' );?></span>
 						</fieldset></td>
 					</tr>
 				</tbody>
@@ -1458,7 +1476,7 @@ class Total_Slider {
 			<?php endif; ?>
 
 		<p class="submit">
-			<input class="button-primary" type="submit" value="<?php _e('Save Changes', 'total_slider');?>" id="submitbutton" />
+			<input class="button-primary" type="submit" value="<?php _e( 'Save Changes', 'total_slider' );?>" id="submitbutton" />
 		</p>
 
 		</form>
@@ -1466,30 +1484,36 @@ class Total_Slider {
 
 	}
 
-	public static function printUploaderJavaScript()
-	{
+	public static function print_uploader_javascript() {
 	/*
 		Print the JavaScript to inject into the Media Uploader
 	*/
 
-		if (array_key_exists('total-slider-uploader', $_GET) && $_GET['total-slider-uploader'] == 'bgimage')
-		{
+		if (array_key_exists( 'total-slider-uploader', $_GET ) && 'bgimage' == $_GET['total-slider-uploader'] )	{
 
-			if (!array_key_exists('total-slider-slide-group-template', $_GET) || empty($_GET['total-slider-slide-group-template']) || 
-				!array_key_exists('total-slider-slide-group-template-location', $_GET) || empty($_GET['total-slider-slide-group-template-location'])
-			)
-			{
-				$crop = array('crop_width' => TOTAL_SLIDER_DEFAULT_CROP_WIDTH, 'crop_height' => TOTAL_SLIDER_DEFAULT_CROP_HEIGHT);
+			if (
+				! array_key_exists( 'total-slider-slide-group-template', $_GET ) ||
+				empty( $_GET['total-slider-slide-group-template'] ) ||
+				! array_key_exists( 'total-slider-slide-group-template-location', $_GET ) ||
+				empty( $_GET['total-slider-slide-group-template-location'] )
+			) {
+				$crop = array( 
+					'crop_width' => TOTAL_SLIDER_DEFAULT_CROP_WIDTH,
+					'crop_height' => TOTAL_SLIDER_DEFAULT_CROP_HEIGHT
+				);
 			}
 			else {
 				try {
-					$t = new Total_Slider_Template($_GET['total-slider-slide-group-template'], $_GET['total-slider-slide-group-template-location']);
+					$t = new Total_Slider_Template( $_GET['total-slider-slide-group-template'], $_GET['total-slider-slide-group-template-location'] );
 					
-					$crop = $t->determineOptions();					
+					$crop = $t->determine_options();					
 				}
-				catch (Exception $e)
+				catch ( Exception $e )
 				{
-					$crop = array('crop_width' => TOTAL_SLIDER_DEFAULT_CROP_WIDTH, 'crop_height' => TOTAL_SLIDER_DEFAULT_CROP_HEIGHT);
+					$crop = array(
+						'crop_width' => TOTAL_SLIDER_DEFAULT_CROP_WIDTH,
+						'crop_height' => TOTAL_SLIDER_DEFAULT_CROP_HEIGHT
+					);
 				}			
 			}
 
@@ -1501,20 +1525,20 @@ class Total_Slider {
 		<script type="text/javascript">
 		//<![CDATA[
 		jQuery(document).ready(function() {
-			jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider'), $crop['crop_width'], $crop['crop_height']);?></p>');
+			jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf( __( 'Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider' ), $crop['crop_width'], $crop['crop_height'] ); ?></p>');
 
 			jQuery('.savesend .button').each(function() {
-				jQuery(this).attr('value', '<?php _e('Use as background image', 'total_slider');?>');
+				jQuery(this).attr('value', '<?php _e( 'Use as background image', 'total_slider' );?>');
 			});
 
 			if (typeof uploader == 'object') {
 				uploader.bind('FileUploaded', function() {
 					window.setTimeout(function() {
 	
-						jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf(__('Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider'), $crop['crop_width'], $crop['crop_height']);?></p>');
+						jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf( __( 'Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider' ), $crop['crop_width'], $crop['crop_height'] ); ?></p>');
 						// rename the main action button
 						jQuery('.savesend .button').each(function() {
-							jQuery(this).attr('value', '<?php _e('Use as background image', 'total_slider');?>');
+							jQuery(this).attr('value', '<?php _e( 'Use as background image', 'total_slider' );?>');
 						});
 					}, 680);
 				});
@@ -1531,7 +1555,7 @@ class Total_Slider {
 
 	/***********	// !Metabox printer callbacks	***********/
 
-	public static function printCreditsMetabox()
+	public static function print_credits_metabox()
 	{
 	/*
 		Print to output the contents of the credits/notes metabox.
@@ -1540,40 +1564,39 @@ class Total_Slider {
 		?>
 
 		<div id="credits">
-			<p><?php _e('Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a>', 'total_slider');?></p>
+			<p><?php _e( 'Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a>', 'total_slider' );?></p>
 
-			<p><?php _e('Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>', 'total_slider');?></p>
+			<p><?php _e( 'Additional UI: <a href="http://www.vanpattenmedia.com/">Chris Van Patten</a>', 'total_slider' );?></p>
 
-			<p><?php _e('Icons: <a href="http://www.field2.com/">Ben Dunkle</a>', 'total_slider');?></p>
+			<p><?php _e( 'Icons: <a href="http://www.field2.com/">Ben Dunkle</a>', 'total_slider' );?></p>
 
-			<?php if (defined('WPLANG') && WPLANG != '' && strpos(strtolower(WPLANG), 'en') !== 0 ): ?>
+			<?php if ( defined('WPLANG') && WPLANG != '' && strpos( strtolower(WPLANG), 'en' ) !== 0 ): ?>
 				<p>
 				<?php
 				/* translators: please replace this with a credit to yourself! "Translation: Your Name". This English message will appear when no translation is available, but the user is using WordPress in another language.. */
 				?>
-				<?php printf(__('<a href="%s">Help us translate this plugin into your language!</a>', 'total_slider'), 'http://www.vanpattenmedia.com/project/total-slider/#translate');?>
+				<?php printf( __( '<a href="%s">Help us translate this plugin into your language!</a>', 'total_slider'), 'http://www.vanpattenmedia.com/project/total-slider/#translate' );?>
 				</p>
 			<?php endif; ?>
 		</div>
 
 		<div id="contrib-note">
-			<p><?php printf( __('If you find this plugin useful, or are using it commercially, please consider <a href="%s">donating</a> to support development.', 'total_slider'), 'http://www.vanpattenmedia.com/project/total-slider/#contribute'); ?></p>
+			<p><?php printf( __( 'If you find this plugin useful, or are using it commercially, please consider <a href="%s">donating</a> to support development.', 'total_slider'), 'http://www.vanpattenmedia.com/project/total-slider/#contribute' ); ?></p>
 
-			<p><?php printf ( __('You can also <a href="%s">report bugs</a>, <a href="%s">suggest features</a>, or <a href="%s">send pull requests</a>.', 'total_slider'), 'http://www.vanpattenmedia.com/project/total-slider/#contribute', 'http://www.vanpattenmedia.com/project/total-slider/#contribute', 'http://www.vanpattenmedia.com/project/total-slider/#contribute');?></p>
+			<p><?php printf ( __( 'You can also <a href="%s">report bugs</a>, <a href="%s">suggest features</a>, or <a href="%s">send pull requests</a>.', 'total_slider'), 'http://www.vanpattenmedia.com/project/total-slider/#contribute', 'http://www.vanpattenmedia.com/project/total-slider/#contribute', 'http://www.vanpattenmedia.com/project/total-slider/#contribute' ); ?></p>
 
-			<p><?php _e('Thanks!', 'total_slider'); ?></p>
+			<p><?php _e( 'Thanks!', 'total_slider' ); ?></p>
 		</div>
 
 		<div id="copyright">
-			<p><?php _e('© 2011-2012 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 (or later) licensed</a>.', 'total_slider');?></p>
-			<p id="vpm-credit"><?php _e('Built by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>', 'total_slider');?></p>
+			<p><?php _e( '© 2011-2012 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 (or later) licensed</a>.', 'total_slider' );?></p>
+			<p id="vpm-credit"><?php _e( 'Built by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>', 'total_slider' );?></p>
 		</div>
 		<?php
 
 	}
 
-	public static function printSlideSorterMetabox()
-	{
+	public static function print_slide_sorter_metabox() {
 	/*
 		Print to output the contents of the slide sorter/slide listing metabox.
 	*/
@@ -1581,21 +1604,20 @@ class Total_Slider {
 		global $TS_The_Slug;
 
 		?><!--sortable slides-->
-		<?php $currentSlides = Total_Slider::getCurrentSlides($TS_The_Slug); ?>
+		<?php $current_slides = Total_Slider::get_current_slides($TS_The_Slug); ?>
 		<div id="slidesort-container">
-		<ul id="slidesort" style="width:<?php echo intval(count($currentSlides)*180); ?>px;">
+		<ul id="slidesort" style="width:<?php echo intval( count( $current_slides ) * 180 ); ?>px;">
 		<?php
 
-		if (is_array($currentSlides) && count($currentSlides) > 0)
-		{
+		if ( is_array( $current_slides ) && count( $current_slides ) > 0 ) {
 
-			foreach($currentSlides as $slide) {
+			foreach( $current_slides as $slide ) {
 
-				$myId = Total_Slider::idFilter($slide['id']);
+				$my_id = Total_Slider::id_filter( $slide['id'] );
 				
-				if (is_numeric($slide['background']))
+				if ( is_numeric($slide['background'] ) )
 				{
-					$background_url = wp_get_attachment_url((int)$slide['background']);
+					$background_url = wp_get_attachment_url( (int) $slide['background'] );
 				}
 				else {
 					$background_url = $slide['background'];
@@ -1603,13 +1625,13 @@ class Total_Slider {
 
 				?>
 
-				<li id="slidesort_<?php echo $myId;?>">
+				<li id="slidesort_<?php echo $my_id;?>">
 
-					<div class="slidesort_slidebox" style="background: url(<?php echo esc_attr($background_url);?>)">
-						<div id="slidesort_<?php echo $myId;?>_text" class="slidesort_text"><?php echo stripslashes(esc_html($slide['title']));?></div>
+					<div class="slidesort_slidebox" style="background: url(<?php echo esc_url( $background_url );?>)">
+						<div id="slidesort_<?php echo $my_id;?>_text" class="slidesort_text"><?php echo stripslashes( esc_html( $slide['title'] ) );?></div>
 
-						<a id="slidesort_<?php echo $myId;?>_move_button" class="slidesort-icon slide-move-button" href="#"><?php _e('Move', 'total_slider');?></a>
-						<span id="slidesort_<?php echo $myId;?>_delete" class="slide-delete"><a id="slidesort_<?php echo $myId;?>_delete_button" class="slidesort-icon slide-delete-button" href="#"><?php _e('Delete', 'total_slider');?></a></span>
+						<a id="slidesort_<?php echo $my_id;?>_move_button" class="slidesort-icon slide-move-button" href="#"><?php _e( 'Move', 'total_slider' );?></a>
+						<span id="slidesort_<?php echo $my_id;?>_delete" class="slide-delete"><a id="slidesort_<?php echo $myId;?>_delete_button" class="slidesort-icon slide-delete-button" href="#"><?php _e( 'Delete', 'total_slider' );?></a></span>
 					</div>
 
 				</li>
@@ -1623,7 +1645,7 @@ class Total_Slider {
 		?>
 		</ul>
 
-		<div class="slidesort-add-hint"<?php if (is_array($currentSlides) && count($currentSlides) > 0) echo ' style="display:none"'; ?>>
+		<div class="slidesort-add-hint"<?php if ( is_array( $current_slides ) && count( $current_slides ) > 0) echo ' style="display:none"'; ?>>
 		<?php _e('Click &lsquo;Add New&rsquo; to create a Slide.', 'total_slider');?></div>
 
 		</div>
@@ -1632,27 +1654,24 @@ class Total_Slider {
 
 	}
 	
-	public static function printSlideTemplateMetabox()
-	{
+	public static function print_slide_template_metabox() {
 	/*
 		Print to output the contents of the slide template metabox.
 	*/
 	
 		global $TS_The_Slug;
 	
-		if (!$TS_The_Slug)
-		{
-			if (!array_key_exists('group', $_GET))
+		if ( ! $TS_The_Slug ) {
+			if ( ! array_key_exists('group', $_GET ) )
 			{
 				return false;
 			}
 			
-			$TS_The_Slug = Total_Slider::sanitizeSlideGroupSlug($_GET['group']);		
+			$TS_The_Slug = Total_Slider::sanitize_slide_group_slug( $_GET['group'] );
 		}
 		
-		$slideGroup = new Total_Slide_Group($TS_The_Slug);
-		if (!$slideGroup->load())
-		{
+		$slide_group = new Total_Slide_Group( $TS_The_Slug );
+		if ( ! $slide_group->load() ) {
 			return false;
 		}
 	
@@ -1661,76 +1680,75 @@ class Total_Slider {
 			<?php $t = new Total_Slider_Template_Iterator(); ?>
 				<select name="template-slug" id="template-slug-selector">
 					
-					<?php $builtin = $t->discoverTemplates('builtin'); ?>
-					<?php if (is_array($builtin) && count($builtin) > 0): ?>
-					<optgroup label="<?php _e('Built-in', 'total_slider');?>">
-						<?php foreach($builtin as $tpl): ?>
+					<?php $builtin = $t->discover_templates( 'builtin' ); ?>
+					<?php if ( is_array( $builtin ) && count( $builtin ) > 0 ): ?>
+					<optgroup label="<?php _e( 'Built-in', 'total_slider' ); ?>">
+						<?php foreach( $builtin as $tpl ): ?>
 
 							<option
-								value="<?php echo esc_attr($tpl['slug']);?>"
-								<?php if ($slideGroup->templateLocation == 'builtin' && $slideGroup->template == $tpl['slug']): ?>
+								value="<?php echo esc_attr( $tpl['slug'] ); ?>"
+								<?php if ( 'builtin' == $slide_group->templateLocation && $slide_group->template == $tpl['slug'] ): ?>
 								selected="selected"
 								<?php endif; ?>
 								
-							><?php echo esc_html($tpl['name']);?></option>
+							><?php echo esc_html( $tpl['name'] );?></option>
 						<?php endforeach; ?>
 					</optgroup>
 					<?php endif; ?>
 					
-					<?php $theme = $t->discoverTemplates('theme'); ?>
-					<?php if (is_array($theme) && count($theme) > 0): ?>
-					<optgroup label="<?php _e('Theme', 'total_slider');?>">
-						<?php foreach($theme as $tpl): ?>
+					<?php $theme = $t->discover_templates( 'theme' ); ?>
+					<?php if ( is_array( $theme ) && count( $theme ) > 0 ): ?>
+					<optgroup label="<?php _e( 'Theme', 'total_slider' ); ?>">
+						<?php foreach( $theme as $tpl ): ?>
 							<option
-								value="<?php echo esc_attr($tpl['slug']);?>"
-								<?php if ($slideGroup->templateLocation == 'theme' && $slideGroup->template == $tpl['slug']): ?>
+								value="<?php echo esc_attr( $tpl['slug'] ); ?>"
+								<?php if ('theme' == $slide_group->templateLocation && $slide_group->template == $tpl['slug']): ?>
 								selected="selected"
 								<?php endif; ?>
 								
-							><?php echo esc_html($tpl['name']);?></option>
+							><?php echo esc_html( $tpl['name'] );?></option>
 						<?php endforeach; ?>
 					</optgroup>
 					<?php endif; ?>
 					
-					<?php $legacy = $t->discoverTemplates('legacy', false); ?>
-					<?php if (is_array($legacy) && count($legacy) > 0): ?>
-					<optgroup label="<?php _e('v1.0 Templates', 'total_slider');?>">
-						<?php foreach($legacy as $tpl): ?>
+					<?php $legacy = $t->discover_templates( 'legacy', false ); ?>
+					<?php if ( is_array( $legacy ) && count( $legacy ) > 0 ): ?>
+					<optgroup label="<?php _e( 'v1.0 Templates', 'total_slider' ); ?>">
+						<?php foreach( $legacy as $tpl ): ?>
 							<option
-							value="<?php echo esc_attr($tpl['slug']);?>"
-							<?php if ($slideGroup->templateLocation == 'legacy'): ?>
+							value="<?php echo esc_attr( $tpl['slug'] ); ?>"
+							<?php if ('legacy' == $slide_group->templateLocation): ?>
 								selected="selected"
 								<?php endif; ?>
-							><?php echo esc_html($tpl['name']);?></option>
+							><?php echo esc_html( $tpl['name'] );?></option>
 						<?php endforeach; ?>
 					</optgroup>								
 					<?php endif; ?>										
 			
-					<?php //$downloaded = $t->discoverTemplates('downloaded'); ?>
+					<?php //$downloaded = $t->discover_templates('downloaded'); ?>
 					<?php $downloaded = false; ?>
-					<?php if (is_array($downloaded) && count($downloaded) > 0): ?>
-					<!--<optgroup label="<?php _e('Downloaded', 'total_slider');?>">
-						<?php foreach($downloaded as $tpl): ?>
+					<?php if ( is_array( $downloaded ) && count( $downloaded ) > 0 ): ?>
+					<!--<optgroup label="<?php _e( 'Downloaded', 'total_slider' );?>">
+						<?php foreach( $downloaded as $tpl ): ?>
 							<option
-								value="<?php echo esc_attr($tpl['slug']);?>"
-								<?php if ($slideGroup->templateLocation == 'downloaded' && $slideGroup->template == $tpl['slug']): ?>
+								value="<?php echo esc_attr( $tpl['slug'] ); ?>"
+								<?php if ( 'downloaded' == $slide_group->templateLocation && $slideGroup->template == $tpl['slug'] ): ?>
 								selected="selected"
 								<?php endif; ?>
 								
-							><?php echo esc_html($tpl['name']);?></option>
+							><?php echo esc_html( $tpl['name'] );?></option>
 						<?php endforeach; ?>																
 					</optgroup>	-->
 					<?php endif; ?>
 													
 				</select>
-			<input id="template-switch-button" type="submit" class="button-secondary action" style="margin-top:8px; max-width:180px;" value="<?php _e('Change Template', 'total_slider');?>" />
+			<input id="template-switch-button" type="submit" class="button-secondary action" style="margin-top:8px; max-width:180px;" value="<?php _e( 'Change Template', 'total_slider' );?>" />
 			</p>
 		</div><?php	
 		
 	}
 
-	public static function printSlidePreviewMetabox()
-	{
+	public static function print_slide_preview_metabox() {
 	/*
 		Print to output the contents of the slide preview metabox.
 	*/
@@ -1761,25 +1779,23 @@ class Total_Slider {
 			<script id="slide-ejs" type="text/ejs">
 			<?php
 			
-			if (!$TS_The_Template || !is_a($TS_The_Template, 'Total_Slider_Template'))
-			{	
+			if ( ! $TS_The_Template || ! is_a( $TS_The_Template, 'Total_Slider_Template' ) ) {	
 				// determine the current template
-				if (!Total_Slider::determineTemplate())	{
+				if ( ! Total_Slider::determineTemplate() ) {
 					?><div class="template-render-error"><?php
-					_e('Unable to load the preview.', 'total_slider');
+					_e( 'Unable to load the preview.', 'total_slider' );
 					?></div><?php
 				}
 			}
 			
-			if ( is_a($TS_The_Template, 'Total_Slider_Template') )
-			{
+			if ( is_a( $TS_The_Template, 'Total_Slider_Template' ) ) {
 				try {
 					echo $TS_The_Template->render();
 				}
-				catch (Exception $e)
+				catch ( Exception $e )
 				{
 					?><div class="template-render-error"><?php
-					_e('Unable to load the preview.', 'total_slider');
+					_e( 'Unable to load the preview.', 'total_slider' );
 					?><br />
 					<em><?php echo esc_html( $e->getMessage() ); ?></em>
 					</div><?php					
@@ -1795,7 +1811,7 @@ class Total_Slider {
 
 	}
 
-	public static function printSlideEditorMetabox()
+	public static function print_slide_editor_Metabox()
 	{
 	/*
 		Print to output the contents of the slide editor metabox.
@@ -1803,7 +1819,7 @@ class Total_Slider {
 	?>
 
 				<div id="edit-controls-choose-hint">
-					<p><?php _e('Click a slide to edit it, or click ‘Add New’.', 'total_slider');?></p>					
+					<p><?php _e( 'Click a slide to edit it, or click ‘Add New’.', 'total_slider' );?></p>					
 				</div>
 
 				<div id="edit-controls">
@@ -1812,7 +1828,7 @@ class Total_Slider {
 						<tbody>
 							<tr class="form-field">
 								<th scope="row">
-									<label for="edit-slide-title"><?php _e('Title', 'total_slider');?></label>
+									<label for="edit-slide-title"><?php _e( 'Title', 'total_slider' );?></label>
 								</th>
 								<td>
 									<input type="text" name="slide-title" id="edit-slide-title" value="" maxlength="64" class="edit-controls-inputs" />
@@ -1820,7 +1836,7 @@ class Total_Slider {
 							</tr>
 							<tr class="form-field">
 								<th scope="row">
-									<label for="edit-slide-description"><?php _e('Description', 'total_slider');?></label>
+									<label for="edit-slide-description"><?php _e( 'Description', 'total_slider' );?></label>
 								</th>
 								<td>
 									<textarea name="slide-description" id="edit-slide-description" class="widefat edit-controls-inputs" rows="4"></textarea>
@@ -1829,27 +1845,27 @@ class Total_Slider {
 
 							<tr class="form-field">
 								<th scope="row">
-									<label for="edit-slide-image-upload"><?php _e('Background', 'total_slider');?></label>
+									<label for="edit-slide-image-upload"><?php _e( 'Background', 'total_slider' );?></label>
 								</th>
 								<td>
 									<input id="edit-slide-image-url" type="hidden" name="slide-image" value="" />
-									<input id="edit-slide-image-upload" type="button" class="button" value="<?php _e('Upload or choose image', 'total_slider');?>" />
+									<input id="edit-slide-image-upload" type="button" class="button" value="<?php _e( 'Upload or choose image', 'total_slider' );?>" />
 								</td>
 							</tr>
 
 							<tr class="form-field">
 								<th scope="row">
-									<?php _e('Slide Link', 'total_slider');?>
+									<?php _e( 'Slide Link', 'total_slider' );?>
 								</th>
 								<td>
 									<label for="slide-link-is-internal">
 										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-internal" value="true" />
-									<?php _e('A page or post on this site', 'total_slider');?>
+									<?php _e( 'A page or post on this site', 'total_slider' );?>
 									</label>
 									<br>
 									<label for="slide-link-is-external">
 										<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-external" value="false" />
-									<?php _e('An external link', 'total_slider');?>
+									<?php _e( 'An external link', 'total_slider' );?>
 									</label>
 								</td>
 							</tr>
@@ -1859,9 +1875,9 @@ class Total_Slider {
 
 								</th>
 								<td>
-									<span id="slide-link-internal-display"><?php _e('No post selected', 'total_slider');?></span>
+									<span id="slide-link-internal-display"><?php _e( 'No post selected', 'total_slider' );?></span>
 									<input id="slide-link-internal-id" name="slide-link-internal" value="" type="hidden" />
-									<input id="slide-link-finder" type="button" class="button" value="<?php _e('Find post', 'total_slider');?>" style="width:70px;" />
+									<input id="slide-link-finder" type="button" class="button" value="<?php _e( 'Find post', 'total_slider' );?>" style="width:70px;" />
 								</td>
 							</tr>
 
@@ -1876,12 +1892,12 @@ class Total_Slider {
 						</tbody>
 					</table>
 					<p class="submit">
-						<input type="button" id="edit-controls-save" class="button-primary" value="<?php _e('Save', 'total_slider');?>" />
-						<input type="button" id="edit-controls-cancel" class="button-secondary" value="<?php _e('Cancel', 'total_slider');?>" />
+						<input type="button" id="edit-controls-save" class="button-primary" value="<?php _e( 'Save', 'total_slider' );?>" />
+						<input type="button" id="edit-controls-cancel" class="button-secondary" value="<?php _e( 'Cancel', 'total_slider' );?>" />
 					</p>
 					<div id="edit-controls-saving">
-						<img id="edit-controls-spinner" src="images/loading.gif" width="16" height="16" alt="<?php _e('Loading', 'total_slider');?>" />
-						<span><?php _e('Saving…', 'total_slider');?></span>
+						<img id="edit-controls-spinner" src="images/loading.gif" width="16" height="16" alt="<?php _e( 'Loading', 'total_slider' );?>" />
+						<span><?php _e( 'Saving…', 'total_slider' );?></span>
 					</div>
 				</form>
 
@@ -1890,7 +1906,7 @@ class Total_Slider {
 
 	}
 
-	public static function printAdminCSS() {
+	public static function print_admin_css() {
 	/*
 		Print the admin CSS to show our admin menu icons.
 	*/
@@ -1939,14 +1955,14 @@ class Total_Slider_Widget extends WP_Widget {
 	protected $slider_iteration = 0;
 
 
-	public function __construct(){
+	public function __construct() {
 	/*
 		Constructor, merely calls the WP_Widget constructor.
 	*/
-		parent::__construct(false, 'Total Slider');
+		parent::__construct( false, 'Total Slider' );
 	}
 
-	public function widget($args, $instance) {
+	public function widget( $args, $instance ) {
 	/*
 		The widget function is responsible for rendering the widget's output. In the case
 		of Total Slider Widget, this will invoke the Slider template file to output the slides
@@ -1968,21 +1984,19 @@ class Total_Slider_Widget extends WP_Widget {
 		$this->slider_iteration = 0;
 
 		// determine the correct template to use
-		$group = new Total_Slide_Group(Total_Slider::sanitizeSlideGroupSlug($this->instance['groupSlug']));
-		if (!$group->load())
-		{
-			_e('<strong>Total Slider:</strong> Could not find the selected slide group to show. Does it still exist?', 'total_slider');
+		$group = new Total_Slide_Group( Total_Slider::sanitize_slide_group_slug( $this->instance['groupSlug'] ) );
+		if ( ! $group->load() ) {
+			_e( '<strong>Total Slider:</strong> Could not find the selected slide group to show. Does it still exist?', 'total_slider' );
 			return;
 		}
 		
 		try {
-			$tpl = new Total_Slider_Template($group->template, $group->templateLocation);		
+			$tpl = new Total_Slider_Template( $group->template, $group->templateLocation );	
 		}
-		catch (Exception $e)
-		{
-			_e('<strong>Total Slider:</strong> Unable to load the template for this slide group.', 'total_slider');
-			if ( is_user_logged_in() && current_user_can('publish_posts') ) {
-				echo ' <em>' . esc_html($e->getMessage()) . '</em>';
+		catch ( Exception $e ) {
+			_e( '<strong>Total Slider:</strong> Unable to load the template for this slide group.', 'total_slider' );
+			if ( is_user_logged_in() && current_user_can( 'publish_posts') ) {
+				echo ' <em>' . esc_html( $e->getMessage() ) . '</em>';
 			}
 			return;
 		}
@@ -1990,15 +2004,17 @@ class Total_Slider_Widget extends WP_Widget {
 		$general_options = get_option('total_slider_general_options');
 		
 		// only enqueue template if relevant option is set (fixes #29)
-		if ( is_array($general_options) && array_key_exists('should_enqueue_template', $general_options) &&
-		$general_options['should_enqueue_template'] == '1' )
-		{
+		if (
+			is_array($general_options) &&
+			array_key_exists('should_enqueue_template', $general_options) &&
+			$general_options['should_enqueue_template'] == '1'
+		) {
 			// enqueue CSS and JS
 			wp_register_style(
-				'total-slider-' . esc_attr($group->template),					/* handle */
-				$tpl->cssURI(),													/* src */
+				'total-slider-' . esc_attr( $group->template ),					/* handle */
+				$tpl->css_uri(),												/* src */
 				array(),														/* deps */
-				date("YmdHis", @filemtime($tpl->cssPath() ) ),					/* ver */
+				date( "YmdHis", @filemtime($tpl->css_path() ) ),				/* ver */
 				'all'															/* media */	
 			);
 			
@@ -2006,25 +2022,24 @@ class Total_Slider_Widget extends WP_Widget {
 	
 			
 			// load .min.js if available, if SCRIPT_DEBUG is not true in wp-config.php
-			$isMin = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? false : true;
+			$is_min = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? false : true;
 			
-			if ($isMin)
-			{
-				$jsURI = $tpl->jsMinURI();
-				$jsPath = $tpl->jsMinPath();				
+			if ( $is_min ) {
+				$js_uri = $tpl->js_min_uri();
+				$js_path = $tpl->js_min_path();				
 			}
 			else {
-				$jsURI = $tpl->jsURI();
-				$jsPath = $tpl->jsPath();				
+				$js_uri = $tpl->js_uri();
+				$js_path = $tpl->js_path();				
 			}
 			
 			wp_register_script(	
 					'total-slider-' . esc_attr($group->template), 				/* handle */
-					$jsURI,														/* src */
+					$js_uri,													/* src */
 					array(
 						'jquery'
 					),															/* deps */
-					date("YmdHis", @filemtime( $jsPath) ),						/* ver */
+					date( 'YmdHis', @filemtime( $js_path) ),					/* ver */
 					true														/* in_footer */		
 			);
 			
@@ -2034,14 +2049,13 @@ class Total_Slider_Widget extends WP_Widget {
 		$s = &$this; // $s is used by the theme to call our functions to actually display the data
 		
 		// include the template
-		include ( $tpl->phpPath() );
+		include ( $tpl->php_path() );
 		
-		unset($s);
+		unset( $s );
 
 	}
 
-	public function form($instance)
-	{
+	public function form( $instance ) {
 	/*
 		The form function defines the settings form for the widget.
 
@@ -2049,29 +2063,27 @@ class Total_Slider_Widget extends WP_Widget {
 		for displaying.
 	*/
 
-	?><p><?php _e('Choose a slide group for this widget to show:', 'total_slider');?></p>
+	?><p><?php _e( 'Choose a slide group for this widget to show:', 'total_slider' ); ?></p>
 
-	<select id="<?php echo $this->get_field_id('groupSlug');?>" name="<?php echo $this->get_field_name('groupSlug');?>">
-		<option value="**INVALID**" disabled="disabled" selected="selected"><?php _e('Select a group', 'total_slider');?></option>
+	<select id="<?php echo $this->get_field_id( 'groupSlug' ); ?>" name="<?php echo $this->get_field_name( 'groupSlug' ); ?>">
+		<option value="**INVALID**" disabled="disabled" selected="selected"><?php _e( 'Select a group', 'total_slider' ); ?></option>
 		<?php
 
 			// find all the slide groups and offer them for the widget
 
-			$slideGroups = get_option('total_slider_slide_groups');
-			$slideTemplates = array();
+			$slide_groups = get_option( 'total_slider_slide_groups' );
+			$slide_templates = array();
 
-			if (is_array($slideGroups) && count($slideGroups) > 0)
-			{
-				foreach($slideGroups as $group)
-				{
+			if ( is_array( $slide_groups ) && count( $slide_groups ) > 0 ) {
+				foreach( $slide_groups as $group ) {
 					?><option value="<?php echo esc_attr($group->slug);?>"
-						<?php if (array_key_exists('groupSlug', $instance)):
-							echo ($group->slug == $instance['groupSlug']) ? ' selected="selected"' : '';
+						<?php if ( array_key_exists('groupSlug', $instance ) ):
+							echo ( $group->slug == $instance['groupSlug'] ) ? ' selected="selected"' : '';
 						endif; ?>
-					><?php echo esc_html($group->name);?></option><?php
+					><?php echo esc_html( $group->name );?></option><?php
 					
 					// get the template for this slide group					
-					$slideTemplates[esc_attr($group->slug)] = $group->template;
+					$slide_templates[ esc_attr( $group->slug ) ] = $group->template;
 					
 				}
 
@@ -2083,19 +2095,19 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function update($newInstance, $oldInstance)
-	{
+	public function update( $new_instance, $old_instance ) {
 	/*
 		Update the widget's settings with the new selected slide group from the form()
 	*/
 
-		if ($newInstance['groupSlug'] != '**INVALID**')
-		{
+		if ( '**INVALID**' != $new_instance['groupSlug'] ) {
 
-			return array('groupSlug' => Total_Slider::sanitizeSlideGroupSlug($newInstance['groupSlug']));
+			return array( 
+				'groupSlug' => Total_Slider::sanitize_slide_group_slug( $new_instance['groupSlug'] ) 
+			);
 		}
 		else {
-			return $oldInstance;
+			return $old_instance;
 		}
 
 	}
@@ -2109,13 +2121,13 @@ class Total_Slider_Widget extends WP_Widget {
 		and, for example, not output the starting <ul>.
 	*/
 
-		if (!is_array($this->slides))
+		if ( ! is_array($this->slides ) )
 		{
-			$this->slides = get_option('total_slider_slides_' . Total_Slider::sanitizeSlideGroupSlug($this->instance['groupSlug']));
-			$this->slides = array_values($this->slides);
+			$this->slides = get_option( 'total_slider_slides_' . Total_Slider::sanitize_slide_group_slug( $this->instance['groupSlug'] ) );
+			$this->slides = array_values( $this->slides );
 		}
 
-		return count($this->slides);
+		return count( $this->slides );
 
 	}
 	
@@ -2142,42 +2154,37 @@ class Total_Slider_Widget extends WP_Widget {
 
 	*/
 
-		if (!$this->instance)
+		if ( ! $this->instance )
 		{
-			throw new Exception("The widget's instance data, containing information about which slide group to show, could not be loaded.");
+			throw new Exception( "The widget's instance data, containing information about which slide group to show, could not be loaded." );
 			return false;
 		}
 
-		if (!is_array($this->slides) || count($this->slides) < 1)
-		{
-			$this->slides = get_option('total_slider_slides_' . Total_Slider::sanitizeSlideGroupSlug($this->instance['groupSlug']));
-			$this->slides = array_values($this->slides);
+		if ( ! is_array( $this->slides ) || count( $this->slides ) < 1 ) {
+			$this->slides = get_option( 'total_slider_slides_' . Total_Slider::sanitize_slide_group_slug( $this->instance['groupSlug'] ) );
+			$this->slides = array_values( $this->slides );
 		}
 
 		// on which slide should we work? does it exist?
-		if (count($this->slides) < $this->slider_iteration + 1)
+		if ( count( $this->slides ) < $this->slider_iteration + 1 )
 		{
 			return false; // we are at the end of the slides
 		}
 
 		// otherwise, load in the data
-		if (!empty ($this->slides[$this->slider_iteration]['title']) )
-		{
+		if (!empty( $this->slides[$this->slider_iteration]['title'] ) ) {
 			$this->slide_title = $this->slides[$this->slider_iteration]['title'];
 		}
-		if (!empty ($this->slides[$this->slider_iteration]['description']) )
-		{
+		if (!empty( $this->slides[$this->slider_iteration]['description'] ) ) {
 			$this->slide_description = $this->slides[$this->slider_iteration]['description'];
 		}
 
-		if (!empty ($this->slides[$this->slider_iteration]['id']) )
-		{
+		if (!empty( $this->slides[$this->slider_iteration]['id'] ) ) {
 			$this->slide_identifier = $this->slides[$this->slider_iteration]['id'];
 		}
 
 		// the background may be blank!
-		if (!empty ($this->slides[$this->slider_iteration]['background']) )
-		{
+		if (!empty ( $this->slides[$this->slider_iteration]['background'] ) ) {
 			$this->slide_background_url = $this->slides[$this->slider_iteration]['background'];
 		}
 		else {
@@ -2185,8 +2192,7 @@ class Total_Slider_Widget extends WP_Widget {
 		}
 
 		// the link may be blank!
-		if (!empty ($this->slides[$this->slider_iteration]['link']) )
-		{
+		if (!empty( $this->slides[$this->slider_iteration]['link'] ) ) {
 			$this->slide_link = $this->slides[$this->slider_iteration]['link'];
 		}
 		else {
@@ -2194,26 +2200,20 @@ class Total_Slider_Widget extends WP_Widget {
 		}
 
 		// get X and Y coords
-		if (!empty ($this->slides[$this->slider_iteration]['title_pos_x']) || $this->slides[$this->slider_iteration]['title_pos_x'] === 0)
-		{
+		if (!empty( $this->slides[$this->slider_iteration]['title_pos_x'] ) || 0 === $this->slides[$this->slider_iteration]['title_pos_x']) {
 			$this->slide_x = $this->slides[$this->slider_iteration]['title_pos_x'];
 		}
-		if (!empty ($this->slides[$this->slider_iteration]['title_pos_y']) || $this->slides[$this->slider_iteration]['title_pos_y'] === 0 )
-		{
+		if (!empty( $this->slides[$this->slider_iteration]['title_pos_y'] ) || 0 === $this->slides[$this->slider_iteration]['title_pos_y'] ) {
 			$this->slide_y = $this->slides[$this->slider_iteration]['title_pos_y'];
 		}
-
-
 
 		// the data is ready, bump the iterator and return true
 		$this->slider_iteration++;
 		return true;
 
-
 	}
 
-	public function the_title()
-	{
+	public function the_title() {
 	/*
 		Print the slide title to output, having sanitised it.
 	*/
@@ -2222,8 +2222,7 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function get_the_title()
-	{
+	public function get_the_title() {
 	/*
 		Return the slide title, having sanitised it.
 	*/
@@ -2232,8 +2231,7 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function the_description()
-	{
+	public function the_description() {
 	/*
 		Print the slide description to output, having sanitised it.
 	*/
@@ -2242,8 +2240,7 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function get_the_description()
-	{
+	public function get_the_description() {
 	/*
 		Return the slide description, having sanitised it.
 	*/
@@ -2252,8 +2249,7 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function the_background_url()
-	{
+	public function the_background_url() {
 	/*
 		Print the background URL to output, having sanitised it.
 	*/
@@ -2262,18 +2258,17 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function get_the_background_url()
-	{
+	public function get_the_background_url() {
 	/*
 		Return the background URL, having sanitisied it.
 	*/
 
-		if (is_numeric($this->slide_background_url))
+		if ( is_numeric( $this->slide_background_url ) )
 		{
-			$bgAttach = (int)$this->slide_background_url;
-			$bgAttach = wp_get_attachment_url($bgAttach);
+			$bg_attach = (int) $this->slide_background_url;
+			$bg_attach = wp_get_attachment_url( $bg_attach );
 
-			return esc_url ( apply_filters('total-slider_slide_background_url', $bgAttach ) );
+			return esc_url ( apply_filters('total-slider_slide_background_url', $bg_attach ) );
 
 		}
 		else {
@@ -2282,8 +2277,7 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function the_link()
-	{
+	public function the_link() {
 	/*
 		Print the slide link URL to output, having sanitised it.
 	*/
@@ -2292,16 +2286,14 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function get_the_link()
-	{
+	public function get_the_link() {
 	/*
 		Return the slide link URL, having sanitised it.
 	*/
 
-		if (is_numeric($this->slide_link))
-		{
-			$linkPost = (int)$this->slide_link;
-			return esc_url( apply_filters('total-slider_slide_link', get_permalink($linkPost) ) );
+		if ( is_numeric( $this->slide_link ) ) {
+			$link_post = (int) $this->slide_link;
+			return esc_url( apply_filters( 'total-slider_slide_link', get_permalink( $link_post ) ) );
 		}
 		else {
 			return esc_url ( apply_filters('total-slider_slide_link', $this->slide_link) );
@@ -2309,8 +2301,7 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function the_x()
-	{
+	public function the_x() {
 	/*
 		Print the X coordinate to the output, having sanitised it.
 	*/
@@ -2319,8 +2310,7 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function get_the_x()
-	{
+	public function get_the_x() {
 	/*
 		Return the X coordinate, having sanitised it.
 	*/
@@ -2329,8 +2319,7 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function the_y()
-	{
+	public function the_y() {
 	/*
 		Print the Y coordinate to the output, having sanitised it.
 	*/
@@ -2339,8 +2328,7 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function get_the_y()
-	{
+	public function get_the_y() {
 	/*
 		Return the Y coordinate, having sanitised it.
 	*/
@@ -2349,8 +2337,7 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function the_identifier()
-	{
+	public function the_identifier() {
 	/*
 		Print the slide identifier to output, having sanitised it.
 	*/
@@ -2359,18 +2346,16 @@ class Total_Slider_Widget extends WP_Widget {
 
 	}
 
-	public function get_the_identifier()
-	{
+	public function get_the_identifier() {
 	/*
 		Return the slide identifier to output, having sanitised it.
 	*/
 
-		return esc_attr( apply_filters('total-slider_slide_identifier', $this->slide_identifier) );
+		return esc_attr( apply_filters( 'total-slider_slide_identifier', $this->slide_identifier ) );
 
 	}
 
-	public function iteration()
-	{
+	public function iteration() {
 	/*
 		Return the iteration number. How many slides have we been through?
 	*/
@@ -2383,8 +2368,7 @@ class Total_Slider_Widget extends WP_Widget {
 	}
 	
 		
-	public function make_draggable()
-	{
+	public function make_draggable() {
 	/*
 		Outputs a class that in edit-time mode makes the object draggable (for X/Y positioning
 		of the title/description overlay).
@@ -2398,8 +2382,7 @@ class Total_Slider_Widget extends WP_Widget {
 		
 	}
 	
-	public function draggable_parent()
-	{
+	public function draggable_parent() {
 	/*
 		Outputs a class that in edit-time mode makes the object the draggable's parent. This
 		will be used to calculate the X/Y offset for the title/description box.
@@ -2419,22 +2402,21 @@ class Total_Slider_Widget extends WP_Widget {
 
 };
 
-function total_slider_shortcode($atts, $content, $tag)
-{
-	return Total_Slider::shortcodeHandler($atts, $content, $tag);
+function total_slider_shortcode( $atts, $content, $tag ) {
+	return Total_Slider::shortcode_handler( $atts, $content, $tag );
 }
 
 /******************************************** WordPress actions ********************************************/
 
-register_activation_hook(__FILE__, array('Total_Slider', 'createSlidesOptionField'));
-add_action('init', array('Total_Slider', 'loadTextDomain'));
-add_action('init', array('Total_Slider', 'bootstrapTinyMCEPlugin'));
-add_action('admin_menu', array('Total_Slider', 'addAdminSubMenu'));
-add_action( 'admin_head', array('Total_Slider', 'printAdminCSS'));
-add_action('widgets_init', array('Total_Slider', 'registerAsWidget'));
-add_action('admin_init', array('Total_Slider', 'passControlToAjaxHandler'));
-add_action('admin_head-media-upload-popup', array('Total_Slider', 'printUploaderJavaScript'));
+register_activation_hook( __FILE__, array ('Total_Slider', 'create_slides_option_field' ) );
+add_action( 'init', array( 'Total_Slider', 'load_text_domain' ) );
+add_action('init', array( 'Total_Slider', 'bootstrap_tinymce_plugin' ) );
+add_action( 'admin_menu', array( 'Total_Slider', 'add_admin_submenu' ) );
+add_action( 'admin_head', array( 'Total_Slider', 'print_admin_css' ) );
+add_action( 'widgets_init', array( 'Total_Slider', 'register_as_widget' ) );
+add_action( 'admin_init', array( 'Total_Slider', 'pass_control_to_ajax_handler' ) );
+add_action( 'admin_head-media-upload-popup', array( 'Total_Slider', 'print_uploader_javascript' ) );
 
-add_shortcode('totalslider', 'total_slider_shortcode');
+add_shortcode( 'totalslider', 'total_slider_shortcode' );
 
 ?>
