@@ -1265,7 +1265,7 @@ $.extend($.fn.cycle.API, {
 })(jQuery);
 
 
-/*  Copyright (C) 2011-2012 Peter Upfold.
+/*  Copyright (C) 2011-2013 Peter Upfold.
 
     This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
