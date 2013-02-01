@@ -371,12 +371,12 @@ class Total_Slide_Group {
 				if ( $slide['id'] == $slide_id ) {
 				
 					// we found the record we were looking for. update it
-					$currentSlides[$i]['title'] = $title;
-					$currentSlides[$i]['description'] = $description;
-					$currentSlides[$i]['background'] = $background;
-					$currentSlides[$i]['link'] = $link;
-					$currentSlides[$i]['title_pos_x'] = $title_pos_x;
-					$currentSlides[$i]['title_pos_y'] = $title_pos_y;
+					$current_slides[$i]['title'] = $title;
+					$current_slides[$i]['description'] = $description;
+					$current_slides[$i]['background'] = $background;
+					$current_slides[$i]['link'] = $link;
+					$current_slides[$i]['title_pos_x'] = $title_pos_x;
+					$current_slides[$i]['title_pos_y'] = $title_pos_y;
 				
 					$found = true;
 				
@@ -507,7 +507,7 @@ class Total_Slide_Group {
 		}	
 		
 		
-		if ( is_array( $current_slides ) && count( $currentSlides ) > 0 ) {
+		if ( is_array( $current_slides ) && count( $current_slides ) > 0 ) {
 		
 			$new_slides = array();	
 			
@@ -532,7 +532,7 @@ class Total_Slide_Group {
 			}
 			
 			if (
-				count($current_slides ) != count( $newSlides ) ||
+				count($current_slides ) != count( $new_slides ) ||
 				$new_slide_not_found_in_current
 			) {
 				// there is a disparity -- so a slide or more will be lost
