@@ -1054,7 +1054,7 @@ class Total_Slider {
 				<div id="post-body" class="columns-2"><div id="post-body-content">
 				<form id="slide-groups-bulk-actions" method="post" action="admin.php?page=total-slider" onsubmit="if ( jQuery('.slide-group-checkbox:checked').length > 0 && jQuery('option[value=remove]:selected').length > 0) { return confirm('<?php _e( 'Are you sure you want to delete these slide groups?\n\nThis action cannot be undone.', 'total_slider' );?>'); }">
 					<input type="hidden" name="_bulk_wpnonce" value="<?php echo wp_create_nonce( 'remove-bulk-slide-group' ); ?>" />
-					<?php require_once( dirname( __FILE__ ) . '/includes/slide_groups_table.php' );
+					<?php require_once( dirname( __FILE__ ) . '/includes/class.slide-groups-table.php' );
 					$table = new Slide_Groups_Table();
 					$table->prepare_items();
 					$table->display();

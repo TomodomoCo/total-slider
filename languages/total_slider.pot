@@ -106,42 +106,42 @@ msgstr ""
 msgid "There are no slides to show."
 msgstr ""
 
-#: includes/slide_groups_table.php:39
+#: includes/class.slide-groups-table.php:39
 msgid "slide group"
 msgstr ""
 
-#: includes/slide_groups_table.php:40
+#: includes/class.slide-groups-table.php:40
 msgid "slide groups"
 msgstr ""
 
-#: includes/slide_groups_table.php:54 total-slider.php:993
+#: includes/class.slide-groups-table.php:54 total-slider.php:993
 msgid "Group Name"
 msgstr ""
 
-#: includes/slide_groups_table.php:55 total-slider.php:997
+#: includes/class.slide-groups-table.php:55 total-slider.php:997
 #: total-slider.php:1185
 msgid "Template"
 msgstr ""
 
-#: includes/slide_groups_table.php:56 total-slider.php:1181
+#: includes/class.slide-groups-table.php:56 total-slider.php:1181
 msgid "Slides"
 msgstr ""
 
-#: includes/slide_groups_table.php:83 total-slider.php:1184
+#: includes/class.slide-groups-table.php:83 total-slider.php:1184
 msgid "Edit"
 msgstr ""
 
-#: includes/slide_groups_table.php:85
+#: includes/class.slide-groups-table.php:85
 msgid ""
 "Are you sure you want to delete this slide group?\\n\\nThis action cannot be "
 "undone."
 msgstr ""
 
-#: includes/slide_groups_table.php:86 includes/slide_groups_table.php:162
+#: includes/class.slide-groups-table.php:86 includes/class.slide-groups-table.php:162
 msgid "Remove"
 msgstr ""
 
-#: includes/slide_groups_table.php:234
+#: includes/class.slide-groups-table.php:234
 msgid "Click &lsquo;Add New&rsquo; to create a new group of slides."
 msgstr ""
 
