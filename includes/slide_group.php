@@ -139,7 +139,7 @@ class Total_Slide_Group {
 		else {
 			$this->name = $current_groups[$the_index]->name;
 			
-			$this->slug = Total_Slider::sanitize_slide_group_slug($currentGroups[$the_index]->slug);
+			$this->slug = Total_Slider::sanitize_slide_group_slug($current_groups[$the_index]->slug);
 			
 			if (
 				property_exists( $current_groups[$the_index], 'templateLocation' ) &&

@@ -265,7 +265,7 @@ class Total_Slider {
 		}
 		
 		$slug = $slide_group->template;
-		$location = $$slide_group->templateLocation;
+		$location = $slide_group->templateLocation;
 		
 		try {
 			$TS_The_Template = new Total_Slider_Template( $slug, $location );
@@ -1413,7 +1413,7 @@ class Total_Slider {
 
 							<?php
 									if ( is_array( $all_roles ) && count( $all_roles ) > 0 ):
-										foreach( $allRoles as $r_name => $r ): ?>
+										foreach( $all_roles as $r_name => $r ): ?>
 								<label for="required_capability_<?php echo esc_attr( $r_name ); ?>">
 										<input type="checkbox" name="required_capability_<?php echo esc_attr( $r_name ); ?>"
 										id="required_capability_<?php echo esc_attr( $r_name ); ?>" value="1" style="width:20px;"
