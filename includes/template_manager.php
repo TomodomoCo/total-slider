@@ -44,7 +44,7 @@ if ( ! defined( 'WP_CONTENT_DIR' ) )
 
 		101 -- the template location is not one of the allowed template locations.
 		102 -- Unable to determine the WP_CONTENT_DIR to load this template.
-		103 -- The allowed template locations are not available. This file must not be loaded without slide_group.php
+		103 -- The allowed template locations are not available. This file must not be loaded without class.total-slide-group.php
 		
 	2xx -- unable to load the template
 		201 -- The template's %s file was not found, but we expected to find it at '%s'.
@@ -97,7 +97,7 @@ class Total_Slider_Template {
 		global $allowed_template_locations;
 		
 		if ( ! is_array($allowed_template_locations ) )	{
-			throw new UnexpectedValueException( __( 'The allowed template locations are not available. This file must not be loaded without slide_group.php', 'total_slider' ), 103 );
+			throw new UnexpectedValueException( __( 'The allowed template locations are not available. This file must not be loaded without class.total-slide-group.php', 'total_slider' ), 103 );
 			return;
 		}
 	
@@ -1238,7 +1238,7 @@ class Total_Slider_Template_Iterator {
 		global $allowed_template_locations;
 		
 		if ( ! is_array( $allowed_template_locations ) ) {
-			throw new UnexpectedValueException( __( 'The allowed template locations are not available. This file must not be loaded without slide_group.php', 'total_slider' ), 103 );
+			throw new UnexpectedValueException( __( 'The allowed template locations are not available. This file must not be loaded without class.total-slide-group.php', 'total_slider' ), 103 );
 			return false;
 		}
 		

@@ -43,7 +43,7 @@ if ( ! function_exists( '__' ) ) {
 	die( '<h1>Forbidden</h1>' );
 }
 
-require_once( dirname( __FILE__ ) . '/slide_group.php' );
+require_once( dirname( __FILE__ ) . '/class.total-slide-group.php' );
 
 // get list of slide groups if asked
 if ( ! array_key_exists( 'group', $_GET ) && 'getSlideGroups' == $_GET['action'] ) {

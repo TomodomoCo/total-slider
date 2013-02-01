@@ -94,15 +94,15 @@ msgid ""
 "deleted by someone else."
 msgstr ""
 
-#: includes/slide_group.php:659
+#: includes/class.total-slide-group.php:659
 msgid "Unable to render the slide mini-preview: %s (error code %d)"
 msgstr ""
 
-#: includes/slide_group.php:666
+#: includes/class.total-slide-group.php:666
 msgid "Template:"
 msgstr ""
 
-#: includes/slide_group.php:673
+#: includes/class.total-slide-group.php:673
 msgid "There are no slides to show."
 msgstr ""
 
@@ -148,7 +148,7 @@ msgstr ""
 #: includes/template_manager.php:103 includes/template_manager.php:1357
 msgid ""
 "The allowed template locations are not available. This file must not be "
-"loaded without slide_group.php"
+"loaded without class.total-slide-group.php"
 msgstr ""
 
 #: includes/template_manager.php:116 includes/template_manager.php:476

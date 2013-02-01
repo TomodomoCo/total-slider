@@ -97,15 +97,15 @@ msgstr "Vous n'avez pas indiqué quelle ID doit être supprimée."
 msgid "The delete slide operation failed at the server. Perhaps it has already been deleted by someone else."
 msgstr "L'opération de suppression de la diapositive n'a pas abouti sur ce serveur. Peut-être a-t-elle déjà été supprimée par quelqu'un d'autre."
 
-#: includes/slide_group.php:659
+#: includes/class.total-slide-group.php:659
 msgid "Unable to render the slide mini-preview: %s (error code %d)"
 msgstr "Impossible d'afficher le mini-aperçu de la diapositive : %s (code erreur %d)"
 
-#: includes/slide_group.php:666
+#: includes/class.total-slide-group.php:666
 msgid "Template:"
 msgstr "Template :"
 
-#: includes/slide_group.php:673
+#: includes/class.total-slide-group.php:673
 msgid "There are no slides to show."
 msgstr "Aucune diapositive à afficher."
 
@@ -159,8 +159,8 @@ msgstr "Cliquez sur &lsquo;Ajouter&rsquo; pour créer un nouveau groupe de diapo
 
 #: includes/template_manager.php:103
 #: includes/template_manager.php:1357
-msgid "The allowed template locations are not available. This file must not be loaded without slide_group.php"
-msgstr "Les emplacements des templates autorisés ne sont pas disponibles. Ce fichier ne doit pas être chargé sans slide_group.php"
+msgid "The allowed template locations are not available. This file must not be loaded without class.total-slide-group.php"
+msgstr "Les emplacements des templates autorisés ne sont pas disponibles. Ce fichier ne doit pas être chargé sans class.total-slide-group.php"
 
 #: includes/template_manager.php:116
 #: includes/template_manager.php:476
