@@ -157,35 +157,35 @@ msgstr "Supprimer"
 msgid "Click &lsquo;Add New&rsquo; to create a new group of slides."
 msgstr "Cliquez sur &lsquo;Ajouter&rsquo; pour créer un nouveau groupe de diapositives."
 
-#: includes/template_manager.php:103
-#: includes/template_manager.php:1357
+#: includes/class.total-slider-template.php:103
+#: includes/class.total-slider-template.php:1357
 msgid "The allowed template locations are not available. This file must not be loaded without class.total-slide-group.php"
 msgstr "Les emplacements des templates autorisés ne sont pas disponibles. Ce fichier ne doit pas être chargé sans class.total-slide-group.php"
 
-#: includes/template_manager.php:116
-#: includes/template_manager.php:476
-#: includes/template_manager.php:1364
+#: includes/class.total-slider-template.php:116
+#: includes/class.total-slider-template.php:476
+#: includes/class.total-slider-template.php:1364
 msgid "The supplied template location is not one of the allowed template locations"
 msgstr "L'emplacement indiqué pour les templates n'appartient pas aux emplacements autorisés"
 
-#: includes/template_manager.php:213
-#: includes/template_manager.php:331
-#: includes/template_manager.php:404
-#: includes/template_manager.php:468
-#: includes/template_manager.php:507
+#: includes/class.total-slider-template.php:213
+#: includes/class.total-slider-template.php:331
+#: includes/class.total-slider-template.php:404
+#: includes/class.total-slider-template.php:468
+#: includes/class.total-slider-template.php:507
 msgid "The template's %s file was not found, but we expected to find it at '%s'."
 msgstr "Le fichier de template %s n'a pu être trouvé, mais nous pensons pouvoir le trouver à '%s'."
 
-#: includes/template_manager.php:346
+#: includes/class.total-slider-template.php:346
 msgid "Unable to determine the WP_CONTENT_DIR, so cannot load this template."
 msgstr "WP_CONTENT_DIR impossible à déterminer. Ce template ne peut donc pas être chargé."
 
-#: includes/template_manager.php:703
-#: includes/template_manager.php:1420
+#: includes/class.total-slider-template.php:703
+#: includes/class.total-slider-template.php:1420
 msgid "v1.0 Custom Template"
 msgstr "Template personnalisé v1.0"
 
-#: includes/template_manager.php:1389
+#: includes/class.total-slider-template.php:1389
 msgid "Unable to determine the WP_CONTENT_DIR, so cannot find relevant templates."
 msgstr "WP_CONTENT_DIR impossible à déterminer. Aucun template pertinent ne peut donc pas être trouvé."
 

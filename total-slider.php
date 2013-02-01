@@ -43,7 +43,7 @@ if ( ! version_compare( get_bloginfo('version'), '3.4', '>=' ) ) {
 
 
 require_once( dirname(__FILE__) . '/includes/class.total-slide-group.php' );
-require_once( dirname(__FILE__) . '/includes/template_manager.php' ); //TODO efficiency -- conditional on 'page'? What about the widget?
+require_once( dirname(__FILE__) . '/includes/class.total-slider-template.php' ); //TODO efficiency -- conditional on 'page'? What about the widget?
 
 $TS_The_Slug = false;
 $TS_The_Template = false;
