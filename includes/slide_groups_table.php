@@ -216,7 +216,7 @@ class Slide_Groups_Table extends WP_List_Table {
 		
 			'total_items'	=>	$total_items,
 			'per_page'		=>	$per_page,
-			'total_pages'	=>	ceil( $totalItems / $perPage )
+			'total_pages'	=>	ceil( $total_items / $per_page )
 		
 		));
 			
@@ -234,5 +234,3 @@ class Slide_Groups_Table extends WP_List_Table {
 	
 
 }
-
-?>

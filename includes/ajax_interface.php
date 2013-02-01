@@ -652,5 +652,3 @@ switch ( $_GET['action'] )
 }
 
 header( 'Content-Type: application/json' );
-
-?>

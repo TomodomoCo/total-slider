@@ -1372,5 +1372,3 @@ class Total_Slider_Template_Iterator {
 	
 	
 };
-
-?>

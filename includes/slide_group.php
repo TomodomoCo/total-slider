@@ -669,5 +669,3 @@ class Total_Slide_Group {
 	
 
 };
-
-?>

@@ -196,7 +196,7 @@ class Total_Slider {
 		Returns an array of the current slides in the database, in their
 		current precedence order.
 	*/
-		return get_option( 'total_slider_slides_' . Total_Slider::sanitizeSlideGroupSlug($slug) );
+		return get_option( 'total_slider_slides_' . Total_Slider::sanitize_slide_group_slug($slug) );
 	}
 
 	private function id_filter( $id_to_filter ) {
@@ -221,7 +221,7 @@ class Total_Slider {
 
 			case 'edit-slide-group':
 				$url = 'admin.php?page=total-slider&group=';
-				$url .= esc_attr(Total_Slider::sanitizeSlideGroupSlug($data));
+				$url .= esc_attr(Total_Slider::sanitize_slide_group_slug($data));
 			break;
 
 			default:
@@ -2418,5 +2418,3 @@ add_action( 'admin_init', array( 'Total_Slider', 'pass_control_to_ajax_handler' 
 add_action( 'admin_head-media-upload-popup', array( 'Total_Slider', 'print_uploader_javascript' ) );
 
 add_shortcode( 'totalslider', 'total_slider_shortcode' );
-
-?>

@@ -109,5 +109,3 @@ if ( !get_option('total_slider_upgrade_v1.0.x_to_v1.1') ) {
 	add_option( 'total_slider_upgrade_v1.0.x_to_v1.1', 'completed', '', 'no' );
 
 }
-
-?>
