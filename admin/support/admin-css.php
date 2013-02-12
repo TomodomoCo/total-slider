@@ -40,7 +40,7 @@ if ( ! function_exists( '__' ) )
 <!-- Total Slider inline admin style -->
 <style type="text/css" id="total-slider-menu-css">
 #toplevel_page_total-slider .wp-menu-image img { visibility: hidden; }
-#toplevel_page_total-slider .wp-menu-image { background: url( <?php echo plugin_dir_url( __FILE__ ).'img/slider-icon-switch.png'; ?> ) 0 90% no-repeat; }
+#toplevel_page_total-slider .wp-menu-image { background: url( <?php echo plugin_dir_url( dirname( __FILE__ ) ).'../img/slider-icon-switch.png'; ?> ) 0 90% no-repeat; }
 #toplevel_page_total-slider.current .wp-menu-image, #toplevel_page_total-slider.wp-has-current-submenu .wp-menu-image, #toplevel_page_total-slider:hover .wp-menu-image { background-position: top left; }
 </style>
 

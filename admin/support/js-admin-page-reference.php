@@ -45,7 +45,7 @@ window._total_slider_jq = '<?php echo includes_url(); ?>js/jquery/jquery.js';
 window._total_slider_tmp = '<?php echo includes_url(); ?>js/tinymce/tiny_mce_popup.js';
 var _total_slider_mce_l10n = '<?php if ( defined('WPLANG' ) && WPLANG != '' && strpos( strtolower(WPLANG), 'en' ) !== 0 ) echo '_' . esc_attr(WPLANG); ?>';
 var _total_slider_mce_l10n_insert = '<?php _e( 'Insert Slider', 'total_slider' );?>';
+var _total_slider_uploader = '<?php echo ( version_compare( get_bloginfo( 'version' ), '3.5', '>=' ) ) ? 'elvin' : 'legacy'; ?>';
 //]]>
 </script>
-<?php
-	
+<?php	
