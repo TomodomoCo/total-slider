@@ -427,6 +427,10 @@ class Total_Slider {
 			wp_enqueue_script( 'thickbox' );
 			wp_enqueue_style( 'thickbox' );
 
+			if ( function_exists( 'wp_enqueue_media' ) ) {
+				wp_enqueue_media();
+			}
+
 			wp_enqueue_script( 'postbox' );
 
 			wp_enqueue_script( 'jquery-ui-draggable' );

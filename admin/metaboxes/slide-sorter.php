@@ -62,7 +62,7 @@ if ( is_array( $current_slides ) && count( $current_slides ) > 0 ) {
 				<div id="slidesort_<?php echo $my_id;?>_text" class="slidesort_text"><?php echo stripslashes( esc_html( $slide['title'] ) );?></div>
 
 				<a id="slidesort_<?php echo $my_id;?>_move_button" class="slidesort-icon slide-move-button" href="#"><?php _e( 'Move', 'total_slider' );?></a>
-				<span id="slidesort_<?php echo $my_id;?>_delete" class="slide-delete"><a id="slidesort_<?php echo $myId;?>_delete_button" class="slidesort-icon slide-delete-button" href="#"><?php _e( 'Delete', 'total_slider' );?></a></span>
+				<span id="slidesort_<?php echo $my_id;?>_delete" class="slide-delete"><a id="slidesort_<?php echo $my_id;?>_delete_button" class="slidesort-icon slide-delete-button" href="#"><?php _e( 'Delete', 'total_slider' );?></a></span>
 			</div>
 
 		</li>

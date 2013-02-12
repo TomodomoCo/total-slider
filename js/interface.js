@@ -42,6 +42,10 @@ var slidePreviewData = {
 
 var slidePreviewUntitledData;
 
+if ( 'elvin' == _total_slider_uploader ) {
+	var upl_frame = false;
+}
+
 /* language is now done by total_slider.php:jsL10n() */
 
 /* !Miscellaneous functions */
@@ -532,12 +536,48 @@ jQuery(document).ready(function($) {
 	
 	/* !Trigger the upload thickbox for the background image */
 	
-	$('#edit-slide-image-upload').click(function () {		
+	$('#edit-slide-image-upload').click(function (e) {	
+
+		e.preventDefault();
 		var myTop = $(this).offset();
 
-		tb_show(_total_slider_L10n.uploadSlideBgImage, 'media-upload.php?total-slider-uploader=bgimage&total-slider-slide-group-template=' + encodeURIComponent(VPM_SLIDE_GROUP_TEMPLATE) + '&total-slider-slide-group-template-location=' + encodeURIComponent(VPM_SLIDE_GROUP_TEMPLATE_LOCATION) + '&type=image&post_id=0&TB_iframe=true&height=400&width=600');
+		if ( 'legacy' == _total_slider_uploader ) {
+
+			tb_show(_total_slider_L10n.uploadSlideBgImage, 'media-upload.php?total-slider-uploader=bgimage&total-slider-slide-group-template=' + encodeURIComponent(VPM_SLIDE_GROUP_TEMPLATE) + '&total-slider-slide-group-template-location=' + encodeURIComponent(VPM_SLIDE_GROUP_TEMPLATE_LOCATION) + '&type=image&post_id=0&TB_iframe=true&height=400&width=600');
 		
-		return false;
+			return false;
+		}
+		else if ( 'elvin' == _total_slider_uploader ) {
+			
+			if ( upl_frame ) {
+				upl_frame.open();
+				return false;
+			}
+
+			upl_frame = wp.media.frames.file_frame = wp.media({
+				title: _total_slider_L10n.uploadSlideBgImage,
+				button: {
+					text: _total_slider_L10n.uploadSlideBgButtonText,
+				},
+				multiple: false,
+			});
+
+			upl_frame.on( 'select', function() { 
+				attachment = upl_frame.state().get('selection').first().toJSON();
+				$('#edit-slide-image-url').val( attachment.url );
+				slidePreviewData.background_url = attachment.url;
+				slidePreviewData.background_attachment_id = attachment.id;
+				$('#' + editingSlideSortButton).children('.slidesort_slidebox').css('background', 'url(' + attachment.url + ')');
+
+				slidePreviewData.title = $('#edit-slide-title').val();
+				slidePreviewData.description = $('#edit-slide-description').val();
+				$().updateSlidePreview();
+
+			});
+
+			upl_frame.open();
+
+		}
 	
 	});
 	
