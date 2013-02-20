@@ -150,7 +150,7 @@ if (
 }
 
 ?><div class="wrap">
-<div id="icon-total-slides" class="icon32" style="background:transparent url(<?php echo plugin_dir_url( __FILE__ ); ?>img/total-slider-icon-32.png?ver=20120229) no-repeat;"><br /></div><h2><?php _e( 'Settings', 'total_slider' );?></h2>
+<div id="icon-total-slides" class="icon32" style="background:transparent url(<?php echo plugin_dir_url( __FILE__ ); ?>../img/total-slider-icon-32.png?ver=20120229) no-repeat;"><br /></div><h2><?php _e( 'Settings', 'total_slider' );?></h2>
 
 
 <?php if ( $success ): ?>
