@@ -394,7 +394,7 @@ class Total_Slide_Group {
 			return true; // no change, don't bother update_option as it returns false and errors us out
 		}
 		
-		// $currentSlides now holds the slides we want to save
+		// $current_slides now holds the slides we want to save
 		return $this->save_slides( $current_slides );
 	
 	}
@@ -585,8 +585,8 @@ class Total_Slide_Group {
 		
 		if ( is_array( $current_slides ) && count( $current_slides ) > 0 ) {
 			foreach( $current_slides as $i => $slide ) {
-				$currentSlides[$i]['title_pos_x'] = 0;
-				$currentSlides[$i]['title_pos_y'] = 0;	
+				$current_slides[$i]['title_pos_x'] = 0;
+				$current_slides[$i]['title_pos_y'] = 0;	
 			}
 			
 			$this->save_slides($current_slides);
@@ -647,7 +647,7 @@ class Total_Slide_Group {
 		?><div class="total-slider-mini-preview">
 		<ul><?php
 		
-		foreach( $currentSlides as $idx => $slide ) {
+		foreach( $current_slides as $idx => $slide ) {
 		
 			if ( is_numeric($slide['background'] ) && intval( $slide['background'] ) == $slide['background'] ) {
 				// background references an attachment ID

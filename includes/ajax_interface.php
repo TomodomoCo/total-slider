@@ -233,7 +233,7 @@ switch ( $_GET['action'] )
 				}
 			}
 			else {
-				if ( ! $g->validate_uRL($_POST['link']) ) {
+				if ( ! $g->validate_url( $_POST['link'] ) ) {
 					header( 'HTTP/1.0 400 Bad Request' );
 					header( 'Content-Type: application/json' );
 					echo json_encode(

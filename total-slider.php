@@ -533,13 +533,13 @@ class Total_Slider {
 		// load .min.js if available, if SCRIPT_DEBUG is not true in wp-config.php
 		$is_min = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? false : true;
 
-		$generalOptions = get_option( 'total_slider_general_options' );
+		$general_options = get_option( 'total_slider_general_options' );
 
 		// do not run if enqueue is disabled
 		if (
-			is_array($generalOptions) &&
-			array_key_exists( 'should_enqueue_template', $generalOptions ) &&
-			'0' == $generalOptions['should_enqueue_template'] &&
+			is_array($general_options) &&
+			array_key_exists( 'should_enqueue_template', $general_options ) &&
+			'0' == $general_options['should_enqueue_template'] &&
 			$context != 'backend'
 		) {
 			return false;

@@ -50,8 +50,8 @@ if ( array_key_exists( 'action', $_GET ) && 'remove' == $_GET['action'] && array
 	if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'remove-slide-group' ) ) {
 		
 		// remove the slide group
-		$newGroup = new Total_Slide_Group( $_GET['group'] );
-		$newGroup->delete();
+		$new_group = new Total_Slide_Group( $_GET['group'] );
+		$new_group->delete();
 
 		// remove the option
 		delete_option( 'total_slider_slides_'. Total_Slider::sanitize_slide_group_slug( $_GET['group'] ) );

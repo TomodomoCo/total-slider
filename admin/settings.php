@@ -60,7 +60,7 @@ if (
 
 	if ( current_user_can( 'manage_options' ) )	{
 
-		$rolesToAdd = array();
+		$roles_to_add = array();
 
 		// find any checked roles to add our capability to
 		foreach( $_POST as $pk => $po ) {

@@ -152,7 +152,7 @@ if ( function_exists( 'find_posts_div' ) ) {
 <!-- Proxy template change form -->
 <form name="template-switch-form" id="template-switch-form" method="POST" action="admin.php?page=total-slider&amp;group=<?php echo $TS_The_Slug; ?>&amp;action=changeTemplate">
 <?php wp_nonce_field( 'total-slider-change-template', 'total-slider-change-template-nonce' ); ?>
-<input type="hidden" id="template-slug" name="template-slug" value="<?php echo esc_attr( $slideGroup->template ); ?>" />
+<input type="hidden" id="template-slug" name="template-slug" value="<?php echo esc_attr( $slide_group->template ); ?>" />
 </form>
 
 
