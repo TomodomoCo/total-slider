@@ -3,7 +3,7 @@
 Plugin Name: Total Slider
 Plugin URI: http://www.totalslider.com/
 Description: The best experience for building sliders, with true WYSIWYG, drag & drop and more!
-Version: 1.1.2
+Version: 1.1.3
 Author: Peter Upfold
 Author URI: http://www.vanpattenmedia.com/
 License: GPLv2 or later
@@ -666,10 +666,12 @@ class Total_Slider {
 				'1' == $general_options['should_show_tinymce_button']
 			) {
 				add_filter( 'mce_external_plugins', array( 'Total_Slider', 'register_tinymce_plugin' ) );
-				add_filter( 'mce_buttons', array( 'Total_Slider', 'register_tinymce_button' ) );
-				add_action( 'admin_head', array( 'Total_Slider', 'print_js_admin_page_reference' ) );
+				add_filter( 'mce_buttons', array( 'Total_Slider', 'register_tinymce_button' ) );			
 			}
 		}
+
+		add_action( 'admin_head', array( 'Total_Slider', 'print_js_admin_page_reference' ) );
+		// we should always load the JS admin page reference -- see #58 at https://github.com/vanpattenmedia/total-slider/issues/58
 	
 	}
 	
