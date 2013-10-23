@@ -271,7 +271,7 @@ class Total_Slide_Group {
 		
 		);	
 		
-		$current_slides[ count( $current_slides ) ] = $new_slide;
+		$current_slides[] = $new_slide;
 		
 		if ( $this->save_slides( $current_slides) ) {
 			return $new_id;
@@ -518,7 +518,7 @@ class Total_Slide_Group {
 			
 				foreach( $current_slides as $index => $slide ) {
 					if ( $slide['id'] == $new_slide_id ) {
-						$new_slides[ count( $new_slides ) ] = $slide;
+						$new_slides[] = $slide;
 						$found_this_slide = true;
 						continue;
 					}
