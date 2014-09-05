@@ -620,8 +620,8 @@ msgid "Thanks!"
 msgstr "Merci !"
 
 #: total-slider.php:1569
-msgid "© 2011-2013 Peter Upfold. Proud to be <a href=\"https://www.gnu.org/licenses/gpl-2.0.html\">GPLv2 (or later) licensed</a>."
-msgstr "© 2011-2013 Peter Upfold. Fier de la distribution sous license <a href=\"https://www.gnu.org/licenses/gpl-2.0.html\">GPLv2 (ou suivante)</a>."
+msgid "© 2011-2014 Peter Upfold. Proud to be <a href=\"https://www.gnu.org/licenses/gpl-2.0.html\">GPLv2 (or later) licensed</a>."
+msgstr "© 2011-2014 Peter Upfold. Fier de la distribution sous license <a href=\"https://www.gnu.org/licenses/gpl-2.0.html\">GPLv2 (ou suivante)</a>."
 
 #: total-slider.php:1570
 msgid "Built by <a href=\"http://www.vanpattenmedia.com/\">Van Patten Media</a>"
