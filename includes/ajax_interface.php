@@ -9,7 +9,7 @@ and returning JSON to the interface on success, or failure.
 
 /* ----------------------------------------------*/
 
-/*  Copyright (C) 2011-2013 Peter Upfold.
+/*  Copyright (C) 2011-2014 Peter Upfold.
 
     This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -144,7 +144,6 @@ switch ( $_GET['action'] )
 			!array_key_exists( 'title_pos_y', $_POST ) ||
 			!array_key_exists( 'background', $_POST ) ||
 			!array_key_exists( 'title', $_POST ) ||
-			!array_key_exists( 'description', $_POST ) ||
 			!array_key_exists( 'link', $_POST )
 		) {
 			header( 'HTTP/1.0 400 Bad Request' );
@@ -173,7 +172,7 @@ switch ( $_GET['action'] )
 			A blank string should never get here, though, because of the casting
 			to int above. A blank string will be cast to decimal 0, which is OK.
 		*/
-		if ( empty($_POST['title'] ) || empty( $_POST['description'] ) || 
+		if ( empty($_POST['title'] ) || 
 			(
 				empty($_POST['title_pos_x']) && !is_numeric($_POST['title_pos_x'])
 			)
@@ -357,7 +356,6 @@ switch ( $_GET['action'] )
 			!array_key_exists('title_pos_y', $_POST) ||
 			!array_key_exists('background', $_POST) ||
 			!array_key_exists('title', $_POST) ||
-			!array_key_exists('description', $_POST) ||
 			!array_key_exists('link', $_POST) ||
 			!array_key_exists('id', $_POST)
 		) {
@@ -400,7 +398,7 @@ switch ( $_GET['action'] )
 			A blank string should never get here, though, because of the casting
 			to int above. A blank string will be cast to decimal 0, which is OK.
 		*/
-		if ( empty( $_POST['title'] ) || empty( $_POST['description'] ) || 
+		if ( empty( $_POST['title'] ) || 
 			(
 				empty( $_POST['title_pos_x'] ) &&  ! is_numeric( $_POST['title_pos_x'] )
 			)

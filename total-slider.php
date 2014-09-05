@@ -3,7 +3,7 @@
 Plugin Name: Total Slider
 Plugin URI: http://www.totalslider.com/
 Description: The best experience for building sliders, with true WYSIWYG, drag & drop and more!
-Version: 1.1.4
+Version: 1.1.5
 Author: Peter Upfold
 Author URI: http://www.vanpattenmedia.com/
 License: GPLv2 or later
@@ -11,7 +11,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: total_slider
 /* ----------------------------------------------*/
 
-/*  Copyright (C) 2011-2013 Peter Upfold.
+/*  Copyright (C) 2011-2014 Peter Upfold.
 
     This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -39,6 +39,10 @@ define( 'TOTAL_SLIDER_DATAFORMAT_VERSION', '1.1' );
 /*VPM_33x_CONDITIONAL*/
 if ( ! version_compare( get_bloginfo('version'), '3.4', '>=' ) ) {
 	define( 'TOTAL_SLIDER_33x_WORKAROUND', true );
+}
+/*VPM_4x_CONDITIONAL*/
+if ( version_compare( get_bloginfo( 'version' ), '4.0', '>=' ) ) {
+	define( 'TOTAL_SLIDER_SHOULD_LOAD_EXTENDED_MEDIA_JS', true );
 }
 
 
@@ -424,6 +428,12 @@ class Total_Slider {
 
 			wp_enqueue_script( 'media' );
 			wp_enqueue_script( 'media-upload' );
+
+			if ( defined( 'TOTAL_SLIDER_SHOULD_LOAD_EXTENDED_MEDIA_JS' ) && TOTAL_SLIDER_SHOULD_LOAD_EXTENDED_MEDIA_JS ) {
+				wp_enqueue_script( 'media-views' );
+				wp_enqueue_script( 'media-editor' );
+				wp_enqueue_script( 'media-grid' );
+			}
 			wp_enqueue_script( 'thickbox' );
 			wp_enqueue_style( 'thickbox' );
 

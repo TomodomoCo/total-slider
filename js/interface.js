@@ -1,4 +1,4 @@
-/*  Copyright (C) 2011-2013 Peter Upfold.
+/*  Copyright (C) 2011-2014 Peter Upfold.
 
     This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -618,10 +618,6 @@ jQuery(document).ready(function($) {
 		if ($('#edit-slide-title').val().length < 1)
 		{ // blank title
 			validationErrors[validationErrors.length] = _total_slider_L10n.validationNoSlideTitle;
-		}
-		if ($('#edit-slide-description').val().length < 1)
-		{ // blank description
-			validationErrors[validationErrors.length] = _total_slider_L10n.validationNoSlideDescription;
 		}
 		if ($('#edit-slide-image-url').val().length > 1 && !isUrl($('#edit-slide-image-url').val()))
 		{	// if we have a background URL set, but it is not a proper URL
