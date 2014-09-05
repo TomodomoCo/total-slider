@@ -6,7 +6,7 @@ Print the JavaScript to inject into the Media Uploader
 
 /* ----------------------------------------------*/
 
-/*  Copyright (C) 2011-2013 Peter Upfold.
+/*  Copyright (C) 2011-2014 Peter Upfold.
 
     This program is free software; you can redistribute it and/or
         modify it under the terms of the GNU General Public License

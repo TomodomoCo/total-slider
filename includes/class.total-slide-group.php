@@ -6,7 +6,7 @@ This class provides a set of methods for manipulating the slide group and its sl
 It is used by ajax_interface.php, primarily.
 /* ----------------------------------------------*/
 
-/*  Copyright (C) 2011-2013 Peter Upfold.
+/*  Copyright (C) 2011-2014 Peter Upfold.
 
     This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
