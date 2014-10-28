@@ -1,9 +1,11 @@
 <?php
 /*
-Print admin JS reference
- 
-When WordPress is displaying the WP-Admin page headers, add a reference to the
-ajax_interface.php access URL, so we can pass it to TinyMCE popup iframes.
+ * Print admin JS reference
+ * 
+ * When WordPress is displaying the WP-Admin page headers, add a reference to the
+ * ajax_interface.php access URL, so we can pass it to TinyMCE popup iframes.
+ *
+ */
 
 /* ----------------------------------------------*/
 

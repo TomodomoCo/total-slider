@@ -1,9 +1,11 @@
 <?php
 /*
-Total Slider Data Format Upgrade Tool -- v1.0.x - v1.1
-	
-This file is invoked by Total Slider when the user has upgraded the plugin,
-to ensure that the data format has been upgraded to the latest version.
+ * Total Slider Data Format Upgrade Tool -- v1.0.x - v1.1
+ * 
+ * This file is invoked by Total Slider when the user has upgraded the plugin,
+ * to ensure that the data format has been upgraded to the latest version.
+ *
+ */
 
 /* ----------------------------------------------*/
 

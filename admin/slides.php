@@ -1,8 +1,9 @@
 <?php
 /*
-Slides page       
- 
-Print the actual slides page for adding, editing and removing the slides.
+ * Slides page
+ * Print the actual slides page for adding, editing and removing the slides.
+ *
+ */
 
 /* ----------------------------------------------*/
 

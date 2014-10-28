@@ -1,11 +1,13 @@
 <?php
 /*
-Total Slider Ajax Interface
-	
-This file is invoked by Total Slider when the user is manipulating
-slides in the edit interface. It is responsible for receiving commands
-from the edit interface, executing them (invoking the Total_Slide_Group class)
-and returning JSON to the interface on success, or failure.
+ * Total Slider Ajax Interface
+ * 
+ * This file is invoked by Total Slider when the user is manipulating
+ * slides in the edit interface. It is responsible for receiving commands
+ * from the edit interface, executing them (invoking the Total_Slide_Group class)
+ * and returning JSON to the interface on success, or failure.
+ *
+ */
 
 /* ----------------------------------------------*/
 

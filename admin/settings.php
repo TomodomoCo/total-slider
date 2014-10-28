@@ -1,9 +1,11 @@
 <?php
-/*
-Settings page       
- 
-Print the settings page to output, and also handle any of the Settings forms if they
-have come back to us.
+/**
+ * Settings page       
+ * 
+ * Print the settings page to output, and also handle any of the Settings forms if they
+ * have come back to us.
+ *
+ */
 
 /* ----------------------------------------------*/
 

@@ -1,8 +1,10 @@
 <?php
 /*
-Print admin CSS
-
-Print the admin CSS to show our admin menu icons.
+ * Print admin CSS
+ * 
+ * Print the admin CSS to show our admin menu icons.
+ *
+ */
 
 /* ----------------------------------------------*/
 

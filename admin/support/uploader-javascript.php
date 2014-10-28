@@ -1,8 +1,10 @@
 <?php
 /*
-Print uploader JavaScript
-
-Print the JavaScript to inject into the Media Uploader
+ * Print uploader JavaScript
+ *
+ * Print the JavaScript to inject into the Media Uploader
+ *
+ */
 
 /* ----------------------------------------------*/
 

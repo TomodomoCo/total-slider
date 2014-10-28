@@ -29,15 +29,41 @@ Text Domain: total_slider
 */
 
 
+/**
+ * A constant used to avoid the direct browser access of Total Slider plugin PHP files.
+ */
 define( 'TOTAL_SLIDER_IN_FUNCTIONS', true );
+
+/**
+ * Defines the WordPress capability needed to manage Total Slider slides. This is attached to a WP role in the plugin's Settings page.
+ */
 define( 'TOTAL_SLIDER_REQUIRED_CAPABILITY', 'total_slider_manage_slides' );
+
+/**
+ * The maximum number of slide groups supported.
+ */
 define( 'TOTAL_SLIDER_MAX_SLIDE_GROUPS', 24 );
+
+/**
+ * The default pixel width used for cropping slide background images.
+ */
 define( 'TOTAL_SLIDER_DEFAULT_CROP_WIDTH', 600 );
+
+/**
+ * The default pixel height used for cropping slide background images.
+ */
 define( 'TOTAL_SLIDER_DEFAULT_CROP_HEIGHT', 300 );
+
+/**
+ * The current version of the Total Slider data format. Used to determine if a data format upgrade is needed.
+ */
 define( 'TOTAL_SLIDER_DATAFORMAT_VERSION', '1.1' );
 
 /*VPM_4x_CONDITIONAL*/
 if ( version_compare( get_bloginfo( 'version' ), '4.0', '>=' ) ) {
+	/**
+	 * If this is WordPress 4.0, we should load the extended media JavaScript includes.
+	 */
 	define( 'TOTAL_SLIDER_SHOULD_LOAD_EXTENDED_MEDIA_JS', true );
 }
 
@@ -51,6 +77,10 @@ $TS_The_Tpl_Error = false;
 
 /******************************************** Total_Slider main class ********************************************/
 
+/**
+ * Class: The main Total Slider class used for initialisation and routing. 
+ *
+ */
 class Total_Slider {
 
 
@@ -85,14 +115,16 @@ class Total_Slider {
 
 	/***********	// !Registration, first-time, etc.	***********/
 
+	/**
+	 * Upon plugin activation, creates the total_slider_slide_groups option in wp_options/
+	 *
+	 * This creates the total_slider_slide_groups option in wp_options if it does not already
+	 * exist. Also set up a base capability for administrator to access the Slider Admin page,
+	 * and configure some default general options.
+	 *
+	 * @return void
+	 */
 	public static function create_slides_option_field() {
-	/*
-		Upon plugin activation, creates the total_slider_slide_groups option
-		in wp_options, if it does not already exist.
-
-		Also set up a base capability for administrator to access the Slider
-		Admin page, and configure some default general options.
-	*/
 	
 		global $current_user;
 	
@@ -141,12 +173,13 @@ class Total_Slider {
 
 	}
 	
+	/**
+	 * Check to see if an upgrade to the data format is required, and run it if necessary.
+	 *
+	 * @return void
+	 */
 	public static function upgrade() {
-	/*
-		Check to see if an upgrade to Total Slider's data format is required, and if
-		so, kick off the appropriate code to run the upgrade.
-	*/
-	
+
 		if ( ! get_option('total_slider_dataformat_version') ) {
 			// Total Slider has not been data-upgraded since before the version was introduced (1.0.x)
 			
@@ -158,19 +191,22 @@ class Total_Slider {
 	
 	}
 
+	/**
+	 * Register the Total Slider widget, so it can be used in a theme later.
+	 *
+	 * @return void
+	 */
 	public static function register_as_widget() {
-	/*
-		Register the output to the theme as a widget
-	*/
 
 		register_widget( 'Total_Slider_Widget' );
 
 	}
 
+	/**
+	 * Load the GetText domain for this plugin's translatable strings.
+	 *
+	 */
 	public static function load_text_domain() {
-	/*
-		Load the GetText domain for this plugin's translatable strings.
-	*/
 
 		load_plugin_textdomain( 'total_slider', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
@@ -178,41 +214,58 @@ class Total_Slider {
 
 	/***********	Utility Functions	***********/
 
+	/**
+	 * Sanitize a slide group slug, for accessing the wp_option row with that slug name.
+	 *
+	 * A wp_option name cannot be greater than 64 chars, so we truncate after 42 chars (63 - length of our option prefix),
+	 * so as not to request a too-long wp_option name from MySQL.
+	 * The create routine will handle if there is an existing name conflict due to the truncation.
+	 *
+	 * @param string $slug The slug to sanitize.
+	 * @return void
+	 */
 	public static function sanitize_slide_group_slug( $slug ) {
 	/*
-		Sanitize a slide group slug, for accessing the wp_option row with that slug name.
-
-		A wp_option name cannot be greater than 64 chars, so we truncate after 42 chars (63 - length of our option prefix),
-		so as not to request a too-long wp_option name from MySQL.
-
-		The create routine will handle if there is an existig name conflict due to the truncation.
-
+		
+	
 	*/
 		return substr ( preg_replace( '/[^a-zA-Z0-9_\-]/', '', $slug ), 0, ( 63 - strlen('total_slider_slides_' ) ) );
 	}
 
+	/**
+	 * Return an array of the current slides of this slug, in current precedence order.
+	 *
+	 * @param string $slug The slug of the slide group from which to get the slides.
+	 * @return array
+	 */
 	private function get_current_slides( $slug ) {
-	/*
-		Returns an array of the current slides in the database, in their
-		current precedence order.
-	*/
 		return get_option( 'total_slider_slides_' . Total_Slider::sanitize_slide_group_slug($slug) );
 	}
 
+	/**
+	 * Filter a uniqid() derived string for output to the admin interface HTML.
+	 *
+	 * This removes any characters that are not alphanumeric or an underscore from the returned uniqid().
+	 *
+	 * @param string $id_to_filter The uniqid() derived string
+	 * @return string
+	 */
 	private function id_filter( $id_to_filter ) {
-	/*
-		Filter a uniqid string for output to the admin interface HTML.
-	*/
 
 		return preg_replace( '[^0-9a-zA-Z_]', '', $id_to_filter );
 
 	}
 
+	/**
+	 * Redirect, from within the admin panel for this plugin, back to the plugin's main page.
+	 *
+	 * As the function name suggests, this is an undesirable hack.
+	 *
+	 * @param string $location Redirect to 'root' or 'edit-slide-group' pages.
+	 * @param string $data The slide group slide to redirect, if 'edit-slide-group' is the $location.
+	 * @return void
+	 */
 	public static function ugly_js_redirect( $location, $data = false ) {
-	/*
-		Redirect, from within the admin panel for this plugin back to the plugin's main page.
-	*/
-
 		switch ( $location ) {
 
 			case 'root':
@@ -221,7 +274,7 @@ class Total_Slider {
 
 			case 'edit-slide-group':
 				$url = 'admin.php?page=total-slider&group=';
-				$url .= esc_attr(Total_Slider::sanitize_slide_group_slug($data));
+				$url .= esc_attr( Total_Slider::sanitize_slide_group_slug( $data ) );
 			break;
 
 			default:
@@ -238,12 +291,13 @@ class Total_Slider {
 
 	}
 	
-	public static function determine_template()	{
-	/*
-		Determine which template we should use, and its location, from the slide group's template
-		attribute.
-	*/
-	
+	/**
+	 * Determine which template to use, and its location, from the slide group's template attribute. 
+	 *
+	 * @return string
+	 */
+	public static function determine_template() {
+
 		global $TS_The_Slug, $TS_The_Template, $TS_The_Tpl_Error;
 		
 		if ( $TS_The_Template ) {
@@ -278,14 +332,17 @@ class Total_Slider {
 		
 	}
 
+	/**
+	 * Set the TOTAL_SLIDER_REQUIRED_CAPABILITY capability against this role, so this role can manage slides.
+	 *
+	 * Will clear out the capability from all roles, then add it to both administrator and the specified roles.
+	 * Administrators are always given access by this function.
+	 *
+	 * @param array $roles_to_set An array containing the roles to set, as strings.
+	 * @return boolean
+	 */
 	public static function set_capability_for_roles( $roles_to_set) {
-	/*
-		Set the TOTAL_SLIDER_REQUIRED_CAPABILITY capability against this role, so this WordPress
-		user role is able to manage the slides.
-
-		Will clear out the capability from all roles, then add it to both administrator and the
-		specified roles. (Administrator always has access).
-	*/
+	
 		global $wp_roles;
 
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -321,12 +378,16 @@ class Total_Slider {
 
 	}
 	
+	/**
+	 * Create a Total Slider WP_Widget from a [totalslider] shortcode in the post body and return its contents.
+	 *
+	 * @param array $atts An array containing the shortcode attributes. See WordPress Codex documentation. We desire a string, 'group', containing the slide group slug.
+	 * @param string $content Not used by our shortcode handler. 
+	 * @param string $tag Not used by our shortcode handler.
+	 * @return string
+	 */
 	public static function shortcode_handler($atts, $content, $tag) {
-	/*
-		Create a Total Slider WP_Widget from a [totalslider] shortcode in
-		the post body.
-	*/
-	
+
 		extract( shortcode_atts( array(
 			'group' => NULL
 		), $atts ));
@@ -345,8 +406,8 @@ class Total_Slider {
 		ob_start();
 		
 		the_widget( 'Total_Slider_Widget', array(
-											'groupSlug' => Total_Slider::sanitize_slide_group_slug($group)
-											) );
+			'groupSlug' => Total_Slider::sanitize_slide_group_slug($group)
+		) );
 		
 		$output = ob_get_contents();
 		ob_end_clean();
@@ -357,14 +418,15 @@ class Total_Slider {
 
 	/***********	// !Control passing, runtime UI setup, enqueuing etc.	***********/
 
+	/**
+	 * Intended to hook 'init', this function passes control to ajax_interface.php if a Total Slider action was requested.
+	 *
+	 * Note that this should use the admin_ajax XML interface in time, for improved adherence to WordPress
+	 * standards.
+	 *
+	 * @return void
+	 */
 	public static function pass_control_to_ajax_handler() {
-	/*
-		If the user is trying to perform an Ajax action, immediately pass
-		control over to ajax_interface.php.
-
-		This should hook admin_init() (therefore be as light as possible).
-	*/
-
 		if (
 			array_key_exists( 'page', $_GET ) &&
 			'total-slider' == $_GET['page'] &&
@@ -376,10 +438,15 @@ class Total_Slider {
 
 	}
 
+	/**
+	 * Add the Slider submenu to the WordPress admin sidebar.
+	 *
+	 * This function also will load in prerequisite CSS and JavaScript files if this admin page load
+	 * is for the Total Slider admin pages.
+	 *
+	 * @return void
+	 */
 	public static function add_admin_submenu() {
-	/*
-		Add the submenu to the admin sidebar for the configuration screen.
-	*/
 		if ( array_key_exists( 'page', $_GET ) && 'total-slider' == $_GET['page'] )
 		{
 		
@@ -506,34 +573,44 @@ class Total_Slider {
 
 	}
 
+	/**
+	 * Print the JavaScript used to display the WordPress Help Pointer.
+	 *
+	 * @return void
+	 */
 	public static function print_help_pointer_js() {
-	/*
-		Print the help pointer JavaScript.
-	*/
 
 		require( dirname( __FILE__ ) . '/admin/support/help-pointer-js.php' );
 
 	}
 	
+	/**
+	 * Add a reference to the ajax_interface.php access URL, so we can pass this to TinyMCE popup frames.
+	 *
+	 * This resolves an issue where TinyMCE popup frames need to access ajax_interface.php, but would not
+	 * know where this file was located. To avoid hard-coding the plugins directory, this function spits out
+	 * a JavaScript variable into the page with the correct URL to access ajax_interface.php, so this can
+	 * be referenced by the TinyMCE popup. A bit of a hack.
+	 *
+	 * @return void
+	 *
+	 */
 	public static function print_js_admin_page_reference() {
-	/*
-		When WordPress is displaying the WP-Admin page headers, add a reference to the
-		ajax_interface.php access URL, so we can pass it to TinyMCE popup iframes.
-	*/
-
 		require( dirname( __FILE__ ) . '/admin/support/js-admin-page-reference.php' );	
 	
 	}
 
+	/**
+	 * When WP is enqueueing styles, inject our Slider CSS and JavaScript.
+	 *
+	 * We use the Template Manager to canonicalize the URIs and paths for the JS and CSS. If the $context is
+	 * 'backend', we load the CSS only, but not the JavaScript.
+	 *
+	 * @param string $context Either 'frontend' (default) or 'backend'.
+	 * @return void
+	 */
 	public static function enqueue_slider_frontend( $context = 'frontend' )	{
-	/*
-		When WordPress is enqueueing the styles, inject our slider CSS and JavaScript in. We will use the Template Manager
-		to canonicalize the URIs and paths for the JS and CSS (including .min.js etc.), and simply enqueue what it tells us to here.
 
-		If $context is 'backend', we will load the CSS only and not the JS.
-
-	*/
-	
 		global $TS_The_Template;
 	
 		// load .min.js if available, if SCRIPT_DEBUG is not true in wp-config.php
@@ -596,22 +673,24 @@ class Total_Slider {
 
 	}
 
+	/**
+	 * Add our help tab to the Slides page.
+	 *
+	 * @return void
+	 */
 	public static function add_slides_help() {
-	/*
-		Add our help tab to the Slides page.
-	*/
 
 		require( dirname( __FILE__ ) . '/admin/support/help.php' );
 
 	}
 
+	/**
+	 * Return the object containing all i18n-capable strings in interface.js, ready for wp_localize_script().
+	 * 
+	 * @return array
+	 */
 	public static function js_l10n()
 	{
-	/*
-		Return the object containing all of the i18n-capable and l10n-capable
-		strings in the interface.js file, ready for wp_localize_script.
-	*/
-
 		return array (
 
 			'switchEditWouldLoseChanges'	=> __( "You are still editing the current slide. Switching to a different slide will lose your changes.\n\nDo you want to lose your changes?", 'total_slider' ),
@@ -650,12 +729,14 @@ class Total_Slider {
 
 	}
 	
+	/**
+	 * Bootstrap the setup of the Total Slider insert button on the rich text editing toolbar.
+	 *
+	 * @return void
+	 *
+	 */
 	public static function bootstrap_tinymce_plugin() {
-	/*
-		Bootstrap the setup of the Total Slider insert button on the rich text
-		editing toolbar, if enabled and desired.
-	*/
-	
+
 		if ( !current_user_can('edit_posts') &&  ! current_user_can('edit_pages') )
 		{
 			return;
@@ -681,19 +762,25 @@ class Total_Slider {
 	
 	}
 	
+	/**
+	 * Register our TinyMCE plugin JavaScript, so it can be run by TinyMCE.
+	 *
+	 * @param array $plugin_array The TinyMCE plugin array, which we modify and return
+	 * @return array
+	 */
 	public static function register_tinymce_plugin( $plugin_array ) {
-	/*
-		Register our TinyMCE plugin JavaScript, so it can be run by TinyMCE.
-	*/
 		$plugin_array['total_slider_insert'] = plugin_dir_url( __FILE__ ) . 'tinymce-custom/mce/total_slider_insert/editor_plugin.js';
 		return $plugin_array;
 		
 	}
 	
+	/**
+	 * Add our new Total Slider button to the TinyMCE buttons toolbar.
+	 *
+	 * @param array $buttons The existing TinyMCE array of buttons, which we modify and retunr
+	 * @return array
+	 */
 	public static function register_tinymce_button ( $buttons ) {
-	/*
-		Add our new Total Slider button to the TinyMCE buttons toolbar.
-	*/	
 		array_push( $buttons, 'separator', 'total_slider_insert' );
 		return $buttons;
 				
@@ -701,23 +788,27 @@ class Total_Slider {
 
 	/***********	// !Print functions for each plugin admin page	***********/
 
+	/**
+	 * Print the actual page HTML for adding, deleting Slide Groups and offering the 'edit' buttons for a particular Group.
+	 *
+	 * @return void
+	 *
+	 */
 	public static function print_slide_groups_page() {
-	/*
-		Print the page for adding, deleting Slide Groups and for pushing people over
-		to the 'actual' slides editing interface for that Slide Group.
-	*/
-	
+
 		global $allowed_template_locations;
 
 		require( dirname( __FILE__ ) . '/admin/slide-groups.php' );
 
 	}
 
+	/**
+	 * Print the actual page HTML for adding, editing and removing the slides of a particular Slide Group.
+	 *
+	 * @return void
+	 *
+	 */
 	public static function print_slides_page() {
-	/*
-		Print the actual slides page for adding, editing and removing the slides.
-	*/
-
 		global $TS_The_Slug, $TS_The_Tpl_Error, $allowed_template_locations, $TS_The_Template;
 
 		require( dirname( __FILE__ ) . '/admin/slides.php' );
@@ -726,53 +817,59 @@ class Total_Slider {
 
 
 
+	/**
+	 * Print the actual page HTML for our settings page. Also handles Settings forms when submitted.
+	 *
+	 * @return void
+	 */
 	public static function print_settings_page() {
-	/*
-		Print the settings page to output, and also handle any of the Settings forms if they
-		have come back to us.
-	*/
-
 		require( dirname( __FILE__ ) . '/admin/settings.php' );
 
 	}
 
+	/**
+	 * Print the JavaScript to inject into the Media Uploader.
+	 *
+	 * @return void
+	 *
+	 */
 	public static function print_uploader_javascript() {
-	/*
-		Print the JavaScript to inject into the Media Uploader
-	*/
-
 		require( dirname( __FILE__ ) . '/admin/support/uploader-javascript.php' );
 
 	}
 
 	/***********	// !Metabox printer callbacks	***********/
 
+	/**
+	 * Print the HTML for the credit/notes metabox
+	 *
+	 * @return void
+	 *
+	 */
 	public static function print_credits_metabox()
 	{
-	/*
-		Print to output the contents of the credits/notes metabox.
-	*/
-
 		require( dirname( __FILE__) . '/admin/metaboxes/credits.php' );
-
 	}
 
+	/**
+	 * Print the HTML for the slide sorter/slide listing metabox.
+	 *
+	 * @return void
+	 */
 	public static function print_slide_sorter_metabox() {
-	/*
-		Print to output the contents of the slide sorter/slide listing metabox.
-	*/
-
 		global $TS_The_Slug;
 
 		require( dirname( __FILE__ ) . '/admin/metaboxes/slide-sorter.php' );
-
 	}
 	
+	/**
+	 * Print the HTML for the slide template metabox.
+	 *
+	 * @return void
+	 *
+	 */
 	public static function print_slide_template_metabox() {
-	/*
-		Print to output the contents of the slide template metabox.
-	*/
-	
+
 		global $TS_The_Slug;
 	
 		if ( ! $TS_The_Slug ) {
@@ -862,10 +959,13 @@ class Total_Slider {
 		
 	}
 
+	/**
+	 * Print the HTML for the slide preview metabox.
+	 *
+	 * @return void
+	 *
+	 */
 	public static function print_slide_preview_metabox() {
-	/*
-		Print to output the contents of the slide preview metabox.
-	*/
 	
 		global $TS_The_Template;
 	
@@ -873,22 +973,26 @@ class Total_Slider {
 
 	}
 
+	/**
+	 * Print the HTML for the slide editor metabox.
+	 *
+	 * @return void 
+	 */
 	public static function print_slide_editor_metabox()
 	{
-	/*
-		Print to output the contents of the slide editor metabox.
-	*/
 
 		require( dirname( __FILE__ ) . '/admin/metaboxes/slide-editor.php' );
 
 	}
 
+	/**
+	 * Print the CSS that shows our WordPress admin menu icon in the sidebar.
+	 *
+	 * @return void
+	 *
+	 */
 	public static function print_admin_css() {
-	/*
-		Print the admin CSS to show our admin menu icons.
-	*/
 		require( dirname( __FILE__ ) . '/admin/support/admin-css.php' );
-
 	}
 
 
@@ -897,6 +1001,14 @@ class Total_Slider {
 require_once( dirname( __FILE__ ) . '/includes/class.total-slider-widget.php' );
 
 
+/**
+ * Stub function that calls Total_Slider::shortcode_handler
+ *
+ * @param array $atts An array containing the shortcode attributes. See WordPress Codex documentation. We desire a string, 'group', containing the slide group slug.
+ * @param string $content Not used by our shortcode handler. 
+ * @param string $tag Not used by our shortcode handler.
+ * @return string
+ */
 function total_slider_shortcode( $atts, $content, $tag ) {
 	return Total_Slider::shortcode_handler( $atts, $content, $tag );
 }

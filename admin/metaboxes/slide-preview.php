@@ -1,8 +1,10 @@
 <?php
 /*
-Slide Preview metabox
-
-Print to output the contents of the slide preview metabox. 
+ * Slide Preview metabox
+ * 
+ * Print to output the contents of the slide preview metabox. 
+ *
+ */
 
 /* ----------------------------------------------*/
 

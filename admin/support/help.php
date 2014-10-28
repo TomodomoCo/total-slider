@@ -1,8 +1,10 @@
 <?php
 /*
-Print help
-
-Add the slides admin help to the current screen. 
+ * Print help
+ *
+ * Add the slides admin help to the current screen. 
+ *
+ */
 
 /* ----------------------------------------------*/
 

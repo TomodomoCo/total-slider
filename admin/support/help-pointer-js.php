@@ -1,6 +1,8 @@
 <?php
 /*
-Admin Help Pointer JavaScript
+ * Admin Help Pointer JavaScript
+ *
+ */
 
 /* ----------------------------------------------*/
 

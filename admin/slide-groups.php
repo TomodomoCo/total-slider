@@ -1,9 +1,11 @@
 <?php
-/*
-Slide Groups page       
- 
-Print the page for adding, deleting Slide Groups and for pushing people over
-to the 'actual' slides editing interface for that Slide Group.
+/**
+ * Slide Groups page
+ *
+ * Print the page for adding, deleting Slide Groups and for pushing people over
+ * to the 'actual' slides editing interface for that Slide Group.
+ *
+ */
 
 /* ----------------------------------------------*/
 

@@ -1,8 +1,10 @@
 <?php
 /*
-Credits metabox
- 
-Print to output the contents of the credits/notes metabox.
+ * Credits metabox
+ * 
+ * Print to output the contents of the credits/notes metabox.
+ *
+ */
 
 /* ----------------------------------------------*/
 
