@@ -25,6 +25,19 @@ Total Slider Slide Group Class
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/*
+ * NEW DATA FORMAT PLAN:
+ *
+ * Each slide is a custom post type wp_post. The custom post type is for Slides, not Slide Groups.
+ *
+ * Slide Groups are implemented as a taxonomy, allowing a Slide Group's slide to be retrieved with
+ * a search on the taxonomy.
+ *
+ * Slide fields other than title/description are implemented as custom fields.
+ *
+ *
+ */
+
 if ( ! defined('TOTAL_SLIDER_IN_FUNCTIONS' ) ) {
 	header( 'HTTP/1.1 403 Forbidden' );
 	die( '<h1>Forbidden</h1>' );
