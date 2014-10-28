@@ -203,7 +203,7 @@ var VPM_SHOULD_DISABLE_XY = <?php echo ( $template_options['disable_xy'] ) ? 'tr
 			<?php do_meta_boxes( '_total_slider_slide', 'normal', null );?>
 		</div>
 
-		<div class="metabox-holder columns-2<?php /*VPM_33x_CONDITIONAL*/ echo ( defined( 'TOTAL_SLIDER_33x_WORKAROUND' ) ) ? ' has-right-sidebar' : ''; ?>">
+		<div class="metabox-holder columns-2">
 			<div class="inner-sidebar" id="postbox-container-1">
 				<?php do_meta_boxes( '_total_slider_slide_bottom', 'side', null );?>
 			</div>
