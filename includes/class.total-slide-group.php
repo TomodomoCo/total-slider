@@ -1,9 +1,11 @@
 <?php
 /*
+ * This file contains the Total Slider Slide Group Class, which provides a set of methods for manipulating
+ * the slide group and its slides at the database level.
+ *
+/*
 Total Slider Slide Group Class
 	
-This class provides a set of methods for manipulating the slide group and its slides at the database level.
-It is used by ajax_interface.php, primarily.
 /* ----------------------------------------------*/
 
 /*  Copyright (C) 2011-2014 Peter Upfold.
@@ -69,29 +71,60 @@ static $allowed_template_locations = array(
 				
 	
 	*/
-	
-class Total_Slide_Group { 
 /*
-	Defines a slide group object for the purposes of storing a list of available
-	groups in the wp_option	'total_slider_slide_groups'.
-	
-	This object specifies the slug and friendly group name. We then use the slug
-	to work out which wp_option to query later -- total_slider_slides_[slug].
-	
-	This class provides a set of methods for manipulating the slide group and its slides
-	at the database level. It is used by ajax_interface.php, primarily.
-*/
+ * Class: This class provides a set of methods for manipulating the slide group and its slides at the database level. It is used by ajax_interface.php, primarily.
+ *
+ * Defines a slide group object for the purposes of storing a list of available groups in the wp_option 'total_slider_slide_groups'.
+ * This object specifies the slug and friendly group name. We then use the slug to work out which wp_option to query later -- total_slider_slides_[slug].
+ * This class provides a set of methods for manipulating the slide group and its slides at the database level. It is used by ajax_interface.php, primarily.
+ *
+ */	
+class Total_Slide_Group { 
 
+	/**
+	 * The URL-friendly slug of this Slide Group.
+	 *
+	 * @var string
+	 */
 	public $slug;
+
+	/**
+	 * The original slug of this Slide Group, if it becomes sanitized for display.
+	 *
+	 * @var string
+	 */
 	public $originalSlug;
+
+	/**
+	 * The friendly name of this Slide Group.
+	 *
+	 * @var string
+	 */
 	public $name;
+
+	/**
+	 * The location of the template used to render this Slide Group. One of 'builtin','theme','downloaded','legacy'.
+	 *
+	 * @var string
+	 */
 	public $templateLocation;
+
+	/**
+	 * The slug of the template used to render this Slide Group. Along with templateLocation, this allows the template to be identified
+	 * and located.
+	 *
+	 * @var string
+	 */
 	public $template;
 	
+	/**
+	 * Set the slug and name for this Slide Group.
+	 *
+	 * @param string $slug Slug for this Slide Group.
+	 * @param string $name Name of this Slide Group.
+	 * @return void
+	 */
 	public function __construct( $slug, $name = null ) {
-	/*
-		Set the slug and name for this group.
-	*/
 	
 		$this->slug = $this->sanitize_slug($slug);
 		$this->originalSlug = $this->slug;
@@ -102,17 +135,25 @@ class Total_Slide_Group {
 		}
 	}
 	
+	/**
+	 * Sanitize a Slide Group slug, so that we can successfully access a wp_option row with that slug.
+	 *
+	 * @param string $slug The slug to sanitize.
+	 * @return string
+	 */
 	public function sanitize_slug( $slug ) {
-	/*
-		Sanitize a slide group slug, for accessing the wp_option row with that slug name.		
-	*/
 		return substr( preg_replace( '/[^a-zA-Z0-9_\-]/', '', $slug ), 0, ( 63 - strlen( 'total_slider_slides_' ) ) );
 	}	
 	
+	/**
+	 * Fetch this Slide Group's properties, including slug, name, templateLocation, template, from the database.
+	 *
+	 * This uses the slug provided in the constructor to load in this Slide Group's other properties.
+	 *
+	 * @return boolean
+	 *
+	 */
 	public function load() {
-	/*
-		Load this slide group's name and slug into the object, from the DB.
-	*/
 	
 		global $allowed_template_locations;
 	
@@ -164,10 +205,13 @@ class Total_Slide_Group {
 		}
 	}
 	
+	/**
+	 * Save this Slide Group, as currently represented in this object, to the database.
+	 *
+	 * @return void
+	 *
+	 */
 	public function save() {
-	/*
-		Save this new slide group to the slide groups option.
-	*/
 	
 		if ( ! get_option('total_slider_slide_groups' ) ) {
 			// create option
@@ -201,10 +245,12 @@ class Total_Slide_Group {
 	
 	}
 	
+	/**
+	 * Delete this Slide Group from the database. This currently does not also delete the slides themselves.
+	 *
+	 * @return void
+	 */
 	public function delete() {
-	/*
-		Delete the slide group with this slug from the list.
-	*/
 	
 		if ( ! get_option('total_slider_slide_groups' ) ) {
 			return false;
@@ -237,12 +283,21 @@ class Total_Slide_Group {
 	
 	}
 	
+	/**
+	 * Given a pre-validated set of data, create a new slide.
+	 *
+	 * Also returns the new slide ID for re-sorting purposes.
+	 *
+	 * @param string $title
+	 * @param string $description
+	 * @param mixed $background This can be specified as a URL, or an attachment ID.
+	 * @param mixed $link This can be specified as a URL, or a post ID.
+	 * @param integer $title_pos_x The X-offset where the description box should be displayed.
+	 * @param integer $title_pos_y The Y-offset where the description box should be displayed.
+	 *
+	 * @return string
+	 */
 	public function new_slide( $title, $description, $background, $link, $title_pos_x, $title_pos_y ) {
-	/*
-			Given a pre-validated set of data (title, description, backgorund,
-			link, title_pos_x and title_pos_y, create a new slide and add to the
-			option. Return the new slide ID for resorting in another function.	
-	*/
 	
 		$current_slides = get_option('total_slider_slides_' . $this->slug);
 		
@@ -283,10 +338,13 @@ class Total_Slide_Group {
 		
 	}
 	
+	/**
+	 * Fetch the given slide from this Slide Group.
+	 *
+	 * @param string $slide_id
+	 * @return array
+	 */
 	public function get_slide( $slide_id ) {
-	/*
-		Fetch the whole object for the given slide ID.
-	*/
 	
 		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
 		
@@ -346,10 +404,19 @@ class Total_Slide_Group {
 	
 	}
 	
+	/**
+	 * Update the slide with the specified ID with the supplied pre-validated data.
+	 *
+	 * @param string $slide_id
+	 * @param string $title
+	 * @param string $description
+	 * @param mixed $background This can be specified as a URL, or an attachment ID.
+	 * @param mixed $link This can be specified as a URL, or a post ID.
+	 * @param integer $title_pos_x The X-offset where the description box should be displayed.
+	 * @param integer $title_pos_y The Y-offset where the description box should be displayed.
+	 * @return boolean
+	 */
 	public function update_slide( $slide_id, $title, $description, $background, $link, $title_pos_x, $title_pos_y ) {
-	/*
-		Given the slide ID, update that slide with the pre-filtered data specified.
-	*/
 	
 		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
 		$original_slides = $current_slides;
@@ -399,18 +466,17 @@ class Total_Slide_Group {
 	
 	}
 	
+	/**
+	 * Assess whether or not the given string is in a valid URL format.
+	 *
+	 * Imported from Drupal 7 common.inc:valid_url. This function is Drupal code and is Copyright 2001 - 2010 by the original authors.
+	 * This function, like the rest of this software, is GPL2-licensed.
+	 *
+	 * @param string $url
+	 * @return boolean
+	 */
 	public function validate_url($url) {
-	/*
-		Assess whether or not a given string is a valid URL format, based on
-		parse_url(). Returns true for valid format, false otherwise.
-		
-		Imported from Drupal 7 common.inc:valid_url.
-		
-		This function is Drupal code and is Copyright 2001 - 2010 by the original authors.
-		This function, like the rest of this software, is GPL2-licensed.
-		
-	*/
-	
+
 		if ( $url === '#' )
 		{
 			// allow a '#' character only
@@ -439,12 +505,14 @@ class Total_Slide_Group {
 	
 	}
 	
+	/**
+	 * Remove this slide from the Slide Group.
+	 *
+	 * @param string $slide_id
+	 * @return boolean
+	 */
 	public function delete_slide( $slide_id ) {
-	/*
-		Remove the slide with slideID from the slides
-		option.
-	*/
-	
+
 		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
 		
 		if ( false === $current_slides ) {
@@ -486,14 +554,15 @@ class Total_Slide_Group {
 	
 	}
 	
+	/**
+	 * Given the new slide order (array of sorted slide IDs as values), sort the slides in this order in the database.
+	 *
+	 * @param array $new_slide_order
+	 * @return boolean
+	 */
 	public function reshuffle($new_slide_order)
 	{
-	/*
-		Given a new, serialised set of slide order IDs in an array,
-		this function will shuffle the order of the slides with said
-		IDs in the options array.
-	*/
-	
+
 		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
 		
 		if ( false === $current_slides ) {
@@ -554,21 +623,29 @@ class Total_Slide_Group {
 	}
 
 	
+	/**
+	 * Save the given valid slide array to the database.
+	 *
+	 * @param array $slides_to_write
+	 * @return boolean
+	 */
 	private function save_slides($slides_to_write) {
-	/*
-		Dumb function that just updates the option with the array it is given.
-	*/
 	
 		return update_option( 'total_slider_slides_' . $this->slug, $slides_to_write );
 	
 	}
 	
+	/**
+	 * Remove all X/Y positional information from this Slide Group's slides.
+	 *
+	 * This is used when changing templates, to avoid the title/description box
+	 * from being off-screen on the new template. The user is warned in the UI
+	 * before they take this action, as it is destructive to X/Y data.
+	 *
+	 * @return boolean
+	 *
+	 */
 	public function remove_xy_data() {
-	/*
-		Remove all the X/Y positional information from this slide group's slides. This
-		is used when changing the slide group template, to avoid the title/description
-		box from being off-screen on the new template.
-	*/
 	
 		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
 		
@@ -599,11 +676,15 @@ class Total_Slide_Group {
 		
 	}
 	
+	/**
+	 * Render an HTML mini-preview of the slide images, for use in the widget selector. TODO UNFINISHED
+	 *
+	 * This allows an at-a-glance verification that the selected slide group is the desired slide group.
+	 *
+	 * @return void
+	 *
+	 */
 	public function mini_preview() {
-	/*
-		Render an HTML mini-preview of the slide images, for use in the widget selector. This allows
-		an at-a-glance verification that the selected slide group is the desired slide group.
-	*/	
 		
 		/*
 			* Extract background images from slides.

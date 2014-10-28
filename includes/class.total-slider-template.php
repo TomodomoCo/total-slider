@@ -1,12 +1,13 @@
 <?php
 /*
-
-	Template Manager
-	
-	Handles the determination of canonical template URIs and paths for inclusion and
-	enqueue purposes, as well as rendering the templates for edit-time JavaScript purposes.
-
-/* ----------------------------------------------*/
+ * Template Manager
+ *
+ * Handles the determination of canonical template URIs and paths, to allow inclusion and enqueue
+ * into the front- and backend. It also renders templates at editing time.
+ *
+ */
+ 
+ /* ----------------------------------------------*/
 
 /*  Copyright (C) 2011-2014 Peter Upfold.
 
@@ -51,49 +52,196 @@ if ( ! defined( 'WP_CONTENT_DIR' ) )
 	
 */
 
+/**
+ * Class: The class that represents a Total Slider template. Includes methods for canonicalizing paths, and rendering.
+ *
+ */
 class Total_Slider_Template {
 	
+	/**
+	 * This template's slug. Should correspond to its folder name.
+	 *
+	 * @var string
+	 */
 	private $slug;
+
+
+	/**
+	 * The template's location. One of 'builtin','theme','downloaded'
+	 *
+	 * @var string
+	 */
 	private $location; // one of 'builtin','theme','downloaded'
 	
+	/**
+	 * This template's metadata name -- the friendly name of the template.
+	 *
+	 * @var string
+	 */
 	private $md_name;
+
+	/**
+	 * The metadata URI -- for example, the template author's home page.
+	 *
+	 * @var string
+	 */
 	private $md_uri;
+
+	/**
+	 * The metadata description -- information about the template's style and purpose.
+	 *
+	 * @var string
+	 */
 	private $md_description;
+
+
+	/**
+	 * The version number of the template.
+	 *
+	 * @var string
+	 */
 	private $md_version;
+
+	/**
+	 * The template's author.
+	 *
+	 * @var string
+	 */
 	private $md_author;
+	
+	/**
+	 * The template author's personal page, for example.
+	 *
+	 * @var string
+	 */
 	private $md_author_uri;
+
+	/**
+	 * The license under which the template is made available.
+	 *
+	 * @var string
+	 */
+
 	private $md_license;
+	
+	/**
+	 * The URI to the template's license document.
+	 *
+	 * @var string
+	 */
 	private $md_license_uri;
+
+	/**
+	 * Any metadata tags the template wishes to be associated with.
+	 *
+	 * @var string
+	 */
 	private $md_tags;
 	
+	/**
+	 * The template's options -- an array of options, for example default crop width and crop height.
+	 *
+	 * @var array
+	 */
 	private $options;
 	
+	/**
+	 * String containing the contents of this template's CSS file.
+	 *
+	 * @var string
+	 */
 	private $template_file = null;
+
+	/**
+	 * String containing the contents of this template's PHP file.
+	 *
+	 * @var string
+	 */
 	private $template_php_file = null;
 	
+	/**
+	 * Determined from the template location and slug, the path to this template's files.
+	 *
+	 * @var string
+	 */
 	private $path_prefix = null;
+
+	/**
+	 * Determined from the template location and slug, the URI base path to this template's files.
+	 *
+	 * @var string
+	 */
 	private $uri_prefix = null;
 	
+	/**
+	 * The full file path to this template's PHP file.
+	 *
+	 * @var string
+	 */
 	private $php_path = null;
+
+	/**
+	 * The full file path to this template's JavaScript file.
+	 *
+	 * @var string
+	 */
 	private $js_path = null;
+
+	/**
+	 * The full file path to this template's minified JavaScript file.
+	 *
+	 * @var string
+	 */
 	private $js_min_path = null;
+
+	/**
+	 * The full file path to this template's CSS file.
+	 *
+	 * @var string
+	 */
 	private $css_path = null;
 	
+	/**
+	 * The fully qualified URI to this template's PHP file.
+	 *
+	 * @var string
+	 */
 	private $php_uri = null;
+
+	/**
+	 * The fully qualified URI to this template's JavaScript file.
+	 *
+	 * @var string
+	 */
 	private $js_uri = null;
+
+	/**
+	 * The fully qualified URI to this template's minified JavaScript file.
+	 *
+	 * @var string
+	 */
 	private $js_min_uri = null;
+
+	/**
+	 * The fully qualified URI to this template's CSS file.
+	 *
+	 * @var string
+	 */
 	private $css_uri = null;
 	
+	/**
+	 * Prepare this Template object.
+	 *
+	 * Check for existence of prerequisite files, prepare to be asked about this template's canonical URIs and paths
+	 * and, if required, be ready to lazy load metadata from the template files. Also prepares
+	 * for rendering of the template's JavaScript, which is done at editing time.
+	 *
+	 * @param string $slug
+	 * @param string $location One of 'builtin','theme','downloaded'
+	 * @return void
+	 */
 	public function __construct( $slug, $location ) {
-	/*
-		Prepare this Template -- pass in the slug of its directory, as
-		well as the location ('builtin','theme','downloaded').
-		
-		We will check for existence, prepare to be asked about this template's
-		canonical URIs and paths, and, if required, be ready to load metadata
-		from the PHP file, and render the template for JavaScript edit-side purposes.
-	*/
-	
+
 		global $allowed_template_locations;
 		
 		if ( ! is_array($allowed_template_locations ) )	{
@@ -117,34 +265,35 @@ class Total_Slider_Template {
 		
 	}
 	
+	/**
+	 * Sanitize a template slug before we assign it internally, or print it anywhere.
+	 *
+	 * A template slug must be fewer than 128 characters in length, unique, and consist only of
+	 * a-z, A-Z, 0-9, _, -.
+	 * The slug is used as the directory name for the template, as well as the base name for its
+	 * standard PHP, CSS and JavaScript files.
+	 *
+	 * @param string $slug
+	 */
 	public static function sanitize_slug($slug) {
-	/*
-		Sanitize a template slug before we assign it to our instance internally, or print
-		it anywhere.
-		
-		A template slug must be fewer than 128 characters in length, unique, and consist only
-		of the following characters:
-		
-			a-z, A-Z, 0-9, _, -
-			
-		The slug is used as the directory name for the template, as well as the basename for its
-		standard PHP, CSS and JS files.
-		
-	*/
-	
+
 		return substr( preg_replace( '/[^a-zA-Z0-9_\-]/', '', $slug ), 0, 128 );
 		
 	}
 	
+	/**
+	 * Construct canonical paths and URIs for this template's files, using the template slug and location.
+	 *
+	 * This will check that these canonicalized paths refer to paths that exist, so we are confident and
+	 * ready to enqueue necessary files in the front- or backend.
+	 * Will throw documented exceptions upon failure, which are caught and pretty-displayed in the admin UI if
+	 * a template is broken because of invalid paths.
+	 *
+	 * @return boolean
+	 *
+	 */
 	private function canonicalize() {
-	/*
-		Construct canonical paths and URLs for this template, by using the template slug
-		and the location to work out where the template files are.
-		
-		We must check that these canonical paths correspond to files that exist, so we are ready
-		for enqueuing and such.
-	*/
-	
+
 		switch ( $this->location ) {
 			
 			case 'builtin':
@@ -449,15 +598,17 @@ class Total_Slider_Template {
 		
 	}
 	
+	/**
+	 * Render this template, using the pseudo-widget class in this file for displaying in the admin UI.
+	 *
+	 * Calls to the WP_Widget public methods actually produce EJS placeholder text, so that the JavaScript
+	 * in the admin UI knows where to place user input at runtime.
+	 *
+	 * @return string
+	 *
+	 */
 	public function render() {
-	/*
-		Render this template, using the pseudo-widget class, so that it will be executed,
-		calls to the widget public methods will product the EJS placeholder text instead of
-		rendering actual slide information.
-		
-		The result will be buffered and ready for use by the client-side code.
-	*/
-	
+
 		if ( ! $this->php_path )
 		{
 			$this->canonicalize();
@@ -488,10 +639,13 @@ class Total_Slider_Template {
 	
 	/***********	// !Canonical path and URI accessor methods		***********/
 	
+	/**
+	 * Return the canonical path for this template.
+	 *
+	 * return @string
+	 *
+	 */
 	public function path_prefix() {
-	/*
-		Return the canonical path for this template.
-	*/	
 	
 		if ( ! $this->path_prefix ) {
 			$this->canonicalize();
@@ -500,12 +654,16 @@ class Total_Slider_Template {
 		return $this->path_prefix;
 		
 	}
+
+	/**
+	 * Return the canonical URI for this template.
+	 *
+	 * return @string
+	 *
+	 */
 	
 	public function uri_prefix() {
-	/*
-		Return the canonical URI for this template.
-	*/
-	
+
 		if ( ! $this->uri_prefix ) {
 			$this->canonicalize();
 		}
@@ -514,11 +672,14 @@ class Total_Slider_Template {
 		
 	}
 	
+	/**
+	 * Return the canonical path to this template's PHP file.
+	 *
+	 * return @string
+	 *
+	 */
 	public function php_path() {
-	/*
-		Return the canonical path to this template's PHP file.
-	*/
-		
+	
 		if ( ! $this->php_path ) {
 			$this->canonicalize();
 		}
@@ -528,10 +689,13 @@ class Total_Slider_Template {
 	}
 	
 	public function js_path() {
-	/*
-		Return the canonical path to this template's JavaScript file.
-	*/
-	
+	/**
+	 * Return the canonical path to this template's JavaScript file.
+	 *
+	 * return @string
+	 *
+	 */
+
 		if ( ! $this->js_path && ! $this->js_min_path ) {
 			$this->canonicalize();
 		}
@@ -545,9 +709,12 @@ class Total_Slider_Template {
 	}
 	
 	public function js_min_path() {
-	/*
-		Return the canonical path to this template's minified JavaScript file.
-	*/	
+	/**
+	 * Return the canonical path to this template's minifed JavaScript file.
+	 *
+	 * return @string
+	 *
+	 */
 	
 		if ( ! $this->js_min_path && ! $this->js_path ) {
 			$this->canonicalize();
@@ -562,9 +729,12 @@ class Total_Slider_Template {
 	}
 	
 	public function css_path() {
-	/*
-		Return the canonical path to this template's CSS file.
-	*/	
+	/**
+	 * Return the canonical path to this template's CSS file.
+	 *
+	 * return @string
+	 *
+	 */
 		if ( ! $this->css_path ) {
 			$this->canonicalize();
 		}
@@ -572,10 +742,13 @@ class Total_Slider_Template {
 		return $this->css_path;		
 	}
 	
+	/**
+	 * Return the canonical URI for this template's PHP file.
+	 *
+	 * return @string
+	 *
+	 */
 	public function php_uri() {
-	/*
-		Return the canonical URI for this template's PHP file.
-	*/
 		if ( ! $this->php_uri ) {
 			$this->canonicalize();
 		}
@@ -583,11 +756,15 @@ class Total_Slider_Template {
 		return $this->php_uri;	
 		
 	}
-	
+
+	/**
+	 * Return the canonical URI for this template's JavaScript file.
+	 *
+	 * return @string
+	 *
+	 */
+
 	public function js_uri() {
-	/*
-		Return the canonical URI for this template's JavaScript file.
-	*/
 		if ( ! $this->js_uri && ! $this->js_min_uri ) {
 			$this->canonicalize();
 		}
@@ -601,9 +778,13 @@ class Total_Slider_Template {
 	}
 	
 	public function js_min_uri() {
-	/*
-		Return the canonical URI for this template's minified JavaScript file.
-	*/
+	/**
+	 * Return the canonical URI for this template's minified JavaScript file.
+	 *
+	 * return @string
+	 *
+	 */
+
 		if ( ! $this->js_min_uri && ! $this->js_uri ) {
 			$this->canonicalize();
 		}
@@ -616,10 +797,13 @@ class Total_Slider_Template {
 		}
 	}
 	
+	/**
+	 * Return the canonical URI for this template's CSS file.
+	 *
+	 * return @string
+	 *
+	 */
 	public function css_uri() {
-	/*
-		Return the canonical URI for this template's PHP file.
-	*/
 		if ( ! $this->css_uri ) {
 			$this->canonicalize();
 		}
@@ -630,11 +814,14 @@ class Total_Slider_Template {
 	
 	/***********	// !Metadata accessor methods		***********/
 	
+	/**
+	 * Return the friendly name for this template.
+	 *
+	 * return @string
+	 *
+	 */
 	public function name() {
-	/*
-		Return the friendly name for this template.
-	*/	
-	
+
 		if ( $this->md_name ) {
 			return $this->md_name; // caching
 		}
@@ -665,10 +852,13 @@ class Total_Slider_Template {
 		
 	}
 	
+	/**
+	 * Return the Template URI metadata for this template.
+	 *
+	 * @return string
+	 *
+	 */
 	public function uri() {
-	/*
-		Return the Template URI metadata for this template.
-	*/	
 		if ( $this->md_uri ) {
 			return $this->md_uri; // caching
 		}
@@ -694,10 +884,13 @@ class Total_Slider_Template {
 		
 	}
 
+	/**
+	 * Return the Template description metadata for this template.
+	 *
+	 * @return string
+	 *
+	 */
 	public function description() {
-	/*
-		Return the Template URI metadata for this template.
-	*/	
 		if ( $this->md_description ) {
 			return $this->md_description; // caching
 		}
@@ -722,11 +915,14 @@ class Total_Slider_Template {
 		}		
 		
 	}
-	
+
+	/**
+	 * Return the version number for this template.
+	 *
+	 * @return string
+	 *
+	 */
 	public function version() {
-	/*
-		Return the version number for this template.
-	*/	
 		if ( $this->md_version ) {
 			return $this->md_version; // caching
 		}
@@ -752,10 +948,13 @@ class Total_Slider_Template {
 		
 	}
 	
+	/**
+	 * Return the author name for this Template.
+	 *
+	 * return @string
+	 *
+	 */
 	public function author() {
-	/*
-		Return the author name for this template.
-	*/	
 		if ( $this->md_author ) {
 			return $this->md_author; // caching
 		}
@@ -781,10 +980,13 @@ class Total_Slider_Template {
 		
 	}
 	
+	/**
+	 * Return the template's metadata author URI.
+	 *
+	 * @return string
+	 *
+	 */
 	public function author_uri() {
-	/*
-		Return the author URI for this template.
-	*/	
 		if ( $this->md_author_uri ) {
 			return $this->md_author_uri; // caching
 		}
@@ -810,10 +1012,13 @@ class Total_Slider_Template {
 		
 	}
 	
+	/**
+	 * Return the license for this Template.
+	 *
+	 * @return string
+	 *
+	 */
 	public function license() {
-	/*
-		Return the license metadata for this template.
-	*/	
 		if ( $this->md_license ) {
 			return $this->md_license; // caching
 		}
@@ -839,10 +1044,13 @@ class Total_Slider_Template {
 		
 	}
 	
+	/**
+	 * Return the license URI for this Template.
+	 *
+	 * @return string
+	 *
+	 */
 	public function license_uri() {
-	/*
-		Return the license URI for this template.
-	*/	
 		if ( $this->md_license_uri ) {
 			return $this->md_license_uri; // caching
 		}
@@ -868,10 +1076,13 @@ class Total_Slider_Template {
 		
 	}
 	
+	/**
+	 * Return the metadata tags for this Template.
+	 *
+	 * @return array
+	 *
+	 */
 	public function tags() {
-	/*
-		Return the license URI for this template.
-	*/	
 		if ( $this->md_tags ) {
 			return $this->md_tags; // caching
 		}
@@ -899,25 +1110,15 @@ class Total_Slider_Template {
 		
 	}
 	
+	/**
+	 * Determine the desired crop height and crop width for the background image, and other template options.
+	 *
+	 * Pulls these from an options statement in the Template's CSS file.
+	 *
+	 * return @array
+	 *
+	 */
 	public function determine_options() {
-	/*
-		Determine the desired crop height and crop width for the background image, as well as other options, including
-		disabling X/Y positioning in admin.
-
-		Requires that custom template PHP include something like the following:
-			/*
-			Template Options
-
-			Crop-Suggested-Width: 600
-			Crop-Suggested-Height: 300
-			Disable-XY-Positioning-In-Admin: No
-			*/
-		/*
-
-		These are parsed as configuration directives for the admin-side.
-
-	*/
-
 		if ( isset( $this->options ) && is_array( $this->options ) && count( $this->options ) > 0 ) {
 			// cache results
 			return $this->options;
@@ -995,47 +1196,56 @@ class Total_Slider_Template {
 };
 
 
+/**
+ * Class: A 'dummy' class that behaves like Total_Slider_Widget, but used for rendering the editing time interface of this template.
+ *
+ * The template's $s calls are rendered as EJS-friendly tokens, so that the editing interface JavaScript canm alter
+ * the template's placeholder data in real-time.
+ *
+ */
 class Total_Slider_Widget_Templater
 {
-/*
-	A 'dummy' class that behaves like Total_Slider_Widget, and that is used to render the template's
-	$s calls to EJS-friendly tokens, so that the editing interface JS can alter the template's
-	placeholder data in real-time.
-*/
 
+	/**
+	 * A 'dummy' counter used to force the number of slides to display to 1 in has_slides().
+	 *
+	 * @var integer
+	 */
 	private $counter = 0;
 
 	//NOTE: the FE format for these tokens is not finalised and is placeholder only
 
+	/**
+	 * Return the number of slides. Hard-coded to 1 for edit-time purposes.
+	 *
+	 * @return integer
+	 *
+	 */
 	public function slides_count() {
-	/*
-		Return the number of slides in this slide group.
-
-		Can also be used by templates to test if there are any slides to show at all,
-		and, for example, not output the starting <ul>.
-	*/
-
 		return 1;
-
 	}
 	
+	/**
+	 * Allows the template to be aware of whether it is running at runtime, or editing time. Hard-coded to false (i.e. "editing time") here.
+	 * 
+	 * @return boolean
+	 *
+	 */
 	public function is_runtime() {
-	/*
-		Allows the template to be aware of whether it is running at runtime (viewing as part of the
-		actual site): 'true', or at edit-time (the user is editing slides in the admin interface, and
-		the template is executing as a preview): 'false'.
-	*/
-	
+
 		return false;
 		
 	}
 
 
+	/**
+	 * The template is made aware if any slides exist in the Slide Group. For editing time purposes, we will return true.
+	 *
+	 * @return boolean
+	 *
+	 */
 	public function has_slides() {
-	/*
-		For our purposes, we want the slide previewer to load the template for one slide only.
-	*/
-	
+
 		++$this->counter;
 		
 		if ($this->counter > 1)
@@ -1046,137 +1256,172 @@ class Total_Slider_Widget_Templater
 
 	}
 
+	/**
+	 * Print the slide title token.
+	 *
+	 * @return void
+	 *
+	 */
 	public function the_title() {
-	/*
-		Print the slide title token to output.
-	*/
-
 		echo $this->get_the_title();
-
 	}
 
+	/**
+	 * Return the slide title token.
+	 *
+	 * @return string
+	 *
+	 */
 	public function get_the_title() {
-	/*
-		Return the slide title token.
-	*/
-
 		return '[%= title %]';
 
 	}
 
+	/**
+	 * Print the slide description token.
+	 *
+	 * @return void
+	 *
+	 */
 	public function the_description() {
-	/*
-		Print the slide description token.
-	*/
 
 		echo $this->get_the_description();
 
 	}
 
+	/**
+	 * Return the slide description token.
+	 *
+	 * @return string
+	 *
+	 */
 	public function get_the_description() {
-	/*
-		Return the slide description token.
-	*/
-
 		return '[%= description %]';
-
 	}
 
+	/**
+	 * Print the background URL token.
+	 * 
+	 * @return void
+	 *
+	 */
 	public function the_background_url() {
-	/*
-		Print the background URL token.
-	*/
-
 		echo $this->get_the_background_url();
-
 	}
 
+	/**
+	 * Return the background URL token.
+	 *
+	 * @return string
+	 *
+	 */
 	public function get_the_background_url() {
-	/*
-		Return the background URL token.
-	*/
 
 		return '[%= background_url %]'; // use other quote style -- likely in a url() CSS block
 
 	}
 
+	/**
+	 * Print the slide link token.
+	 *
+	 * @return void
+	 *
+	 */
 	public function the_link() {
-	/*
-		Print the slide link token.
-	*/
 
 		echo $this->get_the_link();
 
 	}
 
+	/**
+	 * Return the slide link token.
+	 *
+	 * @return string
+	 *
+	 */
 	public function get_the_link() {
-	/*
-		Return the slide link token.
-	*/
 
 		return '[%= link %]';
 
 	}
 
+	/**
+	 * Print the X coordinate token.
+	 *
+	 * @return void
+	 *
+	 */
 	public function the_x() {
-	/*
-		Print the X coordinate token.
-	*/
 
 		echo $this->get_the_x();
 
 	}
 
+	/**
+	 * Return the X coordinate token.
+	 *
+	 * @return string
+	 *
+	 */
 	public function get_the_x() {
-	/*
-		Return the X coordinate token.
-	*/
-
 		return '[%= x %]';
 
 	}
 
+	/**
+	 * Print the Y coordinate token.
+	 *
+	 * @return void
+	 *
+	 */
 	public function the_y() {
-	/*
-		Print the Y coordinate token.
-	*/
 
 		echo $this->get_the_y();
 
 	}
 
+	/**
+	 * Return the Y coordinate token.
+	 *
+	 * @return string
+	 *
+	 */
 	public function get_the_y() {
-	/*
-		Return the Y coordinate token.
-	*/
 
 		return '[%= y %]';
 
 	}
 
+	/**
+	 * Print the slide identifier token.
+	 *
+	 * @return void
+	 *
+	 */
 	public function the_identifier() {
-	/*
-		Print the slide identifier token.
-	*/
-
 		echo $this->get_the_identifier();
 
 	}
 
+	/**
+	 * Return the slide identifier token.
+	 *
+	 * @return string
+	 *
+	 */
 	public function get_the_identifier() {
-	/*
-		Return the slide identifier token.
-	*/
 
 		return '[%= identifier %]';
 
 	}
 
+	/**
+	 * Return the iteration number. Always '1'.
+	 *
+	 * @return int
+	 *
+	 */
 	public function iteration() {
-	/*
-		Return the iteration number. How many slides have we been through?
-	*/
-
 		return intval ( $this->counter - 1 );
 		// has_slides() always bumps the iteration ready for the next run, but we
 		// are still running, for the theme's purposes, on the previous iteration.
@@ -1184,33 +1429,32 @@ class Total_Slider_Widget_Templater
 
 	}
 	
+	/**
+	 * Print a CSS class that, at editing time, allows the object to be made draggable for X/Y positioning.
+	 *
+	 * Should be called when inside a DOM object's 'class' attribute. Does nothing at runtime.
+	 *
+	 * @return void
+	 *
+	 */
 	public function make_draggable() {
-	/*
-		Outputs a class that in edit-time mode makes the object draggable (for X/Y positioning
-		of the title/description overlay).
 	
-		Should be called when inside a DOM object's 'class' attribute.
-		
-		Does nothing at runtime.
-	*/
-		
 		echo 'total-slider-template-draggable';
 		
 	}	
 	
+	/**
+	 * Print a CSS class that, at editing time, makes the object the draggable's parent. This parent is used for X/Y offset calculation.
+	 *
+	 * This element will also be used as the containment for the draggable object, i.e. the box cannot be dragged
+	 * outside of the element marked with this class.
+	 * Should be called when inside a DOM object's 'class' attribute. Does nothing at runtime
+	 *
+	 * @return void
+	 *
+	 */
 	public function draggable_parent() {
-	/*
-		Outputs a class that in edit-time mode makes the object the draggable's parent. This
-		will be used to calculate the X/Y offset for the title/description box.
-		
-		This element will also be used as the containment for the draggable title/description box,
-		i.e. the box will not be able to be dragged outside of the object marked with this class.
-		
-		Should be called when inside a DOM object's 'class' attribute.
-		
-		Does nothing at runtime.
-	*/
-		
+	
 		echo 'total-slider-template-draggable-parent';
 		
 	}
@@ -1218,23 +1462,26 @@ class Total_Slider_Widget_Templater
 
 };
 
+/**
+ * Class: Hunts through any of the builtin, theme (stylesheet_ and template_) and downloaded (wp-content) directories to find templates.
+ *
+ * It will do crude checking for file existence and grab the template name, but more detailed inspection and metadata extraction
+ * is left to Total_Slider_Template.
+ *
+ */
 class Total_Slider_Template_Iterator {
-/*
-	This class hunts through any of the builtin, theme (stylesheet_ and template_)
-	and downloaded (wp-content) directories to find templates.
-	
-	It will do crude checking for file existence and grab the template name, but leaves more detailed
-	inspection to the Total_Slider_Template class (e.g. more metadata parsing).
-*/
 
+	/**
+	 * Discover templates that are available in the specified location.
+	 *
+	 * Returns an array of the template slugs and names, which can be used for further inspection by
+	 * instantiating a Total_Slider_Template class with the returned slug and supplied template location.
+	 *
+	 * @param string $location One of 'builtin','theme','downloaded','legacy'.
+	 * @param boolean $should_parse_name Set to false to avoid the overhead of parsing template names.
+	 * @return array
+	 */
 	public function discover_templates($location, $should_parse_name = true) {
-	/*
-		Discovers the template files that are available in the given location (one of 'builtin',
-		'theme', 'downloaded', 'legacy'.
-		
-		Returns an array of the template slugs and names, which can be used for further inspection by
-		instantiating the Total_Slider_Template class with the slug and location.
-	*/
 		global $allowed_template_locations;
 		
 		if ( ! is_array( $allowed_template_locations ) ) {
