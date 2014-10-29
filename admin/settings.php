@@ -78,7 +78,7 @@ if (
 			}
 		}
 
-		$this->set_capability_for_roles($roles_to_add);
+		$TS_Total_Slider->set_capability_for_roles($roles_to_add);
 		$success = true;
 		$message = __( 'Settings saved.', 'total_slider' );
 
@@ -202,7 +202,7 @@ if (
 								 /> <?php echo esc_html( $r['name'] );?>
 							</label><br/>
 					<?php endforeach; endif; ?>
-					<span class="description"><?php _e( 'Users belonging to checked roles will be able to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the Total Slider widget, which makes the slides show up on your site.', 'total_slider' );?></span>
+					<span class="description"><?php _e( 'Users belonging to checked roles will be able to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the Total Slider widget, which is one of the ways to make the slides show up on your site.', 'total_slider' );?></span>
 				</fieldset></td>
 			</tr>
 			

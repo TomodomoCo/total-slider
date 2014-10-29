@@ -37,7 +37,7 @@ define( 'TOTAL_SLIDER_IN_FUNCTIONS', true );
 /**
  * Defines the WordPress capability needed to manage Total Slider slides. This is attached to a WP role in the plugin's Settings page.
  */
-define( 'TOTAL_SLIDER_REQUIRED_CAPABILITY', 'total_slider_manage_slides' );
+define( 'TOTAL_SLIDER_REQUIRED_CAPABILITY', 'total_slider_manage_slides' ); //TODO fix capabilities on new DF
 
 /**
  * The maximum number of slide groups supported.
@@ -113,6 +113,22 @@ class Total_Slider {
 		'legacy'
 	);
 
+	/**
+	 * The full list of capabilities needed for a user role to manipulate Total Slider slides.
+	 *
+	 * @var array
+	 */
+	public static $required_capabilities = array(
+		TOTAL_SLIDER_REQUIRED_CAPABILITY,
+		'edit_total_slider_slides',
+		'edit_others_total_slider_slides',
+		'edit_published_total_slider_slides',
+		'publish_total_slider_slides',	
+		'delete_total_slider_slides',
+		'delete_published_total_slider_slides',
+		'delete_others_total_slider_slides'
+	);
+
 
 	/* data structure
 
@@ -146,6 +162,27 @@ class Total_Slider {
 	/***********	// !Registration, first-time, etc.	***********/
 
 	/**
+	 * Constructor, which runs add_action for various WP hooks, etc.
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+
+		register_activation_hook( __FILE__, array ($this, 'create_slides_option_field' ) );
+		add_action( 'init', array( $this, 'bootstrap_tinymce_plugin' ) );
+		add_action( 'init', array( $this, 'initialize' ) );
+		add_action( 'admin_menu', array( $this, 'add_admin_submenu' ) );
+		add_action( 'admin_head', array( $this, 'print_admin_css' ) );
+		add_action( 'widgets_init', array( $this, 'register_as_widget' ) );
+		add_action( 'admin_init', array( $this, 'pass_control_to_ajax_handler' ) );
+		add_action( 'admin_head-media-upload-popup', array( $this, 'print_uploader_javascript' ) );
+
+
+		add_shortcode( 'totalslider', 'total_slider_shortcode' );
+	}
+
+
+	/**
 	 * Upon plugin activation, creates the total_slider_slide_groups option in wp_options/
 	 *
 	 * This creates the total_slider_slide_groups option in wp_options if it does not already
@@ -167,14 +204,15 @@ class Total_Slider {
 		}
 
 		// set the capability for administrator so they can visit the options page
-		$admin = get_role('administrator');
-		$admin->add_cap( TOTAL_SLIDER_REQUIRED_CAPABILITY );
+		$this->set_capability_for_roles( array( 'administrator' ), 'preserve_existing' );
 		
 		get_currentuserinfo();
 		
 		// ensure that the current user can manage the plugin once installed (references #49)
-		if ( current_user_can('install_plugins') ) {
-			$current_user->add_cap( TOTAL_SLIDER_REQUIRED_CAPABILITY );
+		if ( current_user_can( 'install_plugins' ) ) {
+			foreach( Total_Slider::$required_capabilities as $cap ) {
+				$current_user->add_cap( $cap );
+			}
 		}
 
 		// set up default general options
@@ -218,6 +256,8 @@ class Total_Slider {
 			
 		}
 		// eventually, there will be additional conditionals here for various incremental upgrade scenarios (version_compare??)
+		//
+		// TODO check for role/cap assignments and migrate those forward
 	
 	}
 
@@ -233,13 +273,95 @@ class Total_Slider {
 	}
 
 	/**
+	 * Perform initialization, including loading the GetText domain and registering our post type.
+	 *
+	 * @return void
+	 */
+	public function initialize() {
+		$this->load_text_domain();
+		$this->register_cpt();
+	}
+
+	/**
 	 * Load the GetText domain for this plugin's translatable strings.
 	 *
+	 * @return void
 	 */
-	public function load_text_domain() {
+	private function load_text_domain() {
 
 		load_plugin_textdomain( 'total_slider', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
+	}
+
+	/**
+	 * Register the Total Slider Slide custom post type with WordPress.
+	 *
+	 * @return void
+	 */
+	private function register_cpt() {
+
+		$labels = array(
+			'name'              => _x( 'Groups', 'taxonomy general name', 'total_slider' ),
+			'singular_name'     => _x( 'Group', 'taxonomy singular name', 'total_slider' ),
+			'search_items'      => __( 'Search Groups', 'total_slider' ),
+			'all_items'         => __( 'All Groups', 'total_slider' ),
+			'parent_item'       => __( 'Parent Group', 'total_slider' ),
+			'parent_item_colon' => __( 'Parent Group:', 'total_slider' ),
+			'edit_item'         => __( 'Edit Group', 'total_slider' ),
+			'update_item'       => __( 'Update Group', 'total_slider' ),
+			'add_new_item'      => __( 'Add New Group', 'total_slider' ),
+			'new_item_name'     => __( 'New Group Name', 'total_slider' ),
+			'menu_name'         => __( 'Group', 'total_slider' ),
+		);
+
+		$args = array(
+			'hierarchical'      => false,
+			'labels'            => $labels,
+			'show_ui'           => true,
+			'show_admin_column' => true,
+			'public'            => true,
+			'query_var'         => true,
+			'rewrite'           => array( 'slug' => 'total_slider_slide_group' ),
+		);
+
+		register_taxonomy( 'total_slider_slide_group', array( 'total_slider_slide' ), $args );	
+
+		$labels = array(
+
+			'name'               => _x( 'Slides', 'post type general name', 'total_slider' ),
+			'singular_name'      => _x( 'Slide', 'post type singular name', 'total_slider' ),
+			'menu_name'          => _x( 'Slides', 'admin menu', 'total_slider' ),
+			'name_admin_bar'     => _x( 'Slide', 'add new on admin bar', 'total_slider' ),
+			'add_new'            => _x( 'Add New', 'book', 'total_slider' ),
+			'add_new_item'       => __( 'Add New Slide', 'total_slider' ),
+			'new_item'           => __( 'New Slide', 'total_slider' ),
+			'edit_item'          => __( 'Edit Slide', 'total_slider' ),
+			'view_item'          => __( 'View Slide', 'total_slider' ),
+			'all_items'          => __( 'All Slides', 'total_slider' ),
+			'search_items'       => __( 'Search Slides', 'total_slider' ),
+			'parent_item_colon'  => __( 'Parent Slides:', 'total_slider' ),
+			'not_found'          => __( 'No slides found.', 'total_slider' ),
+			'not_found_in_trash' => __( 'No slides found in Trash.', 'total_slider' )
+
+		);
+
+		$args = array(
+			'labels'             => $labels,
+			'public'             => true,
+			'publicly_queryable' => true,
+			'show_ui'            => true,
+			'show_in_menu'       => true,
+			'query_var'          => false,
+			'rewrite'            => array( 'slug' => 'total_slider_slide' ),
+			'capability_type'    => 'total_slider_slide',
+			'has_archive'        => true,
+			'hierarchical'       => false,
+			'menu_position'      => null,
+			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' )
+		);
+
+		register_post_type( 'total_slider_slide', $args );
+		
 	}
 
 	/***********	Utility Functions	***********/
@@ -367,9 +489,10 @@ class Total_Slider {
 	 * Administrators are always given access by this function.
 	 *
 	 * @param array $roles_to_set An array containing the roles to set, as strings.
+	 * @param string $should_clear_first Either 'should_clear_first', or 'preserve_existing' -- whether to remove existing role assignments before setting new ones
 	 * @return boolean
 	 */
-	public function set_capability_for_roles( $roles_to_set) {
+	public function set_capability_for_roles( $roles_to_set, $should_clear_first = 'should_clear_first' ) {
 	
 		global $wp_roles;
 
@@ -385,19 +508,27 @@ class Total_Slider {
 		}
 
 		// clear the capability from all roles first
-		foreach ( $all_roles as $r_name => $r ) {
-			$wp_roles->remove_cap( $r_name, TOTAL_SLIDER_REQUIRED_CAPABILITY );
+		if ( $should_clear_first == 'should_clear_first' ) {
+			foreach ( $all_roles as $r_name => $r ) {
+				foreach( Total_Slider::$required_capabilities as $cap ) {
+					$wp_roles->remove_cap( $r_name, $cap );
+				}
+			}
 		}
 
 		// add the capability to 'administrator', which can always manage slides
-		$wp_roles->add_cap( 'administrator', TOTAL_SLIDER_REQUIRED_CAPABILITY );
+		foreach( Total_Slider::$required_capabilities as $cap ) {
+			$wp_roles->add_cap( 'administrator', $cap );
+		}
 
 		// add the capability to the specified $roles_to_set
 		if ( is_array( $roles_to_set ) && count( $roles_to_set ) > 0 ) {
 			
 			foreach($roles_to_set as $the_role) {
 				if ( in_array( $the_role, $valid_roles ) ) {
-					$wp_roles->add_cap( $the_role, TOTAL_SLIDER_REQUIRED_CAPABILITY );
+					foreach( Total_Slider::$required_capabilities as $cap ) {
+						$wp_roles->add_cap( $the_role, $cap );
+					}
 				}
 			}
 		}
@@ -850,6 +981,7 @@ class Total_Slider {
 	 * @return void
 	 */
 	public function print_settings_page() {
+		global $TS_Total_Slider;
 		require( dirname( __FILE__ ) . '/admin/settings.php' );
 
 	}
@@ -1042,18 +1174,6 @@ function total_slider_shortcode( $atts, $content, $tag ) {
 	return Total_Slider::shortcode_handler( $atts, $content, $tag );
 }
 
-/******************************************** WordPress actions ********************************************/
-
 
 $TS_Total_Slider = new Total_Slider();
 
-register_activation_hook( __FILE__, array ($TS_Total_Slider, 'create_slides_option_field' ) );
-add_action( 'init', array( $TS_Total_Slider, 'load_text_domain' ) );
-add_action('init', array( $TS_Total_Slider, 'bootstrap_tinymce_plugin' ) );
-add_action( 'admin_menu', array( $TS_Total_Slider, 'add_admin_submenu' ) );
-add_action( 'admin_head', array( $TS_Total_Slider, 'print_admin_css' ) );
-add_action( 'widgets_init', array( $TS_Total_Slider, 'register_as_widget' ) );
-add_action( 'admin_init', array( $TS_Total_Slider, 'pass_control_to_ajax_handler' ) );
-add_action( 'admin_head-media-upload-popup', array( $TS_Total_Slider, 'print_uploader_javascript' ) );
-
-add_shortcode( 'totalslider', 'total_slider_shortcode' );
