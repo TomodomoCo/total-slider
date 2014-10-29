@@ -71,10 +71,6 @@ if ( version_compare( get_bloginfo( 'version' ), '4.0', '>=' ) ) {
 require_once( dirname(__FILE__) . '/includes/class.total-slide-group.php' );
 require_once( dirname(__FILE__) . '/includes/class.total-slider-template.php' ); //TODO efficiency -- conditional on 'page'? What about the widget?
 
-$TS_The_Slug = false;
-$TS_The_Template = false;
-$TS_The_Tpl_Error = false;
-
 /******************************************** Total_Slider main class ********************************************/
 
 /**
@@ -82,6 +78,30 @@ $TS_The_Tpl_Error = false;
  *
  */
 class Total_Slider {
+
+
+	/**
+	 * Holds the slug of the Slide Group currently being worked on, or rendered.
+	 *
+	 * @var string|boolean
+	 */
+	public $slug = false;
+
+	/**
+	 * Holds the Template object of the Template currently being worked on, or rendered.
+	 *
+	 * @var Total_Slider_Template|boolean
+	 */
+	public $template = false;
+
+	/**
+	 * Holds any template errors that have occurred.
+	 *
+	 * @var Exception|boolean
+	 */
+	public $tpl_error = false;
+
+
 
 
 	/* data structure
@@ -124,7 +144,7 @@ class Total_Slider {
 	 *
 	 * @return void
 	 */
-	public static function create_slides_option_field() {
+	public function create_slides_option_field() {
 	
 		global $current_user;
 	
@@ -164,7 +184,7 @@ class Total_Slider {
 		   tasks.
 		*/
 		if ( ! get_option('total_slider_dataformat_version') && !$no_slide_groups ) {
-			return Total_Slider::upgrade();
+			return $this->upgrade();
 		}
 		
 		if ( ! get_option('total_slider_dataformat_version') ) {
@@ -178,7 +198,7 @@ class Total_Slider {
 	 *
 	 * @return void
 	 */
-	public static function upgrade() {
+	public function upgrade() {
 
 		if ( ! get_option('total_slider_dataformat_version') ) {
 			// Total Slider has not been data-upgraded since before the version was introduced (1.0.x)
@@ -196,7 +216,7 @@ class Total_Slider {
 	 *
 	 * @return void
 	 */
-	public static function register_as_widget() {
+	public function register_as_widget() {
 
 		register_widget( 'Total_Slider_Widget' );
 
@@ -206,7 +226,7 @@ class Total_Slider {
 	 * Load the GetText domain for this plugin's translatable strings.
 	 *
 	 */
-	public static function load_text_domain() {
+	public function load_text_domain() {
 
 		load_plugin_textdomain( 'total_slider', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
@@ -239,7 +259,7 @@ class Total_Slider {
 	 * @return array
 	 */
 	private function get_current_slides( $slug ) {
-		return get_option( 'total_slider_slides_' . Total_Slider::sanitize_slide_group_slug($slug) );
+		return get_option( 'total_slider_slides_' . $this->sanitize_slide_group_slug($slug) );
 	}
 
 	/**
@@ -265,7 +285,7 @@ class Total_Slider {
 	 * @param string $data The slide group slide to redirect, if 'edit-slide-group' is the $location.
 	 * @return void
 	 */
-	public static function ugly_js_redirect( $location, $data = false ) {
+	public function ugly_js_redirect( $location, $data = false ) {
 		switch ( $location ) {
 
 			case 'root':
@@ -274,7 +294,7 @@ class Total_Slider {
 
 			case 'edit-slide-group':
 				$url = 'admin.php?page=total-slider&group=';
-				$url .= esc_attr( Total_Slider::sanitize_slide_group_slug( $data ) );
+				$url .= esc_attr( $this->sanitize_slide_group_slug( $data ) );
 			break;
 
 			default:
@@ -296,23 +316,21 @@ class Total_Slider {
 	 *
 	 * @return string
 	 */
-	public static function determine_template() {
+	public function determine_template() {
 
-		global $TS_The_Slug, $TS_The_Template, $TS_The_Tpl_Error;
-		
-		if ( $TS_The_Template ) {
-			return $TS_The_Template;
+		if ( $this->template ) {
+			return $this->template;
 		}
 		
-		if ( ! $TS_The_Slug ) {
+		if ( ! $this->slug ) {
 			if ( ! array_key_exists ('group', $_GET ) ) {
 				return false;
 			}
 			
-			$TS_The_Slug = Total_Slider::sanitize_slide_group_slug( $_GET['group'] );
+			$this->slug = $this->sanitize_slide_group_slug( $_GET['group'] );
 		}
 		
-		$slide_group = new Total_Slide_Group($TS_The_Slug);
+		$slide_group = new Total_Slide_Group($this->slug);
 		
 		if ( ! $slide_group->load() ) {
 			return false;
@@ -322,13 +340,13 @@ class Total_Slider {
 		$location = $slide_group->templateLocation;
 		
 		try {
-			$TS_The_Template = new Total_Slider_Template( $slug, $location );
+			$this->template = new Total_Slider_Template( $slug, $location );
 		}
 		catch (Exception $e) {
-			$TS_The_Tpl_Error = $e;
+			$this->tpl_error = $e;
 		}
 		
-		return $TS_The_Template;
+		return $this->template;
 		
 	}
 
@@ -341,7 +359,7 @@ class Total_Slider {
 	 * @param array $roles_to_set An array containing the roles to set, as strings.
 	 * @return boolean
 	 */
-	public static function set_capability_for_roles( $roles_to_set) {
+	public function set_capability_for_roles( $roles_to_set) {
 	
 		global $wp_roles;
 
@@ -386,7 +404,7 @@ class Total_Slider {
 	 * @param string $tag Not used by our shortcode handler.
 	 * @return string
 	 */
-	public static function shortcode_handler($atts, $content, $tag) {
+	public function shortcode_handler($atts, $content, $tag) {
 
 		extract( shortcode_atts( array(
 			'group' => NULL
@@ -426,7 +444,7 @@ class Total_Slider {
 	 *
 	 * @return void
 	 */
-	public static function pass_control_to_ajax_handler() {
+	public function pass_control_to_ajax_handler() {
 		if (
 			array_key_exists( 'page', $_GET ) &&
 			'total-slider' == $_GET['page'] &&
@@ -446,12 +464,12 @@ class Total_Slider {
 	 *
 	 * @return void
 	 */
-	public static function add_admin_submenu() {
+	public function add_admin_submenu() {
 		if ( array_key_exists( 'page', $_GET ) && 'total-slider' == $_GET['page'] )
 		{
 		
 			// this is a convenient point to upgrade our database if necessary
-			Total_Slider::upgrade();
+			$this->upgrade();
 					
 			// load .js if SCRIPT_DEBUG is true, or load .min.js otherwise
 			$maybe_min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : 'min.' ;
@@ -517,17 +535,17 @@ class Total_Slider {
 			
 			wp_enqueue_script( 'total-slider-interface' );
 
-			wp_localize_script( 'total-slider-interface', '_total_slider_L10n', Total_Slider::js_l10n() );	
+			wp_localize_script( 'total-slider-interface', '_total_slider_L10n', $this->js_l10n() );	
 
 			wp_register_style( 'total-slider-interface-styles', plugin_dir_url( __FILE__ ) . 'css/interface.css' );
 			wp_enqueue_style( 'total-slider-interface-styles' );
 			
 			// enqueue the frontend so that the interface will be ready
-			Total_Slider::enqueue_slider_frontend( 'backend' );	
+			$this->enqueue_slider_frontend( 'backend' );	
 
 			// load the WP_Pointer if we are on the Slides page
 			if ( array_key_exists ('group', $_GET ) ) {
-				add_action( 'admin_print_footer_scripts', array('Total_Slider', 'print_help_pointer_js') );
+				add_action( 'admin_print_footer_scripts', array($this, 'print_help_pointer_js') );
 			}
 
 		}
@@ -539,7 +557,7 @@ class Total_Slider {
 			__( 'Slider', 'total_slider' ),									/* title of options menu item */
 			TOTAL_SLIDER_REQUIRED_CAPABILITY,								/* permissions level */
 			'total-slider',													/* menu slug */
-			array( 'Total_Slider', 'print_slide_groups_page' ),				/* callback to print the page to output */
+			array( $this, 'print_slide_groups_page' ),				/* callback to print the page to output */
 			plugin_dir_url( __FILE__ ) . 'img/total-slider-icon-16.png',	/* icon file */
 			null 															/* menu position number */
 		);
@@ -552,7 +570,7 @@ class Total_Slider {
 			__( 'Slide Groups', 'total_slider' ),				/* title to use in menu */
 			TOTAL_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
 			'total-slider',										/* menu slug */
-			array( 'Total_Slider', 'print_slide_groups_page' )	/* callback to print the page to output */
+			array( $this, 'print_slide_groups_page' )	/* callback to print the page to output */
 
 		);
 
@@ -564,11 +582,11 @@ class Total_Slider {
 			__( 'Settings', 'total_slider' ),					/* title to use in menu */
 			TOTAL_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
 			'total-slider-settings',							/* menu slug */
-			array('Total_Slider', 'print_settings_page')		/* callback to print the page to output */
+			array($this, 'print_settings_page')		/* callback to print the page to output */
 
 		);
 
-		add_action( 'admin_head-'. $submenu, array('Total_Slider', 'add_slides_help') );
+		add_action( 'admin_head-'. $submenu, array($this, 'add_slides_help') );
 
 
 	}
@@ -578,7 +596,7 @@ class Total_Slider {
 	 *
 	 * @return void
 	 */
-	public static function print_help_pointer_js() {
+	public function print_help_pointer_js() {
 
 		require( dirname( __FILE__ ) . '/admin/support/help-pointer-js.php' );
 
@@ -595,7 +613,7 @@ class Total_Slider {
 	 * @return void
 	 *
 	 */
-	public static function print_js_admin_page_reference() {
+	public function print_js_admin_page_reference() {
 		require( dirname( __FILE__ ) . '/admin/support/js-admin-page-reference.php' );	
 	
 	}
@@ -609,9 +627,8 @@ class Total_Slider {
 	 * @param string $context Either 'frontend' (default) or 'backend'.
 	 * @return void
 	 */
-	public static function enqueue_slider_frontend( $context = 'frontend' )	{
+	public function enqueue_slider_frontend( $context = 'frontend' )	{
 
-		global $TS_The_Template;
 	
 		// load .min.js if available, if SCRIPT_DEBUG is not true in wp-config.php
 		$is_min = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? false : true;
@@ -628,10 +645,10 @@ class Total_Slider {
 			return false;
 		}
 		
-		if ( ! $TS_The_Template || ! is_a( $TS_The_Template, 'Total_Slider_Template' ) )
+		if ( ! $this->template || ! is_a( $this->template, 'Total_Slider_Template' ) )
 		{	
 			// determine the current template
-			if ( ! Total_Slider::determine_template() )	{
+			if ( ! $this->determine_template() )	{
 				return false;		
 			}
 		}
@@ -639,9 +656,9 @@ class Total_Slider {
 		// load the CSS
 		wp_register_style(		
 			'total-slider-frontend',										/* handle */
-			$TS_The_Template->css_uri(),									/* src */
+			$this->template->css_uri(),									/* src */
 			array(),														/* deps */
-			date( 'YmdHis', @filemtime($TS_The_Template->css_path() ) ),	/* ver */
+			date( 'YmdHis', @filemtime($this->template->css_path() ) ),	/* ver */
 			'all'															/* media */
 		);
 		
@@ -649,12 +666,12 @@ class Total_Slider {
 		
 		if ( 'backend' != $context ) {
 			if ($is_min) {
-				$js_uri = $TS_The_Template->js_min_uri();
-				$js_path = $TS_The_Template->js_min_path();				
+				$js_uri = $this->template->js_min_uri();
+				$js_path = $this->template->js_min_path();				
 			}
 			else {
-				$js_uri = $TS_The_Template->js_uri();
-				$js_path = $TS_The_Template->js_path();				
+				$js_uri = $this->template->js_uri();
+				$js_path = $this->template->js_path();				
 			}
 			
 			// enqueue the JS
@@ -678,7 +695,7 @@ class Total_Slider {
 	 *
 	 * @return void
 	 */
-	public static function add_slides_help() {
+	public function add_slides_help() {
 
 		require( dirname( __FILE__ ) . '/admin/support/help.php' );
 
@@ -689,7 +706,7 @@ class Total_Slider {
 	 * 
 	 * @return array
 	 */
-	public static function js_l10n()
+	public function js_l10n()
 	{
 		return array (
 
@@ -735,7 +752,7 @@ class Total_Slider {
 	 * @return void
 	 *
 	 */
-	public static function bootstrap_tinymce_plugin() {
+	public function bootstrap_tinymce_plugin() {
 
 		if ( !current_user_can('edit_posts') &&  ! current_user_can('edit_pages') )
 		{
@@ -752,12 +769,12 @@ class Total_Slider {
 				array_key_exists('should_show_tinymce_button', $general_options) &&
 				'1' == $general_options['should_show_tinymce_button']
 			) {
-				add_filter( 'mce_external_plugins', array( 'Total_Slider', 'register_tinymce_plugin' ) );
-				add_filter( 'mce_buttons', array( 'Total_Slider', 'register_tinymce_button' ) );			
+				add_filter( 'mce_external_plugins', array( $this, 'register_tinymce_plugin' ) );
+				add_filter( 'mce_buttons', array( $this, 'register_tinymce_button' ) );			
 			}
 		}
 
-		add_action( 'admin_head', array( 'Total_Slider', 'print_js_admin_page_reference' ) );
+		add_action( 'admin_head', array( $this, 'print_js_admin_page_reference' ) );
 		// we should always load the JS admin page reference -- see #58 at https://github.com/vanpattenmedia/total-slider/issues/58
 	
 	}
@@ -768,7 +785,7 @@ class Total_Slider {
 	 * @param array $plugin_array The TinyMCE plugin array, which we modify and return
 	 * @return array
 	 */
-	public static function register_tinymce_plugin( $plugin_array ) {
+	public function register_tinymce_plugin( $plugin_array ) {
 		$plugin_array['total_slider_insert'] = plugin_dir_url( __FILE__ ) . 'tinymce-custom/mce/total_slider_insert/editor_plugin.js';
 		return $plugin_array;
 		
@@ -780,7 +797,7 @@ class Total_Slider {
 	 * @param array $buttons The existing TinyMCE array of buttons, which we modify and retunr
 	 * @return array
 	 */
-	public static function register_tinymce_button ( $buttons ) {
+	public function register_tinymce_button ( $buttons ) {
 		array_push( $buttons, 'separator', 'total_slider_insert' );
 		return $buttons;
 				
@@ -794,9 +811,9 @@ class Total_Slider {
 	 * @return void
 	 *
 	 */
-	public static function print_slide_groups_page() {
+	public function print_slide_groups_page() {
 
-		global $allowed_template_locations;
+		global $allowed_template_locations, $TS_Total_Slider;
 
 		require( dirname( __FILE__ ) . '/admin/slide-groups.php' );
 
@@ -808,8 +825,8 @@ class Total_Slider {
 	 * @return void
 	 *
 	 */
-	public static function print_slides_page() {
-		global $TS_The_Slug, $TS_The_Tpl_Error, $allowed_template_locations, $TS_The_Template;
+	public function print_slides_page() {
+		global $TS_Total_Slider;
 
 		require( dirname( __FILE__ ) . '/admin/slides.php' );
 
@@ -822,7 +839,7 @@ class Total_Slider {
 	 *
 	 * @return void
 	 */
-	public static function print_settings_page() {
+	public function print_settings_page() {
 		require( dirname( __FILE__ ) . '/admin/settings.php' );
 
 	}
@@ -833,7 +850,7 @@ class Total_Slider {
 	 * @return void
 	 *
 	 */
-	public static function print_uploader_javascript() {
+	public function print_uploader_javascript() {
 		require( dirname( __FILE__ ) . '/admin/support/uploader-javascript.php' );
 
 	}
@@ -846,8 +863,9 @@ class Total_Slider {
 	 * @return void
 	 *
 	 */
-	public static function print_credits_metabox()
+	public function print_credits_metabox()
 	{
+		global $TS_Total_Slider;
 		require( dirname( __FILE__) . '/admin/metaboxes/credits.php' );
 	}
 
@@ -856,8 +874,8 @@ class Total_Slider {
 	 *
 	 * @return void
 	 */
-	public static function print_slide_sorter_metabox() {
-		global $TS_The_Slug;
+	public function print_slide_sorter_metabox() {
+		global $TS_Total_Slider;
 
 		require( dirname( __FILE__ ) . '/admin/metaboxes/slide-sorter.php' );
 	}
@@ -868,20 +886,20 @@ class Total_Slider {
 	 * @return void
 	 *
 	 */
-	public static function print_slide_template_metabox() {
+	public function print_slide_template_metabox() {
 
-		global $TS_The_Slug;
+		global $TS_Total_Slider;
 	
-		if ( ! $TS_The_Slug ) {
+		if ( ! $this->slug ) {
 			if ( ! array_key_exists('group', $_GET ) )
 			{
 				return false;
 			}
 			
-			$TS_The_Slug = Total_Slider::sanitize_slide_group_slug( $_GET['group'] );
+			$this->slug = $this->sanitize_slide_group_slug( $_GET['group'] );
 		}
 		
-		$slide_group = new Total_Slide_Group( $TS_The_Slug );
+		$slide_group = new Total_Slide_Group( $this->slug );
 		if ( ! $slide_group->load() ) {
 			return false;
 		}
@@ -965,9 +983,9 @@ class Total_Slider {
 	 * @return void
 	 *
 	 */
-	public static function print_slide_preview_metabox() {
+	public function print_slide_preview_metabox() {
 	
-		global $TS_The_Template;
+		global $TS_Total_Slider;
 	
 		require( dirname( __FILE__ ) . '/admin/metaboxes/slide-preview.php' );
 
@@ -978,8 +996,9 @@ class Total_Slider {
 	 *
 	 * @return void 
 	 */
-	public static function print_slide_editor_metabox()
+	public function print_slide_editor_metabox()
 	{
+		global $TS_Total_Slider;
 
 		require( dirname( __FILE__ ) . '/admin/metaboxes/slide-editor.php' );
 
@@ -991,7 +1010,7 @@ class Total_Slider {
 	 * @return void
 	 *
 	 */
-	public static function print_admin_css() {
+	public function print_admin_css() {
 		require( dirname( __FILE__ ) . '/admin/support/admin-css.php' );
 	}
 
@@ -1015,13 +1034,16 @@ function total_slider_shortcode( $atts, $content, $tag ) {
 
 /******************************************** WordPress actions ********************************************/
 
-register_activation_hook( __FILE__, array ('Total_Slider', 'create_slides_option_field' ) );
-add_action( 'init', array( 'Total_Slider', 'load_text_domain' ) );
-add_action('init', array( 'Total_Slider', 'bootstrap_tinymce_plugin' ) );
-add_action( 'admin_menu', array( 'Total_Slider', 'add_admin_submenu' ) );
-add_action( 'admin_head', array( 'Total_Slider', 'print_admin_css' ) );
-add_action( 'widgets_init', array( 'Total_Slider', 'register_as_widget' ) );
-add_action( 'admin_init', array( 'Total_Slider', 'pass_control_to_ajax_handler' ) );
-add_action( 'admin_head-media-upload-popup', array( 'Total_Slider', 'print_uploader_javascript' ) );
+
+$TS_Total_Slider = new Total_Slider();
+
+register_activation_hook( __FILE__, array ($TS_Total_Slider, 'create_slides_option_field' ) );
+add_action( 'init', array( $TS_Total_Slider, 'load_text_domain' ) );
+add_action('init', array( $TS_Total_Slider, 'bootstrap_tinymce_plugin' ) );
+add_action( 'admin_menu', array( $TS_Total_Slider, 'add_admin_submenu' ) );
+add_action( 'admin_head', array( $TS_Total_Slider, 'print_admin_css' ) );
+add_action( 'widgets_init', array( $TS_Total_Slider, 'register_as_widget' ) );
+add_action( 'admin_init', array( $TS_Total_Slider, 'pass_control_to_ajax_handler' ) );
+add_action( 'admin_head-media-upload-popup', array( $TS_Total_Slider, 'print_uploader_javascript' ) );
 
 add_shortcode( 'totalslider', 'total_slider_shortcode' );

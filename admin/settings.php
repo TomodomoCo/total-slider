@@ -78,7 +78,7 @@ if (
 			}
 		}
 
-		Total_Slider::set_capability_for_roles($roles_to_add);
+		$this->set_capability_for_roles($roles_to_add);
 		$success = true;
 		$message = __( 'Settings saved.', 'total_slider' );
 

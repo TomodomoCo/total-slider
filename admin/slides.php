@@ -43,9 +43,9 @@ if ( ! current_user_can( TOTAL_SLIDER_REQUIRED_CAPABILITY ) )
 	return;
 }
 
-$TS_The_Slug = Total_Slider::sanitize_slide_group_slug( $_GET['group'] );
+$TS_Total_Slider->slug = $TS_Total_Slider->sanitize_slide_group_slug( $_GET['group'] );
 
-if ( empty( $TS_The_Slug ) ) {
+if ( empty( $TS_Total_Slider->slug ) ) {
 	echo '<div class="wrap"><h1>';
 	_e( 'No Slide Group selected.', 'total_slider' );
 	echo '</h1></div>';
@@ -53,7 +53,7 @@ if ( empty( $TS_The_Slug ) ) {
 }
 
 // get the name data for this slide group based on its slug
-$slide_group = new Total_Slide_Group( $TS_The_Slug );
+$slide_group = new Total_Slide_Group( $TS_Total_Slider->slug );
 
 if ( ! $slide_group->load() ) {
 	echo '<div class="wrap"><h1>';
@@ -63,9 +63,9 @@ if ( ! $slide_group->load() ) {
 }
 
 // determine and load template
-if ( ! $TS_The_Template || ! is_a( $TS_The_Template, 'Total_Slider_Template' ) )
+if ( ! $TS_Total_Slider->template || ! is_a( $TS_Total_Slider->template, 'Total_Slider_Template' ) )
 {
-	Total_Slider::determine_template();
+	$TS_Total_Slider->determine_template();
 }
 
 if (
@@ -114,7 +114,7 @@ if (
 	) {
 		// avoid being destructive if it's unnecessary
 		// there is no change, so just go back
-		Total_Slider::ugly_js_redirect( 'edit-slide-group', $slide_group->slug );
+		$this->ugly_js_redirect( 'edit-slide-group', $slide_group->slug );
 		die();								
 	}
 	
@@ -131,18 +131,18 @@ if (
 	$slide_group->remove_xy_data();
 	$slide_group->save();
 	
-	Total_Slider::ugly_js_redirect( 'edit-slide-group', $slide_group->slug );
+	$TS_Total_Slider->ugly_js_redirect( 'edit-slide-group', $slide_group->slug );
 	die();
 	
 }
 
 // add the metaboxes
-add_meta_box( 'slide-sorter-mb', __( 'Slides', 'total_slider' ), array( 'Total_Slider', 'print_slide_sorter_metabox' ), '_total_slider_slide', 'normal', 'core' );
-add_meta_box( 'slide-preview-mb', __( 'Preview', 'total_slider' ), array( 'Total_Slider', 'print_slide_preview_metabox' ), '_total_slider_slide', 'normal', 'core' );
+add_meta_box( 'slide-sorter-mb', __( 'Slides', 'total_slider' ), array( $TS_Total_Slider, 'print_slide_sorter_metabox' ), '_total_slider_slide', 'normal', 'core' );
+add_meta_box( 'slide-preview-mb', __( 'Preview', 'total_slider' ), array( $TS_Total_Slider, 'print_slide_preview_metabox' ), '_total_slider_slide', 'normal', 'core' );
 
-add_meta_box( 'slide-editor-mb', __( 'Edit', 'total_slider' ), array( 'Total_Slider', 'print_slide_editor_metabox' ), '_total_slider_slide_bottom', 'normal', 'core' );
-add_meta_box( 'slide-template-mb', __( 'Template', 'total_slider' ), array( 'Total_Slider', 'print_slide_template_metabox' ), '_total_slider_slide_bottom', 'side', 'core' ); 
-add_meta_box( 'credits-notes-mb', __( 'Credits', 'total_slider' ), array( 'Total_Slider', 'print_credits_metabox' ), '_total_slider_slide_bottom', 'side', 'core' );
+add_meta_box( 'slide-editor-mb', __( 'Edit', 'total_slider' ), array( $TS_Total_Slider, 'print_slide_editor_metabox' ), '_total_slider_slide_bottom', 'normal', 'core' );
+add_meta_box( 'slide-template-mb', __( 'Template', 'total_slider' ), array( $TS_Total_Slider, 'print_slide_template_metabox' ), '_total_slider_slide_bottom', 'side', 'core' ); 
+add_meta_box( 'credits-notes-mb', __( 'Credits', 'total_slider' ), array( $TS_Total_Slider, 'print_credits_metabox' ), '_total_slider_slide_bottom', 'side', 'core' );
 
 if ( function_exists( 'find_posts_div' ) ) {
 	// bring in the post/page finder interface for links
@@ -151,7 +151,7 @@ if ( function_exists( 'find_posts_div' ) ) {
 
 ?>
 <!-- Proxy template change form -->
-<form name="template-switch-form" id="template-switch-form" method="POST" action="admin.php?page=total-slider&amp;group=<?php echo $TS_The_Slug; ?>&amp;action=changeTemplate">
+<form name="template-switch-form" id="template-switch-form" method="POST" action="admin.php?page=total-slider&amp;group=<?php echo $TS_Total_Slider->slug; ?>&amp;action=changeTemplate">
 <?php wp_nonce_field( 'total-slider-change-template', 'total-slider-change-template-nonce' ); ?>
 <input type="hidden" id="template-slug" name="template-slug" value="<?php echo esc_attr( $slide_group->template ); ?>" />
 </form>
@@ -161,7 +161,7 @@ if ( function_exists( 'find_posts_div' ) ) {
 //<![CDATA[
 var VPM_WP_ROOT = '<?php echo admin_url(); ?>';
 var VPM_HPS_PLUGIN_URL = '<?php echo admin_url(); ?>admin.php?page=total-slider&total-slider-ajax=true&';
-var VPM_HPS_GROUP = '<?php echo esc_attr($TS_The_Slug); ?>';
+var VPM_HPS_GROUP = '<?php echo esc_attr($TS_Total_Slider->slug); ?>';
 document.title = '‘<?php echo esc_attr($slide_group->name); ?>’ Slides ' + document.title.substring(13, document.title.length);//TODO i18n
 var VPM_SHOULD_WORKAROUND_16655 = <?php echo ( version_compare( get_bloginfo( 'version' ), '3.4', '>=' ) ? 'false' : 'true' ); ?>;
 // on WordPress version <3.4, we need to work around https://core.trac.wordpress.org/ticket/16655. It is fixed in 3.4.
@@ -169,8 +169,8 @@ var VPM_SHOULD_WORKAROUND_16655 = <?php echo ( version_compare( get_bloginfo( 'v
 var VPM_SLIDE_GROUP_TEMPLATE = '<?php echo esc_attr( $slide_group->template );?>';
 var VPM_SLIDE_GROUP_TEMPLATE_LOCATION = '<?php echo esc_attr( $slide_group->templateLocation );?>';
 
-<?php if ( $TS_The_Template && is_a( $TS_The_Template, 'Total_Slider_Template' ) ) {
-	$template_options = $TS_The_Template->determine_options(); 	
+<?php if ( $TS_Total_Slider->template && is_a( $TS_Total_Slider->template, 'Total_Slider_Template' ) ) {
+	$template_options = $TS_Total_Slider->template->determine_options(); 	
 } ?>
 
 var VPM_SHOULD_DISABLE_XY = <?php echo ( $template_options['disable_xy'] ) ? 'true' : 'false'; ?>;
@@ -188,10 +188,10 @@ var VPM_SHOULD_DISABLE_XY = <?php echo ( $template_options['disable_xy'] ) ? 'tr
 <p><?php _e( 'You will need to enable JavaScript for this page before any of the controls below will work.', 'total_slider' );?></p>
 </noscript>
 
-<?php if ( $TS_The_Tpl_Error ): ?>
+<?php if ( $TS_Total_Slider->tpl_error ): ?>
 	<div id="template-error" class="updated settings-error below-h2">
 	<h3><?php _e( 'There is a problem with this slide group&rsquo;s template.', 'total_slider' ); ?></h3>
-	<p><?php echo esc_html( $TS_The_Tpl_Error->getMessage() ); ?> <em><?php printf( __( '(error code %d)', 'total_slider' ), intval( $TS_The_Tpl_Error->getCode() ) ); ?></em></p>
+	<p><?php echo esc_html( $TS_Total_Slider->tpl_error->getMessage() ); ?> <em><?php printf( __( '(error code %d)', 'total_slider' ), intval( $TS_Total_Slider->tpl_error->getCode() ) ); ?></em></p>
 	<p><?php _e( 'Please either resolve this problem, or choose a different template for this slide group.', 'total_slider' ); ?></p>
 	</div>
 <?php endif; ?>

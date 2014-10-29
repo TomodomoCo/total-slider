@@ -35,7 +35,7 @@ if ( ! function_exists( '__' ) )
 }
 
 ?><!--sortable slides-->
-<?php $current_slides = Total_Slider::get_current_slides($TS_The_Slug); ?>
+<?php $current_slides = $TS_Total_Slider->get_current_slides($TS_Total_Slider->slug); ?>
 <div id="slidesort-container">
 <ul id="slidesort" style="width:<?php echo intval( count( $current_slides ) * 180 ); ?>px;">
 <?php
@@ -44,7 +44,7 @@ if ( is_array( $current_slides ) && count( $current_slides ) > 0 ) {
 
 	foreach( $current_slides as $slide ) {
 
-		$my_id = Total_Slider::id_filter( $slide['id'] );
+		$my_id = $TS_Total_Slider->id_filter( $slide['id'] );
 		
 		if ( is_numeric($slide['background'] ) )
 		{

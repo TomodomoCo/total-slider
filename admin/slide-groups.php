@@ -44,7 +44,7 @@ if ( ! current_user_can( TOTAL_SLIDER_REQUIRED_CAPABILITY ) ) {
 }
 
 // add the credits/notes metabox
-add_meta_box( 'credits-notes', __( 'Credits', 'total_slider' ), array( 'Total_Slider', 'print_credits_metabox' ), '_total_slider_slide_groups', 'side', 'core' );
+add_meta_box( 'credits-notes', __( 'Credits', 'total_slider' ), array( $TS_Total_Slider, 'print_credits_metabox' ), '_total_slider_slide_groups', 'side', 'core' );
 
 // if we are to remove a slide group, do that and redirect to home
 if ( array_key_exists( 'action', $_GET ) && 'remove' == $_GET['action'] && array_key_exists( 'group', $_GET ) ) {
@@ -56,10 +56,10 @@ if ( array_key_exists( 'action', $_GET ) && 'remove' == $_GET['action'] && array
 		$new_group->delete();
 
 		// remove the option
-		delete_option( 'total_slider_slides_'. Total_Slider::sanitize_slide_group_slug( $_GET['group'] ) );
+		delete_option( 'total_slider_slides_'. $this->sanitize_slide_group_slug( $_GET['group'] ) );
 
 		// redirect back to the admin total slider root page
-		Total_Slider::ugly_js_redirect( 'root' );
+		$this->ugly_js_redirect( 'root' );
 		die();
 
 	}
@@ -94,11 +94,11 @@ if (
 			$new_group->delete();
 
 			// remove the option
-			delete_option( 'total_slider_slides_'. Total_Slider::sanitize_slide_group_slug( $slide_group ) );
+			delete_option( 'total_slider_slides_'. $this->sanitize_slide_group_slug( $slide_group ) );
 		}
 
 		// redirect back to the admin total slider root page
-		Total_Slider::ugly_js_redirect( 'root' );
+		$this->ugly_js_redirect( 'root' );
 		die();
 	}
 }
@@ -106,7 +106,7 @@ if (
 // if the URL otherwise has 'group' in the GET parameters, it's time to pass control
 // to print_slides_page() for editing purposes
 if ( array_key_exists( 'group', $_GET ) ) {
-	Total_Slider::print_slides_page();
+	$this->print_slides_page();
 	return;
 }
 
@@ -120,19 +120,19 @@ if (
 
 		if ( ! empty( $_POST['group-name'] ) && ! empty( $_POST['template-slug'] ) ) {
 			// add the new slide group
-			$new_slug = Total_Slider::sanitize_slide_group_slug( sanitize_title_with_dashes( $_POST['group-name'] ) );
+			$new_slug = $this->sanitize_slide_group_slug( sanitize_title_with_dashes( $_POST['group-name'] ) );
 
 			// slide group already with this name?
 			$existing = new Total_Slide_Group( $new_slug );
 			if ( $existing->load() ) {
 				$new_slug = substr( $new_slug, 0, ( 63 - strlen( 'total_slider_slides_' ) - 23 ) ); // truncate so that the uniqid portion is retained.
-				$new_slug .= Total_Slider::id_filter( uniqid( '_', true ) );
-				$new_slug = Total_Slider::sanitize_slide_group_slug( $new_slug );
+				$new_slug .= $this->id_filter( uniqid( '_', true ) );
+				$new_slug = $this->sanitize_slide_group_slug( $new_slug );
 			}
 
 			if ( empty( $new_slug) ) {
-				$new_slug = 'group_' . Total_Slider::id_filter( uniqid( '', true ) );
-				$new_slug = Total_Slider::sanitize_slide_group_slug( $newSlug );
+				$new_slug = 'group_' . $this->id_filter( uniqid( '', true ) );
+				$new_slug = $this->sanitize_slide_group_slug( $newSlug );
 			}
 
 			$new_group = new Total_Slide_Group( $new_slug, $_POST['group-name'] );
@@ -184,7 +184,7 @@ if (
 			add_option( 'total_slider_slides_' . $new_slug, array(), '', 'yes' );
 
 			// redirect to the new edit page for this slide group
-			Total_Slider::ugly_js_redirect( 'edit-slide-group', $new_slug );
+			$this->ugly_js_redirect( 'edit-slide-group', $new_slug );
 			die();
 		}
 	}
