@@ -242,9 +242,7 @@ class Total_Slider_Template {
 	 */
 	public function __construct( $slug, $location ) {
 
-		global $allowed_template_locations;
-		
-		if ( ! is_array($allowed_template_locations ) )	{
+		if ( ! is_array(Total_Slider::$allowed_template_locations ) ) {
 			throw new UnexpectedValueException( __( 'The allowed template locations are not available. This file must not be loaded without class.total-slide-group.php', 'total_slider' ), 103 );
 			return;
 		}
@@ -252,7 +250,7 @@ class Total_Slider_Template {
 		// get some key things ready
 		$this->slug = $this->sanitize_slug( $slug );
 		
-		if ( in_array( $location, $allowed_template_locations ) ) {
+		if ( in_array( $location, Total_Slider::$allowed_template_locations ) ) {
 			$this->location = $location;
 		}
 		else {
@@ -1482,15 +1480,14 @@ class Total_Slider_Template_Iterator {
 	 * @return array
 	 */
 	public function discover_templates($location, $should_parse_name = true) {
-		global $allowed_template_locations;
 		
-		if ( ! is_array( $allowed_template_locations ) ) {
+		if ( ! is_array( Total_Slider::$allowed_template_locations ) ) {
 			throw new UnexpectedValueException( __( 'The allowed template locations are not available. This file must not be loaded without class.total-slide-group.php', 'total_slider' ), 103 );
 			return false;
 		}
 		
 		// check the location given is valid	
-		if ( ! in_array( $location, $allowed_template_locations ) ) {
+		if ( ! in_array( $location, Total_Slider::$allowed_template_locations ) ) {
 			throw new UnexpectedValueException( __( 'The supplied template location is not one of the allowed template locations', 'total_slider' ), 101 );
 			return false;
 		}

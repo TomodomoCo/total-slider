@@ -43,13 +43,6 @@ if ( ! defined('TOTAL_SLIDER_IN_FUNCTIONS' ) ) {
 	die( '<h1>Forbidden</h1>' );
 }
 
-static $allowed_template_locations = array(
-	'builtin',
-	'theme',
-	'downloaded',
-	'legacy'
-);
-
 	/* data structure
 	
 		a serialized array stored as a wp_option
@@ -168,7 +161,6 @@ class Total_Slide_Group {
 	 */
 	public function load() {
 	
-		global $allowed_template_locations;
 	
 		if ( ! get_option( 'total_slider_slide_groups' ) ) {
 			return false;
@@ -197,7 +189,7 @@ class Total_Slide_Group {
 			
 			if (
 				property_exists( $current_groups[$the_index], 'templateLocation' ) &&
-				in_array( $current_groups[$the_index]->templateLocation, $allowed_template_locations )
+				in_array( $current_groups[$the_index]->templateLocation, Total_Slider::$allowed_template_locations )
 			) {
 				$this->templateLocation = $current_groups[$the_index]->templateLocation;
 			}

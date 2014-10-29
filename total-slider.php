@@ -101,7 +101,17 @@ class Total_Slider {
 	 */
 	public $tpl_error = false;
 
-
+	/**
+	 * The list of allowed template locations -- 'builtin','theme','downloaded','legacy'
+	 *
+	 * @var array
+	 */
+	public static $allowed_template_locations = array(
+		'builtin',
+		'theme',
+		'downloaded',
+		'legacy'
+	);
 
 
 	/* data structure
@@ -813,7 +823,7 @@ class Total_Slider {
 	 */
 	public function print_slide_groups_page() {
 
-		global $allowed_template_locations, $TS_Total_Slider;
+		global $TS_Total_Slider;
 
 		require( dirname( __FILE__ ) . '/admin/slide-groups.php' );
 
