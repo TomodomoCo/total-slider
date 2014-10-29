@@ -126,7 +126,10 @@ class Total_Slider {
 		'publish_total_slider_slides',	
 		'delete_total_slider_slides',
 		'delete_published_total_slider_slides',
-		'delete_others_total_slider_slides'
+		'delete_others_total_slider_slides',
+		'edit_private_total_slider_slides',
+		'delete_private_total_slider_slides',
+		'read_private_total_slider_slides',
 	);
 
 
