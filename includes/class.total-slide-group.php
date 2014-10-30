@@ -138,6 +138,10 @@ class Total_Slide_Group {
 		$term = get_term_by( 'slug', $this->originalSlug, 'total_slider_slide_group' );
 
 
+		if ( ! $term ) {
+			return false;
+		}
+
 		$this->name = $term->name;
 		$this->slug = Total_Slider::sanitize_slide_group_slug( $term->slug );
 		$this->term_id = intval( $term->term_id );
@@ -185,12 +189,8 @@ class Total_Slide_Group {
 
 		}
 
-		if ( $term ) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return true;
+
 
 	}
 
@@ -287,7 +287,7 @@ class Total_Slide_Group {
 			) );
 		}
 		else {
-			wp_insert_term( array(
+			wp_insert_term( $this->slug, 'total_slider_slide_group', array(
 				'name'     => $this->name,
 				'slug'     => $this->slug,
 				'taxonomy' => 'total_slider_slide_group'

@@ -64,7 +64,7 @@ if ( ! array_key_exists( 'group', $_GET ) && 'getSlideGroups' == $_GET['action']
 		die();
 	}
 	
-	$groups = get_terms( 'total_slider_slide_group' );
+	$groups = get_terms( 'total_slider_slide_group', array( 'hide_empty' => false ) );
 
 	
 	$results = array();

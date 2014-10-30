@@ -283,6 +283,7 @@ class Total_Slider {
 	public function initialize() {
 		$this->load_text_domain();
 		$this->register_cpt();
+
 	}
 
 	/**

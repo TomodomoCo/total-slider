@@ -55,8 +55,6 @@ if ( array_key_exists( 'action', $_GET ) && 'remove' == $_GET['action'] && array
 		$new_group = new Total_Slide_Group( $_GET['group'] );
 		$new_group->delete();
 
-		// remove the option
-		delete_option( 'total_slider_slides_'. $TS_Total_Slider->sanitize_slide_group_slug( $_GET['group'] ) );
 
 		// redirect back to the admin total slider root page
 		$TS_Total_Slider->ugly_js_redirect( 'root' );
@@ -93,8 +91,6 @@ if (
 			$new_group = new Total_Slide_Group( $slide_group );
 			$new_group->delete();
 
-			// remove the option
-			delete_option( 'total_slider_slides_'. $TS_Total_Slider->sanitize_slide_group_slug( $slide_group ) );
 		}
 
 		// redirect back to the admin total slider root page

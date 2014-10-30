@@ -211,7 +211,7 @@ class Slide_Groups_Table extends WP_List_Table {
 	public function get_total_items()
 	{
 	
-		return count( get_terms( 'total_slider_slide_group' ) );
+		return count( get_terms( 'total_slider_slide_group' ) ); //TODO incorrect ??
 	
 	}
 	
@@ -223,8 +223,12 @@ class Slide_Groups_Table extends WP_List_Table {
 	 */
 	public function get_groups()
 	{
-	
-		$groups = get_terms( 'total_slider_slide_group' );
+
+		$args = array(
+			'hide_empty'   => false,
+		);
+
+		$groups = get_terms( 'total_slider_slide_group', $args );
 		return $groups;
 	
 	}
