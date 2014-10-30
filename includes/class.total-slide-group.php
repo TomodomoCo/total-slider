@@ -284,7 +284,7 @@ class Total_Slide_Group {
 			) );
 		}
 		else {
-			wp_insert_term( $this->slug, 'total_slider_slide_group', array(
+			wp_insert_term( $this->name, 'total_slider_slide_group', array(
 				'name'     => $this->name,
 				'slug'     => $this->slug,
 				'taxonomy' => 'total_slider_slide_group'

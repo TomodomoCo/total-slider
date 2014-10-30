@@ -120,7 +120,7 @@ if (
 
 			// slide group already with this name?
 			$existing = new Total_Slide_Group( $new_slug );
-			if ( $existing->load() ) {
+			if ( $existing->load() ) { //TODO replace this code
 				$new_slug = substr( $new_slug, 0, ( 63 - strlen( 'total_slider_slides_' ) - 23 ) ); // truncate so that the uniqid portion is retained.
 				$new_slug .= $TS_Total_Slider->id_filter( uniqid( '_', true ) );
 				$new_slug = $TS_Total_Slider->sanitize_slide_group_slug( $new_slug );
@@ -175,9 +175,6 @@ if (
 			}
 			
 			$new_group->save();
-
-			// add the new slides option for this group
-			add_option( 'total_slider_slides_' . $new_slug, array(), '', 'yes' );
 
 			// redirect to the new edit page for this slide group
 			$TS_Total_Slider->ugly_js_redirect( 'edit-slide-group', $new_slug );
