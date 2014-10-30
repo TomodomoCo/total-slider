@@ -68,6 +68,7 @@ if ( ! $TS_Total_Slider->template || ! is_a( $TS_Total_Slider->template, 'Total_
 	$TS_Total_Slider->determine_template();
 }
 
+
 if (
 	'post' == strtolower( $_SERVER['REQUEST_METHOD'] ) &&
 	array_key_exists( 'action', $_GET ) &&
@@ -135,14 +136,16 @@ if (
 	die();
 	
 }
-
 // add the metaboxes
+
+
 add_meta_box( 'slide-sorter-mb', __( 'Slides', 'total_slider' ), array( $TS_Total_Slider, 'print_slide_sorter_metabox' ), '_total_slider_slide', 'normal', 'core' );
 add_meta_box( 'slide-preview-mb', __( 'Preview', 'total_slider' ), array( $TS_Total_Slider, 'print_slide_preview_metabox' ), '_total_slider_slide', 'normal', 'core' );
-
 add_meta_box( 'slide-editor-mb', __( 'Edit', 'total_slider' ), array( $TS_Total_Slider, 'print_slide_editor_metabox' ), '_total_slider_slide_bottom', 'normal', 'core' );
 add_meta_box( 'slide-template-mb', __( 'Template', 'total_slider' ), array( $TS_Total_Slider, 'print_slide_template_metabox' ), '_total_slider_slide_bottom', 'side', 'core' ); 
 add_meta_box( 'credits-notes-mb', __( 'Credits', 'total_slider' ), array( $TS_Total_Slider, 'print_credits_metabox' ), '_total_slider_slide_bottom', 'side', 'core' );
+
+
 
 if ( function_exists( 'find_posts_div' ) ) {
 	// bring in the post/page finder interface for links
@@ -207,10 +210,12 @@ var VPM_SHOULD_DISABLE_XY = <?php echo ( $template_options['disable_xy'] ) ? 'tr
 		<div class="metabox-holder columns-2">
 			<div class="inner-sidebar" id="postbox-container-1">
 				<?php do_meta_boxes( '_total_slider_slide_bottom', 'side', null );?>
+
 			</div>
 			<div id="post-body" class="columns-2">
 				<div id="post-body-content">
 					<?php do_meta_boxes( '_total_slider_slide_bottom', 'normal', null );?>
+
 				</div>
 			</div>
 		</div>

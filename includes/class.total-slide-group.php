@@ -200,35 +200,32 @@ class Total_Slide_Group {
 	 * @return array
 	 */
 	public function get_slides() {
-		
-		if ( ! $this->name ) {
+
+		if ( ! $this->name || ! $this->term_id ) {
 			$this->load();
 		}
 
 		$args = array(
 			'post_type'          => 'total_slider_slide',
-			'tax_query'          => array(
+			'tax_query'          => array( array( 
 							'taxonomy' => 'total_slider_slide_group',
-							'field'    => 'slug',
-							'terms'    => $this->slug,
-		      	                        ),
+							'field'    => 'term_id',
+							'terms'    => array( $this->term_id ),
+						) ),
 			'orderby'            => 'meta_value_num',
 			'order'              => 'ASC',
 			'meta_key'           => 'total_slider_meta_sequence',
 		);
-
 
 		$raw = new WP_Query( $args );
 
 		$slides = array();
 		$n = 0;
 
+		while ( $raw->have_posts() ) { 
 
-		if ( $raw->have_posts() ) {
-			while ( $raw->have_posts() ) { 
+				$raw->the_post();
 
-			//	the_post();
-/*
 				$slides[$n]['id'] = get_the_ID();
 				$slides[$n]['title'] = get_the_title();
 				$slides[$n]['description'] = get_the_content();
@@ -243,6 +240,8 @@ class Total_Slide_Group {
 					$slides[$n]['background_url'] = wp_get_attachment_url( $bg ); 
 				}
 
+				$slides[$n]['background'] = $slides[$n]['background_url'];
+
 				$link = get_post_meta( get_the_ID(), 'total_slider_meta_link', true );
 
 				if ( ! is_numeric( $link ) || $link < 1 ) {
@@ -256,9 +255,8 @@ class Total_Slide_Group {
 
 				$slides[$n]['title_pos_x'] = get_post_meta( get_the_ID(), 'total_slider_meta_title_pos_x', true );
 				$slides[$n]['title_pos_y'] = get_post_meta( get_the_ID(), 'total_slider_meta_title_pos_y', true );
- */
+ 
 				++$n;
-			}
 		}
 
 
@@ -324,7 +322,7 @@ class Total_Slide_Group {
 				array(
 					'taxonomy' => 'total_slider_slide_group',
 					'field'    => 'slug',
-					'terms'    => $this->slug,
+					'terms'    => array( $this->slug ),
 				),
 			),
 		);
@@ -380,7 +378,7 @@ class Total_Slide_Group {
 			'post_type'           => 'total_slider_slide',
 			'comment_status'      => 'closed',
 			'tax_input'           => array(
-			                         	'total_slider_slide_group' => $this->term_id
+			                         	'total_slider_slide_group' => $this->slug
 			                         )
 		);
 
@@ -402,11 +400,11 @@ class Total_Slide_Group {
 			// we will query all other slides in this group, sorted properly, and grab the last one's sequence
 			$highest_sequence_posts = new WP_Query( array(
 				'post_type'      => 'total_slider_slide',
-				'tax_query'      => array(
-						'taxonomy' => 'total_slider_slide_group',
-						'field'    => 'slug',
-						'terms'    => $this->slug,
-					),
+				'tax_query'      => array( array( 
+							'taxonomy' => 'total_slider_slide_group',
+							'field'    => 'slug',
+							'terms'    => array( $this->slug ),
+						) ),
 				'orderby'        => 'meta_value_num',
 				'order'          => 'DESC',
 				'meta_key'       => 'total_slider_meta_sequence',
@@ -667,7 +665,7 @@ class Total_Slide_Group {
 				array(
 					'taxonomy' => 'total_slider_slide_group',
 					'field'    => 'slug',
-					'terms'    => $this->slug,
+					'terms'    => array( $this->slug ),
 				),
 			),
 		);

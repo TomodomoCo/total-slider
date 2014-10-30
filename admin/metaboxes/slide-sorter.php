@@ -44,6 +44,7 @@ if ( ! function_exists( '__' ) )
 
 if ( is_array( $current_slides ) && count( $current_slides ) > 0 ) {
 
+	
 	foreach( $current_slides as $slide ) {
 
 		$my_id = $TS_Total_Slider->id_filter( $slide['id'] );
