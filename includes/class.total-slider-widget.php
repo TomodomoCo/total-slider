@@ -109,6 +109,12 @@ class Total_Slider_Widget extends WP_Widget {
 	 */
 	protected $slider_iteration = 0;
 
+	/**
+	 * A reference to this widget's Slide Group object, used to get slides.
+	 *
+	 * @var Total_Slide_Group|boolean
+	 */
+	protected $slide_group = false;
 
 	/**
 	 * Calls the WP_Widget constructor.
@@ -140,14 +146,14 @@ class Total_Slider_Widget extends WP_Widget {
 		$this->slider_iteration = 0;
 
 		// determine the correct template to use
-		$group = new Total_Slide_Group( Total_Slider::sanitize_slide_group_slug( $this->instance['groupSlug'] ) );
-		if ( ! $group->load() ) {
+		$this->slide_group = new Total_Slide_Group( Total_Slider::sanitize_slide_group_slug( $this->instance['groupSlug'] ) );
+		if ( ! $this->slide_group->load() ) {
 			_e( '<strong>Total Slider:</strong> Could not find the selected slide group to show. Does it still exist?', 'total_slider' );
 			return;
 		}
 		
 		try {
-			$tpl = new Total_Slider_Template( $group->template, $group->templateLocation );	
+			$tpl = new Total_Slider_Template( $this->slide_group->template, $this->slide_group->templateLocation );	
 		}
 		catch ( Exception $e ) {
 			_e( '<strong>Total Slider:</strong> Unable to load the template for this slide group.', 'total_slider' );
@@ -156,7 +162,7 @@ class Total_Slider_Widget extends WP_Widget {
 			}
 			return;
 		}
-		
+
 		$general_options = get_option('total_slider_general_options');
 		
 		// only enqueue template if relevant option is set (fixes #29)
@@ -167,14 +173,14 @@ class Total_Slider_Widget extends WP_Widget {
 		) {
 			// enqueue CSS and JS
 			wp_register_style(
-				'total-slider-' . esc_attr( $group->template ),					/* handle */
+				'total-slider-' . esc_attr( $this->slide_group->template ),					/* handle */
 				$tpl->css_uri(),												/* src */
 				array(),														/* deps */
 				date( "YmdHis", @filemtime($tpl->css_path() ) ),				/* ver */
 				'all'															/* media */	
 			);
 			
-			wp_enqueue_style( 'total-slider-' . esc_attr($group->template) );
+			wp_enqueue_style( 'total-slider-' . esc_attr($this->slide_group->template) );
 	
 			
 			// load .min.js if available, if SCRIPT_DEBUG is not true in wp-config.php
@@ -190,7 +196,7 @@ class Total_Slider_Widget extends WP_Widget {
 			}
 			
 			wp_register_script(	
-					'total-slider-' . esc_attr($group->template), 				/* handle */
+					'total-slider-' . esc_attr($this->slide_group->template), 				/* handle */
 					$js_uri,													/* src */
 					array(
 						'jquery'
@@ -199,7 +205,7 @@ class Total_Slider_Widget extends WP_Widget {
 					true														/* in_footer */		
 			);
 			
-			wp_enqueue_script( 'total-slider-' . esc_attr($group->template) );
+			wp_enqueue_script( 'total-slider-' . esc_attr($this->slide_group->template) );
 		}
 		
 		$s = &$this; // $s is used by the theme to call our functions to actually display the data
@@ -224,11 +230,26 @@ class Total_Slider_Widget extends WP_Widget {
 		<?php
 
 			// find all the slide groups and offer them for the widget
+			$args = array(
+				'hide_empty'   => false,
+			);
+	
+			$groups = get_terms( 'total_slider_slide_group', $args );
 
-			$slide_groups = get_option( 'total_slider_slide_groups' );
+			$slide_groups = array();
+			$n = 0;
+
+			if ( is_array( $groups ) && count( $groups ) > 0 ) {
+				foreach( $groups as $g ) {
+					$slide_groups[$n] = new Total_Slide_Group( $g->slug );
+					$slide_groups[$n]->load();
+					++$n;
+				}
+			}
+
 			$slide_templates = array();
 
-			if ( is_array( $slide_groups ) && count( $slide_groups ) > 0 ) {
+			if ( count( $slide_groups ) > 0 ) {
 				foreach( $slide_groups as $group ) {
 					?><option value="<?php echo esc_attr($group->slug);?>"
 						<?php if ( array_key_exists('groupSlug', $instance ) ):
@@ -280,8 +301,7 @@ class Total_Slider_Widget extends WP_Widget {
 	{
 		if ( ! is_array($this->slides ) )
 		{
-			$this->slides = get_option( 'total_slider_slides_' . Total_Slider::sanitize_slide_group_slug( $this->instance['groupSlug'] ) );
-			$this->slides = array_values( $this->slides );
+			$this->slides = $this->slide_group->get_slides();
 		}
 
 		return count( $this->slides );
@@ -318,8 +338,7 @@ class Total_Slider_Widget extends WP_Widget {
 		}
 
 		if ( ! is_array( $this->slides ) || count( $this->slides ) < 1 ) {
-			$this->slides = get_option( 'total_slider_slides_' . Total_Slider::sanitize_slide_group_slug( $this->instance['groupSlug'] ) );
-			$this->slides = array_values( $this->slides );
+			$this->slides = $this->slide_group->get_slides();
 		}
 
 		// on which slide should we work? does it exist?
