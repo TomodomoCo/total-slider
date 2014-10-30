@@ -278,10 +278,9 @@ class Total_Slide_Group {
 		$existing = term_exists( $this->name, 'total_slider_slide_group' );
 
 		if ( $existing ) {
-			$result = wp_update_term( $existing, array(
+			$result = wp_update_term( $existing['term_id'], 'total_slider_slide_group', array(
 		       		'name'     => $this->name,
 				'slug'     => $this->slug,
-				'taxonomy' => 'total_slider_slide_group'
 			) );
 		}
 		else {

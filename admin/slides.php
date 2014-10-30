@@ -88,7 +88,7 @@ if (
 	// determine which template location this template is from
 	$t = new Total_Slider_Template_Iterator();
 	
-	foreach( Total_Slider::allowed_template_locations as $l ) {
+	foreach( Total_Slider::$allowed_template_locations as $l ) {
 	
 		if ( $tpl_location || $tpl_slug ) {
 			break;
