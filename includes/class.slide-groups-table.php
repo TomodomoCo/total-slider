@@ -211,7 +211,7 @@ class Slide_Groups_Table extends WP_List_Table {
 	public function get_total_items()
 	{
 	
-		return count( get_option( 'total_slider_slide_groups' ) );
+		return count( get_terms( 'total_slider_slide_group' ) );
 	
 	}
 	
@@ -224,7 +224,7 @@ class Slide_Groups_Table extends WP_List_Table {
 	public function get_groups()
 	{
 	
-		$groups = get_option( 'total_slider_slide_groups' );
+		$groups = get_terms( 'total_slider_slide_group' );
 		return $groups;
 	
 	}
@@ -259,7 +259,7 @@ class Slide_Groups_Table extends WP_List_Table {
 		$this->set_pagination_args(array(
 		
 			'total_items'	=>	$total_items,
-			'per_page'		=>	$per_page,
+			'per_page'	=>	$per_page,
 			'total_pages'	=>	ceil( $total_items / $per_page )
 		
 		));

@@ -28,6 +28,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+require( dirname( __FILE__ ) . '/class.ajax-interface-tools.php' );
+$tools = new Total_Slider_Ajax_Interface_Tools;
+
 ini_set( 'magic_quotes_gpc', 'Off' );
 
 if ( 'post' != strtolower( $_SERVER['REQUEST_METHOD'] ) ) {
@@ -253,7 +256,7 @@ switch ( $_GET['action'] )
 		// do the work
 		$result = $g->new_slide( $_POST['title'], $_POST['description'], $_POST['background'], $_POST['link'], $_POST['title_pos_x'], $_POST['title_pos_y'] );
 		
-		if ( $result ) {
+		if ( intval( $result ) == $result ) {
 			header( 'Content-Type: application/json' );
 			echo json_encode(
 				array(
@@ -262,14 +265,8 @@ switch ( $_GET['action'] )
 			);
 			die();
 		}
-		else {
-			header( 'HTTP/1.0 500 Internal Server Error' );
-			header( 'Content-Type: application/json' );
-			echo json_encode(
-				array(
-					'error' => __('The create slide operation failed at the server.', 'total_slider')
-				)
-			);
+		else if ( is_a( $result, 'WP_Error' ) ) {
+			$tools->maybe_dump_wp_error( $result );
 			die();
 		}
 	
