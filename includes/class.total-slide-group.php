@@ -171,7 +171,7 @@ class Total_Slide_Group {
 				$this->set_default_template();
 			}
 			else {
-				foreach( $group_options_expl as $opt => $key ) {
+				foreach( $group_options_expl as $key => $opt ) {
 					if ( $key == 0 ) { // templateLocation
 						if ( ! in_array( $opt, Total_Slider::$allowed_template_locations ) ) {
 							$this->set_default_template();
@@ -466,6 +466,7 @@ class Total_Slide_Group {
 		if ( empty( $slide['background'] ) ) {
 			// uses legacy URL string
 			$slide['background'] = get_post_meta( $slide_id, 'total_slider_meta_legacy_bgurl', true );
+			$slide['background_url'] = $slide['background'];
 		}
 		else {
 			// extract background image URL for frontend
@@ -516,9 +517,9 @@ class Total_Slide_Group {
 		}
 
 		$updated_post_args = array(
-			'ID'          => $slide_id,
-			'title'       => $title,
-			'description' => $description
+			'ID'           => $slide_id,
+			'post_title'   => $title,
+			'post_content' => $description
 		);
 
 		$result = wp_update_post( $updated_post_args, true );
@@ -529,7 +530,7 @@ class Total_Slide_Group {
 			update_post_meta( $result, 'total_slider_meta_title_pos_x', $title_pos_x );
 			update_post_meta( $result, 'total_slider_meta_title_pos_y', $title_pos_y );
 
-			if ( is_int( $background ) ) {
+			if ( is_numeric( $background ) ) {
 				update_post_meta( $result, '_thumbnail_id', $background );
 			}
 			else {
@@ -616,8 +617,8 @@ class Total_Slide_Group {
 		if ( ! is_array( $new_slide_order ) || count( $new_slide_order ) < 1 ) {
 			return false;
 		}
-		foreach( $new_slide_order as $slide => $sequence ) {
-			update_post_meta( $slide, 'total_slider_meta_sequence', $sequence );
+		foreach( $new_slide_order as $sequence => $slide ) {
+			update_post_meta( intval( $slide ), 'total_slider_meta_sequence', $sequence );
 		}
 
 		return true;
