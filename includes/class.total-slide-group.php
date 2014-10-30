@@ -194,7 +194,7 @@ class Total_Slide_Group {
 	 *
 	 */
 	public function save() {
-		//TODO	
+		//TODO is this needed at all?	
 		if ( ! get_option('total_slider_slide_groups' ) ) {
 			// create option
 			add_option( 'total_slider_slide_groups', array(), '', 'yes' );
@@ -287,7 +287,7 @@ class Total_Slide_Group {
 	 * @param integer $title_pos_x The X-offset where the description box should be displayed.
 	 * @param integer $title_pos_y The Y-offset where the description box should be displayed.
 	 *
-	 * @return integer
+	 * @return integer|WP_Error
 	 */
 	public function new_slide( $title, $description, $background, $link, $title_pos_x, $title_pos_y ) {
 
@@ -309,110 +309,70 @@ class Total_Slide_Group {
 
 		$result = wp_insert_post( $new_post_data, true );
 
-		return $result;
-	
-		$current_slides = get_option('total_slider_slides_' . $this->slug);
-		
-		if (false === $current_slides) {
-			
-			$this->save();
-			
-			$current_slides = get_option( 'total_slider_slides_' . $this->slug );
-			if (false === $current_slides)
-			{
-				return false; //can't do it
+		if ( is_int( $result ) ) {
+			update_post_meta( $result, 'total_slider_meta_link', $link );
+			update_post_meta( $result, 'total_slider_meta_title_pos_x', $title_pos_x );
+			update_post_meta( $result, 'total_slider_meta_title_pos_y', $title_pos_y );
+
+			if ( is_int( $background ) ) {
+				update_post_meta( $result, '_thumbnail_id', $background );
+			}
+			else {
+				update_post_meta( $result, 'total_slider_meta_legacy_bgurl', $background );
 			}
 		}
-		
-		$new_id = str_replace('.', '', uniqid('', true));
-		
-		$new_slide = array(
-		
-			'id' => $new_id,
-			'title' => $title,
-			'description' => $description,
-			'background' => $background,
-			'link' => $link,
-			'title_pos_x' => $title_pos_x,
-			'title_pos_y' => $title_pos_y		
-		
-		);	
-		
-		$current_slides[] = $new_slide;
-		
-		if ( $this->save_slides( $current_slides) ) {
-			return $new_id;
-		}
-		else {
-			return false;
-		}
-		
+
+		return $result;		
 		
 	}
 	
 	/**
 	 * Fetch the given slide from this Slide Group.
 	 *
-	 * @param string $slide_id
+	 * @param integer $slide_id
 	 * @return array
 	 */
 	public function get_slide( $slide_id ) {
+		
+		$post = get_post( $slide_id );
 	
-		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
-		
-		if (
-			false === $current_slides ||
-			! is_array( $current_slides ) ||
-			count( $current_slides ) < 0
-		) {
+		if ( ! $post ) {
 			return false;
 		}
-		
+
+		$slide = array();
+
+		$slide['id'] = $slide_id;
+		$slide['title'] = $post->post_title;
+		$slide['slug'] = $post->post_name;
+		$slide['description'] = $post->post_content;
+
+		// link, background, other meta
+
+		$slide['background'] = get_post_meta( $slide_id, '_thumbnail_id', true );
+	
+		if ( empty( $slide['background'] ) ) {
+			// uses legacy URL string
+			$slide['background'] = get_post_meta( $slide_id, 'total_slider_meta_legacy_bgurl', true );
+		}
 		else {
-		
-			foreach( $current_slides as $slide ) {
-			
-				if ( $slide['id'] == $slide_id ) {
-				
-					if ( (int) $slide['link'] == $slide['link'] ) {
-						// if slide link is a number, and therefore a post ID of some sort
-						$slp = (int) $slide['link'];
-						$link_post = get_post($slp);
-						if ($link_post)
-						{
-							$slide['link_post_title'] = $link_post->post_title;
-						}
-					}
-					
-					if ( (int) $slide['background'] == $slide['background'] && $slide['background'] > 0 ) {
-						// if slide background is a number, it must be an attachment ID
-						// so get its URL
-						$slide['background_url'] = wp_get_attachment_url((int)$slide['background']);
-						
-						if ( $slide['background_url'] == false )
-						{
-							/* 
-								If it failed to look up, simply fail to provide the URL.
-								We must not provide (string)'false' as the URL or things will break.
-								
-								'false' isn't a valid URL, but will be loaded into the frontend, and stays unless replaced by the user
-								during the edit process. This will bite the user when they then try and save, as they will be told
-								the background URL is not valid.
-							*/
-							unset( $slide['background_url'] );
-						}
-					}
-				
-					return $slide;
-				
-				}			
-			
-			}
-			
-			// if we didn't find it
-			
-			return false;
+			// extract background image URL for frontend
+			$slide['background_url'] = wp_get_attachment_url( $slide['background'] );
 		}
+
+		$slide['title_pos_x'] = get_post_meta( $slide_id, 'total_slider_meta_title_pos_x', true );
+		$slide['title_pos_y'] = get_post_meta( $slide_id, 'total_slider_meta_title_pos_y', true );
+
+		$slide['link'] = get_post_meta( $slide_id, 'total_slider_meta_link', true );
+
+		if ( is_numeric( $slide['link'] ) ) {
+			$slide['link_url'] = get_permalink( $slide['link'] );
+		}
+		else {
+			$slide['link_url'] = $slide['link'];
+		}
+		
+		return $slide;
 	
 	}
 	
@@ -647,28 +607,6 @@ class Total_Slide_Group {
 	}
 
 	/**
-	 * If WP_DEBUG is defined and enabled, dump the supplied WP_Error object to the JSON output.
-	 *
-	 * @var WP_Error The WP_Error object.
-	 * @return void
-	 */
-	private function maybe_dump_wp_error( $error_obj ) {
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			ob_start();
-
-			var_dump( $result );
-			$dump = ob_get_contents();
-
-			ob_end_clean();
-			echo json_encode(
-				array(
-					'WP_Error' => $dump
-				);
-			);
-		}
-	}
-
-	/**
 	 * Save the given valid slide array to the database.
 	 *
 	 * @param array $slides_to_write
@@ -727,7 +665,27 @@ class Total_Slide_Group {
 	 * This allows an at-a-glance verification that the selected slide group is the desired slide group.
 	 *
 	 * @return void
+	 *	/**
+	 * If WP_DEBUG is defined and enabled, dump the supplied WP_Error object to the JSON output.
 	 *
+	 * @var WP_Error The WP_Error object.
+	 * @return void
+	 */
+	private function maybe_dump_wp_error( $error_obj ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			ob_start();
+
+			var_dump( $result );
+			$dump = ob_get_contents();
+
+			ob_end_clean();
+			echo json_encode(
+				array(
+					'WP_Error' => $dump
+				);
+			);
+		}
+	}
 	 */
 	public function mini_preview() {
 		
