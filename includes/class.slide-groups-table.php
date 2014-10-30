@@ -229,6 +229,17 @@ class Slide_Groups_Table extends WP_List_Table {
 		);
 
 		$groups = get_terms( 'total_slider_slide_group', $args );
+
+		// load template information
+		if ( is_array( $groups ) && count( $groups ) > 0 ) {
+			foreach( $groups as $group ) {
+				$group_object = new Total_Slide_Group( $group->slug );
+				$group_object->load();
+				$group->template = $group_object->template;
+				$group->templateLocation = $group_object->templateLocation;
+			}
+		}
+
 		return $groups;
 	
 	}
