@@ -168,7 +168,7 @@ class Total_Slide_Group {
 			}
 			else {
 				foreach( $group_options_expl as $opt => $key ) {
-					if ( $key == 1 ) { // templateLocation
+					if ( $key == 0 ) { // templateLocation
 						if ( ! in_array( $opt, Total_Slider::$allowed_template_locations ) ) {
 							$this->set_default_template();
 							break;
@@ -177,7 +177,7 @@ class Total_Slide_Group {
 						$this->templateLocation = $opt;
 
 					}
-					if ( $key == 2 ) { // template slug
+					if ( $key == 1 ) { // template slug
 						$this->template = Total_Slider_Template::sanitize_slug( $opt );
 					}
 				}
@@ -185,8 +185,90 @@ class Total_Slide_Group {
 
 		}
 
+		if ( $term ) {
+			return true;
+		}
+		else {
+			return false;
+		}
+
 	}
-	
+
+	/**
+	 * Get the current slides of this Slide Group.
+	 *
+	 * @return array
+	 */
+	public function get_slides() {
+		
+		if ( ! $this->name ) {
+			$this->load();
+		}
+
+		$args = array(
+			'post_type'          => 'total_slider_slide',
+			'tax_query'          => array(
+							'taxonomy' => 'total_slider_slide_group',
+							'field'    => 'slug',
+							'terms'    => $this->slug,
+		      	                        ),
+			'orderby'            => 'meta_value_num',
+			'order'              => 'ASC',
+			'meta_key'           => 'total_slider_meta_sequence',
+		);
+
+
+		$raw = new WP_Query( $args );
+
+		$slides = array();
+		$n = 0;
+
+
+		if ( $raw->have_posts() ) {
+			while ( $raw->have_posts() ) { 
+
+			//	the_post();
+/*
+				$slides[$n]['id'] = get_the_ID();
+				$slides[$n]['title'] = get_the_title();
+				$slides[$n]['description'] = get_the_content();
+
+				$bg = get_post_meta( get_the_ID(), '_thumbnail_id', true );
+				if ( ! is_numeric( $bg ) || $bg < 1 ) {
+					// legacy -- direct URL
+					$slides[$n]['background_url'] = get_post_meta( get_the_ID(), 'total_slider_meta_legacy_bgurl', true );
+				}
+				else {
+					// attachment ID, so let's parse it
+					$slides[$n]['background_url'] = wp_get_attachment_url( $bg ); 
+				}
+
+				$link = get_post_meta( get_the_ID(), 'total_slider_meta_link', true );
+
+				if ( ! is_numeric( $link ) || $link < 1 ) {
+					// external URL
+					$slides[$n]['link'] = $link;
+				}
+				else {
+					// post or page ID
+					$slides[$n]['link'] = get_permalink( $link );
+				}
+
+				$slides[$n]['title_pos_x'] = get_post_meta( get_the_ID(), 'total_slider_meta_title_pos_x', true );
+				$slides[$n]['title_pos_y'] = get_post_meta( get_the_ID(), 'total_slider_meta_title_pos_y', true );
+ */
+				++$n;
+			}
+		}
+
+
+		wp_reset_postdata();
+
+		return $slides;
+
+	}
+
+
 	/**
 	 * Save this Slide Group, as currently represented in this object, to the database.
 	 *
@@ -194,36 +276,31 @@ class Total_Slide_Group {
 	 *
 	 */
 	public function save() {
-		//TODO is this needed at all?	
-		if ( ! get_option('total_slider_slide_groups' ) ) {
-			// create option
-			add_option( 'total_slider_slide_groups', array(), '', 'yes' );
-		}
-		
-		// get the current slide groups
-		$current_groups = get_option( 'total_slider_slide_groups' );
-		
-		$the_index = false;
-		
-		// loop through to find one with this original slug
-		foreach( $current_groups as $key => $group ) {
-			if ( $group->slug == $this->originalSlug ) {
-				$the_index = $key;
-				break;
-			}
-		}
-		
-		if ( false === $the_index ) {
-			// add this as a new slide group at the end
-			$current_groups[] = $this;
+
+		$existing = term_exists( $this->name, 'total_slider_slide_group' );
+
+		if ( $existing ) {
+			$result = wp_update_term( $existing, array(
+		       		'name'     => $this->name,
+				'slug'     => $this->slug,
+				'taxonomy' => 'total_slider_slide_group'
+			) );
 		}
 		else {
-			// replace the group at $theIndex with the new information
-			$current_groups[$the_index] = $this;
+			wp_insert_term( array(
+				'name'     => $this->name,
+				'slug'     => $this->slug,
+				'taxonomy' => 'total_slider_slide_group'
+			) );
 		}
-		
-		// save the groups list
-		update_option( 'total_slider_slide_groups', $current_groups );
+
+		// update or set template information
+		if ( empty( $this->template ) || ! in_array( $this->templateLocation, Total_Slider::$allowed_template_locations ) ) {
+			$this->set_default_template();
+		}
+		else {
+			update_option( 'total_slider_grptpl_' . $this->slug, $this->templateLocation . '|' . Total_Slider_Template::sanitize_slug( $this->template ) );
+		}
 	
 	}
 	
@@ -278,7 +355,7 @@ class Total_Slide_Group {
 	/**
 	 * Given a pre-validated set of data, create a new slide.
 	 *
-	 * Also returns the new slide ID for re-sorting purposes.
+	 * Also returns the new slide ID for re-sorting purposes. Always puts this new slide at the end of the sequence.
 	 *
 	 * @param string $title
 	 * @param string $description
@@ -320,6 +397,43 @@ class Total_Slide_Group {
 			else {
 				update_post_meta( $result, 'total_slider_meta_legacy_bgurl', $background );
 			}
+
+			// we need to know the highest sort order number for this group and add +1 to this meta
+			// we will query all other slides in this group, sorted properly, and grab the last one's sequence
+			$highest_sequence_posts = new WP_Query( array(
+				'post_type'      => 'total_slider_slide',
+				'tax_query'      => array(
+						'taxonomy' => 'total_slider_slide_group',
+						'field'    => 'slug',
+						'terms'    => $this->slug,
+					),
+				'orderby'        => 'meta_value_num',
+				'order'          => 'DESC',
+				'meta_key'       => 'total_slider_meta_sequence',
+				'posts_per_page' => 1,
+
+			) );
+
+			if ( $highest_sequence_posts->have_posts() ) {
+				$highest_sequence_posts->the_post();
+				$sequence = get_post_meta( get_the_ID(), 'total_slider_meta_sequence', true );
+
+				if ( empty( $sequence ) ) {
+					$sequence = 0;
+				}
+				else {
+					$sequence = intval( $sequence ) + 1;
+				}				
+
+			}
+			else {
+				$sequence = 0;
+			}
+
+			wp_reset_postdata(); 
+
+			update_post_meta( $result, 'total_slider_meta_sequence', $sequence );
+
 		}
 
 		return $result;		
@@ -371,6 +485,8 @@ class Total_Slide_Group {
 		else {
 			$slide['link_url'] = $slide['link'];
 		}
+
+		$slide['sequence'] = get_post_meta( $slide_id, 'total_slider_meta_sequence', true );
 		
 		return $slide;
 	
@@ -379,63 +495,54 @@ class Total_Slide_Group {
 	/**
 	 * Update the slide with the specified ID with the supplied pre-validated data.
 	 *
-	 * @param string $slide_id
+	 * @param integer $slide_id
 	 * @param string $title
 	 * @param string $description
 	 * @param mixed $background This can be specified as a URL, or an attachment ID.
 	 * @param mixed $link This can be specified as a URL, or a post ID.
 	 * @param integer $title_pos_x The X-offset where the description box should be displayed.
 	 * @param integer $title_pos_y The Y-offset where the description box should be displayed.
-	 * @return boolean
+	 * @return boolean|WP_Error
 	 */
 	public function update_slide( $slide_id, $title, $description, $background, $link, $title_pos_x, $title_pos_y ) {
-	
-		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
-		$original_slides = $current_slides;
-		
-		if (
-			false === $current_slides ||
-			!is_array( $current_slides ) ||
-			count( $current_slides ) < 0
-		) {
+
+		// only allow total_slider_slide CPT objects to be updated
+		$check = get_post( $slide_id );
+
+		if ( ! $check ) {
 			return false;
 		}
-		
-		else {
-		
-			$found = false;
-		
-			foreach( $current_slides as $i => $slide ) {
-			
-				if ( $slide['id'] == $slide_id ) {
-				
-					// we found the record we were looking for. update it
-					$current_slides[$i]['title'] = $title;
-					$current_slides[$i]['description'] = $description;
-					$current_slides[$i]['background'] = $background;
-					$current_slides[$i]['link'] = $link;
-					$current_slides[$i]['title_pos_x'] = $title_pos_x;
-					$current_slides[$i]['title_pos_y'] = $title_pos_y;
-				
-					$found = true;
-				
-				}	
-			
-			}
-			
-			if ( ! $found ) {
-				return false;
-			}
+
+		if ( $check->post_type != 'total_slider_slide' ) {
+			return false;
 		}
-		
-		if ( $current_slides === $original_slides )
-		{
-			return true; // no change, don't bother update_option as it returns false and errors us out
+
+		$updated_post_args = array(
+			'ID'          => $slide_id,
+			'title'       => $title,
+			'description' => $description
+		);
+
+		$result = wp_update_post( $updated_post_args, true );
+
+		if ( is_int( $result ) && $result > 0 ) {
+			// also update post meta
+			update_post_meta( $result, 'total_slider_meta_link', $link );
+			update_post_meta( $result, 'total_slider_meta_title_pos_x', $title_pos_x );
+			update_post_meta( $result, 'total_slider_meta_title_pos_y', $title_pos_y );
+
+			if ( is_int( $background ) ) {
+				update_post_meta( $result, '_thumbnail_id', $background );
+			}
+			else {
+				update_post_meta( $result, 'total_slider_meta_legacy_bgurl', $background );
+			}
+
 		}
+
+		return $result;
+
 		
-		// $current_slides now holds the slides we want to save
-		return $this->save_slides( $current_slides );
-	
 	}
 	
 	/**
@@ -480,49 +587,22 @@ class Total_Slide_Group {
 	/**
 	 * Remove this slide from the Slide Group.
 	 *
-	 * @param string $slide_id
+	 * @param integer $slide_id
 	 * @return boolean
 	 */
 	public function delete_slide( $slide_id ) {
 
-		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
-		
-		if ( false === $current_slides ) {
-			$this->save();
-			
-			$current_slides = get_option( 'total_slider_slides_' . $this->slug );
-			if ( false === $current_slides ) {
-				return false; //can't do it
-			}
-		}	
-		
-		if ( is_array( $current_slides) && count($current_slides) > 0 ) {
+		// only allow total_slider_slide CPT objects to be deleted
+		$check = get_post( $slide_id );
 
-			$found_it = false;		
-			
-			foreach( $current_slides as $index => $slide ) {
-			
-				if ($slide['id'] == $slide_id)
-				{
-					unset($current_slides[$index]);
-					$found_it = true;
-					break;
-				}
-			
-			}
-			
-			if ( ! $found_it )
-				return false;
-			else
-			{
-				return $this->save_slides($current_slides);
-			}
-		
-		}
-		
-		else {
+		if ( ! $check ) {
 			return false;
-		}			
+		}
+
+		if ( $check->post_type != 'total_slider_slide' ) {
+			return false;
+		}
+		return wp_delete_post( $slide_id, true );
 	
 	}
 	
@@ -535,62 +615,14 @@ class Total_Slide_Group {
 	public function reshuffle($new_slide_order)
 	{
 
-		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
-		
-		if ( false === $current_slides ) {
-			
-			$this->save();
-			
-			$current_slides = get_option( 'total_slider_slides_' . $this->slug );
-			if ( false === $current_slides ) {
-				return false; //can't do it
-			}
-		}	
-		
-		
-		if ( is_array( $current_slides ) && count( $current_slides ) > 0 ) {
-		
-			$new_slides = array();	
-			
-			$new_slide_not_found_in_current = false;	
-			
-			foreach( $new_slide_order as $new_index => $new_slide_id ) {			
-				$found_this_slide = false;
-			
-				foreach( $current_slides as $index => $slide ) {
-					if ( $slide['id'] == $new_slide_id ) {
-						$new_slides[] = $slide;
-						$found_this_slide = true;
-						continue;
-					}
-				}
-				
-				if (!$found_this_slide)
-				{
-					$new_slide_not_found_in_current = true;
-				}
-				
-			}
-			
-			if (
-				count($current_slides ) != count( $new_slides ) ||
-				$new_slide_not_found_in_current
-			) {
-				// there is a disparity -- so a slide or more will be lost
-				return 'disparity';
-			}
-			
-			if ( $new_slides === $current_slides ) {
-				return true;
-			}
-			
-			return $this->save_slides($new_slides);
-		
-		}
-		else
-		{
+		if ( ! is_array( $new_slide_order ) || count( $new_slide_order ) < 1 ) {
 			return false;
 		}
+		foreach( $new_slide_order as $slide => $sequence ) {
+			update_post_meta( $slide, 'total_slider_meta_sequence', $sequence );
+		}
+
+		return true;
 	
 	}
 
@@ -602,22 +634,14 @@ class Total_Slide_Group {
 	 */
 	private function set_default_template() {
 
+		$this->template = 'default';
+		$this->templateLocation = 'builtin';
+
 		return update_option( 'total_slider_grptpl_' . $this->slug, 'builtin|default' );
 
 	}
 
-	/**
-	 * Save the given valid slide array to the database.
-	 *
-	 * @param array $slides_to_write
-	 * @return boolean
-	 */
-	private function save_slides($slides_to_write) {
-	
-		return update_option( 'total_slider_slides_' . $this->slug, $slides_to_write );
-	
-	}
-	
+
 	/**
 	 * Remove all X/Y positional information from this Slide Group's slides.
 	 *
@@ -630,32 +654,43 @@ class Total_Slide_Group {
 	 */
 	public function remove_xy_data() {
 	
-		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
-		
-		if ( false === $current_slides ) {
-			
-			$this->save();
-			
-			$current_slides = get_option( 'total_slider_slides_' . $this->slug );
-			
-			if ( false === $current_slides ) {
-				return false; //can't do it
+		if ( ! isset( $this->term_id ) ) {
+			$this->load();
+		}
+
+		// delete all slides first
+		$to_delete = array();
+
+		$args = array(
+			'post_type' => 'total_slider_slide',
+			'tax_query' => array(
+				array(
+					'taxonomy' => 'total_slider_slide_group',
+					'field'    => 'slug',
+					'terms'    => $this->slug,
+				),
+			),
+		);
+		$query = new WP_Query( $args );
+
+		if ( $query->have_posts() ) {
+			while( $query->have_posts() ) {
+				$query->the_post();
+
+				$to_delete[] = get_the_ID();
 			}
 		}
-		
-		if ( is_array( $current_slides ) && count( $current_slides ) > 0 ) {
-			foreach( $current_slides as $i => $slide ) {
-				$current_slides[$i]['title_pos_x'] = 0;
-				$current_slides[$i]['title_pos_y'] = 0;	
+
+		wp_reset_postdata();
+
+		if ( count( $to_delete ) > 0 ) {
+			foreach( $to_delete as $id ) {
+				update_post_meta( $id, 'total_slider_meta_title_pos_x', 0 );
+				update_post_meta( $id, 'total_slider_meta_title_pos_y', 0 );
 			}
-			
-			$this->save_slides($current_slides);
-			return true;
-			
 		}
-		else {
-			return true;
-		}				
+
+		return true;
 		
 	}
 	
@@ -665,28 +700,8 @@ class Total_Slide_Group {
 	 * This allows an at-a-glance verification that the selected slide group is the desired slide group.
 	 *
 	 * @return void
-	 *	/**
-	 * If WP_DEBUG is defined and enabled, dump the supplied WP_Error object to the JSON output.
-	 *
-	 * @var WP_Error The WP_Error object.
-	 * @return void
-	 */
-	private function maybe_dump_wp_error( $error_obj ) {
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			ob_start();
+	 */	
 
-			var_dump( $result );
-			$dump = ob_get_contents();
-
-			ob_end_clean();
-			echo json_encode(
-				array(
-					'WP_Error' => $dump
-				);
-			);
-		}
-	}
-	 */
 	public function mini_preview() {
 		
 		/*

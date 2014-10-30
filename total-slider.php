@@ -356,11 +356,12 @@ class Total_Slider {
 			'show_in_menu'       => true,
 			'query_var'          => false,
 			'rewrite'            => array( 'slug' => 'total_slider_slide' ),
-			'capability_type'    => 'total_slider_slide',
+//			'capability_type'    => 'total_slider_slide',
+			'capability_type'    => 'post', //debug only
 			'has_archive'        => true,
 			'hierarchical'       => false,
 			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' )
+			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' )
 		);
 
 		register_post_type( 'total_slider_slide', $args );
@@ -387,50 +388,6 @@ class Total_Slider {
 		return substr ( preg_replace( '/[^a-zA-Z0-9_\-]/', '', $slug ), 0, ( 63 - strlen('total_slider_slides_' ) ) );
 	}
 
-	/**
-	 * If WP_DEBUG is defined and enabled, dump the supplied WP_Error object to the JSON output.
-	 *
-	 * @var WP_Error The WP_Error object.
-	 * @return void
-	 */
-public static function maybe_dump_wp_error( $error_obj ) {
-
-		header( 'HTTP/1.0 500 Internal Server Error' );
-		header( 'Content-Type: application/json' );
-
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			ob_start();
-
-			var_dump( $result );
-			$dump = ob_get_contents();
-
-			ob_end_clean();
-
-			echo json_encode(
-				array(
-					'error' => __( 'The operation failed at the server.\n\nYou may inspect the WP_Error object returned using the web browser Developer Tools.', 'total_slider' ),
-					'WP_Error' => $dump
-				);
-			);
-		}
-		else {
-			echo json_encode(
-				array(
-					'error' => __( 'The operation failed at the server.\n\nFor detailed information, please enable WP_DEBUG.', 'total_slider' )
-				);
-			);
-		}
-	}
-
-	/**
-	 * Return an array of the current slides of this slug, in current precedence order.
-	 *
-	 * @param string $slug The slug of the slide group from which to get the slides.
-	 * @return array
-	 */
-	private function get_current_slides( $slug ) {
-		return get_option( 'total_slider_slides_' . $this->sanitize_slide_group_slug($slug) );
-	}
 
 	/**
 	 * Filter a uniqid() derived string for output to the admin interface HTML.

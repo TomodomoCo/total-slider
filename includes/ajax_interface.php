@@ -64,7 +64,8 @@ if ( ! array_key_exists( 'group', $_GET ) && 'getSlideGroups' == $_GET['action']
 		die();
 	}
 	
-	$groups = get_option( 'total_slider_slide_groups' );
+	$groups = get_terms( 'total_slider_slide_group' );
+
 	
 	$results = array();
 	$i = 0;
@@ -312,6 +313,11 @@ switch ( $_GET['action'] )
 		}
 		
 		$result = $g->get_slide( $_POST['id'] );
+
+		if ( is_a( $result, 'WP_Error' ) ) {
+			$tools->maybe_dump_wp_error( $result );
+			die();	
+		}
 		
 		if ( is_array( $result ) && count( $result ) > 0 ) {
 		
@@ -476,7 +482,7 @@ switch ( $_GET['action'] )
 
 		$result = $g->update_slide( $_POST['id'], $_POST['title'], $_POST['description'], $_POST['background'], $_POST['link'], $_POST['title_pos_x'], $_POST['title_pos_y'] );
 		
-		if ( $result ) {
+		if ( $result && is_int( $result ) ) {
 			header( 'Content-Type: application/json' );
 			echo json_encode(
 				array(
@@ -485,12 +491,16 @@ switch ( $_GET['action'] )
 			);
 			die();
 		}
+		else if ( is_a( $result, 'WP_Error' ) ) {
+			$tools->maybe_dump_wp_error( $result );
+			die();
+		}
 		else {
 			header( 'HTTP/1.0 500 Internal Server Error' );
 			header( 'Content-Type: application/json' );
 			echo json_encode(
 				array(
-					'error' => __('The update slide operation failed at the server.', 'total_slider')
+					'error' => __('The update slide operation failed at the server. No WP_Error information is available.', 'total_slider')
 				)
 			);
 			die();

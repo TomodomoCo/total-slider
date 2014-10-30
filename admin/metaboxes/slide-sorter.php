@@ -35,7 +35,9 @@ if ( ! function_exists( '__' ) )
 }
 
 ?><!--sortable slides-->
-<?php $current_slides = $TS_Total_Slider->get_current_slides($TS_Total_Slider->slug); ?>
+<?php $group = new Total_Slide_Group( $TS_Total_Slider->slug ); ?>
+<?php $group->load(); ?>
+<?php $current_slides = $group->get_slides(); ?>
 <div id="slidesort-container">
 <ul id="slidesort" style="width:<?php echo intval( count( $current_slides ) * 180 ); ?>px;">
 <?php
