@@ -489,9 +489,7 @@ class Total_Slider {
 		}
 		
 		return $this->template;
-		;
-		}
-
+	
 	}
 
 	/**

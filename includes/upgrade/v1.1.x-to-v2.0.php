@@ -51,7 +51,7 @@ if ( is_array( $legacy_slide_groups ) && count( $legacy_slide_groups ) > 0 ) {
 
 			// convert this group to the new format
 			$new_slug = Total_Slider::sanitize_slide_group_slug( $legacy_group->slug );
-			$legacy_slides = get_option( 'total_slider_slides_' . $new_slug;
+			$legacy_slides = get_option( 'total_slider_slides_' . $new_slug );
 
 			$new_group = new Total_Slide_Group( $new_slug, $legacy_group->name );
 			$new_group->template = $legacy_group->template;

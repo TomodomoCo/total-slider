@@ -370,7 +370,7 @@ class Total_Slide_Group {
 			$this->load();
 		}
 
-		if ( !in_array( $status, Total_Slider::allowed_post_statuses ) ) {
+		if ( !in_array( $status, Total_Slider::$allowed_post_statuses ) ) {
 			throw new UnexpectedValueException( sprintf( __( 'The slide cannot be created with the \'%s\' status, as this is not supported by %s.', 'total_slider' ), esc_html( $status ), 'Total Slider' ) );
 			return false;
 		}
