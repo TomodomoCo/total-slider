@@ -57,7 +57,7 @@ define( 'TOTAL_SLIDER_DEFAULT_CROP_HEIGHT', 300 );
 /**
  * The current version of the Total Slider data format. Used to determine if a data format upgrade is needed.
  */
-define( 'TOTAL_SLIDER_DATAFORMAT_VERSION', '1.1' );
+define( 'TOTAL_SLIDER_DATAFORMAT_VERSION', '2.0' );
 
 /*VPM_4x_CONDITIONAL*/
 if ( version_compare( get_bloginfo( 'version' ), '4.0', '>=' ) ) {
@@ -111,6 +111,16 @@ class Total_Slider {
 		'theme',
 		'downloaded',
 		'legacy'
+	);
+
+	/**
+	 * The list of allowed Total Slider post statuses -- 'publish', or 'draft'
+	 *
+	 * @var array
+	 */
+	public static $allowed_post_statuses = array(
+		'publish',
+		'draft'
 	);
 
 	/**
@@ -251,6 +261,8 @@ class Total_Slider {
 	 */
 	public function upgrade() {
 
+		$ts_class = &$this;
+
 		if ( ! get_option('total_slider_dataformat_version') ) {
 			// Total Slider has not been data-upgraded since before the version was introduced (1.0.x)
 			
@@ -258,9 +270,11 @@ class Total_Slider {
 			require_once( dirname(__FILE__) . '/includes/upgrade/v1.0.x-to-v1.1.php' );	
 			
 		}
-		// eventually, there will be additional conditionals here for various incremental upgrade scenarios (version_compare??)
-		//
-		// TODO check for role/cap assignments and migrate those forward
+
+		if ( version_compare( get_option( 'total_slider_dataformat_version' ), '2.0', '<' ) ) {
+			// run upgrade to 2.0
+			require_once( dirname(__FILE__) . '/includes/upgrade/v1.1.x-to-v2.0.php' );
+		}
 	
 	}
 
@@ -358,7 +372,7 @@ class Total_Slider {
 			'query_var'          => false,
 			'rewrite'            => array( 'slug' => 'total_slider_slide' ),
 //			'capability_type'    => 'total_slider_slide',
-			'capability_type'    => 'post', //debug only
+			'capability_type'    => 'post', //TODO debug only
 			'has_archive'        => true,
 			'hierarchical'       => false,
 			'menu_position'      => null,
@@ -475,7 +489,9 @@ class Total_Slider {
 		}
 		
 		return $this->template;
-		
+		;
+		}
+
 	}
 
 	/**

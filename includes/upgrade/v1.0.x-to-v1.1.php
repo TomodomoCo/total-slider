@@ -39,7 +39,7 @@ if ( ! function_exists( '__' ) )
 
 // add the data format option
 if ( ! get_option( 'total_slider_dataformat_version' ) ) {
-	add_option( 'total_slider_dataformat_version', TOTAL_SLIDER_DATAFORMAT_VERSION );
+	add_option( 'total_slider_dataformat_version', '1.1' );
 }
 
 // set default general options, if not set (unlikely)

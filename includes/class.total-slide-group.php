@@ -360,20 +360,26 @@ class Total_Slide_Group {
 	 * @param mixed $link This can be specified as a URL, or a post ID.
 	 * @param integer $title_pos_x The X-offset where the description box should be displayed.
 	 * @param integer $title_pos_y The Y-offset where the description box should be displayed.
+	 * @param string $status Whether this slide should be 'publish' or 'draft'
 	 *
 	 * @return integer|WP_Error
 	 */
-	public function new_slide( $title, $description, $background, $link, $title_pos_x, $title_pos_y ) {
+	public function new_slide( $title, $description, $background, $link, $title_pos_x, $title_pos_y, $status = 'publish' ) {
 
 		if ( ! isset( $this->term_id ) ) {
 			$this->load();
+		}
+
+		if ( !in_array( $status, Total_Slider::allowed_post_statuses ) ) {
+			throw new UnexpectedValueException( sprintf( __( 'The slide cannot be created with the \'%s\' status, as this is not supported by %s.', 'total_slider' ), esc_html( $status ), 'Total Slider' ) );
+			return false;
 		}
 
 		$new_post_data = array(
 			'post_content'        => $description,
 			'post_title'          => $title,
 			'post_name'           => sanitize_title( $title ),
-			'post_status'         => 'publish',
+			'post_status'         => $status,
 			'post_type'           => 'total_slider_slide',
 			'comment_status'      => 'closed',
 			'tax_input'           => array(
