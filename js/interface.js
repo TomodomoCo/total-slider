@@ -624,6 +624,7 @@ jQuery(document).ready(function($) {
 
 	$('#edit-controls-save-draft').click(function() {
 		//TODO what if already published?
+		//TODO what about cancelling a draft and reverting to the previous published post?
 		$().saveSlide();
 	});
 
@@ -1089,11 +1090,7 @@ jQuery(document).ready(function($) {
 	
 		$('#slide-link-is-internal').click();
 
-		if (VPM_SHOULD_WORKAROUND_16655) {
-			// workaround for https://core.trac.wordpress.org/ticket/16655
-			$('#slide-link-is-internal').prop('checked', false);
-		}
-		
+	
 		findPosts.open();
 		isEditing = true;
 	});
@@ -1119,27 +1116,7 @@ jQuery(document).ready(function($) {
 			$('#slide-link-internal-id').val($(this).val());
 		});
 		findPosts.close();
-		
-		if (VPM_SHOULD_WORKAROUND_16655) {
-			// workaround for https://core.trac.wordpress.org/ticket/16655
-			$('#slide-link-is-internal').prop('checked', true);
-		}
-		
 	});
-	
-	if (VPM_SHOULD_WORKAROUND_16655) {
-	
-		$('#find-posts-close').click(function() {
-			// workaround for https://core.trac.wordpress.org/ticket/16655
-				$('#slide-link-is-internal').prop('checked', true);
-		});
-		
-		// workaround for https://core.trac.wordpress.org/ticket/16655
-		$('#find-posts-input').keyup(function(e){
-			if (e.which == 27) { $('#slide-link-is-internal').prop('checked', true); } // close on Escape
-		});
-	
-	}
 	
 	$().makeDraggable();
 

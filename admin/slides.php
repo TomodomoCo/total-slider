@@ -166,8 +166,6 @@ var VPM_WP_ROOT = '<?php echo admin_url(); ?>';
 var VPM_HPS_PLUGIN_URL = '<?php echo admin_url(); ?>admin.php?page=total-slider&total-slider-ajax=true&';
 var VPM_HPS_GROUP = '<?php echo esc_attr($TS_Total_Slider->slug); ?>';
 document.title = '‘<?php echo esc_attr($slide_group->name); ?>’ Slides ' + document.title.substring(13, document.title.length);//TODO i18n
-var VPM_SHOULD_WORKAROUND_16655 = <?php echo ( version_compare( get_bloginfo( 'version' ), '3.4', '>=' ) ? 'false' : 'true' ); ?>;
-// on WordPress version <3.4, we need to work around https://core.trac.wordpress.org/ticket/16655. It is fixed in 3.4.
 
 var VPM_SLIDE_GROUP_TEMPLATE = '<?php echo esc_attr( $slide_group->template );?>';
 var VPM_SLIDE_GROUP_TEMPLATE_LOCATION = '<?php echo esc_attr( $slide_group->templateLocation );?>';

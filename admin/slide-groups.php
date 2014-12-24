@@ -196,7 +196,6 @@ jQuery(document).ready(function() {
 		jQuery('#new-slide-group').hide('slow');
 	});
 });
-var VPM_SHOULD_WORKAROUND_16655 = false; // irrelevant here, but must be defined
 var VPM_SHOULD_DISABLE_XY = false;
 //]]>
 </script>
