@@ -46,7 +46,7 @@ if ( ! function_exists( '__' ) )
 	<form id="edit-form">
 		<table class="form-table edit-controls-form-table">
 			<tbody>
-				<tr class="form-field">
+				<tr class="form-field" id="slide-title-container">
 					<th scope="row">
 						<label for="edit-slide-title"><?php _e( 'Title', 'total_slider' );?></label>
 					</th>
@@ -54,7 +54,7 @@ if ( ! function_exists( '__' ) )
 						<input type="text" name="slide-title" id="edit-slide-title" value="" maxlength="64" class="edit-controls-inputs" />
 					</td>
 				</tr>
-				<tr class="form-field">
+				<tr class="form-field" id="slide-description-container">
 					<th scope="row">
 						<label for="edit-slide-description"><?php _e( 'Description', 'total_slider' );?></label>
 					</th>
@@ -63,7 +63,7 @@ if ( ! function_exists( '__' ) )
 					</td>
 				</tr>
 
-				<tr class="form-field">
+				<tr class="form-field" id="slide-image-container">
 					<th scope="row">
 						<label for="edit-slide-image-upload"><?php _e( 'Background', 'total_slider' );?></label>
 					</th>
@@ -73,7 +73,7 @@ if ( ! function_exists( '__' ) )
 					</td>
 				</tr>
 
-				<tr class="form-field">
+				<tr class="form-field" id="slide-link-container">
 					<th scope="row">
 						<?php _e( 'Slide Link', 'total_slider' );?>
 					</th>
@@ -109,10 +109,23 @@ if ( ! function_exists( '__' ) )
 					</td>
 				</tr>
 
+				<tr class="form-field" id="slide-publish-status-container">
+					<th scope="row">
+						<?php _e( 'Status', 'total_slider' ); ?>
+					</th>
+					<td>
+						<select id="edit-slide-publish-status" name="slide_post_status">
+							<option value="draft"><?php _e( 'Draft', 'total_slider' ); ?></option>
+							<option value="publish"><?php _e( 'Published', 'total_slider' ); ?></option>
+						</select>
+					</td>
+				</tr>
+
 			</tbody>
 		</table>
 		<p class="submit">
-			<input type="button" id="edit-controls-save" class="button-primary" value="<?php _e( 'Save', 'total_slider' );?>" />
+			<input type="button" id="edit-controls-publish" class="button-primary" value="<?php _e( 'Publish', 'total_slider' );?>" />
+			<input type="button" id="edit-controls-save-draft" class="button-secondary" value="<?php _e( 'Save Draft', 'total_slider' ); ?>" />
 			<input type="button" id="edit-controls-cancel" class="button-secondary" value="<?php _e( 'Cancel', 'total_slider' );?>" />
 		</p>
 		<div id="edit-controls-saving">

@@ -882,7 +882,7 @@ class Total_Slider {
 			'newSlideTemplateMove'			=> __( 'Move', 'total_slider' ),
 			'newSlideTemplateDelete'		=> __( 'Delete', 'total_slider' ),
 			'slideEditNoPostSelected'		=> __( 'No post selected.', 'total_slider' ),
-			'saveButtonValue'			=> __( 'Save', 'total_slider' ),
+			'publishButtonValue'			=> __( 'Publish', 'total_slider' ),
 			'unableToGetSlide'			=> __( 'Sorry, unable to get that slide', 'total_slider' ),
 			'slideSaved'				=> __( 'Slide saved.', 'total_slider' ),
 			'uploadSlideBgImage'			=> __( 'Upload slide background image', 'total_slider' ),

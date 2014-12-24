@@ -188,6 +188,41 @@ select#template-slug {
 	padding: 5px 12px 10px !important;
 }
 
+#slide-publish-status-container > th:before {
+	content: '\f173'; /* link icon */
+}
+
+#slide-title-container > th:before {
+	content: '\f109'; /* pushpin */
+}
+
+#slide-description-container > th:before {
+	content: '\f119'; /* description */
+}
+
+#slide-image-container > th:before {
+	content: '\f128'; /* image */
+}
+
+#slide-link-container > th:before {
+	content: '\f103'; /* link */
+}
+
+#edit-controls .form-table th:before {
+	color: #888;
+	display: inline-block;
+	font: normal 20px/1 'dashicons';
+	speak: none;
+	left: -1px;
+	padding: 0 5px 0 0;
+	position: relative;
+	top: 0;
+	text-decoration: none !important;
+	vertical-align: top;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
 #edit-controls-save, #edit-controls-cancel {
 	cursor: pointer;
 }

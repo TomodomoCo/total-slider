@@ -255,6 +255,7 @@ class Total_Slide_Group {
 
 				$slides[$n]['title_pos_x'] = get_post_meta( get_the_ID(), 'total_slider_meta_title_pos_x', true );
 				$slides[$n]['title_pos_y'] = get_post_meta( get_the_ID(), 'total_slider_meta_title_pos_y', true );
+				$slides[$n]['post_status'] = get_post_status( get_the_ID() );
  
 				++$n;
 		}
@@ -364,7 +365,7 @@ class Total_Slide_Group {
 	 *
 	 * @return integer|WP_Error
 	 */
-	public function new_slide( $title, $description, $background, $link, $title_pos_x, $title_pos_y, $status = 'publish' ) {
+	public function new_slide( $title, $description, $background, $link, $title_pos_x, $title_pos_y, $status ) {
 
 		if ( ! isset( $this->term_id ) ) {
 			$this->load();
@@ -491,6 +492,7 @@ class Total_Slide_Group {
 		}
 
 		$slide['sequence'] = get_post_meta( $slide_id, 'total_slider_meta_sequence', true );
+		$slide['post_status'] = get_post_status( $slide_id );
 		
 		return $slide;
 	
@@ -506,9 +508,10 @@ class Total_Slide_Group {
 	 * @param mixed $link This can be specified as a URL, or a post ID.
 	 * @param integer $title_pos_x The X-offset where the description box should be displayed.
 	 * @param integer $title_pos_y The Y-offset where the description box should be displayed.
+	 * @param string $post_status The post status -- 'draft' or 'publish', of this slide.
 	 * @return boolean|WP_Error
 	 */
-	public function update_slide( $slide_id, $title, $description, $background, $link, $title_pos_x, $title_pos_y ) {
+	public function update_slide( $slide_id, $title, $description, $background, $link, $title_pos_x, $title_pos_y, $post_status ) {
 
 		// only allow total_slider_slide CPT objects to be updated
 		$check = get_post( $slide_id );
@@ -524,7 +527,8 @@ class Total_Slide_Group {
 		$updated_post_args = array(
 			'ID'           => $slide_id,
 			'post_title'   => $title,
-			'post_content' => $description
+			'post_content' => $description,
+			'post_status'  => $post_status
 		);
 
 		$result = wp_update_post( $updated_post_args, true );

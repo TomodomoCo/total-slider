@@ -216,6 +216,7 @@ jQuery(document).ready(function($) {
 		$('#slide-link-is-external').prop('checked', false);
 		$('#slide-link-internal-settings').hide();
 		$('#slide-link-external-settings').hide();	
+		$('#edit-slide-publish-status').val('draft');
 		
 		// reset preview area
 		slidePreviewData = $.extend(true, {}, slidePreviewUntitledData);
@@ -223,8 +224,8 @@ jQuery(document).ready(function($) {
 		
 		$('#edit-controls-saving').fadeTo(0,0).hide();
 		
-		$('#edit-controls-save,#edit-controls-cancel').removeAttr('disabled');
-		$('#edit-controls-save').val(_total_slider_L10n.saveButtonValue);
+		$('#edit-controls-publish,#edit-controls-cancel').removeAttr('disabled');
+		$('#edit-controls-publish').val(_total_slider_L10n.publishButtonValue);
 		
 		linkToSave = '';
 	
@@ -327,6 +328,8 @@ jQuery(document).ready(function($) {
 							$('#slide-link-internal-settings').hide();
 							$('#slide-link-external-settings').hide();
 						}
+
+						$('#edit-slide-publish-status').val( result.post_status );
 						
 						slidePreviewData.title = result.title;
 						slidePreviewData.description = result.description;
@@ -609,7 +612,7 @@ jQuery(document).ready(function($) {
 	}
 	
 	/* !Save button -- create a new, or update an existing slide */
-	$('#edit-controls-save').click(function() {
+	$('#edit-controls-publish').click(function() {
 	
 		// validate data
 		
@@ -665,8 +668,8 @@ jQuery(document).ready(function($) {
 		
 		$('#edit-controls-saving').show().fadeTo(400,1);
 		
-		$('#edit-controls-save,#edit-controls-cancel').prop('disabled', 'disabled');
-		// $('#edit-controls-save').val('Saving');
+		$('#edit-controls-publish,#edit-controls-cancel').prop('disabled', 'disabled');
+		// $('#edit-controls-publish').val('Saving');
 		
 		if ($('.total-slider-template-draggable').length < 1 || $('.total-slider-template-draggable-parent').length < 1)
 		{
@@ -744,8 +747,8 @@ jQuery(document).ready(function($) {
 					
 					alert(_total_slider_L10n.unableToSaveSlide + '\n\n' + response.error);
 					
-					$('#edit-controls-save,#edit-controls-cancel').removeAttr('disabled');
-					$('#edit-controls-save').val(_total_slider_L10n.saveButtonValue);
+					$('#edit-controls-publish,#edit-controls-cancel').removeAttr('disabled');
+					$('#edit-controls-publish').val(_total_slider_L10n.publishButtonValue);
 					$('#edit-controls-saving').fadeTo(0,0).hide();		
 							
 				}
@@ -810,8 +813,8 @@ jQuery(document).ready(function($) {
 									
 					alert(_total_slider_L10n.unableToSaveSlide + '\n\n' + errorToShow);
 
-					$('#edit-controls-save,#edit-controls-cancel').removeAttr('disabled');
-					$('#edit-controls-save').val(_total_slider_L10n.saveButtonValue);
+					$('#edit-controls-publish,#edit-controls-cancel').removeAttr('disabled');
+					$('#edit-controls-publish').val(_total_slider_L10n.publishButtonValue);
 					$('#edit-controls-saving').fadeTo(0,0).hide();					
 									
 				}
