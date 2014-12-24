@@ -151,7 +151,7 @@ switch ( $_GET['action'] )
 			!array_key_exists( 'background', $_POST ) ||
 			!array_key_exists( 'title', $_POST ) ||
 			!array_key_exists( 'link', $_POST ) ||
-			!array_key_exists( 'slide_post_status', $POST )
+			!array_key_exists( 'post_status', $_POST )
 		) {
 			header( 'HTTP/1.0 400 Bad Request' );
 			header( 'Content-Type: application/json' );
@@ -253,12 +253,12 @@ switch ( $_GET['action'] )
 		}
 
 		// invalid post status
-		if ( ! in_array( $_POST['slide_post_status'], Total_Slider::$allowed_post_statuses ) ) { 
+		if ( ! in_array( $_POST['post_status'], Total_Slider::$allowed_post_statuses ) ) { 
 			header( 'HTTP/1.0 400 Bad Request' );
 			header( 'Content-Type: application/json' );
 			echo json_encode(
 				array(
-					'error' => sprintf( __( 'The slide cannot be created with the \'%s\' status, as this is not supported by %s.', 'total_slider' ), esc_html( $_POST['slide_post_status'] ), 'Total Slider' )
+					'error' => sprintf( __( 'The slide cannot be created with the \'%s\' status, as this is not supported by %s.', 'total_slider' ), esc_html( $_POST['post_status'] ), 'Total Slider' )
 				)
 			);
 		}
@@ -267,7 +267,7 @@ switch ( $_GET['action'] )
 		$_POST['description'] = stripslashes( $_POST['description'] );
 		
 		// do the work
-		$result = $g->new_slide( $_POST['title'], $_POST['description'], $_POST['background'], $_POST['link'], $_POST['title_pos_x'], $_POST['title_pos_y'], $_POST['slide_post_status'] );
+		$result = $g->new_slide( $_POST['title'], $_POST['description'], $_POST['background'], $_POST['link'], $_POST['title_pos_x'], $_POST['title_pos_y'], $_POST['post_status'] );
 		
 		if ( intval( $result ) == $result ) {
 			header( 'Content-Type: application/json' );
@@ -376,7 +376,7 @@ switch ( $_GET['action'] )
 			!array_key_exists( 'title', $_POST ) ||
 			!array_key_exists( 'link', $_POST ) ||
 			!array_key_exists( 'id', $_POST ) ||
-			!array_key_exists( 'slide_post_status', $POST )
+			!array_key_exists( 'post_status', $_POST )
 
 		) {
 			header( 'HTTP/1.0 400 Bad Request' );
@@ -493,12 +493,12 @@ switch ( $_GET['action'] )
 		}
 
 		// invalid post status
-		if ( ! in_array( $_POST['slide_post_status'], Total_Slider::$allowed_post_statuses ) ) { 
+		if ( ! in_array( $_POST['post_status'], Total_Slider::$allowed_post_statuses ) ) { 
 			header( 'HTTP/1.0 400 Bad Request' );
 			header( 'Content-Type: application/json' );
 			echo json_encode(
 				array(
-					'error' => sprintf( __( 'The slide cannot be created with the \'%s\' status, as this is not supported by %s.', 'total_slider' ), esc_html( $_POST['slide_post_status'] ), 'Total Slider' )
+					'error' => sprintf( __( 'The slide cannot be created with the \'%s\' status, as this is not supported by %s.', 'total_slider' ), esc_html( $_POST['post_status'] ), 'Total Slider' )
 				)
 			);	
 		}
@@ -507,7 +507,7 @@ switch ( $_GET['action'] )
 		$_POST['title'] = stripslashes( $_POST['title'] );
 		$_POST['description'] = stripslashes( $_POST['description'] );
 
-		$result = $g->update_slide( $_POST['id'], $_POST['title'], $_POST['description'], $_POST['background'], $_POST['link'], $_POST['title_pos_x'], $_POST['title_pos_y'], $_POST['slide_post_status'] );
+		$result = $g->update_slide( $_POST['id'], $_POST['title'], $_POST['description'], $_POST['background'], $_POST['link'], $_POST['title_pos_x'], $_POST['title_pos_y'], $_POST['post_status'] );
 		
 		if ( $result && is_int( $result ) ) {
 			header( 'Content-Type: application/json' );

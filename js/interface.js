@@ -399,7 +399,12 @@ jQuery(document).ready(function($) {
 	/* show saved message */
 	$.fn.showSavedMessage = function() {
 	
-		$('#message-area').html('<p>' + _total_slider_L10n.slideSaved + '</p>');
+		if ( 'publish' == $('#edit-slide-publish-status').val() ) {
+			$('#message-area').html('<p>' + _total_slider_L10n.slidePublished + '</p>');
+		}
+		else {
+			$('#message-area').html('<p>' + _total_slider_L10n.slideDraftSaved + '</p>');
+		}
 		$('#message-area').fadeIn('slow');
 		window.setTimeout(function() {
 			$('#message-area').fadeOut('slow');
@@ -613,6 +618,16 @@ jQuery(document).ready(function($) {
 	
 	/* !Save button -- create a new, or update an existing slide */
 	$('#edit-controls-publish').click(function() {
+		$('#edit-slide-publish-status').val('publish');
+		$().saveSlide();
+	});
+
+	$('#edit-controls-save-draft').click(function() {
+		//TODO what if already published?
+		$().saveSlide();
+	});
+
+	$.fn.saveSlide = function() {
 	
 		// validate data
 		
@@ -650,7 +665,20 @@ jQuery(document).ready(function($) {
 			linkToSave = $('#slide-link-internal-id').val();
 			
 		}
-		
+
+		// check valid post statuses
+		var postStatusValid = false;
+		for (var psi = 0; psi < _total_slider_allowed_post_statuses.length; psi++) {
+			if (_total_slider_allowed_post_statuses[psi] == $('#edit-slide-publish-status').val() ) {
+				postStatusValid = true;
+			}
+		}
+
+		if (!postStatusValid) {
+			validationErrors[validationErrors.length] = _total_slider_L10n.validationInvalidPostStatus;
+		}
+
+
 		// X/Y bounds??
 		
 		if (validationErrors.length > 0)
@@ -665,7 +693,8 @@ jQuery(document).ready(function($) {
 			return false;		
 			
 		}
-		
+
+			
 		$('#edit-controls-saving').show().fadeTo(400,1);
 		
 		$('#edit-controls-publish,#edit-controls-cancel').prop('disabled', 'disabled');
@@ -693,7 +722,8 @@ jQuery(document).ready(function($) {
 					'background': slidePreviewData.background_attachment_id,
 					'link': linkToSave,
 					'title_pos_x': calcBoxOffsetLeft,
-					'title_pos_y': calcBoxOffsetTop						
+					'title_pos_y': calcBoxOffsetTop,
+					'post_status': $('#edit-slide-publish-status').val()				
 				},
 				
 				success: function(result) {
@@ -779,7 +809,8 @@ jQuery(document).ready(function($) {
 					'background': backgroundToSave,
 					'link': linkToSave,
 					'title_pos_x': calcBoxOffsetLeft,
-					'title_pos_y': calcBoxOffsetTop									
+					'title_pos_y': calcBoxOffsetTop,	
+					'post_status': $('#edit-slide-publish-status').val()
 				},
 				
 				success: function(result) {
@@ -823,7 +854,7 @@ jQuery(document).ready(function($) {
 		
 		}
 	
-	});
+	};
 	
 	/* Cancel with esc key */
 	/*$(document).keyup(function(event) {
