@@ -619,16 +619,16 @@ jQuery(document).ready(function($) {
 	/* !Save button -- create a new, or update an existing slide */
 	$('#edit-controls-publish').click(function() {
 		$('#edit-slide-publish-status').val('publish');
-		$().saveSlide();
+		$().saveSlide(this);
 	});
 
 	$('#edit-controls-save-draft').click(function() {
 		//TODO what if already published?
 		//TODO what about cancelling a draft and reverting to the previous published post?
-		$().saveSlide();
+		$().saveSlide(this);
 	});
 
-	$.fn.saveSlide = function() {
+	$.fn.saveSlide = function(caller) {
 	
 		// validate data
 		
@@ -701,6 +701,95 @@ jQuery(document).ready(function($) {
 		$('#edit-controls-publish,#edit-controls-cancel').prop('disabled', 'disabled');
 		// $('#edit-controls-publish').val('Saving');
 		
+
+
+		$().performSaveAction({
+			newSlideSuccess: function(result, caller) {	
+				if (result.error) {
+					alert(result.error);
+				}
+				else {
+			
+				$('#' + editingSlideSortButton).removeClass('slidesort-selected');
+				$('#' + editingSlideSortButton).click(function() { $().clickSlideObject(this); } );
+				$('#' + editingSlideSortButton).attr('id', 'slidesort_' + result.new_id);
+				 
+				// update other IDs too
+				$('#' + editingSlideSortButton + '_text').attr('id', 'slidesort_' + result.new_id + '_text');
+				$('#slidesort_untitled_delete').attr('id', 'slidesort_' + result.new_id + '_delete');
+				$('#slidesort_untitled_delete_button').attr('id', 'slidesort_' + result.new_id + '_delete_button');					
+				
+				$('#edit-controls').fadeTo(400, 0);
+				$('#edit-controls-choose-hint').show().fadeTo(400,1);
+				window.setTimeout(function() { $().clearForm(); }, 750);
+						
+				
+				isEditing = false;
+				isEditingUntitledSlide = false;
+				editingSlideSortButton = false;
+				
+				// trigger a shuffle update with the new order, if changed, of this new item
+				if (newShouldShuffle)
+				{
+					newShouldShuffle = false;
+					window.setTimeout(function() { $().sortSlides(); }, 1200);
+				}
+				
+				newShouldShuffle = false;
+				
+				$().showSavedMessage();
+				
+				}
+
+			},
+			existingSlideSuccess: function(result, caller) {
+				if (result.error) {
+					alert(result.error);
+				}
+				else {
+					$('#' + editingSlideSortButton).removeClass('slidesort-selected');
+					$('#edit-controls').fadeTo(400, 0);
+					$('#edit-controls-choose-hint').show().fadeTo(400,1);
+					window.setTimeout(function() { $().clearForm(); }, 750);
+					
+					isEditing = false;
+					isEditingUntitledSlide = false;
+					editingSlideSortButton = false;
+					
+					$().showSavedMessage();
+					
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown, caller) {
+				var response = $.parseJSON(jqXHR.responseText);
+				var errorToShow = '';
+					
+				if (response != null && response.error != null)
+				{
+					errorToShow = response.error;
+				}
+				
+				alert(_total_slider_L10n.unableToSaveSlide + '\n\n' + response.error);
+				
+				$('#edit-controls-publish,#edit-controls-cancel').removeAttr('disabled');
+				$('#edit-controls-publish').val(_total_slider_L10n.publishButtonValue);
+				$('#edit-controls-saving').fadeTo(0,0).hide();		
+							
+			},
+			caller: caller
+		});		
+	
+	};
+
+	/* Actually pull the form fields and push them over to the server, to either create a new slide
+	 * or update an existing one. The calling function must validate if this is an interactive save (i.e.
+	 * not an auto-draft). Otherwise, invalid or missing values will be dropped on save by this method.
+	 */
+	$.fn.performSaveAction = function(args) {
+		/*
+		 * Pass the callback functions for newSlideSuccess, existingSlideSuccess and error in the JSON object args.
+		 */
+		
 		if ($('.total-slider-template-draggable').length < 1 || $('.total-slider-template-draggable-parent').length < 1)
 		{
 			var calcBoxOffsetLeft = 0;
@@ -710,9 +799,8 @@ jQuery(document).ready(function($) {
 			var calcBoxOffsetLeft = $('.total-slider-template-draggable').offset().left - $('.total-slider-template-draggable-parent').offset().left;
 			var calcBoxOffsetTop  = $('.total-slider-template-draggable').offset().top - $('.total-slider-template-draggable-parent').offset().top;
 		}
-			
-		if (isEditingUntitledSlide) {
-		
+
+		if (isEditingUntitledSlide) {	
 			// create new slide
 			$.ajax({
 				type: 'POST',
@@ -728,62 +816,12 @@ jQuery(document).ready(function($) {
 				},
 				
 				success: function(result) {
-				
-					if (result.error) {
-						alert(result.error);
-					}
-					else {
-				
-					$('#' + editingSlideSortButton).removeClass('slidesort-selected');
-					$('#' + editingSlideSortButton).click(function() { $().clickSlideObject(this); } );
-					$('#' + editingSlideSortButton).attr('id', 'slidesort_' + result.new_id);
-					 
-					// update other IDs too
-					$('#' + editingSlideSortButton + '_text').attr('id', 'slidesort_' + result.new_id + '_text');
-					$('#slidesort_untitled_delete').attr('id', 'slidesort_' + result.new_id + '_delete');
-					$('#slidesort_untitled_delete_button').attr('id', 'slidesort_' + result.new_id + '_delete_button');					
-					
-					$('#edit-controls').fadeTo(400, 0);
-					$('#edit-controls-choose-hint').show().fadeTo(400,1);
-					window.setTimeout(function() { $().clearForm(); }, 750);
-
-						
-					
-					isEditing = false;
-					isEditingUntitledSlide = false;
-					editingSlideSortButton = false;
-					
-					// trigger a shuffle update with the new order, if changed, of this new item
-					if (newShouldShuffle)
-					{
-						newShouldShuffle = false;
-						window.setTimeout(function() { $().sortSlides(); }, 1200);
-					}
-					
-					newShouldShuffle = false;
-					
-					$().showSavedMessage();
-					
-					}
+					args.newSlideSuccess(result, args.caller);
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 				
-					var response = $.parseJSON(jqXHR.responseText);
-					var errorToShow = '';
-					
-					if (response != null && response.error != null)
-					{
-						errorToShow = response.error;
-					}
-					
-					alert(_total_slider_L10n.unableToSaveSlide + '\n\n' + response.error);
-					
-					$('#edit-controls-publish,#edit-controls-cancel').removeAttr('disabled');
-					$('#edit-controls-publish').val(_total_slider_L10n.publishButtonValue);
-					$('#edit-controls-saving').fadeTo(0,0).hide();		
-							
-				}
-				
+					args.error(jqXHR, textStatus, errorThrown, args.caller);
+				}			
 			});
 		
 		}
@@ -815,46 +853,17 @@ jQuery(document).ready(function($) {
 				},
 				
 				success: function(result) {
-				
-					if (result.error) {
-						alert(result.error);
-					}
-					else {
-						$('#' + editingSlideSortButton).removeClass('slidesort-selected');
-						$('#edit-controls').fadeTo(400, 0);
-						$('#edit-controls-choose-hint').show().fadeTo(400,1);
-						window.setTimeout(function() { $().clearForm(); }, 750);
-						
-						isEditing = false;
-						isEditingUntitledSlide = false;
-						editingSlideSortButton = false;
-						
-						$().showSavedMessage();
-						
-					}
+					args.existingSlideSuccess(result, args.caller);	
+
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-				
-					var response = $.parseJSON(jqXHR.responseText);
-					var errorToShow = '';
-					
-					if (response != null && response.error != null)
-					{
-						errorToShow = response.error;
-					}
-									
-					alert(_total_slider_L10n.unableToSaveSlide + '\n\n' + errorToShow);
-
-					$('#edit-controls-publish,#edit-controls-cancel').removeAttr('disabled');
-					$('#edit-controls-publish').val(_total_slider_L10n.publishButtonValue);
-					$('#edit-controls-saving').fadeTo(0,0).hide();					
-									
+					args.error(jqXHR, textStatus, errorThrown, args.caller);
 				}
 				
 			});
 		
 		}
-	
+		
 	};
 	
 	/* Cancel with esc key */
