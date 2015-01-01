@@ -11,7 +11,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: total_slider
 /* ----------------------------------------------*/
 
-/*  Copyright (C) 2011-2014 Peter Upfold.
+/*  Copyright (C) 2011-2015 Peter Upfold.
 
     This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License

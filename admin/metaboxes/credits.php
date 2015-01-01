@@ -8,7 +8,7 @@
 
 /* ----------------------------------------------*/
 
-/*  Copyright (C) 2011-2014 Peter Upfold.
+/*  Copyright (C) 2011-2015 Peter Upfold.
 
     This program is free software; you can redistribute it and/or
         modify it under the terms of the GNU General Public License
@@ -64,7 +64,7 @@ if ( ! function_exists( '__' ) )
 </div>
 
 <div id="copyright">
-	<p><?php _e( '© 2011-2014 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 (or later) licensed</a>.', 'total_slider' );?></p>
+	<p><?php _e( '© 2011-2015 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 (or later) licensed</a>.', 'total_slider' );?></p>
 	<p id="vpm-credit"><?php _e( 'Built by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>', 'total_slider' );?></p>
 </div>
 <?php
