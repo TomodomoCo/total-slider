@@ -240,8 +240,29 @@ select#template-slug {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-#edit-controls-save, #edit-controls-cancel {
+#edit-controls-publish, #edit-controls-save-draft, #edit-controls-cancel {
 	cursor: pointer;
+}
+
+#edit-controls-save-draft {
+	margin-right: 45px;
+}
+
+#edit-controls-cancel {
+	float: right;
+}
+
+.delete-container {
+	text-align: right;
+	margin-top: 20px;
+}
+
+.delete-container a {
+	color: #a00;
+}
+.delete-container a:hover {
+	color: #fff;
+	background-color: #a00;
 }
 
 /* Spinner & Saving... text */

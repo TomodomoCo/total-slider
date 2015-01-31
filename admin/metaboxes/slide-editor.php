@@ -124,11 +124,15 @@ if ( ! function_exists( '__' ) )
 			</tbody>
 		</table>
 		<p class="submit">
-			<input type="button" id="edit-controls-publish" class="button-primary" value="<?php _e( 'Publish', 'total_slider' );?>" />
 			<input type="button" id="edit-controls-save-draft" class="button-secondary" value="<?php _e( 'Save Draft', 'total_slider' ); ?>" />
 			<input type="button" id="edit-controls-cancel" class="button-secondary" value="<?php _e( 'Cancel', 'total_slider' );?>" />
+			<input type="button" id="edit-controls-publish" class="button-primary" value="<?php _e( 'Publish', 'total_slider' );?>" />
+			<p class="delete-container">
+				<a id="edit-controls-delete-slide" href="#">Delete Slide</a>
+			</p>
+
 		</p>
-		<div id="edit-controls-saving">
+			<div id="edit-controls-saving">
 			<img id="edit-controls-spinner" src="images/loading.gif" width="16" height="16" alt="<?php _e( 'Loading', 'total_slider' );?>" />
 			<span><?php _e( 'Saving…', 'total_slider' );?></span>
 		</div>

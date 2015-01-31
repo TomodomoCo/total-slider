@@ -24,6 +24,10 @@ var originalBackgroundID = false;
 var dontStartEdit = false;
 var newShouldShuffle = false;
 var deleteCaller = false;
+var autoSaveExistingStatus = false;
+var lastSaveState = '';
+var lastChange = 0;
+var lastAutoSave = 0;
 var linkToSave = '';
 var tplEJS = false;
 
@@ -217,6 +221,7 @@ jQuery(document).ready(function($) {
 		$('#slide-link-internal-settings').hide();
 		$('#slide-link-external-settings').hide();	
 		$('#edit-slide-publish-status').val('draft');
+		$('#edit-controls-save-draft').removeProp( 'disabled' );
 		
 		// reset preview area
 		slidePreviewData = $.extend(true, {}, slidePreviewUntitledData);
@@ -235,6 +240,7 @@ jQuery(document).ready(function($) {
 	$('.edit-controls-inputs').keyup(function(e) {
 		isEditing = true;
 		$('#' + editingSlideSortButton).addClass('slidesort-unsaved');
+		lastChange = Date.now();
 	});
 	
 	/* click on a slide in the resortable list to select it for editing */
@@ -363,6 +369,11 @@ jQuery(document).ready(function($) {
 						else {
 							slidePreviewData.x = slidePreviewUntitledData.x;
 							slidePreviewData.y = slidePreviewUntitledData.y;
+						}
+
+						// determine if published and enable only appropriate controls
+						if ( result.post_status == 'publish' ) {
+							$( '#edit-controls-save-draft' ).prop('disabled', 'disabled' );
 						}
 						
 						// ok, do the grand unveiling
@@ -533,6 +544,7 @@ jQuery(document).ready(function($) {
 					slidePreviewData.y = parseInt(calcBoxOffsetTop);
 					
 					isEditing = true;
+					lastChange = Date.now();
 					//console.log("x = " + slidePreviewData.x + ", y = " + slidePreviewData.y);
 					
 				},
@@ -621,12 +633,21 @@ jQuery(document).ready(function($) {
 	/* !Save button -- create a new, or update an existing slide */
 	$('#edit-controls-publish').click(function() {
 		$('#edit-slide-publish-status').val('publish');
+		lastSaveState = 'publish';
 		$().saveSlide(this);
 	});
 
 	$('#edit-controls-save-draft').click(function() {
 		//TODO what if already published?
 		//TODO what about cancelling a draft and reverting to the previous published post?
+		$('#edit-slide-publish-status').val('draft');
+
+		if ( editingSlideSortButton && $( '#' + editingSlideSortButton ).hasClass( 'slidesort-publish') ) {
+			$( '#' + editingSlideSortButton ).removeClass('slidesort-publish');
+			$( '#' + editingSlideSortButton ).addClass('slidesort-draft');
+		}
+
+		lastSaveState = 'draft';
 		$().saveSlide(this);
 	});
 
@@ -713,7 +734,16 @@ jQuery(document).ready(function($) {
 				else {
 			
 				$('#' + editingSlideSortButton).removeClass('slidesort-selected');
-				$('#' + editingSlideSortButton).removeClass('slidesort-draft'); // publish!
+				switch ( lastSaveState ) {
+					case 'draft':
+						$('#' + editingSlideSortButton).removeClass('slidesort-publish');
+						$('#' + editingSlideSortButton).addClass('slidesort-draft');
+					break;
+					case 'publish':
+						$('#' + editingSlideSortButton).removeClass('slidesort-draft'); // publish!
+						$('#' + editingSlideSortButton).addClass('slidesort-publish');
+					break;
+				}
 				$('#' + editingSlideSortButton).removeClass('slidesort-unsaved');
 				$('#' + editingSlideSortButton).click(function() { $().clickSlideObject(this); } );
 				$('#' + editingSlideSortButton).attr('id', 'slidesort_' + result.new_id);
@@ -752,7 +782,16 @@ jQuery(document).ready(function($) {
 				}
 				else {
 					$('#' + editingSlideSortButton).removeClass('slidesort-selected');
-					$('#' + editingSlideSortButton).removeClass('slidesort-draft'); // publish!
+					switch ( lastSaveState ) {
+						case 'draft':
+							$('#' + editingSlideSortButton).removeClass('slidesort-publish');
+							$('#' + editingSlideSortButton).addClass('slidesort-draft');
+						break;
+						case 'publish':
+							$('#' + editingSlideSortButton).removeClass('slidesort-draft'); // publish!
+							$('#' + editingSlideSortButton).addClass('slidesort-publish');
+						break;
+					}
 					$('#' + editingSlideSortButton).removeClass('slidesort-unsaved');
 					$('#edit-controls').fadeTo(400, 0);
 					$('#edit-controls-choose-hint').show().fadeTo(400,1);
@@ -873,16 +912,38 @@ jQuery(document).ready(function($) {
 	};
 
 	$.fn.saveAutoDraft = function(caller) {
+
+		$('#edit-controls-saving > span').html('Saving a draft&hellip;');
+		$('#edit-controls-saving').css('opacity', '1');
+		$('#edit-controls-saving').show();
+
+		autoSaveExistingStatus = $('#edit-slide-publish-status').val();
+
+		$('#edit-slide-publish-status').val('draft');
+
 		$().performSaveAction({
 			newSlideSuccess: function(result, caller) {
 				// hook up new slide stuff
-
+				$('#' + editingSlideSortButton).removeClass('slidesort-unsaved');
+				$('#' + editingSlideSortButton).click(function() { $().clickSlideObject(this); } );
+				$('#' + editingSlideSortButton).attr('id', 'slidesort_' + result.new_id);
+				 
+				// update other IDs too
+				$('#' + editingSlideSortButton + '_text').attr('id', 'slidesort_' + result.new_id + '_text');
+				$('#slidesort_untitled_delete').attr('id', 'slidesort_' + result.new_id + '_delete');
+				$('#slidesort_untitled_delete_button').attr('id', 'slidesort_' + result.new_id + '_delete_button');		
 
 				$('#' + editingSlideSortButton ).removeClass( 'slidesort-unsaved' );
 
 				if ( typeof console != 'undefined') {
 					console.log( 'Total Slider: Successful auto-save of slide -- new post created.');
 				}
+
+				isEditingUntitledSlide = false;
+				$('#edit-slide-publish-status').val(autoSaveExistingStatus);
+				$('#edit-controls-saving').hide();
+				lastAutoSave = Date.now();
+
 			},
 			existingSlideSuccess: function(result, caller) {
 				// not much??
@@ -892,9 +953,14 @@ jQuery(document).ready(function($) {
 				if ( typeof console != 'undefined' ) {
 					console.log( 'Total Slider: Successful auto-save of slide -- draft post updated' );
 				}
+				$('#edit-slide-publish-status').val(autoSaveExistingStatus);
+				$('#edit-controls-saving').hide();
+				lastAutoSave = Date.now();
 			},
 			error: function(jqXHR, textStatus, errorThrown, caller) {
 				alert(textStatus);
+				$('#edit-slide-publish-status').val(autoSaveExistingStatus);
+				$('#edit-controls-saving').hide();
 			}
 		});
 	};
@@ -904,12 +970,19 @@ jQuery(document).ready(function($) {
 			if ( typeof console != 'undefined' ) {
 				console.log( "Total Slider: Triggering auto-save after 30 seconds." );	
 			}
-			if ( ! $('#' + editingSlideSortButton ).hasClass( 'slidesort-publish' ) ) {
-				$().saveAutoDraft(null);
+			if ( lastChange > lastAutoSave ) {
+				if ( ! $('#' + editingSlideSortButton ).hasClass( 'slidesort-publish' ) ) {
+					$().saveAutoDraft(null);
+				}
+				else {
+					if ( typeof console != 'undefined' ) {
+						console.log( "Total Slider: Aborting auto-save, as slide currently in editing is already published." );
+					}
+				}
 			}
 			else {
 				if ( typeof console != 'undefined' ) {
-					console.log( "Total Slider: Aborting auto-save, as slide currently in editing is already published." );
+					console.log( "Total Slider: Aborting auto-save, as no changes since last auto-save." );
 				}
 			}
 		}	    	    
@@ -996,13 +1069,33 @@ jQuery(document).ready(function($) {
 	
 	});
 
+	/* !Re-enable save draft button if the user wants to 'un-publish' a slide */
+	$('#edit-slide-publish-status').change( function(e) {
+		// if current slide is published
+		if ( editingSlideSortButton && $( '#' + editingSlideSortButton ).hasClass( 'slidesort-publish' ) ) {
+			switch( $(this).val() ) {
+				case 'draft':
+					$('#edit-controls-save-draft').removeProp( 'disabled' );
+				break;
+				case 'publish':
+					$('#edit-controls-save-draft').prop('disabled', 'disabled' );
+				break;
+			}
+		}
+	});
+
 	/* !Delete slide generic function */
 	$.fn.deleteSlide = function(event, caller) {
 	
 		event.preventDefault();
 		
 		// what is our ID?
-		var slideID = $(caller).parent().parent().parent().attr('id');
+		if ( caller != null ) {
+			var slideID = $(caller).parent().parent().parent().attr('id');
+		}
+		else {
+			var slideID = editingSlideSortButton;
+		}
 		
 		if (!slideID)
 			alert(_total_slider_L10n.unableToDeleteSlideNoID);
@@ -1058,8 +1151,14 @@ jQuery(document).ready(function($) {
 				
 				success: function(result) {
 				
-					$(deleteCaller).parent().parent().fadeTo(350, 0);
-					window.setTimeout(function() {$(deleteCaller).parent().parent().parent().remove();}, 380);
+					if (deleteCaller) {
+						$(deleteCaller).parent().parent().fadeTo(350, 0);
+						window.setTimeout(function() {$(deleteCaller).parent().parent().parent().remove();}, 380);
+					}
+					else {
+						$('#' + editingSlideSortButton).fadeTo(350,0);
+						window.setTimeout(function() { $('#' + editingSlideSortButton).remove(); } );
+					}
 					
 					$('#edit-controls').fadeTo(400, 0);
 					$('#edit-controls-choose-hint').show().fadeTo(400,1);
@@ -1113,6 +1212,15 @@ jQuery(document).ready(function($) {
 		$().deleteSlide(event, this);
 	
 	});
+
+	$('#edit-controls-delete-slide').click( function(event) {
+		if ( isEditingUntitledSlide ) {
+			$('#edit-controls-cancel').click();
+		}
+		else {
+			$().deleteSlide(event, null);
+		}
+	});
 	
 	/* !Help buttons */
 	$('.total-slider-help-point').click(function(event)
@@ -1154,6 +1262,7 @@ jQuery(document).ready(function($) {
 		$('#' + editingSlideSortButton).addClass('slidesort-unsaved');
 		findPosts.open();
 		isEditing = true;
+		lastChange = Date.now();
 	});
 	
 	/* !'Internal post or page' chosen for slide link */
@@ -1162,6 +1271,7 @@ jQuery(document).ready(function($) {
 		$('#slide-link-internal-settings').show('fast');	
 		$('#' + editingSlideSortButton).addClass('slidesort-unsaved');
 		isEditing = true;		
+		lastChange = Date.now();
 	});
 	
 	/* !'External link' chosen for slide link */
@@ -1170,6 +1280,7 @@ jQuery(document).ready(function($) {
 		$('#slide-link-external-settings').show('fast');
 		$('#' + editingSlideSortButton).addClass('slidesort-unsaved');
 		isEditing = true;			
+		lastChange = Date.now();
 	});
 	
 	/* !Shim the find post/page button to get it for the link */
