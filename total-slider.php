@@ -1174,6 +1174,8 @@ class Total_Slider {
 require_once( dirname( __FILE__ ) . '/includes/class.total-slider-widget.php' );
 
 
+$TS_Total_Slider = new Total_Slider();
+
 /**
  * Stub function that calls Total_Slider::shortcode_handler
  *
@@ -1183,9 +1185,7 @@ require_once( dirname( __FILE__ ) . '/includes/class.total-slider-widget.php' );
  * @return string
  */
 function total_slider_shortcode( $atts, $content, $tag ) {
-	return Total_Slider::shortcode_handler( $atts, $content, $tag );
+	global $TS_Total_Slider;
+	return $TS_Total_Slider->shortcode_handler( $atts, $content, $tag );
 }
-
-
-$TS_Total_Slider = new Total_Slider();
 

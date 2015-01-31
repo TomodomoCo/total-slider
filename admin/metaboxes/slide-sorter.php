@@ -59,7 +59,7 @@ if ( is_array( $current_slides ) && count( $current_slides ) > 0 ) {
 
 		?>
 
-		<li id="slidesort_<?php echo $my_id;?>">
+		<li id="slidesort_<?php echo $my_id;?>" class="slidesort-<?php echo esc_attr( $slide['post_status'] ); ?>">
 
 			<div class="slidesort_slidebox" style="background: url(<?php echo esc_url( $background_url );?>)">
 				<div id="slidesort_<?php echo $my_id;?>_text" class="slidesort_text"><?php echo stripslashes( esc_html( $slide['title'] ) );?></div>

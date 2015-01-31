@@ -174,7 +174,7 @@ jQuery(document).ready(function($) {
 			var newIdNo = $('#slidesort').children().length+1;
 			
 			// create a new button
-			$('#slidesort').append('<li id="slidesort_untitled'  + newIdNo + '" style="background: url();" class="slidesort-selected"><div class="slidesort_slidebox" style="background:url();"><div id="slidesort_untitled'  + newIdNo + '_text" class="slidesort_text">' + _total_slider_L10n.newSlideTemplateUntitled + '</div><a id="slidesort_'  + newIdNo + '_move_button" class="slidesort-icon slide-move-button" href="#">' + _total_slider_L10n.newSlideTemplateMove + '</a><span id="slidesort_'  + newIdNo + '_delete" class="slide-delete"><a id="slidesort_untitled'  + newIdNo + '_delete_button" class="slidesort-icon slide-delete-button" href="#">' + _total_slider_L10n.newSlideTemplateDelete + '</a></span></div></li>');			
+			$('#slidesort').append('<li id="slidesort_untitled'  + newIdNo + '" style="background: url();" class="slidesort-draft slidesort-selected"><div class="slidesort_slidebox" style="background:url();"><div id="slidesort_untitled'  + newIdNo + '_text" class="slidesort_text">' + _total_slider_L10n.newSlideTemplateUntitled + '</div><a id="slidesort_'  + newIdNo + '_move_button" class="slidesort-icon slide-move-button" href="#">' + _total_slider_L10n.newSlideTemplateMove + '</a><span id="slidesort_'  + newIdNo + '_delete" class="slide-delete"><a id="slidesort_untitled'  + newIdNo + '_delete_button" class="slidesort-icon slide-delete-button" href="#">' + _total_slider_L10n.newSlideTemplateDelete + '</a></span></div></li>');			
 			
 			// hook up new pseudo-delete button
 			$('#slidesort_untitled' + newIdNo + '_delete_button').click(function (event) {
@@ -234,6 +234,7 @@ jQuery(document).ready(function($) {
 	/* any form editing performed, set inEditing to true */
 	$('.edit-controls-inputs').keyup(function(e) {
 		isEditing = true;
+		$('#' + editingSlideSortButton).addClass('slidesort-unsaved');
 	});
 	
 	/* click on a slide in the resortable list to select it for editing */
@@ -253,6 +254,7 @@ jQuery(document).ready(function($) {
 			if (confirm(_total_slider_L10n.switchEditWouldLoseChanges))
 			{
 				isEditing = false;
+				$('#' + editingSlideSortButton).removeClass('slidesort-unsaved');
 				
 				if (isEditingUntitledSlide) {
 					$('#' + isEditingUntitledSlide).remove();				
@@ -711,6 +713,8 @@ jQuery(document).ready(function($) {
 				else {
 			
 				$('#' + editingSlideSortButton).removeClass('slidesort-selected');
+				$('#' + editingSlideSortButton).removeClass('slidesort-draft'); // publish!
+				$('#' + editingSlideSortButton).removeClass('slidesort-unsaved');
 				$('#' + editingSlideSortButton).click(function() { $().clickSlideObject(this); } );
 				$('#' + editingSlideSortButton).attr('id', 'slidesort_' + result.new_id);
 				 
@@ -748,6 +752,8 @@ jQuery(document).ready(function($) {
 				}
 				else {
 					$('#' + editingSlideSortButton).removeClass('slidesort-selected');
+					$('#' + editingSlideSortButton).removeClass('slidesort-draft'); // publish!
+					$('#' + editingSlideSortButton).removeClass('slidesort-unsaved');
 					$('#edit-controls').fadeTo(400, 0);
 					$('#edit-controls-choose-hint').show().fadeTo(400,1);
 					window.setTimeout(function() { $().clearForm(); }, 750);
@@ -867,8 +873,48 @@ jQuery(document).ready(function($) {
 	};
 
 	$.fn.saveAutoDraft = function(caller) {
-		
+		$().performSaveAction({
+			newSlideSuccess: function(result, caller) {
+				// hook up new slide stuff
+
+
+				$('#' + editingSlideSortButton ).removeClass( 'slidesort-unsaved' );
+
+				if ( typeof console != 'undefined') {
+					console.log( 'Total Slider: Successful auto-save of slide -- new post created.');
+				}
+			},
+			existingSlideSuccess: function(result, caller) {
+				// not much??
+				//
+
+				$('#' + editingSlideSortButton ).removeClass( 'slidesort-unsaved' );
+				if ( typeof console != 'undefined' ) {
+					console.log( 'Total Slider: Successful auto-save of slide -- draft post updated' );
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown, caller) {
+				alert(textStatus);
+			}
+		});
 	};
+
+	window.setInterval( function() {
+		if ( isEditing && editingSlideSortButton ) {
+			if ( typeof console != 'undefined' ) {
+				console.log( "Total Slider: Triggering auto-save after 30 seconds." );	
+			}
+			if ( ! $('#' + editingSlideSortButton ).hasClass( 'slidesort-publish' ) ) {
+				$().saveAutoDraft(null);
+			}
+			else {
+				if ( typeof console != 'undefined' ) {
+					console.log( "Total Slider: Aborting auto-save, as slide currently in editing is already published." );
+				}
+			}
+		}	    	    
+	} ,
+			30000);
 	
 	/* Cancel with esc key */
 	/*$(document).keyup(function(event) {
@@ -891,6 +937,7 @@ jQuery(document).ready(function($) {
 				$().clearForm();
 				
 				isEditing = false;
+				$('#' + editingSlideSortButton).removeClass('slidesort-unsaved');
 				isEditingUntitledSlide = false;
 				editingSlideSortButton = false;
 				
@@ -917,7 +964,8 @@ jQuery(document).ready(function($) {
 				$('#' + editingSlideSortButton + '_text').text(originalTitle); // restore pre-edit title
 				$('#' + editingSlideSortButton).children('.slidesort_slidebox').css('background', 'url(' + originalBackground + ')'); // restore pre-edit background
 				$('#' + editingSlideSortButton).removeClass('slidesort-selected'); // unselect
-				
+				$('#' + editingSlideSortButton).removeClass('slidesort-unsaved');
+
 				isEditing = false;
 				isEditingUntitledSlide = false;
 				editingSlideSortButton = false;
@@ -931,6 +979,7 @@ jQuery(document).ready(function($) {
 			if (editingSlideSortButton)
 			{
 				$('#' + editingSlideSortButton).removeClass('slidesort-selected'); // unselect the button if it was selected
+				$('#' + editingSlideSortButton).removeClass('slidesort-unsaved');
 			}
 			
 			$('#' + editingSlideSortButton).children('.slidesort_slidebox').css('background', 'url(' + originalBackground + ')'); // restore pre-edit background
@@ -1102,8 +1151,7 @@ jQuery(document).ready(function($) {
 	$('#slide-link-finder').click(function() {
 	
 		$('#slide-link-is-internal').click();
-
-	
+		$('#' + editingSlideSortButton).addClass('slidesort-unsaved');
 		findPosts.open();
 		isEditing = true;
 	});
@@ -1112,6 +1160,7 @@ jQuery(document).ready(function($) {
 	$('#slide-link-is-internal').click(function() {
 		$('#slide-link-external-settings').hide();
 		$('#slide-link-internal-settings').show('fast');	
+		$('#' + editingSlideSortButton).addClass('slidesort-unsaved');
 		isEditing = true;		
 	});
 	
@@ -1119,6 +1168,7 @@ jQuery(document).ready(function($) {
 	$('#slide-link-is-external').click(function() {
 		$('#slide-link-internal-settings').hide();
 		$('#slide-link-external-settings').show('fast');
+		$('#' + editingSlideSortButton).addClass('slidesort-unsaved');
 		isEditing = true;			
 	});
 	

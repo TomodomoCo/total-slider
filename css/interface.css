@@ -87,6 +87,23 @@ ul#slidesort li.slidesort-selected {
 	background-image: url(../img/icons.png);
 }
 
+.slidesort-draft > div.slidesort_slidebox > div.slidesort_text {
+	background-color: rgba(0, 0, 0, 0.30);
+}
+.slidesort-draft > div.slidesort_slidebox > div.slidesort_text:before {
+	content: "Draft ";
+	font-size: 80%;
+	font-style: italic;
+}
+
+.slidesort-draft.slidesort-unsaved > div.slidesort_slidebox > div.slidesort_text {
+	background-color: rgba( 255, 0, 0, 0.20 );
+}
+.slidesort-publish.slidesort-unsaved > div.slidesort_slidebox > div.slidesort_text {
+	background-color: rgba( 255, 0, 0, 0.65 );
+}
+
+
 ul#slidesort li:hover .slidesort-icon {
 	display: block;
 }
