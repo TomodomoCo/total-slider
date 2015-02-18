@@ -44,7 +44,7 @@ if ( ! current_user_can( TOTAL_SLIDER_REQUIRED_CAPABILITY ) ) {
 }
 
 // add the credits/notes metabox
-add_meta_box( 'credits-notes', __( 'Credits', 'total_slider' ), array( $TS_Total_Slider, 'print_credits_metabox' ), '_total_slider_slide_groups', 'side', 'core' );
+add_meta_box( 'credits-notes', __( 'Credits', 'total-slider' ), array( $TS_Total_Slider, 'print_credits_metabox' ), '_total_slider_slide_groups', 'side', 'core' );
 
 // if we are to remove a slide group, do that and redirect to home
 if ( array_key_exists( 'action', $_GET ) && 'remove' == $_GET['action'] && array_key_exists( 'group', $_GET ) ) {
@@ -201,32 +201,32 @@ var VPM_SHOULD_DISABLE_XY = false;
 </script>
 <div class="wrap">
 
-<div id="icon-total-slides" class="icon32"><br /></div><h2><?php _e( 'Slide Groups', 'total_slider' );?> <a href="#" id="new-slide-group-button" class="add-new-h2"><?php _e( 'Add New', 'total_slider' );?></a></h2>
+<div id="icon-total-slides" class="icon32"><br /></div><h2><?php _e( 'Slide Groups', 'total-slider' );?> <a href="#" id="new-slide-group-button" class="add-new-h2"><?php _e( 'Add New', 'total-slider' );?></a></h2>
 
 <noscript>
-<h3><?php _e( 'Sorry, this interface requires JavaScript to function.', 'total_slider' ); ?></h3>
-<p><?php _e( 'You will need to enable JavaScript for this page before many of the controls below will work.', 'total_slider' );?></p>
+<h3><?php _e( 'Sorry, this interface requires JavaScript to function.', 'total-slider' ); ?></h3>
+<p><?php _e( 'You will need to enable JavaScript for this page before many of the controls below will work.', 'total-slider' );?></p>
 </noscript>
 
 <div id="new-slide-group">
 	<form name="new-slide-group-form" id="new-slide-group-form" method="post" action="admin.php?page=total-slider&action=new_slide_group">
-		<h3 id="new-slide-group-header"><?php _e( 'Add a Slide Group', 'total_slider' ); ?></h3>
+		<h3 id="new-slide-group-header"><?php _e( 'Add a Slide Group', 'total-slider' ); ?></h3>
 		<?php wp_nonce_field( 'new-slide-group' );?>
 		<table class="form-table" style="max-width:690px">
 
 			<tr class="form-field form-required">
-				<th scope="row"><label for="group-name"><?php _e( 'Group Name', 'total_slider' ); ?></label></th>
+				<th scope="row"><label for="group-name"><?php _e( 'Group Name', 'total-slider' ); ?></label></th>
 				<td><input name="group-name" type="text" id="group-name" value="" /></td>
 			</tr>
 			<tr class="form-field form-required">
-				<th scope="row"><label for="template-slug"><?php _e( 'Template', 'total_slider' ); ?></label></th>
+				<th scope="row"><label for="template-slug"><?php _e( 'Template', 'total-slider' ); ?></label></th>
 				<td>
 					<?php $t = new Total_Slider_Template_Iterator(); ?>
 					<select name="template-slug" id="template-slug">
 						
 						<?php $builtin = $t->discover_templates( 'builtin' ); ?>
 						<?php if ( is_array( $builtin ) && count( $builtin ) > 0 ): ?>
-						<optgroup label="<?php _e( 'Built-in', 'total_slider' );?>">
+						<optgroup label="<?php _e( 'Built-in', 'total-slider' );?>">
 							<?php foreach( $builtin as $tpl ): ?>
 								<option value="<?php echo esc_attr( $tpl['slug'] ); ?>"><?php echo esc_html( $tpl['name'] ); ?></option>
 							<?php endforeach; ?>
@@ -235,7 +235,7 @@ var VPM_SHOULD_DISABLE_XY = false;
 						
 						<?php $theme = $t->discover_templates( 'theme' ); ?>
 						<?php if ( is_array( $theme ) && count( $theme ) > 0 ): ?>
-						<optgroup label="<?php _e( 'Theme', 'total_slider' ); ?>">
+						<optgroup label="<?php _e( 'Theme', 'total-slider' ); ?>">
 							<?php foreach($theme as $tpl): ?>
 								<option value="<?php echo esc_attr( $tpl['slug' ]); ?>"><?php echo esc_html( $tpl['name'] ); ?></option>
 							<?php endforeach; ?>
@@ -244,7 +244,7 @@ var VPM_SHOULD_DISABLE_XY = false;
 						
 						<?php $legacy = $t->discover_templates( 'legacy', false ); ?>
 						<?php if ( is_array( $legacy ) && count( $legacy ) > 0 ): ?>
-						<optgroup label="<?php _e( 'v1.0 Templates', 'total_slider' ); ?>">
+						<optgroup label="<?php _e( 'v1.0 Templates', 'total-slider' ); ?>">
 							<?php foreach($legacy as $tpl): ?>
 								<option value="<?php echo esc_attr( $tpl['slug'] ); ?>"><?php echo esc_html( $tpl['name'] ); ?></option>
 							<?php endforeach; ?>
@@ -254,7 +254,7 @@ var VPM_SHOULD_DISABLE_XY = false;
 						<?php //$downloaded = $t->discover_templates( 'downloaded' ); ?>
 						<?php $downloaded = false; ?>
 						<?php if ( is_array( $downloaded ) && count( $downloaded ) > 0 ): ?>
-						<!--<optgroup label="<?php _e( 'Downloaded', 'total_slider' ); ?>">
+						<!--<optgroup label="<?php _e( 'Downloaded', 'total-slider' ); ?>">
 							<?php foreach( $downloaded as $tpl ): ?>
 								<option value="<?php echo esc_attr( $tpl['slug'] ); ?>"><?php echo esc_html( $tpl['name'] ); ?></option>
 							<?php endforeach; ?>																
@@ -265,8 +265,8 @@ var VPM_SHOULD_DISABLE_XY = false;
 				</td>
 			</tr>
 		</table>
-		<p class="submit"><input type="submit" class="button-primary" value="<?php _e( 'Add Slide Group', 'total_slider' ); ?>"  />
-		<input type="button" id="new-slide-group-cancel" class="button-secondary" value="<?php _e( 'Cancel', 'total_slider' ); ?>" /></p></form>
+		<p class="submit"><input type="submit" class="button-primary" value="<?php _e( 'Add Slide Group', 'total-slider' ); ?>"  />
+		<input type="button" id="new-slide-group-cancel" class="button-secondary" value="<?php _e( 'Cancel', 'total-slider' ); ?>" /></p></form>
 	</form>
 </div>
 
@@ -278,7 +278,7 @@ var VPM_SHOULD_DISABLE_XY = false;
 		</div>
 
 		<div id="post-body" class="columns-2"><div id="post-body-content">
-		<form id="slide-groups-bulk-actions" method="post" action="admin.php?page=total-slider" onsubmit="if ( jQuery('.slide-group-checkbox:checked').length > 0 && jQuery('option[value=remove]:selected').length > 0) { return confirm('<?php _e( 'Are you sure you want to delete these slide groups?\n\nThis action cannot be undone.', 'total_slider' );?>'); }">
+		<form id="slide-groups-bulk-actions" method="post" action="admin.php?page=total-slider" onsubmit="if ( jQuery('.slide-group-checkbox:checked').length > 0 && jQuery('option[value=remove]:selected').length > 0) { return confirm('<?php _e( 'Are you sure you want to delete these slide groups?\n\nThis action cannot be undone.', 'total-slider' );?>'); }">
 			<input type="hidden" name="_bulk_wpnonce" value="<?php echo wp_create_nonce( 'remove-bulk-slide-group' ); ?>" />
 			<?php require_once( dirname( __FILE__ ) . '/../includes/class.slide-groups-table.php' );
 			$table = new Slide_Groups_Table();

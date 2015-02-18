@@ -148,7 +148,7 @@ class Total_Slider_Widget extends WP_Widget {
 		// determine the correct template to use
 		$this->slide_group = new Total_Slide_Group( Total_Slider::sanitize_slide_group_slug( $this->instance['groupSlug'] ) );
 		if ( ! $this->slide_group->load() ) {
-			_e( '<strong>Total Slider:</strong> Could not find the selected slide group to show. Does it still exist?', 'total_slider' );
+			_e( '<strong>Total Slider:</strong> Could not find the selected slide group to show. Does it still exist?', 'total-slider' );
 			return;
 		}
 		
@@ -156,7 +156,7 @@ class Total_Slider_Widget extends WP_Widget {
 			$tpl = new Total_Slider_Template( $this->slide_group->template, $this->slide_group->templateLocation );	
 		}
 		catch ( Exception $e ) {
-			_e( '<strong>Total Slider:</strong> Unable to load the template for this slide group.', 'total_slider' );
+			_e( '<strong>Total Slider:</strong> Unable to load the template for this slide group.', 'total-slider' );
 			if ( is_user_logged_in() && current_user_can( 'publish_posts') ) {
 				echo ' <em>' . esc_html( $e->getMessage() ) . '</em>';
 			}
@@ -223,10 +223,10 @@ class Total_Slider_Widget extends WP_Widget {
 	 * @param array $instance
 	 */
 	public function form( $instance ) {
-	?><p><?php _e( 'Choose a slide group for this widget to show:', 'total_slider' ); ?></p>
+	?><p><?php _e( 'Choose a slide group for this widget to show:', 'total-slider' ); ?></p>
 
 	<select id="<?php echo $this->get_field_id( 'groupSlug' ); ?>" name="<?php echo $this->get_field_name( 'groupSlug' ); ?>">
-		<option value="**INVALID**" disabled="disabled" selected="selected"><?php _e( 'Select a group', 'total_slider' ); ?></option>
+		<option value="**INVALID**" disabled="disabled" selected="selected"><?php _e( 'Select a group', 'total-slider' ); ?></option>
 		<?php
 
 			// find all the slide groups and offer them for the widget

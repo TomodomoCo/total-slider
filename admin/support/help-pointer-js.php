@@ -41,8 +41,8 @@ if ( in_array( 'total-slider-help-pointer', $dismissed ) ) {
 	$pointer_content = '';
 }
 else {
-	$pointer_content = '<h3>' . esc_attr ( __('Need help?', 'total_slider') ) . '</h3>';
-	$pointer_content .= '<p>' . esc_attr ( __('The help menu will walk you through creating new groups, adding slides, and getting them to display in your theme. It’s a great place to start!', 'total_slider') ) . '</p>';
+	$pointer_content = '<h3>' . esc_attr ( __('Need help?', 'total-slider') ) . '</h3>';
+	$pointer_content .= '<p>' . esc_attr ( __('The help menu will walk you through creating new groups, adding slides, and getting them to display in your theme. It’s a great place to start!', 'total-slider') ) . '</p>';
 
 }
 

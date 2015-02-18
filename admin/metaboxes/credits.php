@@ -39,33 +39,33 @@ if ( ! function_exists( '__' ) )
 ?>
 
 <div id="credits">
-	<p><?php _e( 'Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a>', 'total_slider' );?></p>
+	<p><?php _e( 'Development: <a href="http://peter.upfold.org.uk/">Peter Upfold</a>', 'total-slider' );?></p>
 
-	<p><?php _e( 'Additional UI: <a href="https://www.vanpattenmedia.com/">Chris Van Patten</a>', 'total_slider' );?></p>
+	<p><?php _e( 'Additional UI: <a href="https://www.vanpattenmedia.com/">Chris Van Patten</a>', 'total-slider' );?></p>
 
-	<p><?php _e( 'Icons: <a href="http://www.field2.com/">Ben Dunkle</a>', 'total_slider' );?></p>
+	<p><?php _e( 'Icons: <a href="http://www.field2.com/">Ben Dunkle</a>', 'total-slider' );?></p>
 	
 	<?php if ( defined('WPLANG') && WPLANG != '' && strpos( strtolower(WPLANG), 'en' ) !== 0 ): ?>
 		<p>
 		<?php
 		/* translators: please replace this with a credit to yourself! "Translation: Your Name". This English message will appear when no translation is available, but the user is using WordPress in another language.. */
 		?>
-		<?php printf( __( '<a href="%s">Help us translate this plugin into your language!</a>', 'total_slider'), 'http://www.totalslider.com/' );?>
+		<?php printf( __( '<a href="%s">Help us translate this plugin into your language!</a>', 'total-slider'), 'http://www.totalslider.com/' );?>
 		</p>
 	<?php endif; ?>
 </div>
 
 <div id="contrib-note">
-	<p><?php printf( __( 'If you find this plugin useful, or are using it commercially, please consider <a href="%s">donating</a> to support development.', 'total_slider'), 'http://www.totalslider.com/support/' ); ?></p>
+	<p><?php printf( __( 'If you find this plugin useful, or are using it commercially, please consider <a href="%s">donating</a> to support development.', 'total-slider'), 'http://www.totalslider.com/support/' ); ?></p>
 
-	<p><?php printf ( __( 'You can also <a href="%s">report bugs</a>, <a href="%s">suggest features</a>, or <a href="%s">send pull requests</a>.', 'total_slider'), 'https://github.com/vanpattenmedia/total-slider', 'https://github.com/vanpattenmedia/total-slider', 'https://github.com/vanpattenmedia/total-slider' ); ?></p>
+	<p><?php printf ( __( 'You can also <a href="%s">report bugs</a>, <a href="%s">suggest features</a>, or <a href="%s">send pull requests</a>.', 'total-slider'), 'https://github.com/vanpattenmedia/total-slider', 'https://github.com/vanpattenmedia/total-slider', 'https://github.com/vanpattenmedia/total-slider' ); ?></p>
 
-	<p><?php _e( 'Thanks!', 'total_slider' ); ?></p>
+	<p><?php _e( 'Thanks!', 'total-slider' ); ?></p>
 </div>
 
 <div id="copyright">
-	<p><?php _e( '© 2011-2015 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 (or later) licensed</a>.', 'total_slider' );?></p>
-	<p id="vpm-credit"><?php _e( 'Built by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>', 'total_slider' );?></p>
+	<p><?php _e( '© 2011-2015 Peter Upfold. Proud to be <a href="https://www.gnu.org/licenses/gpl-2.0.html">GPLv2 (or later) licensed</a>.', 'total-slider' );?></p>
+	<p id="vpm-credit"><?php _e( 'Built by <a href="http://www.vanpattenmedia.com/">Van Patten Media</a>', 'total-slider' );?></p>
 </div>
 <?php
 

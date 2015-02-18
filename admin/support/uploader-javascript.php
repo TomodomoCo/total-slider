@@ -72,20 +72,20 @@ if ( array_key_exists( 'total-slider-uploader', $_GET ) && 'bgimage' == $_GET['t
 <script type="text/javascript">
 //<![CDATA[
 jQuery(document).ready(function() {
-	jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf( __( 'Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider' ), $crop['crop_width'], $crop['crop_height'] ); ?></p>');
+	jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf( __( 'Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total-slider' ), $crop['crop_width'], $crop['crop_height'] ); ?></p>');
 
 	jQuery('.savesend .button').each(function() {
-		jQuery(this).attr('value', '<?php _e( 'Use as background image', 'total_slider' );?>');
+		jQuery(this).attr('value', '<?php _e( 'Use as background image', 'total-slider' );?>');
 	});
 
 	if (typeof uploader == 'object') {
 		uploader.bind('FileUploaded', function() {
 			window.setTimeout(function() {
 
-				jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf( __( 'Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total_slider' ), $crop['crop_width'], $crop['crop_height'] ); ?></p>');
+				jQuery('.imgedit-response').append('<p style="text-align:center;font-size:12px;color:#909090;"><?php printf( __( 'Choose ‘Edit Image’ and crop to %d×%d for best results.', 'total-slider' ), $crop['crop_width'], $crop['crop_height'] ); ?></p>');
 				// rename the main action button
 				jQuery('.savesend .button').each(function() {
-					jQuery(this).attr('value', '<?php _e( 'Use as background image', 'total_slider' );?>');
+					jQuery(this).attr('value', '<?php _e( 'Use as background image', 'total-slider' );?>');
 				});
 			}, 680);
 		});

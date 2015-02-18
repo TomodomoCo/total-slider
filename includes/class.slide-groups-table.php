@@ -45,8 +45,8 @@ class Slide_Groups_Table extends WP_List_Table {
 		return parent::__construct(
 		
 			array (
-				'singular' 	=> __( 'slide group', 'total_slider' ),
-				'plural'	=> __( 'slide groups', 'total_slider' ),
+				'singular' 	=> __( 'slide group', 'total-slider' ),
+				'plural'	=> __( 'slide groups', 'total-slider' ),
 				'ajax'		=> false			
 			)
 		);
@@ -61,9 +61,9 @@ class Slide_Groups_Table extends WP_List_Table {
 		return array(
 		
 	        'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text	
-			'name'		=>	__('Group Name', 'total_slider'),
-			'template'  =>	__('Template', 'total_slider'),
-			'slides_count'		=>	__('Slides', 'total_slider')
+			'name'		=>	__('Group Name', 'total-slider'),
+			'template'  =>	__('Template', 'total-slider'),
+			'slides_count'		=>	__('Slides', 'total-slider')
 		
 		);
 	
@@ -99,10 +99,10 @@ class Slide_Groups_Table extends WP_List_Table {
 	
 		echo esc_html( stripslashes( $item->name ) );
 		?><br/><div class="row-actions">
-			<span class="edit"><a href="admin.php?page=total-slider&amp;group=<?php echo esc_attr( $item->slug ); ?>"><?php _e( 'Edit', 'total_slider' ); ?></a></span> |
+			<span class="edit"><a href="admin.php?page=total-slider&amp;group=<?php echo esc_attr( $item->slug ); ?>"><?php _e( 'Edit', 'total-slider' ); ?></a></span> |
 			<span class="trash"><a class="submitdelete" href="admin.php?page=total-slider&amp;action=remove&amp;group=<?php echo esc_attr( $item->slug ); ?>&amp;_wpnonce=<?php echo wp_create_nonce( 'remove-slide-group' );?>"
-				onclick="return confirm('<?php _e( 'Are you sure you want to delete this slide group?\n\nThis action cannot be undone.', 'total_slider' ); ?>');"
-			><?php _e( 'Remove', 'total_slider' ); ?></a></span>
+				onclick="return confirm('<?php _e( 'Are you sure you want to delete this slide group?\n\nThis action cannot be undone.', 'total-slider' ); ?>');"
+			><?php _e( 'Remove', 'total-slider' ); ?></a></span>
 		</div><?php
 	}
 	
@@ -197,7 +197,7 @@ class Slide_Groups_Table extends WP_List_Table {
 	public function get_bulk_actions() {
 		
 		$actions = array(
-			'remove'			=> __('Remove', 'total_slider')
+			'remove'			=> __('Remove', 'total-slider')
 		);
 		
 		
@@ -293,7 +293,7 @@ class Slide_Groups_Table extends WP_List_Table {
 	public function no_items()
 	{
 	
-		echo __( 'Click &lsquo;Add New&rsquo; to create a new group of slides.', 'total_slider' );
+		echo __( 'Click &lsquo;Add New&rsquo; to create a new group of slides.', 'total-slider' );
 	
 	}
 	

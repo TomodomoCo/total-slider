@@ -64,7 +64,7 @@ if ( ! function_exists( '__' ) )
 		// determine the current template
 		if ( ! $this->determineTemplate() ) {
 			?><div class="template-render-error"><?php
-			_e( 'Unable to load the preview.', 'total_slider' );
+			_e( 'Unable to load the preview.', 'total-slider' );
 			?></div><?php
 		}
 	}
@@ -76,7 +76,7 @@ if ( ! function_exists( '__' ) )
 		catch ( Exception $e )
 		{
 			?><div class="template-render-error"><?php
-			_e( 'Unable to load the preview.', 'total_slider' );
+			_e( 'Unable to load the preview.', 'total-slider' );
 			?><br />
 			<em><?php echo esc_html( $e->getMessage() ); ?></em>
 			</div><?php					

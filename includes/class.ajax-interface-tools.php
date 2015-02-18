@@ -54,7 +54,7 @@ class Total_Slider_Ajax_Interface_Tools {
 
 			echo json_encode(
 				array(
-					'error' => __( 'The operation failed at the server.\n\nYou may inspect the WP_Error object returned using the web browser Developer Tools.', 'total_slider' ),
+					'error' => __( 'The operation failed at the server.\n\nYou may inspect the WP_Error object returned using the web browser Developer Tools.', 'total-slider' ),
 					'WP_Error' => $dump
 				)
 			);
@@ -62,7 +62,7 @@ class Total_Slider_Ajax_Interface_Tools {
 		else {
 			echo json_encode(
 				array(
-					'error' => __( 'The operation failed at the server.\n\nFor detailed information, please enable WP_DEBUG.', 'total_slider' )
+					'error' => __( 'The operation failed at the server.\n\nFor detailed information, please enable WP_DEBUG.', 'total-slider' )
 				)
 			);
 		}

@@ -39,7 +39,7 @@ if ( ! function_exists( '__' ) )
 ?>
 
 	<div id="edit-controls-choose-hint">
-		<p><?php _e( 'Click a slide to edit it, or click ‘Add New’.', 'total_slider' );?></p>					
+		<p><?php _e( 'Click a slide to edit it, or click ‘Add New’.', 'total-slider' );?></p>					
 	</div>
 
 	<div id="edit-controls">
@@ -48,7 +48,7 @@ if ( ! function_exists( '__' ) )
 			<tbody>
 				<tr class="form-field" id="slide-title-container">
 					<th scope="row">
-						<label for="edit-slide-title"><?php _e( 'Title', 'total_slider' );?></label>
+						<label for="edit-slide-title"><?php _e( 'Title', 'total-slider' );?></label>
 					</th>
 					<td>
 						<input type="text" name="slide-title" id="edit-slide-title" value="" maxlength="64" class="edit-controls-inputs" />
@@ -56,7 +56,7 @@ if ( ! function_exists( '__' ) )
 				</tr>
 				<tr class="form-field" id="slide-description-container">
 					<th scope="row">
-						<label for="edit-slide-description"><?php _e( 'Description', 'total_slider' );?></label>
+						<label for="edit-slide-description"><?php _e( 'Description', 'total-slider' );?></label>
 					</th>
 					<td>
 						<textarea name="slide-description" id="edit-slide-description" class="widefat edit-controls-inputs" rows="4"></textarea>
@@ -65,27 +65,27 @@ if ( ! function_exists( '__' ) )
 
 				<tr class="form-field" id="slide-image-container">
 					<th scope="row">
-						<label for="edit-slide-image-upload"><?php _e( 'Background', 'total_slider' );?></label>
+						<label for="edit-slide-image-upload"><?php _e( 'Background', 'total-slider' );?></label>
 					</th>
 					<td>
 						<input id="edit-slide-image-url" type="hidden" name="slide-image" value="" />
-						<input id="edit-slide-image-upload" type="button" class="button" value="<?php _e( 'Upload or choose image', 'total_slider' );?>" />
+						<input id="edit-slide-image-upload" type="button" class="button" value="<?php _e( 'Upload or choose image', 'total-slider' );?>" />
 					</td>
 				</tr>
 
 				<tr class="form-field" id="slide-link-container">
 					<th scope="row">
-						<?php _e( 'Slide Link', 'total_slider' );?>
+						<?php _e( 'Slide Link', 'total-slider' );?>
 					</th>
 					<td>
 						<label for="slide-link-is-internal">
 							<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-internal" value="true" />
-						<?php _e( 'A page or post on this site', 'total_slider' );?>
+						<?php _e( 'A page or post on this site', 'total-slider' );?>
 						</label>
 						<br>
 						<label for="slide-link-is-external">
 							<input type="radio" style="width:auto;" name="slide-link-is-internal" id="slide-link-is-external" value="false" />
-						<?php _e( 'An external link', 'total_slider' );?>
+						<?php _e( 'An external link', 'total-slider' );?>
 						</label>
 					</td>
 				</tr>
@@ -95,9 +95,9 @@ if ( ! function_exists( '__' ) )
 
 					</th>
 					<td>
-						<span id="slide-link-internal-display"><?php _e( 'No post selected', 'total_slider' );?></span>
+						<span id="slide-link-internal-display"><?php _e( 'No post selected', 'total-slider' );?></span>
 						<input id="slide-link-internal-id" name="slide-link-internal" value="" type="hidden" />
-						<input id="slide-link-finder" type="button" class="button" value="<?php _e( 'Find post', 'total_slider' );?>" style="width:70px;" />
+						<input id="slide-link-finder" type="button" class="button" value="<?php _e( 'Find post', 'total-slider' );?>" style="width:70px;" />
 					</td>
 				</tr>
 
@@ -111,12 +111,12 @@ if ( ! function_exists( '__' ) )
 
 				<tr class="form-field" id="slide-publish-status-container">
 					<th scope="row">
-						<?php _e( 'Status', 'total_slider' ); ?>
+						<?php _e( 'Status', 'total-slider' ); ?>
 					</th>
 					<td>
 						<select id="edit-slide-publish-status" name="slide_post_status">
-							<option value="draft"><?php _e( 'Draft', 'total_slider' ); ?></option>
-							<option value="publish"><?php _e( 'Published', 'total_slider' ); ?></option>
+							<option value="draft"><?php _e( 'Draft', 'total-slider' ); ?></option>
+							<option value="publish"><?php _e( 'Published', 'total-slider' ); ?></option>
 						</select>
 					</td>
 				</tr>
@@ -124,17 +124,17 @@ if ( ! function_exists( '__' ) )
 			</tbody>
 		</table>
 		<p class="submit">
-			<input type="button" id="edit-controls-save-draft" class="button-secondary" value="<?php _e( 'Save Draft', 'total_slider' ); ?>" />
-			<input type="button" id="edit-controls-cancel" class="button-secondary" value="<?php _e( 'Cancel', 'total_slider' );?>" />
-			<input type="button" id="edit-controls-publish" class="button-primary" value="<?php _e( 'Publish', 'total_slider' );?>" />
+			<input type="button" id="edit-controls-save-draft" class="button-secondary" value="<?php _e( 'Save Draft', 'total-slider' ); ?>" />
+			<input type="button" id="edit-controls-cancel" class="button-secondary" value="<?php _e( 'Cancel', 'total-slider' );?>" />
+			<input type="button" id="edit-controls-publish" class="button-primary" value="<?php _e( 'Publish', 'total-slider' );?>" />
 			<p class="delete-container">
 				<a id="edit-controls-delete-slide" href="#">Delete Slide</a>
 			</p>
 
 		</p>
 			<div id="edit-controls-saving">
-			<img id="edit-controls-spinner" src="images/loading.gif" width="16" height="16" alt="<?php _e( 'Loading', 'total_slider' );?>" />
-			<span><?php _e( 'Saving…', 'total_slider' );?></span>
+			<img id="edit-controls-spinner" src="images/loading.gif" width="16" height="16" alt="<?php _e( 'Loading', 'total-slider' );?>" />
+			<span><?php _e( 'Saving…', 'total-slider' );?></span>
 		</div>
 	</form>
 

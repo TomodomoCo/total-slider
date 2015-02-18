@@ -39,7 +39,7 @@ if ( ! function_exists( '__' ) )
 // permissions check
 if ( ! current_user_can( TOTAL_SLIDER_REQUIRED_CAPABILITY ) )
 {
-	?><h1><?php _e( 'This page is not accessible to your user.', 'total_slider' ); ?></h1><?php
+	?><h1><?php _e( 'This page is not accessible to your user.', 'total-slider' ); ?></h1><?php
 	return;
 }
 
@@ -47,7 +47,7 @@ $TS_Total_Slider->slug = $TS_Total_Slider->sanitize_slide_group_slug( $_GET['gro
 
 if ( empty( $TS_Total_Slider->slug ) ) {
 	echo '<div class="wrap"><h1>';
-	_e( 'No Slide Group selected.', 'total_slider' );
+	_e( 'No Slide Group selected.', 'total-slider' );
 	echo '</h1></div>';
 	return;
 }
@@ -57,7 +57,7 @@ $slide_group = new Total_Slide_Group( $TS_Total_Slider->slug );
 
 if ( ! $slide_group->load() ) {
 	echo '<div class="wrap"><h1>';
-	_e( 'Could not load the selected Slide Group. Does it exist?', 'total_slider' );
+	_e( 'Could not load the selected Slide Group. Does it exist?', 'total-slider' );
 	echo '</h1></div>';
 	return;
 }
@@ -77,7 +77,7 @@ if (
 	
 	// change the template and redirect
 	if ( ! wp_verify_nonce( $_POST['total-slider-change-template-nonce'], 'total-slider-change-template' ) ) {
-		die( __( 'Unable to confirm the form’s security.', 'total_slider' ) );
+		die( __( 'Unable to confirm the form’s security.', 'total-slider' ) );
 	}
 	
 	// update the new template
@@ -139,11 +139,11 @@ if (
 // add the metaboxes
 
 
-add_meta_box( 'slide-sorter-mb', __( 'Slides', 'total_slider' ), array( $TS_Total_Slider, 'print_slide_sorter_metabox' ), '_total_slider_slide', 'normal', 'core' );
-add_meta_box( 'slide-preview-mb', __( 'Preview', 'total_slider' ), array( $TS_Total_Slider, 'print_slide_preview_metabox' ), '_total_slider_slide', 'normal', 'core' );
-add_meta_box( 'slide-editor-mb', __( 'Edit', 'total_slider' ), array( $TS_Total_Slider, 'print_slide_editor_metabox' ), '_total_slider_slide_bottom', 'normal', 'core' );
-add_meta_box( 'slide-template-mb', __( 'Template', 'total_slider' ), array( $TS_Total_Slider, 'print_slide_template_metabox' ), '_total_slider_slide_bottom', 'side', 'core' ); 
-add_meta_box( 'credits-notes-mb', __( 'Credits', 'total_slider' ), array( $TS_Total_Slider, 'print_credits_metabox' ), '_total_slider_slide_bottom', 'side', 'core' );
+add_meta_box( 'slide-sorter-mb', __( 'Slides', 'total-slider' ), array( $TS_Total_Slider, 'print_slide_sorter_metabox' ), '_total_slider_slide', 'normal', 'core' );
+add_meta_box( 'slide-preview-mb', __( 'Preview', 'total-slider' ), array( $TS_Total_Slider, 'print_slide_preview_metabox' ), '_total_slider_slide', 'normal', 'core' );
+add_meta_box( 'slide-editor-mb', __( 'Edit', 'total-slider' ), array( $TS_Total_Slider, 'print_slide_editor_metabox' ), '_total_slider_slide_bottom', 'normal', 'core' );
+add_meta_box( 'slide-template-mb', __( 'Template', 'total-slider' ), array( $TS_Total_Slider, 'print_slide_template_metabox' ), '_total_slider_slide_bottom', 'side', 'core' ); 
+add_meta_box( 'credits-notes-mb', __( 'Credits', 'total-slider' ), array( $TS_Total_Slider, 'print_credits_metabox' ), '_total_slider_slide_bottom', 'side', 'core' );
 
 
 
@@ -181,19 +181,19 @@ var VPM_SHOULD_DISABLE_XY = <?php echo ( $template_options['disable_xy'] ) ? 'tr
 <div class="wrap">
 
 <div id="icon-total-slides" class="icon32"><br /></div>
-<h2><?php printf( __( '‘%s’ Slides', 'total_slider' ), esc_html( $slide_group->name ) );?>
-<a href="#" id="new-slide-button" class="add-new-h2"><?php _e( 'Add New', 'total_slider' );?></a></h2>
+<h2><?php printf( __( '‘%s’ Slides', 'total-slider' ), esc_html( $slide_group->name ) );?>
+<a href="#" id="new-slide-button" class="add-new-h2"><?php _e( 'Add New', 'total-slider' );?></a></h2>
 
 <noscript>
-<h3><?php _e( 'Sorry, this interface requires JavaScript to function.', 'total_slider' );?></h3>
-<p><?php _e( 'You will need to enable JavaScript for this page before any of the controls below will work.', 'total_slider' );?></p>
+<h3><?php _e( 'Sorry, this interface requires JavaScript to function.', 'total-slider' );?></h3>
+<p><?php _e( 'You will need to enable JavaScript for this page before any of the controls below will work.', 'total-slider' );?></p>
 </noscript>
 
 <?php if ( $TS_Total_Slider->tpl_error ): ?>
 	<div id="template-error" class="updated settings-error below-h2">
-	<h3><?php _e( 'There is a problem with this slide group&rsquo;s template.', 'total_slider' ); ?></h3>
-	<p><?php echo esc_html( $TS_Total_Slider->tpl_error->getMessage() ); ?> <em><?php printf( __( '(error code %d)', 'total_slider' ), intval( $TS_Total_Slider->tpl_error->getCode() ) ); ?></em></p>
-	<p><?php _e( 'Please either resolve this problem, or choose a different template for this slide group.', 'total_slider' ); ?></p>
+	<h3><?php _e( 'There is a problem with this slide group&rsquo;s template.', 'total-slider' ); ?></h3>
+	<p><?php echo esc_html( $TS_Total_Slider->tpl_error->getMessage() ); ?> <em><?php printf( __( '(error code %d)', 'total-slider' ), intval( $TS_Total_Slider->tpl_error->getCode() ) ); ?></em></p>
+	<p><?php _e( 'Please either resolve this problem, or choose a different template for this slide group.', 'total-slider' ); ?></p>
 	</div>
 <?php endif; ?>
 

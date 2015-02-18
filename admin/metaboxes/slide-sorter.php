@@ -64,8 +64,8 @@ if ( is_array( $current_slides ) && count( $current_slides ) > 0 ) {
 			<div class="slidesort_slidebox" style="background: url(<?php echo esc_url( $background_url );?>)">
 				<div id="slidesort_<?php echo $my_id;?>_text" class="slidesort_text"><?php echo stripslashes( esc_html( $slide['title'] ) );?></div>
 
-				<a id="slidesort_<?php echo $my_id;?>_move_button" class="slidesort-icon slide-move-button" href="#"><?php _e( 'Move', 'total_slider' );?></a>
-				<span id="slidesort_<?php echo $my_id;?>_delete" class="slide-delete"><a id="slidesort_<?php echo $my_id;?>_delete_button" class="slidesort-icon slide-delete-button" href="#"><?php _e( 'Delete', 'total_slider' );?></a></span>
+				<a id="slidesort_<?php echo $my_id;?>_move_button" class="slidesort-icon slide-move-button" href="#"><?php _e( 'Move', 'total-slider' );?></a>
+				<span id="slidesort_<?php echo $my_id;?>_delete" class="slide-delete"><a id="slidesort_<?php echo $my_id;?>_delete_button" class="slidesort-icon slide-delete-button" href="#"><?php _e( 'Delete', 'total-slider' );?></a></span>
 			</div>
 
 		</li>
@@ -80,7 +80,7 @@ if ( is_array( $current_slides ) && count( $current_slides ) > 0 ) {
 </ul>
 
 <div class="slidesort-add-hint"<?php if ( is_array( $current_slides ) && count( $current_slides ) > 0) echo ' style="display:none"'; ?>>
-<?php _e('Click &lsquo;Add New&rsquo; to create a Slide.', 'total_slider');?></div>
+<?php _e('Click &lsquo;Add New&rsquo; to create a Slide.', 'total-slider');?></div>
 
 </div>
 

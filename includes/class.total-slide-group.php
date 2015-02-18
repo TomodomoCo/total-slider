@@ -379,7 +379,7 @@ class Total_Slide_Group {
 		}
 
 		if ( !in_array( $status, Total_Slider::$allowed_post_statuses ) ) {
-			throw new UnexpectedValueException( sprintf( __( 'The slide cannot be created with the \'%s\' status, as this is not supported by %s.', 'total_slider' ), esc_html( $status ), 'Total Slider' ) );
+			throw new UnexpectedValueException( sprintf( __( 'The slide cannot be created with the \'%s\' status, as this is not supported by %s.', 'total-slider' ), esc_html( $status ), 'Total Slider' ) );
 			return false;
 		}
 
@@ -748,21 +748,21 @@ class Total_Slide_Group {
 		}
 		catch ( Exception $e ) {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				printf( __( 'Unable to render the slide mini-preview: %s (error code %d)', 'total_slider' ), $e->getMessage(), $e->getCode() );
+				printf( __( 'Unable to render the slide mini-preview: %s (error code %d)', 'total-slider' ), $e->getMessage(), $e->getCode() );
 			}
 			return false;
 		}		
 		
 		$template_options = $t->determine_options();
 		
-		?><p><strong><?php _e( 'Template:', 'total_slider' );?></strong> <?php echo esc_html( $t->name() ); ?></p><?php
+		?><p><strong><?php _e( 'Template:', 'total-slider' );?></strong> <?php echo esc_html( $t->name() ); ?></p><?php
 		
 		
 		$current_slides = get_option( 'total_slider_slides_' . $this->slug );
 		
 		if (false === $current_slides || !is_array( $current_slides ) || count( $current_slides ) < 0)
 		{
-			?><p><?php _e( 'There are no slides to show.', 'total_slider' );?></p><?php
+			?><p><?php _e( 'There are no slides to show.', 'total-slider' );?></p><?php
 			return true;
 		}
 		

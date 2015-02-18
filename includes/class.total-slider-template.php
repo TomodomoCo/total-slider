@@ -243,7 +243,7 @@ class Total_Slider_Template {
 	public function __construct( $slug, $location ) {
 
 		if ( ! is_array(Total_Slider::$allowed_template_locations ) ) {
-			throw new UnexpectedValueException( __( 'The allowed template locations are not available. This file must not be loaded without class.total-slide-group.php', 'total_slider' ), 103 );
+			throw new UnexpectedValueException( __( 'The allowed template locations are not available. This file must not be loaded without class.total-slide-group.php', 'total-slider' ), 103 );
 			return;
 		}
 	
@@ -254,7 +254,7 @@ class Total_Slider_Template {
 			$this->location = $location;
 		}
 		else {
-			throw new UnexpectedValueException( __( 'The supplied template location is not one of the allowed template locations', 'total_slider' ), 101 );
+			throw new UnexpectedValueException( __( 'The supplied template location is not one of the allowed template locations', 'total-slider' ), 101 );
 			return;
 		}
 		
@@ -346,7 +346,7 @@ class Total_Slider_Template {
 				// if a file was missing, then bubble up a relevant exception
 				if ( ! empty( $missing_file ) )	{
 					throw new RuntimeException(
-						sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider' ), $missing_file, $expected_location )
+						sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total-slider' ), $missing_file, $expected_location )
 					, 201 );
 					return false;
 				}
@@ -453,7 +453,7 @@ class Total_Slider_Template {
 				// if a file was missing, then bubble up a relevant exception
 				if ( ! empty( $missing_file ) ) {
 					throw new RuntimeException(
-						sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider'), $missing_file, $expected_location)
+						sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total-slider'), $missing_file, $expected_location)
 					, 201 );
 					return false;
 				}
@@ -467,7 +467,7 @@ class Total_Slider_Template {
 				//NOTE: in the conspicious absence of a `content_path()` function, we must use the WP_CONTENT_DIR constant
 				
 				if ( ! defined( 'WP_CONTENT_DIR' ) ) {
-					throw new UnexpectedValueException(__('Unable to determine the WP_CONTENT_DIR, so cannot load this template.', 'total_slider'), 102);
+					throw new UnexpectedValueException(__('Unable to determine the WP_CONTENT_DIR, so cannot load this template.', 'total-slider'), 102);
 					return false;					
 				}
 				
@@ -521,7 +521,7 @@ class Total_Slider_Template {
 				// if a file was missing, then bubble up a relevant exception
 				if ( ! empty( $missing_file ) )	{
 					throw new RuntimeException(
-						sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider' ), $missing_file, $expected_location )
+						sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total-slider' ), $missing_file, $expected_location )
 					, 201 );
 					return false;
 				}			
@@ -579,7 +579,7 @@ class Total_Slider_Template {
 				// if a file was missing, then bubble up a relevant exception
 				if ( ! empty( $missing_file ) )	{
 					throw new RuntimeException(
-						sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider'), $missing_file, $expected_location)
+						sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total-slider'), $missing_file, $expected_location)
 					, 201 );
 					return false;
 				}					
@@ -587,7 +587,7 @@ class Total_Slider_Template {
 			break;
 			
 			default:
-				throw new UnexpectedValueException( __( 'The supplied template location is not one of the allowed template locations', 'total_slider' ), 101 );
+				throw new UnexpectedValueException( __( 'The supplied template location is not one of the allowed template locations', 'total-slider' ), 101 );
 				return false;				
 			break;
 			
@@ -619,7 +619,7 @@ class Total_Slider_Template {
 		if ( ! @ file_exists($this->php_path ) )
 		{
 			throw new RuntimeException(
-				sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total_slider' ), 'PHP', $this->php_path )
+				sprintf( __( "The template's %s file was not found, but we expected to find it at '%s'.", 'total-slider' ), 'PHP', $this->php_path )
 			, 201 );
 			return false;
 		}
@@ -841,7 +841,7 @@ class Total_Slider_Template {
 		}
 		else {
 			if ( $this->location == 'legacy' ) {
-				return __( 'v1.0 Custom Template', 'total_slider' );
+				return __( 'v1.0 Custom Template', 'total-slider' );
 			}
 			else {
 				return $this->slug;
@@ -1482,13 +1482,13 @@ class Total_Slider_Template_Iterator {
 	public function discover_templates($location, $should_parse_name = true) {
 		
 		if ( ! is_array( Total_Slider::$allowed_template_locations ) ) {
-			throw new UnexpectedValueException( __( 'The allowed template locations are not available. This file must not be loaded without class.total-slide-group.php', 'total_slider' ), 103 );
+			throw new UnexpectedValueException( __( 'The allowed template locations are not available. This file must not be loaded without class.total-slide-group.php', 'total-slider' ), 103 );
 			return false;
 		}
 		
 		// check the location given is valid	
 		if ( ! in_array( $location, Total_Slider::$allowed_template_locations ) ) {
-			throw new UnexpectedValueException( __( 'The supplied template location is not one of the allowed template locations', 'total_slider' ), 101 );
+			throw new UnexpectedValueException( __( 'The supplied template location is not one of the allowed template locations', 'total-slider' ), 101 );
 			return false;
 		}
 		
@@ -1512,7 +1512,7 @@ class Total_Slider_Template_Iterator {
 			
 			case 'downloaded':
 				if ( ! defined('WP_CONTENT_DIR') ) {
-					throw new UnexpectedValueException(__( 'Unable to determine the WP_CONTENT_DIR, so cannot find relevant templates.', 'total_slider' ), 102 );
+					throw new UnexpectedValueException(__( 'Unable to determine the WP_CONTENT_DIR, so cannot find relevant templates.', 'total-slider' ), 102 );
 					return false;					
 				}
 				
@@ -1540,7 +1540,7 @@ class Total_Slider_Template_Iterator {
 					
 					if ( 'total-slider-template.php' == $f ) {
 						$templates[$i]['slug'] = Total_Slider_Template::sanitize_slug(basename($f));
-						$templates[$i]['name'] = __( 'v1.0 Custom Template', 'total_slider' );
+						$templates[$i]['name'] = __( 'v1.0 Custom Template', 'total-slider' );
 						return $templates;
 					}
 				}

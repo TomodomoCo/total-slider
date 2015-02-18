@@ -308,7 +308,7 @@ class Total_Slider {
 	 */
 	private function load_text_domain() {
 
-		load_plugin_textdomain( 'total_slider', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		load_plugin_textdomain( 'total-slider', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 	}
 
@@ -320,17 +320,17 @@ class Total_Slider {
 	private function register_cpt() {
 
 		$labels = array(
-			'name'              => _x( 'Groups', 'taxonomy general name', 'total_slider' ),
-			'singular_name'     => _x( 'Group', 'taxonomy singular name', 'total_slider' ),
-			'search_items'      => __( 'Search Groups', 'total_slider' ),
-			'all_items'         => __( 'All Groups', 'total_slider' ),
-			'parent_item'       => __( 'Parent Group', 'total_slider' ),
-			'parent_item_colon' => __( 'Parent Group:', 'total_slider' ),
-			'edit_item'         => __( 'Edit Group', 'total_slider' ),
-			'update_item'       => __( 'Update Group', 'total_slider' ),
-			'add_new_item'      => __( 'Add New Group', 'total_slider' ),
-			'new_item_name'     => __( 'New Group Name', 'total_slider' ),
-			'menu_name'         => __( 'Group', 'total_slider' ),
+			'name'              => _x( 'Groups', 'taxonomy general name', 'total-slider' ),
+			'singular_name'     => _x( 'Group', 'taxonomy singular name', 'total-slider' ),
+			'search_items'      => __( 'Search Groups', 'total-slider' ),
+			'all_items'         => __( 'All Groups', 'total-slider' ),
+			'parent_item'       => __( 'Parent Group', 'total-slider' ),
+			'parent_item_colon' => __( 'Parent Group:', 'total-slider' ),
+			'edit_item'         => __( 'Edit Group', 'total-slider' ),
+			'update_item'       => __( 'Update Group', 'total-slider' ),
+			'add_new_item'      => __( 'Add New Group', 'total-slider' ),
+			'new_item_name'     => __( 'New Group Name', 'total-slider' ),
+			'menu_name'         => __( 'Group', 'total-slider' ),
 		);
 
 		$args = array(
@@ -347,20 +347,20 @@ class Total_Slider {
 
 		$labels = array(
 
-			'name'               => _x( 'Slides', 'post type general name', 'total_slider' ),
-			'singular_name'      => _x( 'Slide', 'post type singular name', 'total_slider' ),
-			'menu_name'          => _x( 'Slides', 'admin menu', 'total_slider' ),
-			'name_admin_bar'     => _x( 'Slide', 'add new on admin bar', 'total_slider' ),
-			'add_new'            => _x( 'Add New', 'book', 'total_slider' ),
-			'add_new_item'       => __( 'Add New Slide', 'total_slider' ),
-			'new_item'           => __( 'New Slide', 'total_slider' ),
-			'edit_item'          => __( 'Edit Slide', 'total_slider' ),
-			'view_item'          => __( 'View Slide', 'total_slider' ),
-			'all_items'          => __( 'All Slides', 'total_slider' ),
-			'search_items'       => __( 'Search Slides', 'total_slider' ),
-			'parent_item_colon'  => __( 'Parent Slides:', 'total_slider' ),
-			'not_found'          => __( 'No slides found.', 'total_slider' ),
-			'not_found_in_trash' => __( 'No slides found in Trash.', 'total_slider' )
+			'name'               => _x( 'Slides', 'post type general name', 'total-slider' ),
+			'singular_name'      => _x( 'Slide', 'post type singular name', 'total-slider' ),
+			'menu_name'          => _x( 'Slides', 'admin menu', 'total-slider' ),
+			'name_admin_bar'     => _x( 'Slide', 'add new on admin bar', 'total-slider' ),
+			'add_new'            => _x( 'Add New', 'book', 'total-slider' ),
+			'add_new_item'       => __( 'Add New Slide', 'total-slider' ),
+			'new_item'           => __( 'New Slide', 'total-slider' ),
+			'edit_item'          => __( 'Edit Slide', 'total-slider' ),
+			'view_item'          => __( 'View Slide', 'total-slider' ),
+			'all_items'          => __( 'All Slides', 'total-slider' ),
+			'search_items'       => __( 'Search Slides', 'total-slider' ),
+			'parent_item_colon'  => __( 'Parent Slides:', 'total-slider' ),
+			'not_found'          => __( 'No slides found.', 'total-slider' ),
+			'not_found_in_trash' => __( 'No slides found in Trash.', 'total-slider' )
 
 		);
 
@@ -448,7 +448,7 @@ class Total_Slider {
 		// erm, just a little bit of an ugly hack :(
 
 		?><script type="text/javascript">window.location.replace('<?php echo $url; ?>');</script>
-		<noscript><h1><a href="<?php echo esc_url($url); ?>"><?php _e( 'Please visit this page to continue', 'total_slider' ); ?></a></h1></noscript><?php
+		<noscript><h1><a href="<?php echo esc_url($url); ?>"><?php _e( 'Please visit this page to continue', 'total-slider' ); ?></a></h1></noscript><?php
 		die();
 
 	}
@@ -563,13 +563,13 @@ class Total_Slider {
 		
 		// require a slide group
 		if ( empty($group) ) {
-			return __( '<strong>Total Slider:</strong> No slide group selected to show.', 'total_slider' );
+			return __( '<strong>Total Slider:</strong> No slide group selected to show.', 'total-slider' );
 		}
 		
 		// require a valid slide group
 		if ( ! get_option( 'total_slider_slides_' . Total_Slider::sanitize_slide_group_slug( $group ) ) )
 		{
-			return __( '<strong>Total Slider:</strong> Could not find the selected slide group to show. Does it still exist?', 'total_slider' );
+			return __( '<strong>Total Slider:</strong> Could not find the selected slide group to show. Does it still exist?', 'total-slider' );
 		}
 		
 		ob_start();
@@ -704,8 +704,8 @@ class Total_Slider {
 		/* Top-level menu page */
 		add_menu_page(
 
-			__( 'Slider', 'total_slider' ),									/* title of options page */
-			__( 'Slider', 'total_slider' ),									/* title of options menu item */
+			__( 'Slider', 'total-slider' ),									/* title of options page */
+			__( 'Slider', 'total-slider' ),									/* title of options menu item */
 			TOTAL_SLIDER_REQUIRED_CAPABILITY,								/* permissions level */
 			'total-slider',													/* menu slug */
 			array( $this, 'print_slide_groups_page' ),				/* callback to print the page to output */
@@ -717,8 +717,8 @@ class Total_Slider {
 		$submenu = add_submenu_page(
 
 			'total-slider',										/* parent slug */
-			__( 'Slide Groups', 'total_slider' ),				/* title of page */
-			__( 'Slide Groups', 'total_slider' ),				/* title to use in menu */
+			__( 'Slide Groups', 'total-slider' ),				/* title of page */
+			__( 'Slide Groups', 'total-slider' ),				/* title to use in menu */
 			TOTAL_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
 			'total-slider',										/* menu slug */
 			array( $this, 'print_slide_groups_page' )	/* callback to print the page to output */
@@ -729,8 +729,8 @@ class Total_Slider {
 		add_submenu_page(
 
 			'total-slider',										/* parent slug */
-			__( 'Settings', 'total_slider' ),					/* title of page */
-			__( 'Settings', 'total_slider' ),					/* title to use in menu */
+			__( 'Settings', 'total-slider' ),					/* title of page */
+			__( 'Settings', 'total-slider' ),					/* title to use in menu */
 			TOTAL_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
 			'total-slider-settings',							/* menu slug */
 			array($this, 'print_settings_page')		/* callback to print the page to output */
@@ -861,39 +861,39 @@ class Total_Slider {
 	{
 		return array (
 
-			'switchEditWouldLoseChanges'	=> __( "You are still editing the current slide. Switching to a different slide will lose your changes.\n\nDo you want to lose your changes?", 'total_slider' ),
-			'leavePageWouldLoseChanges'		=> __( 'You are still editing the current slide. Leaving this page will lose your changes.', 'total_slider' ),
+			'switchEditWouldLoseChanges'	=> __( "You are still editing the current slide. Switching to a different slide will lose your changes.\n\nDo you want to lose your changes?", 'total-slider' ),
+			'leavePageWouldLoseChanges'		=> __( 'You are still editing the current slide. Leaving this page will lose your changes.', 'total-slider' ),
 				/* note:
 					This message may or may not be shown. This is browser-dependent. All we can do in some cases is throw a generic
 					“don’t leave, you haven’t saved yet” confirm box, which is better than nothing.
 				*/
-			'wouldLoseUnsavedChanges'		=> __( "You will lose any unsaved changes.\n\nAre you sure you want to lose these changes?", 'total_slider' ),
-			'confirmDeleteOperation'		=> __( "Are you sure you want to delete this slide?\n\nThis action cannot be undone.", 'total_slider' ),
-			'validationErrorIntroduction'		=> __( "Please correct the following errors with the form.\n\n", 'total_slider' ),
-			'validationNoSlideTitle'		=> __( 'You must enter a slide title.', 'total_slider' ),
-			'validationNoSlideDescription'		=> __( 'You must enter a slide description.', 'total_slider' ),
-			'validationInvalidBackgroundURL'	=> __( 'The supplied background image URL is not a valid URL.', 'total_slider' ),
-			'validationInvalidLinkURL'		=> __( 'The supplied external link is not a valid URL.', 'total_slider' ),
-			'validationInvalidLinkID'		=> __( 'The supplied post ID for the slide link is not valid.', 'total_slider' ),
-			'validationInvalidPostStatus'           => __( 'The supplied post status for this slide is not valid.', 'total_slider' ),
-			'sortWillSaveSoon'			=> __( 'The new order will be saved when you save the new slide.', 'total_slider' ),
-			'unableToResortSlides'			=> __( 'Sorry, unable to resort the slides.', 'total_slider' ),
-			'newSlideTemplateUntitled'		=> __( 'untitled', 'total_slider' ),
-			'newSlideTemplateNoText'		=> __( '(no text)', 'total_slider' ),
-			'newSlideTemplateMove'			=> __( 'Move', 'total_slider' ),
-			'newSlideTemplateDelete'		=> __( 'Delete', 'total_slider' ),
-			'slideEditNoPostSelected'		=> __( 'No post selected.', 'total_slider' ),
-			'publishButtonValue'			=> __( 'Publish', 'total_slider' ),
-			'unableToGetSlide'			=> __( 'Sorry, unable to get that slide', 'total_slider' ),
-			'slideDraftSaved'			=> __( 'Draft saved.', 'total_slider' ),
-			'slidePublished'                        => __( 'Slide published.', 'total_slider' ),
-			'uploadSlideBgImage'			=> __( 'Upload slide background image', 'total_slider' ),
-			'unableToSaveSlide'			=> __( 'Sorry, unable to save the new slide.', 'total_slider' ),
-			'unableToDeleteSlideNoID'		=> __( 'Unable to delete -- could not get the slide ID for the current slide.', 'total_slider' ),
-			'unableToDeleteSlide'			=> __( 'Sorry, unable to delete the slide.', 'total_slider' ),
-			'templateChangeWouldLoseData'		=> __( "Changing the template affects all slides in this group.\n\nAny custom positions for the title and description will be lost. You should review your slides after the change.\n\nDo you want to change the template?", 'total_slider' ),
-			'mustFinishEditingFirst'		=> __( 'You must finish editing the slide before performing this action. Please either save your changes to the slide, or click Cancel.', 'total_slider' ),
-			'uploadSlideBgButtonText'		=> __( 'Use as background image', 'total_slider' ),
+			'wouldLoseUnsavedChanges'		=> __( "You will lose any unsaved changes.\n\nAre you sure you want to lose these changes?", 'total-slider' ),
+			'confirmDeleteOperation'		=> __( "Are you sure you want to delete this slide?\n\nThis action cannot be undone.", 'total-slider' ),
+			'validationErrorIntroduction'		=> __( "Please correct the following errors with the form.\n\n", 'total-slider' ),
+			'validationNoSlideTitle'		=> __( 'You must enter a slide title.', 'total-slider' ),
+			'validationNoSlideDescription'		=> __( 'You must enter a slide description.', 'total-slider' ),
+			'validationInvalidBackgroundURL'	=> __( 'The supplied background image URL is not a valid URL.', 'total-slider' ),
+			'validationInvalidLinkURL'		=> __( 'The supplied external link is not a valid URL.', 'total-slider' ),
+			'validationInvalidLinkID'		=> __( 'The supplied post ID for the slide link is not valid.', 'total-slider' ),
+			'validationInvalidPostStatus'           => __( 'The supplied post status for this slide is not valid.', 'total-slider' ),
+			'sortWillSaveSoon'			=> __( 'The new order will be saved when you save the new slide.', 'total-slider' ),
+			'unableToResortSlides'			=> __( 'Sorry, unable to resort the slides.', 'total-slider' ),
+			'newSlideTemplateUntitled'		=> __( 'untitled', 'total-slider' ),
+			'newSlideTemplateNoText'		=> __( '(no text)', 'total-slider' ),
+			'newSlideTemplateMove'			=> __( 'Move', 'total-slider' ),
+			'newSlideTemplateDelete'		=> __( 'Delete', 'total-slider' ),
+			'slideEditNoPostSelected'		=> __( 'No post selected.', 'total-slider' ),
+			'publishButtonValue'			=> __( 'Publish', 'total-slider' ),
+			'unableToGetSlide'			=> __( 'Sorry, unable to get that slide', 'total-slider' ),
+			'slideDraftSaved'			=> __( 'Draft saved.', 'total-slider' ),
+			'slidePublished'                        => __( 'Slide published.', 'total-slider' ),
+			'uploadSlideBgImage'			=> __( 'Upload slide background image', 'total-slider' ),
+			'unableToSaveSlide'			=> __( 'Sorry, unable to save the new slide.', 'total-slider' ),
+			'unableToDeleteSlideNoID'		=> __( 'Unable to delete -- could not get the slide ID for the current slide.', 'total-slider' ),
+			'unableToDeleteSlide'			=> __( 'Sorry, unable to delete the slide.', 'total-slider' ),
+			'templateChangeWouldLoseData'		=> __( "Changing the template affects all slides in this group.\n\nAny custom positions for the title and description will be lost. You should review your slides after the change.\n\nDo you want to change the template?", 'total-slider' ),
+			'mustFinishEditingFirst'		=> __( 'You must finish editing the slide before performing this action. Please either save your changes to the slide, or click Cancel.', 'total-slider' ),
+			'uploadSlideBgButtonText'		=> __( 'Use as background image', 'total-slider' ),
 			
 		);
 
@@ -1065,7 +1065,7 @@ class Total_Slider {
 					
 					<?php $builtin = $t->discover_templates( 'builtin' ); ?>
 					<?php if ( is_array( $builtin ) && count( $builtin ) > 0 ): ?>
-					<optgroup label="<?php _e( 'Built-in', 'total_slider' ); ?>">
+					<optgroup label="<?php _e( 'Built-in', 'total-slider' ); ?>">
 						<?php foreach( $builtin as $tpl ): ?>
 
 							<option
@@ -1081,7 +1081,7 @@ class Total_Slider {
 					
 					<?php $theme = $t->discover_templates( 'theme' ); ?>
 					<?php if ( is_array( $theme ) && count( $theme ) > 0 ): ?>
-					<optgroup label="<?php _e( 'Theme', 'total_slider' ); ?>">
+					<optgroup label="<?php _e( 'Theme', 'total-slider' ); ?>">
 						<?php foreach( $theme as $tpl ): ?>
 							<option
 								value="<?php echo esc_attr( $tpl['slug'] ); ?>"
@@ -1096,7 +1096,7 @@ class Total_Slider {
 					
 					<?php $legacy = $t->discover_templates( 'legacy', false ); ?>
 					<?php if ( is_array( $legacy ) && count( $legacy ) > 0 ): ?>
-					<optgroup label="<?php _e( 'v1.0 Templates', 'total_slider' ); ?>">
+					<optgroup label="<?php _e( 'v1.0 Templates', 'total-slider' ); ?>">
 						<?php foreach( $legacy as $tpl ): ?>
 							<option
 							value="<?php echo esc_attr( $tpl['slug'] ); ?>"
@@ -1111,7 +1111,7 @@ class Total_Slider {
 					<?php //$downloaded = $t->discover_templates('downloaded'); ?>
 					<?php $downloaded = false; ?>
 					<?php if ( is_array( $downloaded ) && count( $downloaded ) > 0 ): ?>
-					<!--<optgroup label="<?php _e( 'Downloaded', 'total_slider' );?>">
+					<!--<optgroup label="<?php _e( 'Downloaded', 'total-slider' );?>">
 						<?php foreach( $downloaded as $tpl ): ?>
 							<option
 								value="<?php echo esc_attr( $tpl['slug'] ); ?>"
@@ -1125,7 +1125,7 @@ class Total_Slider {
 					<?php endif; ?>
 													
 				</select>
-			<input id="template-switch-button" type="submit" class="button-secondary action" style="margin-top:8px; max-width:180px;" value="<?php _e( 'Change Template', 'total_slider' );?>" />
+			<input id="template-switch-button" type="submit" class="button-secondary action" style="margin-top:8px; max-width:180px;" value="<?php _e( 'Change Template', 'total-slider' );?>" />
 			</p>
 		</div><?php	
 		
