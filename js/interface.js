@@ -977,7 +977,11 @@ jQuery(document).ready(function($) {
 			}
 			// only save if the last change was more recent than the last successful auto-save
 			// and if the title or description have some text
-			if ( lastChange > lastAutoSave && (! ( $('#edit-slide-title').val().length < 1 && $('#edit-slide-description').val().length < 1 ) ) {
+			if ( lastChange > lastAutoSave &&
+				(!
+				 ( $('#edit-slide-title').val().length < 1 && $('#edit-slide-description').val().length < 1 )
+				)
+			) {
 				if ( ! $('#' + editingSlideSortButton ).hasClass( 'slidesort-publish' ) ) {
 					$().saveAutoDraft(null);
 				}
