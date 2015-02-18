@@ -297,6 +297,7 @@ class Total_Slider {
 	public function initialize() {
 		$this->load_text_domain();
 		$this->register_cpt();
+		$this->upgrade(); // upgrade wasn't otherwise being called soon enough, leaving possible blank slides during DF upgrade!
 
 	}
 
