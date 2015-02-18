@@ -178,76 +178,78 @@ switch ( $_GET['action'] )
 			
 			A blank string should never get here, though, because of the casting
 			to int above. A blank string will be cast to decimal 0, which is OK.
-		*/
-		if ( empty($_POST['title'] ) || 
-			(
-				empty($_POST['title_pos_x']) && !is_numeric($_POST['title_pos_x'])
-			)
-			|| 
-			(
-				empty($_POST['title_pos_y']) && !is_numeric($_POST['title_pos_y'])
-			)
-		) {
-			header( 'HTTP/1.0 400 Bad Request' );
-			header( 'Content-Type: application/json' );
-			echo json_encode(
-				array(
-					'error' => __('You have not supplied all of the required data.', 'total_slider')
+		 */
+		if ( 'publish' == $_POST['post_status'] ) {
+			if ( empty($_POST['title'] ) || 
+				(
+					empty($_POST['title_pos_x']) && !is_numeric($_POST['title_pos_x'])
 				)
-			);
-			die();			
-		}
-		
-		if ( ! empty( $_POST['background'] ) ) {
-			if (is_numeric($_POST['background'])) {
-				if ( (int) $_POST['background'] != $_POST['background'] ) {
-					header( 'HTTP/1.0 400 Bad Request' );
-					header( 'Content-Type: application/json' );
-					echo json_encode(
-						array(
-							'error' => __('Invalid attachment ID for the specified background.', 'total_slider')
-						)
-					);
-					die();	
-				}
-			}
-			else if ( ! $g->validate_url( $_POST['background'] ) ) {
+				|| 
+				(
+					empty($_POST['title_pos_y']) && !is_numeric($_POST['title_pos_y'])
+				)
+			) {
 				header( 'HTTP/1.0 400 Bad Request' );
 				header( 'Content-Type: application/json' );
 				echo json_encode(
 					array(
-						'error' => __('Invalid URL format for the specified background URL.', 'total_slider')
+						'error' => __('You have not supplied all of the required data.', 'total_slider')
 					)
 				);
 				die();			
-			}	
-		}
-		
-		if ( ! empty($_POST['link'] ) ) {
-			if ( is_numeric( $_POST['link'] ) ) {
-				$_POST['link'] = (int) $_POST['link'];
-				
-				if ( $_POST['link'] < 1 ) {
-					header( 'HTTP/1.0 400 Bad Request' );
-					header( 'Content-Type: application/json' );
-					echo json_encode(
-						array(
-							'error' => __('The post ID for the specified slide link is not valid.', 'total_slider')
-						)
-					);
-					die();					
-				}
 			}
-			else {
-				if ( ! $g->validate_url( $_POST['link'] ) ) {
+
+			if ( ! empty( $_POST['background'] ) ) {
+				if (is_numeric($_POST['background'])) {
+					if ( (int) $_POST['background'] != $_POST['background'] ) {
+						header( 'HTTP/1.0 400 Bad Request' );
+						header( 'Content-Type: application/json' );
+						echo json_encode(
+							array(
+								'error' => __('Invalid attachment ID for the specified background.', 'total_slider')
+							)
+						);
+						die();	
+					}
+				}
+				else if ( ! $g->validate_url( $_POST['background'] ) ) {
 					header( 'HTTP/1.0 400 Bad Request' );
 					header( 'Content-Type: application/json' );
 					echo json_encode(
 						array(
-							'error' => __('Invalid URL format for the specified link URL.', 'total_slider')
+							'error' => __('Invalid URL format for the specified background URL.', 'total_slider')
 						)
 					);
-					die();	
+					die();			
+				}	
+			}
+
+			if ( ! empty($_POST['link'] ) ) {
+				if ( is_numeric( $_POST['link'] ) ) {
+					$_POST['link'] = (int) $_POST['link'];
+
+					if ( $_POST['link'] < 1 ) {
+						header( 'HTTP/1.0 400 Bad Request' );
+						header( 'Content-Type: application/json' );
+						echo json_encode(
+							array(
+								'error' => __('The post ID for the specified slide link is not valid.', 'total_slider')
+							)
+						);
+						die();					
+					}
+				}
+				else {
+					if ( ! $g->validate_url( $_POST['link'] ) ) {
+						header( 'HTTP/1.0 400 Bad Request' );
+						header( 'Content-Type: application/json' );
+						echo json_encode(
+							array(
+								'error' => __('Invalid URL format for the specified link URL.', 'total_slider')
+							)
+						);
+						die();	
+					}
 				}
 			}
 		}
@@ -391,6 +393,7 @@ switch ( $_GET['action'] )
 		
 		// we need the slide ID
 		$_POST['id'] = preg_replace( '[^0-9a-zA-Z_]', '', $_POST['id'] );
+		//TODO now numeric for sure
 		
 		if ( empty( $_POST['id'] ) ) {
 			header( 'HTTP/1.0 400 Bad Request' );
@@ -418,76 +421,78 @@ switch ( $_GET['action'] )
 			A blank string should never get here, though, because of the casting
 			to int above. A blank string will be cast to decimal 0, which is OK.
 		*/
-		if ( empty( $_POST['title'] ) || 
-			(
-				empty( $_POST['title_pos_x'] ) &&  ! is_numeric( $_POST['title_pos_x'] )
-			)
-			|| 
-			(
-				empty( $_POST['title_pos_y'] ) &&  ! is_numeric( $_POST['title_pos_y'] )
-			)
-		)
-		{
-			header( 'HTTP/1.0 400 Bad Request' );
-			header( 'Content-Type: application/json' );
-			echo json_encode(
-				array(
-					'error' => __('You have not supplied all of the required data.', 'total_slider')
+		if ( 'publish' == $_POST['post_status'] ) {
+			if ( empty( $_POST['title'] ) || 
+				(
+					empty( $_POST['title_pos_x'] ) &&  ! is_numeric( $_POST['title_pos_x'] )
 				)
-			);
-			die();			
-		}
-		
-		if ( ! empty($_POST['background'] ) ) {
-			if ( is_numeric($_POST['background'] ) ) {
-				if ( (int) $_POST['background'] != $_POST['background'] ) {
-					header( 'HTTP/1.0 400 Bad Request' );
-					header( 'Content-Type: application/json' );
-					echo json_encode(
-						array(
-							'error' => __('Invalid attachment ID for the specified background.', 'total_slider')
-						)
-					);
-					die();	
-				}
-			}
-			else if (!$g->validate_url( $_POST['background'] ) ) {
+				|| 
+				(
+					empty( $_POST['title_pos_y'] ) &&  ! is_numeric( $_POST['title_pos_y'] )
+				)
+			)
+			{
 				header( 'HTTP/1.0 400 Bad Request' );
 				header( 'Content-Type: application/json' );
 				echo json_encode(
 					array(
-						'error' => __('Invalid URL format for the specified background URL.', 'total_slider')
+						'error' => __('You have not supplied all of the required data.', 'total_slider')
 					)
 				);
 				die();			
-			}	
-		}
-		
-		if ( ! empty($_POST['link'] ) ) {
-			if ( is_numeric($_POST['link'] ) ) {
-				$_POST['link'] = (int) $_POST['link'];
-				
-				if ( $_POST['link'] < 1 ) {
-					header( 'HTTP/1.0 400 Bad Request' );
-					header( 'Content-Type: application/json' );
-					echo json_encode(
-						array(
-							'error' => __('The post ID for the specified slide link is not valid.', 'total_slider')
-						)
-					);
-					die();					
-				}
 			}
-			else {
-				if ( ! $g->validate_url( $_POST['link'] ) ) {
+
+			if ( ! empty($_POST['background'] ) ) {
+				if ( is_numeric($_POST['background'] ) ) {
+					if ( (int) $_POST['background'] != $_POST['background'] ) {
+						header( 'HTTP/1.0 400 Bad Request' );
+						header( 'Content-Type: application/json' );
+						echo json_encode(
+							array(
+								'error' => __('Invalid attachment ID for the specified background.', 'total_slider')
+							)
+						);
+						die();	
+					}
+				}
+				else if (!$g->validate_url( $_POST['background'] ) ) {
 					header( 'HTTP/1.0 400 Bad Request' );
 					header( 'Content-Type: application/json' );
 					echo json_encode(
 						array(
-							'error' => __('Invalid URL format for the specified link URL.', 'total_slider')
+							'error' => __('Invalid URL format for the specified background URL.', 'total_slider')
 						)
 					);
-					die();	
+					die();			
+				}	
+			}
+
+			if ( ! empty($_POST['link'] ) ) {
+				if ( is_numeric($_POST['link'] ) ) {
+					$_POST['link'] = (int) $_POST['link'];
+
+					if ( $_POST['link'] < 1 ) {
+						header( 'HTTP/1.0 400 Bad Request' );
+						header( 'Content-Type: application/json' );
+						echo json_encode(
+							array(
+								'error' => __('The post ID for the specified slide link is not valid.', 'total_slider')
+							)
+						);
+						die();					
+					}
+				}
+				else {
+					if ( ! $g->validate_url( $_POST['link'] ) ) {
+						header( 'HTTP/1.0 400 Bad Request' );
+						header( 'Content-Type: application/json' );
+						echo json_encode(
+							array(
+								'error' => __('Invalid URL format for the specified link URL.', 'total_slider')
+							)
+						);
+						die();	
+					}
 				}
 			}
 		}

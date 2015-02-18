@@ -958,7 +958,11 @@ jQuery(document).ready(function($) {
 				lastAutoSave = Date.now();
 			},
 			error: function(jqXHR, textStatus, errorThrown, caller) {
-				alert(textStatus);
+				
+				if ( typeof console != 'undefined' ) {
+					console.log( 'Total Slider: Auto-save of draft failed -- error thrown was \'' + errorThrown  + '\''); 
+				}
+
 				$('#edit-slide-publish-status').val(autoSaveExistingStatus);
 				$('#edit-controls-saving').hide();
 			}
