@@ -47,7 +47,7 @@ class Total_Slider_Ajax_Interface_Tools {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			ob_start();
 
-			var_dump( $result );
+			var_dump( $error_obj );
 			$dump = ob_get_contents();
 
 			ob_end_clean();

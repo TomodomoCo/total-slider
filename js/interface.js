@@ -940,6 +940,7 @@ jQuery(document).ready(function($) {
 				}
 
 				isEditingUntitledSlide = false;
+				editingSlideSortButton = 'slidesort_' + result.new_id;
 				$('#edit-slide-publish-status').val(autoSaveExistingStatus);
 				$('#edit-controls-saving').hide();
 				lastAutoSave = Date.now();
@@ -974,7 +975,9 @@ jQuery(document).ready(function($) {
 			if ( typeof console != 'undefined' ) {
 				console.log( "Total Slider: Triggering auto-save after 30 seconds." );	
 			}
-			if ( lastChange > lastAutoSave ) {
+			// only save if the last change was more recent than the last successful auto-save
+			// and if the title or description have some text
+			if ( lastChange > lastAutoSave && (! ( $('#edit-slide-title').val().length < 1 && $('#edit-slide-description').val().length < 1 ) ) {
 				if ( ! $('#' + editingSlideSortButton ).hasClass( 'slidesort-publish' ) ) {
 					$().saveAutoDraft(null);
 				}
@@ -986,7 +989,7 @@ jQuery(document).ready(function($) {
 			}
 			else {
 				if ( typeof console != 'undefined' ) {
-					console.log( "Total Slider: Aborting auto-save, as no changes since last auto-save." );
+					console.log( "Total Slider: Aborting auto-save, as no changes since last auto-save, or slide still has blank title and description." );
 				}
 			}
 		}	    	    

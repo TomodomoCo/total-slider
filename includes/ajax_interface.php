@@ -267,11 +267,17 @@ switch ( $_GET['action'] )
 		
 		$_POST['title'] = stripslashes( $_POST['title'] );
 		$_POST['description'] = stripslashes( $_POST['description'] );
+
+		// WP will not do any work if content, title and excerpt are all empty. We need to handle this and not actually do a save in this instance
+		if ( empty( $_POST['title'] ) && empty( $_POST['description'] ) ) {
+			$tools->maybe_dump_wp_error( sprintf( __('%s will not attempt a draft save if the title and description are both empty.', 'total_slider' ), 'Total Slider' ) );
+			die();
+		}
 		
 		// do the work
 		$result = $g->new_slide( $_POST['title'], $_POST['description'], $_POST['background'], $_POST['link'], $_POST['title_pos_x'], $_POST['title_pos_y'], $_POST['post_status'] );
 		
-		if ( intval( $result ) == $result ) {
+		if ( is_int( $result ) ) {
 			header( 'Content-Type: application/json' );
 			echo json_encode(
 				array(
