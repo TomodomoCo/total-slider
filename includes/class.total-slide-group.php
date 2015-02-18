@@ -251,12 +251,12 @@ class Total_Slide_Group {
 				else {
 					// post or page ID
 					$slides[$n]['link'] = get_permalink( $link );
-					$slp = (int) $slide[$n]['link'];
+					$slp = (int) $slides[$n]['link'];
 
 					$link_post = get_post($slp);
 					if ($link_post)
 					{
-						$slide[$n]['link_post_title'] = $link_post->post_title;
+						$slides[$n]['link_post_title'] = $link_post->post_title;
 					}
 				}
 
