@@ -58,6 +58,8 @@ if ( is_array( $legacy_slide_groups ) && count( $legacy_slide_groups ) > 0 ) {
 			$new_group->templateLocation = $legacy_group->templateLocation;
 			$new_group->save();
 
+			$new_slide_ids = array();
+
 			if ( is_array( $legacy_slides ) && count( $legacy_slides ) > 0 ) {
 				foreach( $legacy_slides as $legacy_slide ) {
 					$title = $legacy_slide['title'];
@@ -67,9 +69,12 @@ if ( is_array( $legacy_slide_groups ) && count( $legacy_slide_groups ) > 0 ) {
 					$title_pos_x = $legacy_slide['title_pos_x'];
 					$title_pos_y = $legacy_slide['title_pos_y'];
 
-					$new_group->new_slide( $title, $description, $background, $link, $title_pos_x, $title_pos_y, 'publish' );	
+					$new_slide_ids[] = $new_group->new_slide( $title, $description, $background, $link, $title_pos_x, $title_pos_y, 'publish' );	
 				}
 			}
+
+			// fix ordering by doing a reshuffle with the new array of slide ids returned
+			$new_group->reshuffle( $new_slide_ids );
 		}
 	}
 }
