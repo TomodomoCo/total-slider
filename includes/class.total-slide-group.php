@@ -251,6 +251,13 @@ class Total_Slide_Group {
 				else {
 					// post or page ID
 					$slides[$n]['link'] = get_permalink( $link );
+					$slp = (int) $slide[$n]['link'];
+
+					$link_post = get_post($slp);
+					if ($link_post)
+					{
+						$slide[$n]['link_post_title'] = $link_post->post_title;
+					}
 				}
 
 				$slides[$n]['title_pos_x'] = get_post_meta( get_the_ID(), 'total_slider_meta_title_pos_x', true );
@@ -486,6 +493,14 @@ class Total_Slide_Group {
 
 		if ( is_numeric( $slide['link'] ) ) {
 			$slide['link_url'] = get_permalink( $slide['link'] );
+			
+			$slp = (int) $slide['link'];
+
+			$link_post = get_post($slp);
+			if ($link_post)
+			{
+				$slide['link_post_title'] = $link_post->post_title;
+			}
 		}
 		else {
 			$slide['link_url'] = $slide['link'];

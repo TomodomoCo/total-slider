@@ -37,7 +37,7 @@ define( 'TOTAL_SLIDER_IN_FUNCTIONS', true );
 /**
  * Defines the WordPress capability needed to manage Total Slider slides. This is attached to a WP role in the plugin's Settings page.
  */
-define( 'TOTAL_SLIDER_REQUIRED_CAPABILITY', 'total_slider_manage_slides' ); //TODO fix capabilities on new DF
+define( 'TOTAL_SLIDER_REQUIRED_CAPABILITY', 'total_slider_manage_slides' ); 
 
 /**
  * The maximum number of slide groups supported.
@@ -335,10 +335,10 @@ class Total_Slider {
 		$args = array(
 			'hierarchical'      => false,
 			'labels'            => $labels,
-			'show_ui'           => true,
-			'show_admin_column' => true,
-			'public'            => true,
-			'query_var'         => true,
+			'show_ui'           => false,
+			'show_admin_column' => false,
+			'public'            => false,
+			'query_var'         => false,
 			'rewrite'           => array( 'slug' => 'total_slider_slide_group' ),
 		);
 
@@ -365,14 +365,13 @@ class Total_Slider {
 
 		$args = array(
 			'labels'             => $labels,
-			'public'             => true,
-			'publicly_queryable' => true,
-			'show_ui'            => true,
-			'show_in_menu'       => true,
+			'public'             => false,
+			'publicly_queryable' => false,
+			'show_ui'            => false,
+			'show_in_menu'       => false,
 			'query_var'          => false,
 			'rewrite'            => array( 'slug' => 'total_slider_slide' ),
-//			'capability_type'    => 'total_slider_slide',
-			'capability_type'    => 'post', //TODO debug only
+			'capability_type'    => 'total_slider_slide',
 			'has_archive'        => true,
 			'hierarchical'       => false,
 			'menu_position'      => null,
