@@ -120,65 +120,79 @@ if (
 
 			// slide group already with this name?
 			$existing = new Total_Slide_Group( $new_slug );
-			if ( $existing->load() ) { //TODO replace this code
-				$new_slug = substr( $new_slug, 0, ( 63 - strlen( 'total_slider_slides_' ) - 23 ) ); // truncate so that the uniqid portion is retained.
-				$new_slug .= $TS_Total_Slider->id_filter( uniqid( '_', true ) );
-				$new_slug = $TS_Total_Slider->sanitize_slide_group_slug( $new_slug );
+			$collision = false;
+
+			if ( $existing->load() ) {
+				$collision = true;
 			}
 
-			if ( empty( $new_slug) ) {
-				$new_slug = 'group_' . $TS_Total_Slider->id_filter( uniqid( '', true ) );
-				$new_slug = $TS_Total_Slider->sanitize_slide_group_slug( $newSlug );
-			}
-
-			$new_group = new Total_Slide_Group( $new_slug, $_POST['group-name'] );
-			
-			// set the new template
-			$desired_tpl_slug = Total_Slider_Template::sanitize_slug( $_POST['template-slug'] );
-			$tpl_location = false;
-			$tpl_slug = false;
-
-			// determine which template location this template is from
-			$t = new Total_Slider_Template_Iterator();
-			
-			foreach( Total_Slider::$allowed_template_locations as $l )
-			{
-			
-				if ($tpl_location || $tpl_slug)	{
-					break;
-				}
-			
-				$choices = $t->discover_templates( $l, false );	
-
-				// find the right template and set our provision template slug and location to it
-				if ( is_array( $choices ) && count( $choices ) > 0 )
-				{
-					foreach( $choices as $c )
-					{
-						if ( $desired_tpl_slug == $c['slug'] ) {
-							$tpl_location = $l;
-							$tpl_slug = $desired_tpl_slug;
-							break;
-						}		
+			// v2.0: we can no longer have slide groups that have identical names, even if slugs don't clash
+			$existing_terms = get_terms( 'total_slider_slide_group', array( 'hide_empty' => false ) );
+			if ( ! $collision && is_array( $existing_terms ) && count( $existing_terms ) > 0 ) {
+				foreach( $existing_terms as $term ) {
+					if ( $term->name == $_POST['group-name'] ) {
+						$collision = true;
+						break;
 					}
 				}
-										
 			}
-			
-			if ( $tpl_location && $tpl_slug ) {
-				$new_group->templateLocation = $tpl_location;
-				$new_group->template = $tpl_slug;
+
+
+			// if collision, throw an error:
+			if ( $collision ) {
+				$create_error = __( 'Unable to create this slide group, as there is already a group with this name.', 'total-slider' );
 			}
 			else {
-				$new_group->templateLocation = 'builtin';
-				$new_group->template = 'default';
-			}
-			
-			$new_group->save();
 
-			// redirect to the new edit page for this slide group
-			$TS_Total_Slider->ugly_js_redirect( 'edit-slide-group', $new_slug );
-			die();
+				$new_group = new Total_Slide_Group( $new_slug, $_POST['group-name'] );
+
+				// set the new template
+				$desired_tpl_slug = Total_Slider_Template::sanitize_slug( $_POST['template-slug'] );
+				$tpl_location = false;
+				$tpl_slug = false;
+
+				// determine which template location this template is from
+				$t = new Total_Slider_Template_Iterator();
+
+				foreach( Total_Slider::$allowed_template_locations as $l )
+				{
+
+					if ($tpl_location || $tpl_slug)	{
+						break;
+					}
+
+					$choices = $t->discover_templates( $l, false );	
+
+					// find the right template and set our provision template slug and location to it
+					if ( is_array( $choices ) && count( $choices ) > 0 )
+					{
+						foreach( $choices as $c )
+						{
+							if ( $desired_tpl_slug == $c['slug'] ) {
+								$tpl_location = $l;
+								$tpl_slug = $desired_tpl_slug;
+								break;
+							}		
+						}
+					}
+
+				}
+
+				if ( $tpl_location && $tpl_slug ) {
+					$new_group->templateLocation = $tpl_location;
+					$new_group->template = $tpl_slug;
+				}
+				else {
+					$new_group->templateLocation = 'builtin';
+					$new_group->template = 'default';
+				}
+
+				$new_group->save();
+
+				// redirect to the new edit page for this slide group
+				$TS_Total_Slider->ugly_js_redirect( 'edit-slide-group', $new_slug );
+				die();
+			}
 		}
 	}
 }
@@ -207,6 +221,10 @@ var VPM_SHOULD_DISABLE_XY = false;
 <h3><?php _e( 'Sorry, this interface requires JavaScript to function.', 'total-slider' ); ?></h3>
 <p><?php _e( 'You will need to enable JavaScript for this page before many of the controls below will work.', 'total-slider' );?></p>
 </noscript>
+
+<?php if ( isset( $create_error ) ): ?>
+<div id="message" class="error"><?php echo esc_html( $create_error ); ?></div>
+<?php endif; ?>
 
 <div id="new-slide-group">
 	<form name="new-slide-group-form" id="new-slide-group-form" method="post" action="admin.php?page=total-slider&action=new_slide_group">
