@@ -189,6 +189,7 @@ class Total_Slider {
 		add_action( 'widgets_init', array( $this, 'register_as_widget' ) );
 		add_action( 'admin_init', array( $this, 'pass_control_to_ajax_handler' ) );
 		add_action( 'admin_head-media-upload-popup', array( $this, 'print_uploader_javascript' ) );
+		add_action( 'wp_loaded', array( $this, 'upgrade' ) ); // ensure upgrader runs promptly
 
 
 		add_shortcode( 'totalslider', 'total_slider_shortcode' );
@@ -297,8 +298,6 @@ class Total_Slider {
 	public function initialize() {
 		$this->load_text_domain();
 		$this->register_cpt();
-		$this->upgrade(); // upgrade wasn't otherwise being called soon enough, leaving possible blank slides during DF upgrade!
-
 	}
 
 	/**
