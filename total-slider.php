@@ -253,6 +253,9 @@ class Total_Slider {
 			add_option( 'total_slider_dataformat_version', TOTAL_SLIDER_DATAFORMAT_VERSION );
 		}
 
+		// if all is said and done, we'll call upgrade again to make sure any 1.1.x slides are migrated upon plugin upgrade
+		$this->upgrade();
+
 	}
 	
 	/**
