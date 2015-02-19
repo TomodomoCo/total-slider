@@ -38,6 +38,7 @@ if ( ! function_exists( '__' ) )
 	die( '<h1>Forbidden</h1>' );
 }
 
+require_once ( ABSPATH . 'wp-admin/includes/user.php' );
 
 // get the slide group list
 
@@ -112,4 +113,3 @@ $ts_class->set_capability_for_roles( $roles_to_set, 'preserve_existing' );
 
 // completed -- so update our data format version
 update_option( 'total_slider_dataformat_version', '2.0' );
-
