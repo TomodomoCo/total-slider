@@ -94,9 +94,6 @@ if ( is_array( $legacy_slide_groups ) && count( $legacy_slide_groups ) > 0 ) {
 	}
 }
 
-//CAUTION possible that WP upgrades may move this
-require_once( ABSPATH . WPINC . '/user.php' );
-
 // handle role assignments and add the new capabilities to roles that previous had TOTAL_SLIDER_REQUIRED_CAPABILITY
 $all_roles = get_editable_roles();
 $roles_to_set = array( 'administrator' );

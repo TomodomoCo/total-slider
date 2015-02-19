@@ -189,7 +189,7 @@ class Total_Slider {
 		add_action( 'widgets_init', array( $this, 'register_as_widget' ) );
 		add_action( 'admin_init', array( $this, 'pass_control_to_ajax_handler' ) );
 		add_action( 'admin_head-media-upload-popup', array( $this, 'print_uploader_javascript' ) );
-		add_action( 'init', array( $this, 'upgrade' ) );
+		add_action( 'admin_init', array( $this, 'upgrade' ) );
 
 
 		add_shortcode( 'totalslider', 'total_slider_shortcode' );
