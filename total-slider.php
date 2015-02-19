@@ -8,7 +8,7 @@ Author: Peter Upfold
 Author URI: http://www.vanpattenmedia.com/
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: total_slider
+Text Domain: total-slider
 /* ----------------------------------------------*/
 
 /*  Copyright (C) 2011-2015 Peter Upfold.

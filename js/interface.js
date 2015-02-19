@@ -638,8 +638,7 @@ jQuery(document).ready(function($) {
 	});
 
 	$('#edit-controls-save-draft').click(function() {
-		//TODO what if already published?
-		//TODO what about cancelling a draft and reverting to the previous published post?
+		// draft saving can only be performed if slide is not already published
 		$('#edit-slide-publish-status').val('draft');
 
 		if ( editingSlideSortButton && $( '#' + editingSlideSortButton ).hasClass( 'slidesort-publish') ) {
