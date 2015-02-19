@@ -51,7 +51,7 @@ if ( ! function_exists( '__' ) )
 						<label for="edit-slide-title"><?php _e( 'Title', 'total-slider' );?></label>
 					</th>
 					<td>
-						<input type="text" name="slide-title" id="edit-slide-title" value="" maxlength="64" class="edit-controls-inputs" />
+						<input type="text" name="slide-title" id="edit-slide-title" value="" maxlength="2048" class="edit-controls-inputs" />
 					</td>
 				</tr>
 				<tr class="form-field" id="slide-description-container">

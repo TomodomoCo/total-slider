@@ -45,9 +45,13 @@ $legacy_slide_groups = get_option( 'total_slider_slide_groups' );
 
 if ( is_array( $legacy_slide_groups ) && count( $legacy_slide_groups ) > 0 ) {
 
+	$legacy_slide_group_names = array();
+	// to detect and handle Slide Group name clashes, which are now a problem with the 2.0 data format
+
 	foreach( $legacy_slide_groups as $key => $legacy_group ) {
 
 		if ( is_a( $legacy_group, 'Total_Slide_Group' ) ) {
+
 
 			// convert this group to the new format
 			$new_slug = Total_Slider::sanitize_slide_group_slug( $legacy_group->slug );
@@ -56,6 +60,14 @@ if ( is_array( $legacy_slide_groups ) && count( $legacy_slide_groups ) > 0 ) {
 			$new_group = new Total_Slide_Group( $new_slug, $legacy_group->name );
 			$new_group->template = $legacy_group->template;
 			$new_group->templateLocation = $legacy_group->templateLocation;
+
+			// if this legacy group name collides with an existing legacy group name, we must rename and re-slug it
+			// or WP will combine posts attached to the two terms, merging the Slide Groups!
+			if ( in_array( $legacy_group->name, $legacy_slide_group_names ) ) {
+				$new_group->name = $legacy_group->name . ' (duplicate name)';
+				$new_group->slug = Total_Slider::sanitize_slide_group_slug( substr( $legacy_group->slug, 0, 12 ) . sanitize_title_with_dashes( uniqid( '', true ) ) );
+			}
+
 			$new_group->save();
 
 			$new_slide_ids = array();
@@ -72,6 +84,9 @@ if ( is_array( $legacy_slide_groups ) && count( $legacy_slide_groups ) > 0 ) {
 					$new_slide_ids[] = $new_group->new_slide( $title, $description, $background, $link, $title_pos_x, $title_pos_y, 'publish' );	
 				}
 			}
+
+			// make sure we don't use this name again
+			$legacy_slide_group_names[] = $legacy_group->name;
 
 			// fix ordering by doing a reshuffle with the new array of slide ids returned
 			$new_group->reshuffle( $new_slide_ids );
