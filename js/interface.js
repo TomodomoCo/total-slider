@@ -911,7 +911,6 @@ jQuery(document).ready(function($) {
 	};
 
 	$.fn.saveAutoDraft = function(caller) {
-
 		$('#edit-controls-saving > span').html('Saving a draft&hellip;');
 		$('#edit-controls-saving').css('opacity', '1');
 		$('#edit-controls-saving').show();
@@ -919,6 +918,19 @@ jQuery(document).ready(function($) {
 		autoSaveExistingStatus = $('#edit-slide-publish-status').val();
 
 		$('#edit-slide-publish-status').val('draft');
+
+
+		if ($('#slide-link-is-external').prop('checked') == true)
+		{
+			linkToSave = $('#edit-slide-link').val();
+		}
+		else if ($('#slide-link-is-internal').prop('checked') == true)
+		{
+			linkToSave = $('#slide-link-internal-id').val();
+		}
+		else {
+			linkToSave = '';
+		}	
 
 		$().performSaveAction({
 			newSlideSuccess: function(result, caller) {

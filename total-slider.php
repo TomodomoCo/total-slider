@@ -210,7 +210,7 @@ class Total_Slider {
 	
 		$no_slide_groups = false;
 
-		if ( ! get_option('total_slider_slide_groups') ) {
+		if ( ! get_option('total_slider_slide_groups') ) { // intentionally old-school -- we are checking for 1.0.x data format
 			$no_slide_groups = true;
 			add_option( 'total_slider_slide_groups', array( ) ); // create with a blank array
 
