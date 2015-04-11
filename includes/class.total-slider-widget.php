@@ -173,11 +173,11 @@ class Total_Slider_Widget extends WP_Widget {
 		) {
 			// enqueue CSS and JS
 			wp_register_style(
-				'total-slider-' . esc_attr( $this->slide_group->template ),					/* handle */
-				$tpl->css_uri(),												/* src */
-				array(),														/* deps */
+				'total-slider-' . esc_attr( $this->slide_group->template ),			/* handle */
+				$tpl->css_uri(),								/* src */
+				array(),									/* deps */
 				date( "YmdHis", @filemtime($tpl->css_path() ) ),				/* ver */
-				'all'															/* media */	
+				'all'										/* media */	
 			);
 			
 			wp_enqueue_style( 'total-slider-' . esc_attr($this->slide_group->template) );
@@ -196,13 +196,13 @@ class Total_Slider_Widget extends WP_Widget {
 			}
 			
 			wp_register_script(	
-					'total-slider-' . esc_attr($this->slide_group->template), 				/* handle */
-					$js_uri,													/* src */
+					'total-slider-' . esc_attr($this->slide_group->template), 		/* handle */
+					$js_uri,								/* src */
 					array(
 						'jquery'
-					),															/* deps */
-					date( 'YmdHis', @filemtime( $js_path) ),					/* ver */
-					true														/* in_footer */		
+					),									/* deps */
+					date( 'YmdHis', @filemtime( $js_path) ),				/* ver */
+					true									/* in_footer */		
 			);
 			
 			wp_enqueue_script( 'total-slider-' . esc_attr($this->slide_group->template) );

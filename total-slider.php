@@ -565,7 +565,8 @@ class Total_Slider {
 		}
 		
 		// require a valid slide group
-		if ( ! get_option( 'total_slider_slides_' . Total_Slider::sanitize_slide_group_slug( $group ) ) )
+		$group_obj = new Total_Slide_Group( Total_Slider::sanitize_slide_group_slug( $group ) );
+		if ( ! $group_obj->load() )
 		{
 			return __( '<strong>Total Slider:</strong> Could not find the selected slide group to show. Does it still exist?', 'total-slider' );
 		}
@@ -625,30 +626,31 @@ class Total_Slider {
 			
 			wp_register_script(
 			
-				'total-slider-ejs', 										/* handle */
+				'total-slider-ejs', 						/* handle */
 				plugin_dir_url( __FILE__ ).'js/ejs.' . $maybe_min . 'js',	/* src */
 				array(
 					'jquery', 'jquery-ui-draggable', 'jquery-ui-droppable',
 					'jquery-ui-sortable'
-				),															/* deps */
+				),								/* deps */
 				date("YmdHis", @filemtime( plugin_dir_path( __FILE__ ) .
-							'js/ejs.' . $maybe_min . 'js'	) ),			/* ver */
-				true														/* in_footer */		
+							'js/ejs.' . $maybe_min . 'js'	) ),	/* ver */
+				true								/* in_footer */		
 			);
 
 
 			// get our JavaScript on
 			wp_register_script(
 			
-				'total-slider-interface', 									/* handle */
-				plugin_dir_url( __FILE__ ).'js/interface.' . $maybe_min . 'js',/* src */
+				'total-slider-interface', 					/* handle */
+				plugin_dir_url( __FILE__ ).'js/interface.' . $maybe_min . 'js', /* src */
 				array(
 					'jquery', 'jquery-ui-draggable', 'jquery-ui-droppable',
 					'jquery-ui-sortable', 'total-slider-ejs'
-				),															/* deps */
+				),								/* deps */
 				date("YmdHis", @filemtime( plugin_dir_path( __FILE__ ) .
-							'js/interface.' . $maybe_min . 'js'	) ),		/* ver */
-				true														/* in_footer */		
+					'js/interface.' . $maybe_min . 'js'	) ),
+												/* ver */
+				true								/* in_footer */		
 			);
 			
 			
@@ -702,36 +704,36 @@ class Total_Slider {
 		/* Top-level menu page */
 		add_menu_page(
 
-			__( 'Slider', 'total-slider' ),									/* title of options page */
-			__( 'Slider', 'total-slider' ),									/* title of options menu item */
-			TOTAL_SLIDER_REQUIRED_CAPABILITY,								/* permissions level */
-			'total-slider',													/* menu slug */
-			array( $this, 'print_slide_groups_page' ),				/* callback to print the page to output */
+			__( 'Slider', 'total-slider' ),					/* title of options page */
+			__( 'Slider', 'total-slider' ),					/* title of options menu item */
+			TOTAL_SLIDER_REQUIRED_CAPABILITY,				/* permissions level */
+			'total-slider',							/* menu slug */
+			array( $this, 'print_slide_groups_page' ),			/* callback to print the page to output */
 			plugin_dir_url( __FILE__ ) . 'img/total-slider-icon-16.png',	/* icon file */
-			null 															/* menu position number */
+			null 								/* menu position number */
 		);
 
 		/* First child, 'Slide Groups' */
 		$submenu = add_submenu_page(
 
-			'total-slider',										/* parent slug */
+			'total-slider',							/* parent slug */
 			__( 'Slide Groups', 'total-slider' ),				/* title of page */
 			__( 'Slide Groups', 'total-slider' ),				/* title to use in menu */
-			TOTAL_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
-			'total-slider',										/* menu slug */
-			array( $this, 'print_slide_groups_page' )	/* callback to print the page to output */
+			TOTAL_SLIDER_REQUIRED_CAPABILITY,				/* permissions level */
+			'total-slider',							/* menu slug */
+			array( $this, 'print_slide_groups_page' )			/* callback to print the page to output */
 
 		);
 
 		/* 'Settings' */
 		add_submenu_page(
 
-			'total-slider',										/* parent slug */
-			__( 'Settings', 'total-slider' ),					/* title of page */
-			__( 'Settings', 'total-slider' ),					/* title to use in menu */
-			TOTAL_SLIDER_REQUIRED_CAPABILITY,					/* permissions level */
-			'total-slider-settings',							/* menu slug */
-			array($this, 'print_settings_page')		/* callback to print the page to output */
+			'total-slider',							/* parent slug */
+			__( 'Settings', 'total-slider' ),				/* title of page */
+			__( 'Settings', 'total-slider' ),				/* title to use in menu */
+			TOTAL_SLIDER_REQUIRED_CAPABILITY,				/* permissions level */
+			'total-slider-settings',					/* menu slug */
+			array($this, 'print_settings_page')				/* callback to print the page to output */
 
 		);
 
@@ -804,11 +806,11 @@ class Total_Slider {
 		
 		// load the CSS
 		wp_register_style(		
-			'total-slider-frontend',										/* handle */
-			$this->template->css_uri(),									/* src */
-			array(),														/* deps */
+			'total-slider-frontend',					/* handle */
+			$this->template->css_uri(),					/* src */
+			array(),							/* deps */
 			date( 'YmdHis', @filemtime($this->template->css_path() ) ),	/* ver */
-			'all'															/* media */
+			'all'								/* media */
 		);
 		
 		wp_enqueue_style( 'total-slider-frontend' );
@@ -826,11 +828,11 @@ class Total_Slider {
 			// enqueue the JS
 			
 			wp_register_script(	
-				'total-slider-frontend',										/* handle */
-				$js_uri,														/* src */
-				array( 'jquery' ),												/* deps */
-				date( 'YmdHis', @filemtime($jsPath) ),							/* ver */
-				true															/* in_footer */					
+				'total-slider-frontend',				/* handle */
+				$js_uri,						/* src */
+				array( 'jquery' ),					/* deps */
+				date( 'YmdHis', @filemtime($jsPath) ),			/* ver */
+				true							/* in_footer */					
 			);
 			
 			wp_enqueue_script( 'total-slider-frontend' );
