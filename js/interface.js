@@ -25,6 +25,7 @@ var dontStartEdit = false;
 var newShouldShuffle = false;
 var deleteCaller = false;
 var autoSaveExistingStatus = false;
+var isCurrentlySaving = false;
 var lastSaveState = '';
 var lastChange = 0;
 var lastAutoSave = 0;
@@ -834,6 +835,8 @@ jQuery(document).ready(function($) {
 		 * Pass the callback functions for newSlideSuccess, existingSlideSuccess and error in the JSON object args.
 		 */
 		
+		isCurrentlySaving = true;
+
 		if ($('.total-slider-template-draggable').length < 1 || $('.total-slider-template-draggable-parent').length < 1)
 		{
 			var calcBoxOffsetLeft = 0;
@@ -861,10 +864,12 @@ jQuery(document).ready(function($) {
 				
 				success: function(result) {
 					args.newSlideSuccess(result, args.caller);
+					isCurrentlySaving = false;
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 				
 					args.error(jqXHR, textStatus, errorThrown, args.caller);
+					isCurrentlySaving = false;
 				}			
 			});
 		
@@ -898,10 +903,12 @@ jQuery(document).ready(function($) {
 				
 				success: function(result) {
 					args.existingSlideSuccess(result, args.caller);	
+					isCurrentlySaving = false;
 
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					args.error(jqXHR, textStatus, errorThrown, args.caller);
+					isCurrentlySaving = false;
 				}
 				
 			});
@@ -990,7 +997,7 @@ jQuery(document).ready(function($) {
 			}
 			// only save if the last change was more recent than the last successful auto-save
 			// and if the title or description have some text
-			if ( lastChange > lastAutoSave &&
+			if ( !isCurrentlySaving && lastChange > lastAutoSave &&
 				(!
 				 ( $('#edit-slide-title').val().length < 1 && $('#edit-slide-description').val().length < 1 )
 				)
@@ -1006,7 +1013,7 @@ jQuery(document).ready(function($) {
 			}
 			else {
 				if ( typeof console != 'undefined' ) {
-					console.log( "Total Slider: Aborting auto-save, as no changes since last auto-save, or slide still has blank title and description." );
+					console.log( "Total Slider: Aborting auto-save, as no changes since last auto-save, save already in progress, or slide still has blank title and description." );
 				}
 			}
 		}	    	    
