@@ -765,7 +765,7 @@ jQuery(document).ready(function($) {
 				if (newShouldShuffle)
 				{
 					newShouldShuffle = false;
-					window.setTimeout(function() { $().sortSlides(); }, 1200);
+					$().sortSlides();
 				}
 				
 				newShouldShuffle = false;
@@ -955,6 +955,7 @@ jQuery(document).ready(function($) {
 				$('#edit-slide-publish-status').val(autoSaveExistingStatus);
 				$('#edit-controls-saving').hide();
 				lastAutoSave = Date.now();
+				$().sortSlides();
 
 			},
 			existingSlideSuccess: function(result, caller) {
@@ -968,6 +969,7 @@ jQuery(document).ready(function($) {
 				$('#edit-slide-publish-status').val(autoSaveExistingStatus);
 				$('#edit-controls-saving').hide();
 				lastAutoSave = Date.now();
+				$().sortSlides();
 			},
 			error: function(jqXHR, textStatus, errorThrown, caller) {
 				
