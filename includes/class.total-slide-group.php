@@ -402,7 +402,7 @@ class Total_Slide_Group {
 			update_post_meta( $result, 'total_slider_meta_title_pos_x', $title_pos_x );
 			update_post_meta( $result, 'total_slider_meta_title_pos_y', $title_pos_y );
 
-			if ( is_int( $background ) ) {
+			if ( is_numeric( $background ) ) {
 				update_post_meta( $result, '_thumbnail_id', $background );
 			}
 			else {
