@@ -3,7 +3,7 @@
 Plugin Name: Total Slider
 Plugin URI: http://www.totalslider.com/
 Description: The best experience for building sliders, with true WYSIWYG, drag & drop and more!
-Version: 2.0-alpha
+Version: 2.0
 Author: Peter Upfold
 Author URI: http://www.vanpattenmedia.com/
 License: GPLv2 or later
