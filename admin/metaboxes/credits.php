@@ -45,7 +45,7 @@ if ( ! function_exists( '__' ) )
 
 	<p><?php _e( 'Icons: <a href="http://www.field2.com/">Ben Dunkle</a>', 'total-slider' );?></p>
 	
-	<?php if ( defined('WPLANG') && WPLANG != '' && strpos( strtolower(WPLANG), 'en' ) !== 0 ): ?>
+	<?php if ( strpos( strtolower( get_locale() ), 'en' ) !== 0 ): ?>
 		<p>
 		<?php
 		/* translators: please replace this with a credit to yourself! "Translation: Your Name". This English message will appear when no translation is available, but the user is using WordPress in another language.. */
