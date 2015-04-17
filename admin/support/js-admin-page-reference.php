@@ -49,6 +49,7 @@ var _total_slider_mce_l10n = '<?php if ( defined('WPLANG' ) && WPLANG != '' && s
 var _total_slider_mce_l10n_insert = '<?php _e( 'Insert Slider', 'total-slider' );?>';
 var _total_slider_uploader = '<?php echo ( version_compare( get_bloginfo( 'version' ), '3.5', '>=' ) ) ? 'elvin' : 'legacy'; ?>';
 var _total_slider_allowed_post_statuses = [ '<?php echo implode( "','", Total_Slider::$allowed_post_statuses ) ; ?>' ];
+var _total_slider_locale = '<?php echo esc_attr( get_locale() ); ?>';
 //]]>
 </script>
 <?php	

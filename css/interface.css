@@ -96,6 +96,10 @@ ul#slidesort li.slidesort-selected {
 	font-style: italic;
 }
 
+.slidesort-draft > div.slidesort_slidebox > div.slidesort_text.total-slider_fr_FR:before {
+	content: "Brouillon ";
+}
+
 .slidesort-draft.slidesort-unsaved > div.slidesort_slidebox > div.slidesort_text {
 	background-color: rgba( 255, 0, 0, 0.20 );
 }
