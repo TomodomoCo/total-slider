@@ -126,7 +126,7 @@ msgstr "Crédits"
 
 #: admin/slides.php:142 includes/class.slide-groups-table.php:66
 msgid "Slides"
-msgstr "‘%s’ Diapositives"
+msgstr "Diapositives"
 
 #: admin/slides.php:143
 msgid "Preview"
@@ -490,8 +490,6 @@ msgid "The post ID for the specified slide link is not valid."
 msgstr "L'ID de l'article n'est pas valide pour cette diapositive."
 
 #: includes/ajax_interface.php:248 includes/ajax_interface.php:497
-msgid "Invalid URL format for the specified link URL."
-msgstr "Format d'URL invalide pour le fond indiqué."
 
 #: includes/ajax_interface.php:273
 #, php-format
@@ -530,3 +528,193 @@ msgstr "Vous n'avez pas indiqué quelle ID doit être supprimée."
 #: includes/ajax_interface.php:681
 msgid "The delete slide operation failed at the server. Perhaps it has already been deleted by someone else."
 msgstr "L'opération de suppression de la diapositive n'a pas abouti sur ce serveur. Peut-être a-t-elle déjà été supprimée par quelqu'un d'autre."
+
+msgid "Invalid URL format for the specified link URL."
+msgstr "Format d'URL invalide pour le lien indiqué."
+
+msgid "The create slide operation failed at the server."
+msgstr "Le processus de création de la diapositive n'a pas abouti sur ce serveur."
+
+msgid "The update slide operation failed at the server."
+msgstr "L'opération de mise à jour de la diapositive n'a pas abouti sur ce serveur."
+
+msgid "Template:"
+msgstr "Template :"
+
+msgid "There are no slides to show."
+msgstr "Aucune diapositive à afficher."
+
+msgid "Please visit this page to continue"
+msgstr "Visitez cette page pour aller plus loin"
+
+msgid "Insert Slider"
+msgstr "Insérer un slider"
+
+msgid "Save"
+msgstr "Enregistrement"
+
+msgid "Slide saved."
+msgstr "Diapositive enregistrée."
+
+msgid "Add New"
+msgstr "Ajouter"
+
+msgid "Sorry, this interface requires JavaScript to function."
+msgstr "Désolé, cette interface a besoin de JavaScript pour fonctionner."
+
+msgid "You will need to enable JavaScript for this page before many of the controls below will work."
+msgstr "Vous devez activer JavaScript pour cette page si vous voulez que les contrôles de paramètres ci-dessus fonctionnent."
+
+msgid "Add a Slide Group"
+msgstr "Ajouter un groupe"
+
+msgid "Built-in"
+msgstr "Intégré"
+
+msgid "Theme"
+msgstr "Thème"
+
+msgid "v1.0 Templates"
+msgstr "Templates v1.0"
+
+msgid "Downloaded"
+msgstr "Téléchargés"
+
+msgid "Add Slide Group"
+msgstr "Ajouter un groupe"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "This page is not accessible to your user."
+msgstr "Cette page ne vous est pas accessible."
+
+msgid "No Slide Group selected."
+msgstr "Aucun groupe sélectionné."
+
+msgid "You will need to enable JavaScript for this page before any of the controls below will work."
+msgstr "Vous devez activer JavaScript pour cette page si vous voulez que les contrôles de paramètres ci-dessus fonctionnent."
+
+msgid "There is a problem with this slide group&rsquo;s template."
+msgstr "Un problème a été rencontré avec le template de ce groupe."
+
+msgid "Please either resolve this problem, or choose a different template for this slide group."
+msgstr "Merci d'essayer de corriger ce problème ou de choisir un template différent pour ce groupe de diapositives."
+
+msgid "You do not have permission to manage Slider settings."
+msgstr "Vous n'avez pas l'autorisation d'accéder aux paramétrages de Slider."
+
+msgid "Required role level"
+msgstr "Rôle minimum nécessaire"
+
+msgid "Users belonging to checked roles will be able to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the Total Slider widget, which makes the slides show up on your site."
+msgstr "Les utilisateurs dont le rôle est celui coché ci-dessus auront la permission de créer, éditer et supprimer des diapositives. Seuls les utilisateurs ayant les autorisations d'accès aux widgets seront habilités à activer, désactiver ou déplacer le widget Total Slider, nécessaire pour faire apparaître le slider sur votre site."
+
+msgid "Editor"
+msgstr "Editeur"
+
+msgid "Show the Total Slider button in the editor toolbar"
+msgstr "Afficher le bouton Total Slider dans la barre d'outils de l'éditeur"
+
+msgid "Advanced Settings"
+msgstr "Réglages avancés"
+
+msgid "Load JS & CSS"
+msgstr "Activation des fichiers JS et CSS"
+
+msgid "Automatically load slide template CSS and JavaScript into my theme"
+msgstr "Activation automatique des fichiers CSS et JavaScript dans mon thème"
+
+msgid "Uncheck for manual control over how slide template CSS and JavaScript are included in your theme."
+msgstr "Décochez cette case pour manipuler vous-même la manière dont ces fichiers CSS et JavaScript seront incorporés au thème."
+
+msgid "Save Changes"
+msgstr "Enregistrer les modifications"
+
+msgid "Development: <a href=\"http://peter.upfold.org.uk/\">Peter Upfold</a>"
+msgstr "Développement : <a href=\"http://peter.upfold.org.uk/\">Peter Upfold</a>"
+
+msgid "Additional UI: <a href=\"http://www.vanpattenmedia.com/\">Chris Van Patten</a>"
+msgstr "Eléments d'interface  (UI) : <a href=\"http://www.vanpattenmedia.com/\">Chris Van Patten</a>"
+
+msgid "Icons: <a href=\"http://www.field2.com/\">Ben Dunkle</a>"
+msgstr "Icones : <a href=\"http://www.field2.com/\">Ben Dunkle</a>"
+
+msgid "Thanks!"
+msgstr "Merci !"
+
+msgid "© 2011-2014 Peter Upfold. Proud to be <a href=\"https://www.gnu.org/licenses/gpl-2.0.html\">GPLv2 (or later) licensed</a>."
+msgstr "© 2011-2014 Peter Upfold. Fier de la distribution sous license <a href=\"https://www.gnu.org/licenses/gpl-2.0.html\">GPLv2 (ou suivante)</a>."
+
+msgid "Built by <a href=\"http://www.vanpattenmedia.com/\">Van Patten Media</a>"
+msgstr "Développé par <a href=\"http://www.vanpattenmedia.com/\">Van Patten Media</a>"
+
+msgid "Click &lsquo;Add New&rsquo; to create a Slide."
+msgstr "Cliquez sur &lsquo;Ajouter&rsquo; pour créer une diapositive."
+
+msgid "Change Template"
+msgstr "Modifier le template"
+
+msgid "<strong>Total Slider:</strong> Unable to load the template for this slide group."
+msgstr "<strong>Total Slider:</strong> Impossible de charger le template pour ce groupe."
+
+msgid "Choose a slide group for this widget to show:"
+msgstr "Choisissez un groupe de diapositives pour ce widget :"
+
+msgid "Select a group"
+msgstr "Choisissez un groupe"
+
+msgid "Total Slider"
+msgstr "Total Slider"
+
+msgid "http://www.totalslider.com/"
+msgstr "http://www.totalslider.com/"
+
+msgid "The best experience for building sliders, with true WYSIWYG, drag & drop and more!"
+msgstr "La meilleure des expériences pour construire des sliders : WYSIWYG, Tirez-Déplacez et plus encore !"
+
+msgid "Peter Upfold"
+msgstr "Peter Upfold"
+
+msgid "http://www.vanpattenmedia.com/"
+msgstr "http://www.vanpattenmedia.com/"
+
+msgid "Unable to load the preview."
+msgstr "Impossible de charger l'aperçu."
+
+msgid "Click a slide to edit it, or click ‘Add New’."
+msgstr "Cliquez sur une diapositive pour l'éditer, ou cliquez sur ‘Ajouter’."
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Background"
+msgstr "Arrière-plan"
+
+msgid "Upload or choose image"
+msgstr "Choisissez"
+
+msgid "Slide Link"
+msgstr "Lien de la diapositive"
+
+msgid "A page or post on this site"
+msgstr "Page ou article de ce site"
+
+msgid "An external link"
+msgstr "Lien extérieur"
+
+msgid "No post selected"
+msgstr "Aucun article choisi"
+
+msgid "Find post"
+msgstr "Chercher"
+
+msgid "Loading"
+msgstr "Chargement"
+
+msgid "Saving…"
+msgstr "Enregistrement..."
+
