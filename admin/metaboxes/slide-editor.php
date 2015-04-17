@@ -128,7 +128,7 @@ if ( ! function_exists( '__' ) )
 			<input type="button" id="edit-controls-cancel" class="button-secondary" value="<?php _e( 'Cancel', 'total-slider' );?>" />
 			<input type="button" id="edit-controls-publish" class="button-primary" value="<?php _e( 'Publish', 'total-slider' );?>" />
 			<p class="delete-container">
-				<a id="edit-controls-delete-slide" href="#">Delete Slide</a>
+				<a id="edit-controls-delete-slide" href="#"><?php _e( 'Delete Slide', 'total-slider' ); ?></a>
 			</p>
 
 		</p>
