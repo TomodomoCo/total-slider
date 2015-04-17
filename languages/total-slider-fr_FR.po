@@ -607,7 +607,7 @@ msgstr "Vous n'avez pas l'autorisation d'accéder aux paramétrages de Slider."
 msgid "Required role level"
 msgstr "Rôle minimum nécessaire"
 
-msgid "Users belonging to checked roles will be able to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the Total Slider widget, which makes the slides show up on your site."
+msgid "Users belonging to checked roles will be able to create, edit and delete slides. Only users that can manage widgets are able to activate, deactivate or move the Total Slider widget, which is one of the ways to make the slides show up on your site."
 msgstr "Les utilisateurs dont le rôle est celui coché ci-dessus auront la permission de créer, éditer et supprimer des diapositives. Seuls les utilisateurs ayant les autorisations d'accès aux widgets seront habilités à activer, désactiver ou déplacer le widget Total Slider, nécessaire pour faire apparaître le slider sur votre site."
 
 msgid "Editor"
@@ -733,3 +733,4 @@ msgstr "Publié"
 
 msgid "Delete Slide"
 msgstr "Supplimer"
+
