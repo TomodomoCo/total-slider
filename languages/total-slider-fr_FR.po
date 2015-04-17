@@ -8,25 +8,21 @@ msgstr ""
 "Project-Id-Version: Total Slider 2.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/total-slider\n"
 "POT-Creation-Date: 2015-02-18 16:06+0000\n"
-"PO-Revision-Date: 2015-02-18 16:09+0100\n"
+"PO-Revision-Date: 2015-04-11 16:53+0100\n"
 "Last-Translator: d Frédéric Serva <fred.serva@gmail.com>\n"
 "Language-Team: Peter Upfold <peter@vanpattenmedia.com>\n"
-"Language: French\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: French\n"
+"X-Generator: Poedit 1.7.5\n"
 
-#: admin/settings.php:60
-#: admin/slides.php:80
+#: admin/settings.php:60 admin/slides.php:80
 msgid "Unable to confirm the form’s security."
 msgstr "Impossible de certifier la sécurité de ce formulaire."
 
-#: admin/settings.php:83
-#: admin/settings.php:99
-#: admin/settings.php:112
-#: admin/settings.php:131
-#: admin/settings.php:144
+#: admin/settings.php:83 admin/settings.php:99 admin/settings.php:112
+#: admin/settings.php:131 admin/settings.php:144
 msgid "Settings saved."
 msgstr "Paramètres sauvegardés."
 
@@ -45,9 +41,7 @@ msgstr "Chaque groupe contient un certain nombre de diapositives qui apparaîtro
 msgid "You can make up to %d slide groups, which you can use to have different slideshows on different parts of your site."
 msgstr "Vous pouvez créer jusqu'à %d groupes, que vous pourrez utilisez de manière à avoir des slideshows différents à des endroits distincts sur votre site."
 
-#: admin/support/help.php:47
-#: total-slider.php:720
-#: total-slider.php:721
+#: admin/support/help.php:47 total-slider.php:720 total-slider.php:721
 msgid "Slide Groups"
 msgstr "Groupes"
 
@@ -75,7 +69,6 @@ msgstr "Une fois que vous serez satisfait de votre groupe de diapositives, vous 
 msgid "To do this, your theme needs to support Widgets, and have a widget area in the theme where you’d like the slides to show up."
 msgstr "Pour ce faire, votre thème doit accepter les widgets, et posséder une barre latérale là où vous désirez que le slider apparaisse."
 
-
 #: admin/support/help.php:65
 msgid "Go to <a href=\"widgets.php\">Appearance » Widgets</a> and drag a <strong>Total Slider</strong> widget to the desired sidebar. In the widget’s settings, choose the slide group you would like to show and click <em>Save</em>."
 msgstr "Allez à <a href=\"widgets.php\">Apparence » Widgets</a> et tirez un widget <strong>Total Slider</strong> vers la barre latérale de votre choix. Dans les paramètres du widget, choisissez un groupe et cliquez sur <em>Enregistrez</em>."
@@ -96,7 +89,6 @@ msgstr "Faîtes des essais en déplaçant titre et description à différents en
 msgid "Keep your site fresh — create multiple slide groups ahead of time, then simply edit the <strong>Total Slider</strong> widget to switch over to display another slide group every now and then."
 msgstr "Animez votre site — Créez des groupes puis mettez-les en place grâce au widget <strong>Total Slider</strong>, qui vous permettra d'alterner vos groupes quand vous le souhaiterez."
 
-
 #: admin/support/help.php:79
 msgid "Completely customise the look of your slides — create a <em>total-slider-templates</em> subfolder in your theme. You can use our <em>templates</em> folder in the plugin as a starting point."
 msgstr "Personnalisez le look de vos diapositives — Créez un dossier <em>total-slider-templates</em> dans votre thème. Vous pourrez utiliser ce dossier <em>templates</em> dans l'extension."
@@ -116,7 +108,7 @@ msgstr "Le menu d'aide vous explique comment créer de nouveaux groupes, ajouter
 #: admin/metaboxes/credits.php:53
 #, php-format
 msgid "<a href=\"%s\">Help us translate this plugin into your language!</a>"
-msgstr "Traduction en français : Frédéric Serva"
+msgstr "<a href=\"%s\">Aidez-nous à traduire cette extension dans votre langue !</a>. Traduction en français : Frédéric Serva"
 
 #: admin/metaboxes/credits.php:59
 #, php-format
@@ -128,13 +120,11 @@ msgstr "Si vous trouvez cette extension utile, ou si vous en faîtes un usage co
 msgid "You can also <a href=\"%s\">report bugs</a>, <a href=\"%s\">suggest features</a>, or <a href=\"%s\">send pull requests</a>."
 msgstr "Vous pouvez également <a href=\"%s\">signaler des bugs</a>, <a href=\"%s\">suggérer des fonctionnalités</a>, ou <a href=\"%s\">demander à contribuer au développement</a>."
 
-#: admin/slide-groups.php:47
-#: admin/slides.php:146
+#: admin/slide-groups.php:47 admin/slides.php:146
 msgid "Credits"
 msgstr "Crédits"
 
-#: admin/slides.php:142
-#: includes/class.slide-groups-table.php:66
+#: admin/slides.php:142 includes/class.slide-groups-table.php:66
 msgid "Slides"
 msgstr "‘%s’ Diapositives"
 
@@ -142,13 +132,11 @@ msgstr "‘%s’ Diapositives"
 msgid "Preview"
 msgstr "Prévisualisation"
 
-
 #: admin/slides.php:144
 msgid "Edit"
 msgstr "Editer"
 
-#: admin/slides.php:145
-#: includes/class.slide-groups-table.php:65
+#: admin/slides.php:145 includes/class.slide-groups-table.php:65
 msgid "Template"
 msgstr "Template"
 
@@ -164,75 +152,75 @@ msgstr "(code erreur %d)"
 
 #: total-slider.php:325
 msgid "Search Groups"
-msgstr ""
+msgstr "Chercher dans les groupes"
 
 #: total-slider.php:326
 msgid "All Groups"
-msgstr ""
+msgstr "Tous les groupes"
 
 #: total-slider.php:327
 msgid "Parent Group"
-msgstr ""
+msgstr "Groupe parent"
 
 #: total-slider.php:328
 msgid "Parent Group:"
-msgstr ""
+msgstr "Groupe parent :"
 
 #: total-slider.php:329
 msgid "Edit Group"
-msgstr ""
+msgstr "Modifier le groupe"
 
 #: total-slider.php:330
 msgid "Update Group"
-msgstr ""
+msgstr "Mettre le groupe à jour"
 
 #: total-slider.php:331
 msgid "Add New Group"
-msgstr ""
+msgstr "Ajouter un nouveau groupe"
 
 #: total-slider.php:332
 msgid "New Group Name"
-msgstr ""
+msgstr "Nouveau nom de groupe"
 
 #: total-slider.php:333
 msgid "Group"
-msgstr ""
+msgstr "Groupe"
 
 #: total-slider.php:355
 msgid "Add New Slide"
-msgstr ""
+msgstr "Ajouter une nouvelle diapositive"
 
 #: total-slider.php:356
 msgid "New Slide"
-msgstr ""
+msgstr "Nouvelle diapositive"
 
 #: total-slider.php:357
 msgid "Edit Slide"
-msgstr ""
+msgstr "Modifier la diapositive"
 
 #: total-slider.php:358
 msgid "View Slide"
-msgstr ""
+msgstr "Afficher la diapositive"
 
 #: total-slider.php:359
 msgid "All Slides"
-msgstr ""
+msgstr "Toutes les diapositives"
 
 #: total-slider.php:360
 msgid "Search Slides"
-msgstr ""
+msgstr "Chercher dans les diapositives"
 
 #: total-slider.php:361
 msgid "Parent Slides:"
-msgstr ""
+msgstr "Diapositives parentes :"
 
 #: total-slider.php:362
 msgid "No slides found."
-msgstr ""
+msgstr "Aucune diapositive trouvée."
 
 #: total-slider.php:363
 msgid "No slides found in Trash."
-msgstr ""
+msgstr "Aucune diapositive trouvée dans la corbeille."
 
 #: total-slider.php:566
 msgid "<strong>Total Slider:</strong> No slide group selected to show."
@@ -242,13 +230,11 @@ msgstr "<strong>Total Slider :</strong> Aucun groupe sélectionné."
 msgid "<strong>Total Slider:</strong> Could not find the selected slide group to show. Does it still exist?"
 msgstr "<strong>Total Slider :</strong> Impossible de charger le groupe choisi. Etes-vous sûr qu'il existe ?"
 
-#: total-slider.php:707
-#: total-slider.php:708
+#: total-slider.php:707 total-slider.php:708
 msgid "Slider"
 msgstr "Slider"
 
-#: total-slider.php:732
-#: total-slider.php:733
+#: total-slider.php:732 total-slider.php:733
 msgid "Settings"
 msgstr "Réglages"
 
@@ -261,8 +247,6 @@ msgstr ""
 "Vous êtes en train d'éditer une diapositive. En choisir une autre entraînera l'annulation de toutes vos modifications.\n"
 "\n"
 "Etes-vous sûr que c'est ce que vous désirez ?"
-
-
 
 #: total-slider.php:865
 msgid "You are still editing the current slide. Leaving this page will lose your changes."
@@ -278,13 +262,15 @@ msgstr ""
 "\n"
 "En êtes-vous sûr ?"
 
-
 #: total-slider.php:871
 msgid ""
 "Are you sure you want to delete this slide?\n"
 "\n"
 "This action cannot be undone."
 msgstr ""
+"Etes-vous certain de vouloir supprimer cette diapositive ?\n"
+"\n"
+"Cette action ne peut être annulée."
 
 #: total-slider.php:872
 msgid ""
@@ -294,11 +280,9 @@ msgstr ""
 "Merci de corriger ces erreurs :\n"
 "\n"
 
-
 #: total-slider.php:873
 msgid "You must enter a slide title."
 msgstr "Vous devez choisir un titre à la diapositive."
-
 
 #: total-slider.php:874
 msgid "You must enter a slide description."
@@ -308,7 +292,6 @@ msgstr "Vous devez écrire une description."
 msgid "The supplied background image URL is not a valid URL."
 msgstr "L'URL de l'image de fond choisie n'est pas une URL valide."
 
-
 #: total-slider.php:876
 msgid "The supplied external link is not a valid URL."
 msgstr "Le lien externe spécifié n'est pas une URL valide."
@@ -317,10 +300,9 @@ msgstr "Le lien externe spécifié n'est pas une URL valide."
 msgid "The supplied post ID for the slide link is not valid."
 msgstr "L'ID de l'article spécifié pour le lien de la diapositive n'est pas valide."
 
-
 #: total-slider.php:878
 msgid "The supplied post status for this slide is not valid."
-msgstr ""
+msgstr "Le statut demandé pour cette diapositive n'est pas valide."
 
 #: total-slider.php:879
 msgid "The new order will be saved when you save the new slide."
@@ -352,20 +334,19 @@ msgstr "Aucun article choisi."
 
 #: total-slider.php:886
 msgid "Publish"
-msgstr ""
+msgstr "Publier"
 
 #: total-slider.php:887
 msgid "Sorry, unable to get that slide"
 msgstr "Désolé, impossible d'utiliser cette diapositive"
 
-
 #: total-slider.php:888
 msgid "Draft saved."
-msgstr ""
+msgstr "Brouillon enregistré."
 
 #: total-slider.php:889
 msgid "Slide published."
-msgstr ""
+msgstr "Diapositive publiée."
 
 #: total-slider.php:890
 msgid "Upload slide background image"
@@ -425,7 +406,6 @@ msgstr "L'emplacement indiqué pour les templates n'appartient pas aux emplaceme
 msgid "The template's %s file was not found, but we expected to find it at '%s'."
 msgstr "Le fichier de template %s n'a pu être trouvé, mais nous pensons pouvoir le trouver à '%s'."
 
-
 #: includes/class.total-slider-template.php:470
 msgid "Unable to determine the WP_CONTENT_DIR, so cannot load this template."
 msgstr "WP_CONTENT_DIR impossible à déterminer. Ce template ne peut donc pas être chargé."
@@ -440,25 +420,18 @@ msgid "Unable to determine the WP_CONTENT_DIR, so cannot find relevant templates
 msgstr "WP_CONTENT_DIR impossible à déterminer. Aucun template pertinent ne peut donc pas être trouvé."
 
 #: includes/class.ajax-interface-tools.php:57
-msgid ""
-"The operation failed at the server.\\n"
-"\\n"
-"You may inspect the WP_Error object returned using the web browser Developer Tools."
-msgstr ""
+msgid "The operation failed at the server.\\n\\nYou may inspect the WP_Error object returned using the web browser Developer Tools."
+msgstr "L'opération a échoué sur le serveur.\\n\\nVous devriez inspecter l'objet WP_Error retourné en utilisant les outils développeur de votre navigateur web."
 
 #: includes/class.ajax-interface-tools.php:65
-msgid ""
-"The operation failed at the server.\\n"
-"\\n"
-"For detailed information, please enable WP_DEBUG."
-msgstr ""
+msgid "The operation failed at the server.\\n\\nFor detailed information, please enable WP_DEBUG."
+msgstr "L'opération a échoué sur le serveur..\\n\\nPour plus d'informations, veuillez activer WP_DEBUG."
 
-#: includes/class.total-slide-group.php:382
-#: includes/ajax_interface.php:263
+#: includes/class.total-slide-group.php:382 includes/ajax_interface.php:263
 #: includes/ajax_interface.php:512
 #, php-format
 msgid "The slide cannot be created with the '%s' status, as this is not supported by %s."
-msgstr ""
+msgstr "La diapositive ne peut être créée avec le statut '%s' car celui-ci n'est pas pris en charge par %s."
 
 #: includes/class.total-slide-group.php:751
 #, php-format
@@ -467,12 +440,11 @@ msgstr "Impossible d'afficher le mini-aperçu de la diapositive : %s (code erreu
 
 #: includes/class.slide-groups-table.php:48
 msgid "slide group"
-msgstr ""
+msgstr "groupe de diapositives"
 
 #: includes/class.slide-groups-table.php:49
 msgid "slide groups"
 msgstr "Groupe"
-
 
 #: includes/class.slide-groups-table.php:64
 msgid "Group Name"
@@ -486,12 +458,9 @@ msgstr "Supprimer"
 msgid "Click &lsquo;Add New&rsquo; to create a new group of slides."
 msgstr "Cliquez sur &lsquo;Ajouter&rsquo; pour créer un nouveau groupe de diapositives."
 
-#: includes/ajax_interface.php:61
-#: includes/ajax_interface.php:141
-#: includes/ajax_interface.php:303
-#: includes/ajax_interface.php:373
-#: includes/ajax_interface.php:559
-#: includes/ajax_interface.php:633
+#: includes/ajax_interface.php:61 includes/ajax_interface.php:141
+#: includes/ajax_interface.php:303 includes/ajax_interface.php:373
+#: includes/ajax_interface.php:559 includes/ajax_interface.php:633
 msgid "Your user does not have the required permission level. Are you sure you are still logged in to the WordPress dashboard?"
 msgstr "Vous n'avez pas le niveau de permissions suffisant. Etes-vous sûr d'être toujours connecté à l'administration de WordPress ?"
 
@@ -499,45 +468,37 @@ msgstr "Vous n'avez pas le niveau de permissions suffisant. Etes-vous sûr d'êt
 msgid "You did not supply the slide group to which this action should be applied."
 msgstr "Vous n'avez pas indiqué à quel groupe cette action doit être appliquée."
 
-
 #: includes/ajax_interface.php:113
 msgid "Could not load the selected Slide Group. Does it exist?"
 msgstr "Impossible de charger le groupe choisi. Etes-vous sûr qu'il existe ?"
 
-#: includes/ajax_interface.php:160
-#: includes/ajax_interface.php:196
-#: includes/ajax_interface.php:394
-#: includes/ajax_interface.php:445
+#: includes/ajax_interface.php:160 includes/ajax_interface.php:196
+#: includes/ajax_interface.php:394 includes/ajax_interface.php:445
 msgid "You have not supplied all of the required data."
 msgstr "Vous n'avez pas assemblé tous les éléments nécessaires."
 
-#: includes/ajax_interface.php:209
-#: includes/ajax_interface.php:458
+#: includes/ajax_interface.php:209 includes/ajax_interface.php:458
 msgid "Invalid attachment ID for the specified background."
 msgstr "ID invalide pour le fond spécifié."
 
-#: includes/ajax_interface.php:220
-#: includes/ajax_interface.php:469
+#: includes/ajax_interface.php:220 includes/ajax_interface.php:469
 msgid "Invalid URL format for the specified background URL."
 msgstr "Format d'URL invalide pour le fond indiqué."
 
-#: includes/ajax_interface.php:236
-#: includes/ajax_interface.php:485
+#: includes/ajax_interface.php:236 includes/ajax_interface.php:485
 msgid "The post ID for the specified slide link is not valid."
 msgstr "L'ID de l'article n'est pas valide pour cette diapositive."
 
-#: includes/ajax_interface.php:248
-#: includes/ajax_interface.php:497
+#: includes/ajax_interface.php:248 includes/ajax_interface.php:497
 msgid "Invalid URL format for the specified link URL."
 msgstr "Format d'URL invalide pour le fond indiqué."
 
 #: includes/ajax_interface.php:273
 #, php-format
 msgid "%s will not attempt a draft save if the title and description are both empty."
-msgstr ""
+msgstr "%s n'essaiera pas de sauvegarder un brouillon si son titre et sa description sont tous les deux vides."
 
-#: includes/ajax_interface.php:315
-#: includes/ajax_interface.php:329
+#: includes/ajax_interface.php:315 includes/ajax_interface.php:329
 #: includes/ajax_interface.php:409
 msgid "You have not supplied the ID to look up."
 msgstr "Vous n'avez pas renseigné l'ID à chercher."
@@ -546,14 +507,11 @@ msgstr "Vous n'avez pas renseigné l'ID à chercher."
 msgid "Specified slide ID could not be found. It may have been already deleted."
 msgstr "L'ID de la diapositive choisie n'a pas été trouvée. Elle a peut-être déjà été supprimée."
 
-
 #: includes/ajax_interface.php:541
 msgid "The update slide operation failed at the server. No WP_Error information is available."
-msgstr ""
+msgstr "La mise à jour de la diapositive a échoué sur le serveur. Aucune information WP_Error n'est disponible."
 
-
-#: includes/ajax_interface.php:571
-#: includes/ajax_interface.php:582
+#: includes/ajax_interface.php:571 includes/ajax_interface.php:582
 msgid "The new slide order was not specified, or there were no items within it."
 msgstr "Le nouvel ordre des diapositives n'a pas été spécifié, ou ne contenait aucun élément."
 
@@ -565,12 +523,10 @@ msgstr "Il manque une ou plusieurs diapositives dans le nouvel ordre des diaposi
 msgid "The sort slide operation failed at the server."
 msgstr "Le processus de réarrangerment des diapositives n'a pas abouti sur ce serveur."
 
-#: includes/ajax_interface.php:645
-#: includes/ajax_interface.php:659
+#: includes/ajax_interface.php:645 includes/ajax_interface.php:659
 msgid "You have not supplied the ID to delete."
 msgstr "Vous n'avez pas indiqué quelle ID doit être supprimée."
 
 #: includes/ajax_interface.php:681
 msgid "The delete slide operation failed at the server. Perhaps it has already been deleted by someone else."
 msgstr "L'opération de suppression de la diapositive n'a pas abouti sur ce serveur. Peut-être a-t-elle déjà été supprimée par quelqu'un d'autre."
-
