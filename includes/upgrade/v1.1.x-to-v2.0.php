@@ -101,7 +101,7 @@ $roles_to_set = array( 'administrator' );
 
 if ( is_array( $all_roles ) && count( $all_roles ) > 0 ) {
 	foreach( $all_roles as $role_name => $role_info ) {
-		if ( in_array( TOTAL_SLIDER_REQUIRED_CAPABILITY, $role_info['capabilities'] ) ) {
+		if ( in_array( TOTAL_SLIDER_REQUIRED_CAPABILITY, array_keys( $role_info['capabilities'] ) ) ) {
 			$roles_to_set[] = $role_name;
 		}
 	}
