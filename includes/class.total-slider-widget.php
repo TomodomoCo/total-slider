@@ -354,6 +354,9 @@ class Total_Slider_Widget extends WP_Widget {
 		if (!empty( $this->slides[$this->slider_iteration]['description'] ) ) {
 			$this->slide_description = $this->slides[$this->slider_iteration]['description'];
 		}
+		else {
+			$this->slide_description = '';
+		}
 
 		if (!empty( $this->slides[$this->slider_iteration]['id'] ) ) {
 			$this->slide_identifier = $this->slides[$this->slider_iteration]['id'];
