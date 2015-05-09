@@ -107,7 +107,7 @@ if ( is_array( $all_roles ) && count( $all_roles ) > 0 ) {
 	}
 }
 
-$ts_class->set_capability_for_roles( $roles_to_set, 'preserve_existing' );
+$ts_class->set_capability_for_roles( $roles_to_set, 'preserve_existing', 'upgrading' );
 
 
 
