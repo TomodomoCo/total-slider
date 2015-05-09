@@ -390,14 +390,15 @@ class Total_Slide_Group {
 			'post_status'         => $status,
 			'post_type'           => 'total_slider_slide',
 			'comment_status'      => 'closed',
-			'tax_input'           => array(
-			                         	'total_slider_slide_group' => $this->slug
-			                         )
 		);
 
 		$result = wp_insert_post( $new_post_data, true );
 
 		if ( is_int( $result ) ) {
+			// set slide group taxonomy
+			wp_set_object_terms( $result, array( $this->slug ), 'total_slider_slide_group' );
+
+			// set meta
 			update_post_meta( $result, 'total_slider_meta_link', $link );
 			update_post_meta( $result, 'total_slider_meta_title_pos_x', $title_pos_x );
 			update_post_meta( $result, 'total_slider_meta_title_pos_y', $title_pos_y );
