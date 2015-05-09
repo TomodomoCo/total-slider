@@ -3,7 +3,7 @@
 Plugin Name: Total Slider
 Plugin URI: http://www.totalslider.com/
 Description: The best experience for building sliders, with true WYSIWYG, drag & drop and more!
-Version: 2.0
+Version: 2.0.1
 Author: Peter Upfold
 Author URI: http://www.vanpattenmedia.com/
 License: GPLv2 or later
@@ -57,7 +57,7 @@ define( 'TOTAL_SLIDER_DEFAULT_CROP_HEIGHT', 300 );
 /**
  * The current version of the Total Slider data format. Used to determine if a data format upgrade is needed.
  */
-define( 'TOTAL_SLIDER_DATAFORMAT_VERSION', '2.0' );
+define( 'TOTAL_SLIDER_DATAFORMAT_VERSION', '2.0.1' );
 
 /*VPM_4x_CONDITIONAL*/
 if ( version_compare( get_bloginfo( 'version' ), '4.0', '>=' ) ) {
@@ -217,7 +217,7 @@ class Total_Slider {
 		}
 
 		// set the capability for administrator so they can visit the options page
-		$this->set_capability_for_roles( array( 'administrator' ), 'preserve_existing' );
+		$this->set_capability_for_roles( array( 'administrator' ), 'preserve_existing', 'upgrading' );
 		
 		get_currentuserinfo();
 		
@@ -274,6 +274,11 @@ class Total_Slider {
 		if ( version_compare( get_option( 'total_slider_dataformat_version' ), '2.0', '<' ) ) {
 			// run upgrade to 2.0
 			require_once( dirname(__FILE__) . '/includes/upgrade/v1.1.x-to-v2.0.php' );
+		}
+
+		if ( version_compare( get_option( 'total_slider_dataformat_version' ), '2.0.1', '<' ) ) {
+			// run upgrade to 2.0.1 (data format 2.0.1 is just a fix for any issues with 1.1>2.0 upgrades)
+			require_once( dirname(__FILE__) . '/includes/upgrade/v2.0-to-v2.0.1.php' );
 		}
 
 	}
@@ -500,11 +505,11 @@ class Total_Slider {
 	 * @param string $should_clear_first Either 'should_clear_first', or 'preserve_existing' -- whether to remove existing role assignments before setting new ones
 	 * @return boolean
 	 */
-	public function set_capability_for_roles( $roles_to_set, $should_clear_first = 'should_clear_first' ) {
+	public function set_capability_for_roles( $roles_to_set, $should_clear_first = 'should_clear_first', $is_upgrading = 'not_upgrading' ) {
 	
 		global $wp_roles;
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_options' ) && $is_upgrading != 'upgrading' ) {
 			return false;
 		}
 
