@@ -1,6 +1,8 @@
 Total Slider
 ==========
 
+**_Note:_ Total Slider is not in active development at this time.**
+
 Total Slider is a plugin for WordPress from Van Patten Media that helps web developers build sliders that can be easily managed by non-technical users.
 
 Build your own templates in HTML/PHP, CSS, and JavaScript, and Total Slider will supply a WYSIWYG interface.
