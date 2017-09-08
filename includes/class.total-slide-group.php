@@ -215,6 +215,7 @@ class Total_Slide_Group {
 			'orderby'            => 'meta_value_num',
 			'order'              => 'ASC',
 			'meta_key'           => 'total_slider_meta_sequence',
+			'posts_per_page'           => -1,
 		);
 
 		$raw = new WP_Query( $args );
